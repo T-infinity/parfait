@@ -8,6 +8,16 @@ TEST_GROUP(Adt)
 {
 };
 
+TEST(Adt, StoreNothing){
+
+    Adt adt(ADT_3D_POINT);
+    double extent[6] = {0,0,0,1,1,1};
+    auto inside = adt.retrieve(extent);
+
+    LONGS_EQUAL(0, inside.size());
+}
+
+
 TEST(Adt, Store3DPoints){
 
     Adt adt(ADT_3D_POINT);
@@ -99,4 +109,15 @@ TEST(Adt, Store3DExtents)
     double searchExtent3[6] = {0,0,0,1,1,1};
     inside = adt.retrieve(searchExtent3);
     CHECK_EQUAL(2, inside.size());
+}
+
+TEST(Adt, CornerCaseStoreMinus10){
+
+    Adt adt(ADT_3D_POINT);
+    double extent[6] = {0,0,0,1,1,1};
+    double domain[6] = {0,0,0,0,0,0};
+    adt.store(-10, domain);
+    auto inside = adt.retrieve(extent);
+
+    LONGS_EQUAL(1, inside.size());
 }

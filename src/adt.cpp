@@ -54,53 +54,41 @@ Adt::Adt(int adt_type) {
             assert(false);
     }
     type = adt_type;
-
-    double *xmin = (double *)malloc(ndim * sizeof(double));
-    assert(xmin != NULL);
-    double *xmax = (double *)malloc(ndim * sizeof(double));
-    assert(xmax != NULL);
-    // Root cell is an N-dimensional Hybercube
-    for (int i = 0; i < ndim; i++) {
-        xmin[i] = 0.0;
-        xmax[i] = 1.0;
-    }
-    // Create the root cell
-    SearchTree.push_back(new Adt_elem(4, xmin, xmax, ndim));
-    nelem = 0;
-    free(xmin);
-    free(xmax);
 }
 
 // ============= Public Interface ===============
 
 std::vector<int> Adt::retrieve(const double *extent) {
     double a[6], b[6];
-    create_hyper_rectangle_from_extent(extent, a, b);
     std::vector<int> ids;
+    if(SearchTree.size() == 0){
+        return ids;    
+    }
+    create_hyper_rectangle_from_extent(extent, a, b);
     retrieve(ids, a, b);
     return ids;
 }
 
 void Adt::store(int object_id, const double *x) {
     stored = false;
-    store(0, object_id, x);
+    if(SearchTree.size() == 0){
+        double xmin[ndim];
+        double xmax[ndim];
+        for(int i = 0; i < ndim; i++){
+            xmin[i] = 0.0;
+            xmax[i] = 1.0;
+        }
+        SearchTree.push_back(new Adt_elem(4, xmin, xmax, ndim, object_id, x));
+        nelem = 1;
+    } else {
+        store(0, object_id, x);
+    }
 }
 
 // ========== Private Implementation ==============
 void Adt::store(int elem_id, int object_id, const double *x) {
     if (stored) return;
     Adt_elem *elem = SearchTree[elem_id];
-    if (elem_id == 0 && elem->object_id == ADT_OBJECT_NOT_SET) {
-        if (!elem->contains_object(x, ndim)) {
-            printf(
-                "\nADT ERROR trying to store an object outside of the domin.");
-        }
-        assert(elem->contains_object(x, ndim));
-        elem->object_id = object_id;
-        for (int i = 0; i < ndim; i++) elem->object_x[i] = x[i];
-        nelem = 1;
-        return;
-    }
     if (elem->contains_object(x, ndim)) {
         // if kids exist, pass to them
         if (elem->lchild != ADT_NO_CHILD) store(elem->lchild, object_id, x);
@@ -159,7 +147,6 @@ void Adt::retrieve(std::vector<int> &ids, double *a, double *b) {
 
 void Adt::retrieve(int elem_id, std::vector<int> &ids, double *a, double *b) {
     Adt_elem *elem = SearchTree[elem_id];
-    if(elem_id == 0 && elem->object_id == ADT_OBJECT_NOT_SET) return;
     if (!elem->contains_hyper_rectangle(a, b, ndim)) return;
     if (elem->hyper_rectangle_contains_object(a, b, ndim))
         ids.push_back(elem->object_id);
