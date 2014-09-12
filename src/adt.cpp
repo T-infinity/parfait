@@ -159,6 +159,7 @@ void Adt::retrieve(std::vector<int> &ids, double *a, double *b) {
 
 void Adt::retrieve(int elem_id, std::vector<int> &ids, double *a, double *b) {
     Adt_elem *elem = SearchTree[elem_id];
+    if(elem_id == 0 && elem->object_id == ADT_OBJECT_NOT_SET) return;
     if (!elem->contains_hyper_rectangle(a, b, ndim)) return;
     if (elem->hyper_rectangle_contains_object(a, b, ndim))
         ids.push_back(elem->object_id);

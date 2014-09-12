@@ -10,6 +10,15 @@
 
 TEST_GROUP(Adt3DPoint) {} ;
 
+TEST(Adt3DPoint, StoreNoPoint){
+
+    Adt3DPoint adt(Extent(Point(0,0,0), Point(1,1,1)));
+    Extent domain({-1,-1,-1}, {2,2,2});
+    auto inside = adt.retrieve(domain);
+    LONGS_EQUAL(0, inside.size());
+
+}
+
 TEST(Adt3DPoint, StorePoint){
     Adt3DPoint adt(Extent(Point(0,0,0), Point(1,1,1)));
     Point point1(.1,.1,.1);
