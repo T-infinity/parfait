@@ -1,8 +1,4 @@
-Parfait = "/ump/fldmd/home/cdruyorj/Projects/mesh-tools/src/Parfait/"
-Vis = "/ump/fldmd/home/cdruyorj/Projects/mesh-tools/src/Parfait-vis/"
-Parallel = "/ump/fldmd/home/cdruyorj/Projects/mesh-tools/src/Parfait-parallel/"
-yoga = "/ump/fldmd/home/cdruyorj/Projects/yoga/"
-xml = "/ump/fldmd/home/cdruyorj/Projects/mesh-tools/src/tinyxml/"
+Parfait = "../../../"
 
 solution "MySolution"
    configurations { "Debug", "Release" }
@@ -12,17 +8,10 @@ project "TEST_ugridWriter.x"
    language "C++"
    includedirs { "include",
 			Parfait.."include",
-			Vis.."include",
-			Parallel.."include",
-			yoga.."include",
-			xml,
    }
    files {
 		"**.cpp",
 		Parfait.."src/*cpp",
-       Vis.."src/*cpp",
-       --Parallel.."src/*cpp",
-       yoga.."src/*cpp",
    }
 
   excludes {
@@ -40,7 +29,7 @@ project "TEST_ugridWriter.x"
 			--"metis",
 			--"irc",
 			--"imf",
-			"tinyxml",
+			--"tinyxml",
 		}
 
    buildoptions{ "--std=c++11 -g"}

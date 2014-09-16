@@ -16,7 +16,7 @@ TEST_GROUP(ugridWriterTests)
 
 TEST(ugridWriterTests,Exists)
 {
-	std::string gridFile = "/ump/fldmd/home/cdruyorj/Projects/grids/6cell.ugrid";
+	std::string gridFile = "../grids/6cell.ugrid";
 	using namespace UgridReader;
 	int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
 	readHeader(gridFile,nnodes,ntri,nquad,ntet,npyr,nprism,nhex);
