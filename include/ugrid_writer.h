@@ -4,8 +4,12 @@
 #include <vector>
 #include <stdlib.h>
 #include <string>
+#include "imported_ugrid.h"
 namespace UgridWriter
 {
+
+    void writeImportedUgrid(ImportedUgrid &ugrid, std::string filename);
+
 	/// Tools for writing files in native endianness
 	void writeHeader(std::string &filename,int nnodes,
 		int ntri,int nquad,
