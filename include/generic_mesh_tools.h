@@ -19,6 +19,8 @@
 
 #include <cmath>
 #include <stdexcept>
+#include <set>
+#include <array>
 
 namespace GenericMeshTools {
 
@@ -30,7 +32,7 @@ namespace GenericMeshTools {
 //          D 
 //         /|\
 //        / | \
-//       /  |  \  
+//       /  |  \
 //      /   |   \
 //     /    |    \
 //  A /     |     \ C 
@@ -51,8 +53,9 @@ inline double CompTetVolume(Point &a, Point &b, Point &c, Point &d) {
     Point v = Point::cross(v2, v3);
     return -Point::dot(v1, v) / 6.0;
 }
-template <class MeshType>
-Point computeCenter(MeshType &mesh, const std::vector<int> &nodes) {
+
+template <class MeshType, class container>
+Point computeCenter(MeshType &mesh, const container &nodes) {
     Point center(0, 0, 0);
     for (auto node : nodes) {
         Point a;
@@ -68,6 +71,14 @@ template <class MeshType, class CellType>
 Point cellCenter(MeshType &mesh, CellType &cell) {
     auto nodes = cell.getNodes();
     return GenericMeshTools::computeCenter(mesh, nodes);
+}
+
+template <class MeshType>
+Point cellCenter(MeshType &mesh_in, int cellId){
+
+    Mesh<MeshType> mesh(mesh_in);
+    auto cell = mesh.cell(cellId);
+    return cellCenter(mesh_in, cell);
 }
 
 template <class MeshType, class CellType>
@@ -91,6 +102,39 @@ inline double computeCellVolume(MeshType &mesh_in, CellType &&cell) {
         }
     }
     return volume_;
+}
+
+template <class MeshType>
+std::vector<std::array<int, 2>> getUniqueEdges(MeshType &mesh_in){
+
+    Mesh<MeshType> mesh(mesh_in);
+
+    typedef std::pair<int, int> Edge;
+
+    std::set<std::pair<int, int>> edgeSet;
+    for(auto cell : mesh.cells()){
+        for(auto face : cell){
+            auto nodes = face.getNodes();
+            for(int index = 0; index < nodes.size(); index++){
+                int node1 = nodes[index];
+                int node2 = nodes[(index+1) % nodes.size()];
+
+                edgeSet.insert(std::pair<int, int>(
+                            std::min(node1, node2),
+                            std::max(node1, node2)
+                            ));
+            }
+        }
+    }
+
+    std::vector<std::array<int, 2>> edges;
+    edges.reserve(edgeSet.size());
+    for(auto edge : edgeSet){
+        std::array<int, 2> e = {edge.first, edge.second};
+        edges.push_back(e);
+    }
+
+    return edges;
 }
 
 template <class MeshType, class FaceType>

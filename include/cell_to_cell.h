@@ -9,6 +9,7 @@
 #include "adt_builder.h"
 #include "extent_builder.h"
 #include <algorithm>
+#include "node_to_cell.h"
 
 #include <string>
 

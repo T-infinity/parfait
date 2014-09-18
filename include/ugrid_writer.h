@@ -8,7 +8,7 @@
 namespace UgridWriter
 {
 
-    void writeImportedUgrid(ImportedUgrid &ugrid, std::string filename);
+    void writeImportedUgrid(ImportedUgrid &ugrid, std::string filename, bool swapBytes);
 
 	/// Tools for writing files in native endianness
 	void writeHeader(std::string &filename,int nnodes,
