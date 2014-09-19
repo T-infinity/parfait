@@ -1,5 +1,4 @@
-Parallel = "/ump/fldmd/home/cdruyorj/Projects/mesh-tools/src/Parfait-parallel/"
-Parfait = "/ump/fldmd/home/cdruyorj/Projects/mesh-tools/src/Parfait/"
+Parfait = "../../../"
 
 solution "MySolution"
    configurations { "Debug", "Release" }
@@ -9,7 +8,6 @@ project "TEST_MessagePasser.x"
    language "C++"
    includedirs { "include",
    Parfait.."include",
-   	Parallel.."include",
         "/usr/local/pkgs-modules/cpputest_3.5/include/",
 		"../"
    }
@@ -17,7 +15,6 @@ project "TEST_MessagePasser.x"
 		"**.cpp",
 		"../*cpp",
 		Parfait.."src/*cpp",
-   		Parallel.."src/*cpp",
    }
 
   excludes {

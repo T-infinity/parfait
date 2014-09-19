@@ -39,15 +39,19 @@
 #include "vtk_hex_writer.h"
 #include "vtk_slice_writer.h"
 #include "vtk_surface_writer.h"
+#include "motion_matrix.h"
 
 #ifdef PARFAIT_WITH_ANN
 #include "kd_tree.h"
 #endif
 
+#ifdef PARFAIT_WITH_XML
+#include "tinyxml.h"
+#endif
+
 #ifdef PARFAIT_WITH_MPI
 #include "parallel_mesh_redistributor.h"
 #include "parallel_mesh_importer.h"
-#include "component_placer.h"
 	#ifdef PARFAIT_WITH_PARMETIS
 		#include "parmetis_prepper.h"
 	#endif
