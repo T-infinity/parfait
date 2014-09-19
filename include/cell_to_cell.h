@@ -3,12 +3,14 @@
 
 #include <stdio.h>
 #include <algorithm>
+#include <assert.h>
+#include <algorithm>
+#include <array>
+
 #include "vector_tools.h"
 #include "generic_mesh.h"
-#include <assert.h>
 #include "adt_builder.h"
 #include "extent_builder.h"
-#include <algorithm>
 #include "node_to_cell.h"
 
 #include <string>
@@ -72,7 +74,7 @@ std::vector<std::vector<int>> buildEdgeToCell(MeshType &mesh_in,
     std::vector<std::vector<int>> e2c(edges.size());
 
     for(int edgeId = 0; edgeId < edges.size(); edgeId++){
-        auto edge = edges[edgeId];
+        std::array<int,2> edge = edges[edgeId];
         auto sharedCells = getSharedCells(edge[0], edge[1], nodeToCell);
         e2c[edgeId] = sharedCells;
     }
