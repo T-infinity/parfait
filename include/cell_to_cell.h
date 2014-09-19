@@ -48,6 +48,37 @@ std::vector<std::vector<int>> buildNodeToCell(MeshType &mesh_i){
 }
 #endif
 
+inline std::vector<int> getSharedCells(int node1, int node2, 
+                                std::vector<std::vector<int>> &nodeToCell){
+
+    auto &cells1 = nodeToCell[node1];
+    auto &cells2 = nodeToCell[node2];
+
+    std::vector<int> shared;
+    for(int cell : cells1){
+        if(isIn(cells2, cell)){
+            shared.push_back(cell);
+        }
+    }
+    return shared;
+}
+
+template <typename MeshType>
+std::vector<std::vector<int>> buildEdgeToCell(MeshType &mesh_in,
+        std::vector<std::array<int, 2>> &edges ){
+
+    Mesh<MeshType> mesh(mesh_in);
+    auto nodeToCell = buildNodeToCell(mesh_in);
+    std::vector<std::vector<int>> e2c(edges.size());
+
+    for(int edgeId = 0; edgeId < edges.size(); edgeId++){
+        auto edge = edges[edgeId];
+        auto sharedCells = getSharedCells(edge[0], edge[1], nodeToCell);
+        e2c[edgeId] = sharedCells;
+    }
+    return e2c;
+}
+
 template <typename T> 
 std::vector<std::vector<int>> buildCellToCell_NoAdt(T &meshInterface)
 {

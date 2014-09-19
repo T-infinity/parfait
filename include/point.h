@@ -21,8 +21,9 @@ class Point
             return pos[i];
         }
         Point operator+(const Point &rhs) const;
-        Point operator-(const Point &rhs) const ;
-        Point operator*(const double a) const ;
+        Point operator-(const Point &rhs) const;
+        Point operator*(const double a) const;
+        Point operator/(const double a) const;
         Point operator*=(const double a);
         Point operator/=(const double a);
         Point operator+=(const Point &rhs);

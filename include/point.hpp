@@ -3,9 +3,6 @@
 #include <math.h>
 
 inline Point::Point(){
-    //pos[0] = 0;
-    //pos[1] = 0;
-    //pos[2] = 0;
 }
 
 inline Point::Point(double a, double b, double c){
@@ -49,6 +46,15 @@ inline Point Point::operator*(const double a) const
             a*pos[0], 
             a*pos[1], 
             a*pos[2]);
+}
+
+inline Point Point::operator/(const double a) const 
+{
+    double ooa = 1.0/a;
+    return Point(
+            ooa*pos[0], 
+            ooa*pos[1], 
+            ooa*pos[2]);
 }
 
 inline Point Point::operator*=(const double a)
