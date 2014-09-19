@@ -296,7 +296,6 @@ TEST(MessagePasserTests,Exists)
 		else
 		{
 			Recv(vec,0);
-			printf("Rank %i recv size %i\n",Rank(),vec.size());
 			LONGS_EQUAL(2,vec.size());
 			for(auto row:vec)
 			{
@@ -921,6 +920,14 @@ TEST(MessagePasserTests,Exists)
 				sum += junk + (double)i;
 			DOUBLES_EQUAL(sum,psum,MPI_DOUBLE_TOL);
 		}
+	}
+
+	{
+		// test max for integer
+		int val = Rank();
+		int max = ParallelMax(val,0);
+		if(Rank() == 0)
+			LONGS_EQUAL(NumberOfProcesses()-1,max);
 	}
 	
 	{

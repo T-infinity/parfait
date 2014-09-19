@@ -108,6 +108,10 @@ namespace MessagePasser
 	// sum single values to the root
 	template<typename T>
 	T ParallelSum(T value,int rootId);
+
+	// calculate max value across procs
+	template<typename T>
+	T ParallelMax(T value,int rootId);
 	
 	// get the max of values in a vector
 	template<typename T>
