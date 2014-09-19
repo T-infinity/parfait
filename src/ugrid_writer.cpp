@@ -5,6 +5,29 @@
 
 using std::vector;
 
+void UgridWriter::writeImportedUgrid(ImportedUgrid &ugrid, std::string filename, bool swapBytes)
+{
+
+    writeHeader(filename, ugrid.nodes.size() / 3, ugrid.triangles.size() / 3, 
+            ugrid.quads.size() / 4, ugrid.tets.size() / 4, 
+            ugrid.pyramids.size() / 5, ugrid.prisms.size() / 6, ugrid.hexs.size() / 8, swapBytes);
+
+
+    writeNodes(filename, ugrid.nodes.size() / 3, ugrid.nodes.data(), swapBytes);
+    writeTriangles(filename, ugrid.triangles.size() / 3, ugrid.triangles.data(), swapBytes);
+    writeQuads(filename, ugrid.quads.size() / 4, ugrid.quads.data(), swapBytes);
+    writeTriangleBoundaryTags(filename, ugrid.triangles.size() / 3, ugrid.triangleTags.data(), swapBytes);
+    writeQuadBoundaryTags(filename, ugrid.quads.size() / 4, ugrid.quadTags.data(), swapBytes);
+
+    writeTets(filename, ugrid.tets.size() / 4, ugrid.tets.data(), swapBytes);
+    writePyramids(filename, ugrid.pyramids.size() / 5, ugrid.pyramids.data(), swapBytes);
+    writePrisms(filename, ugrid.prisms.size() / 6, ugrid.prisms.data(), swapBytes);
+    writeHexs(filename, ugrid.hexs.size() / 8, ugrid.hexs.data(), swapBytes);
+
+
+
+}
+
 void UgridWriter::writeHeader(std::string &filename,int nnodes,
         int ntri,int nquad,
         int ntet,int npyr,int nprism,int nhex,bool swapBytes)

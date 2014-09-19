@@ -105,3 +105,14 @@ TEST(GenericMeshToolsTests, node2Cell)
     LONGS_EQUAL(2, node2Cell[25].size());
     LONGS_EQUAL(1, node2Cell[26].size());
 }
+
+TEST(GenericMeshToolsTests, UniqueEdges){
+
+    CartMesh cartMesh({0,0,0}, {1,1,1}, 1,1,1);
+    auto edges = GenericMeshTools::getUniqueEdges(cartMesh);
+    LONGS_EQUAL(12, edges.size());
+
+    for(auto edge : edges){
+        printf("\nEdge = %d %d", edge[0], edge[1]);
+    }
+}

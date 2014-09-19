@@ -9,7 +9,9 @@ void writeOffsets(FILE *f, std::vector<Hex> &boxes);
 void writeTypes(FILE *f, std::vector<Hex> &boxes);
 
 VtkHexWriter::VtkHexWriter(std::string filename_i): filename(filename_i)
-{}
+{
+    filename += ".vtu";
+}
 
 void VtkHexWriter::addHex(Hex b)
 {
