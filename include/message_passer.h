@@ -43,6 +43,14 @@ namespace MessagePasser
 	template<typename T>
 	void Send(std::vector<T> &vec,int destination);
 
+	// send a vector of vectors
+	template<typename T>
+	void Send(std::vector<std::vector<T>> &vec,int destination);
+	
+	// recv a vector of vectors
+	template<typename T>
+	void Recv(std::vector<std::vector<T>> &vec,int source);
+
 	// recv a vector (receiver doesn't know length)
 	template<typename T>
 	void Recv(std::vector<T> &vec,int source);

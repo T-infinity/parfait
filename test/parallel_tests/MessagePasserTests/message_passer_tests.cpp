@@ -19,6 +19,7 @@ TEST_GROUP(MessagePasserTests)
 TEST(MessagePasserTests,Exists)
 {
 	using namespace MessagePasser;
+	using std::vector;
 
 	// initialize mpi
 	Init();
@@ -279,6 +280,29 @@ TEST(MessagePasserTests,Exists)
 		}
 		// check that everyone has the right size vector
 		LONGS_EQUAL(0,(int)vec.size());
+	}
+	
+	// test Send for vector of vector of integers
+	{
+		vector<vector<int>> vec;
+		if(Rank() == 0)
+		{
+			vector<int> a = {1,2,3};
+			vec.push_back(a);
+			vec.push_back(a);
+			for(int i=1;i<NumberOfProcesses();i++)
+				Send(vec,i);
+		}
+		else
+		{
+			Recv(vec,0);
+			printf("Rank %i recv size %i\n",Rank(),vec.size());
+			LONGS_EQUAL(2,vec.size());
+			for(auto row:vec)
+			{
+				LONGS_EQUAL(3,row.size());
+			}
+		}
 	}
 
 	// test Gather() for integers
