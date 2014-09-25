@@ -1,5 +1,6 @@
 #include "ugrid_writer.h"
 #include "byteswap.h"
+#include "message_passer.h"
 #include <stdexcept>
 #include <vector>
 
@@ -7,12 +8,35 @@ using std::vector;
 
 void UgridWriter::writeImportedUgrid(ImportedUgrid &ugrid, std::string filename, bool swapBytes)
 {
+	using namespace MessagePasser;
+	int numberOfNodes      = ParallelSum(ugrid.numberOfNodes(),0);
+	int numberOfTets       = ParallelSum(ugrid.tets.size()/4,0);
+   	int numberOfPyramids   = ParallelSum(ugrid.pyramids.size()/5,0);
+	int numberOfPrisms     = ParallelSum(ugrid.prisms.size()/6,0);
+	int numberOfHexs       = ParallelSum(ugrid.hexs.size()/8,0);
+	int numberOfTriangles  = ParallelSum(ugrid.triangles.size()/3,0);
+	int numberOfQuads      = ParallelSum(ugrid.quads.size()/4,0);
 
-    writeHeader(filename, ugrid.nodes.size() / 3, ugrid.triangles.size() / 3, 
+	if(Rank() == 0)
+	{
+    	writeHeader(filename, ugrid.nodes.size() / 3, ugrid.triangles.size() / 3, 
             ugrid.quads.size() / 4, ugrid.tets.size() / 4, 
             ugrid.pyramids.size() / 5, ugrid.prisms.size() / 6, ugrid.hexs.size() / 8, swapBytes);
+	}
+
+	// first make lists of nodes and elements
+	vector<double> myNodes(ugrid.numberOfNodes(),0.0);
+	vector<int>    myTets;
+	vector<int>    myPyrs;
+	vector<int>    myPrisms;
+	vector<int>    myHexs;
 
 
+	// then transfer to the root process and write them out
+	for(int i=0;i<NumberOfProcesses();i++)
+	{
+		
+	}
     writeNodes(filename, ugrid.nodes.size() / 3, ugrid.nodes.data(), swapBytes);
     writeTriangles(filename, ugrid.triangles.size() / 3, ugrid.triangles.data(), swapBytes);
     writeQuads(filename, ugrid.quads.size() / 4, ugrid.quads.data(), swapBytes);
@@ -23,9 +47,6 @@ void UgridWriter::writeImportedUgrid(ImportedUgrid &ugrid, std::string filename,
     writePyramids(filename, ugrid.pyramids.size() / 5, ugrid.pyramids.data(), swapBytes);
     writePrisms(filename, ugrid.prisms.size() / 6, ugrid.prisms.data(), swapBytes);
     writeHexs(filename, ugrid.hexs.size() / 8, ugrid.hexs.data(), swapBytes);
-
-
-
 }
 
 void UgridWriter::writeHeader(std::string &filename,int nnodes,
