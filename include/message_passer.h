@@ -14,6 +14,7 @@ namespace MessagePasser
 	int NumberOfProcesses();
 	// Overloaded functions to return correct MPI Datatype without dynamic type checking
 	inline MPI_Datatype Type(int    value) {return MPI_INT;}
+	inline MPI_Datatype Type(size_t value) {return MPI_INT;}
 	inline MPI_Datatype Type(float  value) {return MPI_FLOAT;}
 	inline MPI_Datatype Type(double value) {return MPI_DOUBLE;}
 	inline void Barrier() {MPI_Barrier(MPI_COMM_WORLD);}
