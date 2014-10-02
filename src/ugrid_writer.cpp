@@ -1,5 +1,6 @@
 #include "ugrid_writer.h"
 #include "byteswap.h"
+#include "message_passer.h"
 #include <stdexcept>
 #include <vector>
 
@@ -7,25 +8,149 @@ using std::vector;
 
 void UgridWriter::writeImportedUgrid(ImportedUgrid &ugrid, std::string filename, bool swapBytes)
 {
+	using namespace MessagePasser;
+	int numberOfNodes      = ParallelSum(ugrid.numberOfNodes(),0);
+	int numberOfTets       = ParallelSum(ugrid.tets.size()/4,0);
+   	int numberOfPyramids   = ParallelSum(ugrid.pyramids.size()/5,0);
+	int numberOfPrisms     = ParallelSum(ugrid.prisms.size()/6,0);
+	int numberOfHexs       = ParallelSum(ugrid.hexs.size()/8,0);
+	int numberOfTriangles  = ParallelSum(ugrid.triangles.size()/3,0);
+	int numberOfQuads      = ParallelSum(ugrid.quads.size()/4,0);
 
-    writeHeader(filename, ugrid.nodes.size() / 3, ugrid.triangles.size() / 3, 
-            ugrid.quads.size() / 4, ugrid.tets.size() / 4, 
-            ugrid.pyramids.size() / 5, ugrid.prisms.size() / 6, ugrid.hexs.size() / 8, swapBytes);
+	if(Rank() == 0)
+	{
+    	writeHeader(filename, numberOfNodes, numberOfTriangles, 
+            numberOfQuads, numberOfTets, numberOfPyramids, 
+			numberOfPrisms, numberOfHexs, swapBytes);
+	}
 
+	// transfer nodes to root proc and write out in order
+	if(Rank() == 0)
+	{
+    	writeNodes(filename, ugrid.nodes.size()/3, ugrid.nodes.data(), swapBytes);
+		vector<double> recvNodes;
+		for(int proc=1;proc<NumberOfProcesses();proc++)
+		{
+			Recv(recvNodes,proc);
+    		writeNodes(filename, recvNodes.size()/3, recvNodes.data(), swapBytes);
+		}
+	}
+	else
+		Send(ugrid.nodes,0);
 
-    writeNodes(filename, ugrid.nodes.size() / 3, ugrid.nodes.data(), swapBytes);
-    writeTriangles(filename, ugrid.triangles.size() / 3, ugrid.triangles.data(), swapBytes);
-    writeQuads(filename, ugrid.quads.size() / 4, ugrid.quads.data(), swapBytes);
-    writeTriangleBoundaryTags(filename, ugrid.triangles.size() / 3, ugrid.triangleTags.data(), swapBytes);
-    writeQuadBoundaryTags(filename, ugrid.quads.size() / 4, ugrid.quadTags.data(), swapBytes);
+	// transfer triangles to root proc and write out in order
+	if(Rank() == 0)
+	{
+    	writeTriangles(filename, ugrid.triangles.size() / 3, ugrid.triangles.data(), swapBytes);
+		vector<int> recvTriangles;
+		for(int proc=1;proc<NumberOfProcesses();proc++)
+		{
+			Recv(recvTriangles,proc);
+			writeTriangles(filename, recvTriangles.size() / 3, recvTriangles.data(), swapBytes);
+		}
+	}
+	else
+		Send(ugrid.triangles,0);
 
-    writeTets(filename, ugrid.tets.size() / 4, ugrid.tets.data(), swapBytes);
-    writePyramids(filename, ugrid.pyramids.size() / 5, ugrid.pyramids.data(), swapBytes);
-    writePrisms(filename, ugrid.prisms.size() / 6, ugrid.prisms.data(), swapBytes);
-    writeHexs(filename, ugrid.hexs.size() / 8, ugrid.hexs.data(), swapBytes);
+	// transfer quads to root proc and write out in order
+	if(Rank() == 0)
+	{
+    	writeQuads(filename, ugrid.quads.size() / 4, ugrid.quads.data(), swapBytes);
+		vector<int> recvQuads;
+		for(int proc=1;proc<NumberOfProcesses();proc++)
+		{
+			Recv(recvQuads,proc);
+    		writeQuads(filename, recvQuads.size()/4, recvQuads.data(), swapBytes);
+		}
+	}
+	else
+		Send(ugrid.quads,0);
 
+	// transfer triangle boundary tags to root and write out in order
+	if(Rank() == 0)
+	{
+    	writeTriangleBoundaryTags(filename, ugrid.triangles.size() / 3, 
+							ugrid.triangleTags.data(), swapBytes);
+		vector<int> recvTriangleTags;
+		for(int proc=1;proc<NumberOfProcesses();proc++)
+		{
+			Recv(recvTriangleTags,proc);
+    		writeTriangleBoundaryTags(filename, recvTriangleTags.size(), 
+							recvTriangleTags.data(), swapBytes);
+		}
+	}
+	else
+		Send(ugrid.triangleTags,0);
 
+	// transfer quad boundary tags to root and write out in order
+	if(Rank() == 0)
+	{
+    	writeQuadBoundaryTags(filename, ugrid.quads.size() / 4, ugrid.quadTags.data(), swapBytes);
+		vector<int> recvQuadTags;
+		for(int proc=1;proc<NumberOfProcesses();proc++)
+		{
+			Recv(recvQuadTags,proc);
+    		writeQuadBoundaryTags(filename, recvQuadTags.size(), recvQuadTags.data(), swapBytes);
+		}
+	}
+	else
+		Send(ugrid.quadTags,0);
 
+	// transfer tets to root and write out in order
+	if(Rank() == 0)
+	{
+   	 	writeTets(filename, ugrid.tets.size() / 4, ugrid.tets.data(), swapBytes);
+		vector<int> recvTets;
+		for(int proc=1;proc<NumberOfProcesses();proc++)
+		{
+			Recv(recvTets,proc);
+   	 		writeTets(filename, recvTets.size() / 4, recvTets.data(), swapBytes);
+		}
+	}
+	else
+		Send(ugrid.tets,0);
+
+	// transfer pyramids to root and write out in order
+	if(Rank() == 0)
+	{
+    	writePyramids(filename, ugrid.pyramids.size() / 5, ugrid.pyramids.data(), swapBytes);
+		vector<int> recvPyramids;
+		for(int proc=1;proc<NumberOfProcesses();proc++)
+		{
+			Recv(recvPyramids,proc);
+    		writePyramids(filename, recvPyramids.size() / 5, recvPyramids.data(), swapBytes);
+		}
+	}
+	else
+		Send(ugrid.pyramids,0);
+
+	// transfer prisms to root and write out in order
+	if(Rank() == 0)
+	{
+    	writePrisms(filename, ugrid.prisms.size() / 6, ugrid.prisms.data(), swapBytes);
+		vector<int> recvPrisms;
+		for(int proc=1;proc<NumberOfProcesses();proc++)
+		{
+			Recv(recvPrisms,proc);
+    		writePrisms(filename, recvPrisms.size() / 6, recvPrisms.data(), swapBytes);
+		}
+	}
+	else
+		Send(ugrid.prisms,0);
+
+	// send hexs to root and write out in order
+	if(Rank() == 0)
+	{
+    	writeHexs(filename, ugrid.hexs.size() / 8, ugrid.hexs.data(), swapBytes);
+		vector<int> recvHexs;
+		for(int proc=1;proc<NumberOfProcesses();proc++)
+		{
+			Recv(recvHexs,proc);
+    		writeHexs(filename, recvHexs.size() / 8, recvHexs.data(), swapBytes);
+		}
+	}
+	else
+		Send(ugrid.hexs,0);
 }
 
 void UgridWriter::writeHeader(std::string &filename,int nnodes,

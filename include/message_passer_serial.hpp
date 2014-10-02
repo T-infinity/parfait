@@ -117,6 +117,10 @@ namespace MessagePasser
 	template<typename T>
 	T ParallelSum(T value,int rootid){return value;}
 	
+	// calculate max value across procs
+	template<typename T>
+	T ParallelMax(T value,int rootId){return value;}
+	
 	// get the max of values in a vector
 	template<typename T>
 	std::vector<T> ParallelMax(const std::vector<T> &vec,int rootId){return vec;}

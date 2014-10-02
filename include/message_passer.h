@@ -14,6 +14,7 @@ namespace MessagePasser
 	int NumberOfProcesses();
 	// Overloaded functions to return correct MPI Datatype without dynamic type checking
 	inline MPI_Datatype Type(int    value) {return MPI_INT;}
+	inline MPI_Datatype Type(size_t value) {return MPI_INT;}
 	inline MPI_Datatype Type(float  value) {return MPI_FLOAT;}
 	inline MPI_Datatype Type(double value) {return MPI_DOUBLE;}
 	inline void Barrier() {MPI_Barrier(MPI_COMM_WORLD);}
@@ -108,6 +109,10 @@ namespace MessagePasser
 	// sum single values to the root
 	template<typename T>
 	T ParallelSum(T value,int rootId);
+
+	// calculate max value across procs
+	template<typename T>
+	T ParallelMax(T value,int rootId);
 	
 	// get the max of values in a vector
 	template<typename T>
