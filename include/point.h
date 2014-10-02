@@ -30,6 +30,7 @@ class Point
         Point operator-=(const Point &rhs) ;
         bool operator==(const Point &rhs);
         bool operator!=(const Point &rhs);
+        void normalize();
         friend Point operator*(double a, const Point &rhs);
 
         static double distance(const Point &a, const Point &b);

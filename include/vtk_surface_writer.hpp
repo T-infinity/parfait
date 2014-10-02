@@ -17,7 +17,9 @@ void VtkSurfaceWriter<Mesh>::addScalarField(bool isNodeData,string fieldName,int
 {
 	    int n = isNodeData?mesh.numberOfNodes():mesh.numberOfBoundaryFaces();
 		if(Rank() == 0)
-			printf("Adding integer field of length %i\n",n);
+        {
+			//printf("Adding integer field of length %i\n",n);
+        }
 		intFields.push_back(VtkField<int>(isNodeData,fieldName,1,n,data,boundaryNodeIdMap));
 }
 
@@ -170,7 +172,9 @@ void VtkSurfaceWriter<Mesh>::writeFieldData()
 		if(!field.isNodeData())
 		{
 			if(Rank() == 0)
-				printf("appending an integer field for cell data\n");
+            {
+				//printf("appending an integer field for cell data\n");
+            }
 			field.append(filename);
 		}
 	// append cell based float data

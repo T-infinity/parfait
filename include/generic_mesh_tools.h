@@ -143,6 +143,11 @@ Point faceCenter(MeshType &mesh, FaceType &face) {
     return GenericMeshTools::computeCenter(mesh,faceNodes);
 }
 
+template <class MeshType>
+Point getFaceArea(MeshType &mesh, int cellId, int faceId){
+
+}
+
 template <class MeshType, class FaceType>
 Point getFaceArea(MeshType &mesh, FaceType &face) {
     auto faceNodeIds = face.getNodes();

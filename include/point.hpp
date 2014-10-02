@@ -135,3 +135,8 @@ inline Point Point::cross(const Point &a, const Point &b){
             a[0]*b[1] - b[0]*a[1]
             );
 }
+
+inline void Point::normalize() {
+    double mag = magnitude(*this);
+    *this /= mag;
+}

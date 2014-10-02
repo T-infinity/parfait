@@ -1,6 +1,6 @@
-#include "CppUTest/CommandLineTestRunner.h"
 #include "parfait.h"
 #include <vector>
+#include "CppUTest/CommandLineTestRunner.h"
 
 using std::vector;
 
