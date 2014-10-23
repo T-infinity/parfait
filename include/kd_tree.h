@@ -16,6 +16,7 @@ class KdTree
 		void findNearestNeighbors(int k,double *queryPoint,int *nbrIds,double *distances,double fuzz);
 		~KdTree();
 	private:
+	bool isEmpty;
 	int nPts;
 	int dim;
 	int previousK;
