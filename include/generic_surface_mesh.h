@@ -2,12 +2,12 @@
 #define GENERIC_SURFACE_MESH_H
 
 template <class MeshType>
-class GenericSurfaceMesh
+class SurfaceMesh
 {
     protected:
         MeshType &mesh;
     public:
-        GenericSurfaceMesh(MeshType &mesh_in) : mesh(mesh_in){}
+        SurfaceMesh(MeshType &mesh_in) : mesh(mesh_in){}
 
         int numberOfBoundaryFaces() const
         {return mesh.numberOfBoundaryFaces();}
