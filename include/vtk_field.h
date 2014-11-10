@@ -24,7 +24,7 @@ class VtkField
 		// get data at a single location (scalar data)
 		T getElement(int id);
 		// get pointer to block of data (vector data)
-		T* getBlock(int id);
+		const T* getBlock(int id);
 		inline int Type() {T t;return Type(t);}
 		std::string name();
 		bool isNodeData(){return nodeBased;}
