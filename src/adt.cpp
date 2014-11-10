@@ -58,7 +58,7 @@ Adt::Adt(int adt_type) {
 
 // ============= Public Interface ===============
 
-std::vector<int> Adt::retrieve(const double *extent) {
+std::vector<int> Adt::retrieve(const double *extent) const {
     double a[6], b[6];
     std::vector<int> ids;
     if(SearchTree.size() == 0){
@@ -141,11 +141,11 @@ void Adt::store(int elem_id, int object_id, const double *x) {
     }
 }
 
-void Adt::retrieve(std::vector<int> &ids, double *a, double *b) {
+void Adt::retrieve(std::vector<int> &ids, double *a, double *b) const {
     retrieve(0, ids, a, b);
 }
 
-void Adt::retrieve(int elem_id, std::vector<int> &ids, double *a, double *b) {
+void Adt::retrieve(int elem_id, std::vector<int> &ids, double *a, double *b) const {
     Adt_elem *elem = SearchTree[elem_id];
     if (!elem->contains_hyper_rectangle(a, b, ndim)) return;
     if (elem->hyper_rectangle_contains_object(a, b, ndim))
@@ -155,7 +155,7 @@ void Adt::retrieve(int elem_id, std::vector<int> &ids, double *a, double *b) {
 }
 
 void Adt::create_hyper_rectangle_from_extent(const double *extent, double *a,
-                                             double *b) {
+                                             double *b) const {
     if (ndim == 2) {
         a[0] = extent[0];
         a[1] = extent[1];

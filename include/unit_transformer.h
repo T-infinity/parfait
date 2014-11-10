@@ -24,7 +24,7 @@ class UnitTransformer {
         return scale;
     }
 
-    inline Point ToUnitSpace(const Point &physicalPoint) {
+    inline Point ToUnitSpace(const Point &physicalPoint) const {
         Point temp(physicalPoint);
         temp[0] -= extent.lo[0];
         temp[1] -= extent.lo[1];
@@ -37,7 +37,7 @@ class UnitTransformer {
         return temp;
     }
 
-    inline Point ToPhysicalSpace(const Point &unitPoint) {
+    inline Point ToPhysicalSpace(const Point &unitPoint) const {
         Point temp(unitPoint);
         temp[0] *= scale;
         temp[1] *= scale;

@@ -35,7 +35,7 @@ class VtkField
 		std::vector<int> localIds;
 		int blockSize;
 		int nBlocks;
-		T *data;
+		const T *data;
 		inline int Type(int x)    {return INT32_FIELD;}
 		inline int Type(float x)  {return FLOAT32_FIELD;}
 		inline int Type(double x) {return FLOAT64_FIELD;}
