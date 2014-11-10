@@ -135,7 +135,7 @@ TEST(ImportedUgridTests,BoundaryFaceTests)
 	ImportedUgrid ugrid(nodes,triangles,quads,
 			tets,pyramids,prisms,hexs, triangleTags, quadTags);
 
-    GenericSurfaceMesh<ImportedUgrid> mesh(ugrid);
+    SurfaceMesh<ImportedUgrid> mesh(ugrid);
     LONGS_EQUAL(4, mesh.numberOfBoundaryFaces());
     for(auto id : range(mesh.numberOfBoundaryFaces())){
         LONGS_EQUAL(3, mesh.numberOfNodesInBoundaryFace(id));

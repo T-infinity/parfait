@@ -6,6 +6,7 @@ KdTree::KdTree()
 {
 	printf("Empty constructor called\n");
 	fflush(stdout);
+	isEmpty = true;
 	nPts = 0;
 	dim = 0;
 	previousK = 0;
@@ -19,15 +20,30 @@ KdTree::KdTree()
 KdTree::KdTree(int numberOfPoints,double *dataPoints,int dimensions)
 	:nPts(numberOfPoints), dim(dimensions)
 {
-	nnIdx = new ANNidx[1];
-	dists = new ANNdist[1];
-	previousK = 1;
-	dataPts = annAllocPts(nPts,dim);
-	queryPt = annAllocPt(dim);
-	for(int i=0;i<nPts;i++)
-		for(int j=0;j<dim;j++)
-			dataPts[i][j] = dataPoints[i*dim+j];
-	tree = new ANNkd_tree(dataPts,nPts,dim);
+	if(numberOfPoints > 0)
+	{
+		nnIdx = new ANNidx[1];
+		dists = new ANNdist[1];
+		previousK = 1;
+		dataPts = annAllocPts(nPts,dim);
+		queryPt = annAllocPt(dim);
+		for(int i=0;i<nPts;i++)
+			for(int j=0;j<dim;j++)
+				dataPts[i][j] = dataPoints[i*dim+j];
+		tree = new ANNkd_tree(dataPts,nPts,dim);
+	}
+	else
+	{
+		isEmpty = true;
+		nPts = 0;
+		dim = 0;
+		previousK = 0;
+		nnIdx = NULL;
+		dists = NULL;
+		dataPts = NULL;
+		queryPt = NULL;
+		tree = NULL;
+	}
 }
 
 KdTree::KdTree(const KdTree &obj)
@@ -56,6 +72,7 @@ KdTree::KdTree(KdTree &&other)    // move constructor
 
 KdTree::~KdTree()
 {
+	if(isEmpty) return;
 	if(dataPts != NULL) annDeallocPts(dataPts);
 	if(queryPt != NULL) annDeallocPt(queryPt);
 	delete tree;

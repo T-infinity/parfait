@@ -16,7 +16,9 @@ project "ALL_PARFAIT_TESTS.x"
 
    links { "CppUTest" } 
 
-   buildoptions{ "--std=c++11",}
+   buildoptions{ "--std=c++11", "-fprofile-arcs", "-ftest-coverage"}
+   linkoptions{ "-fprofile-arcs", "-ftest-coverage"}
+
 
    configuration "Debug"
      defines("_DEBUG")
