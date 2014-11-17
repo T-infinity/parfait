@@ -10,8 +10,7 @@ void Adt3DPoint::store(int Id, const Point &point)
     adt.store(Id, &storePoint[0]);
 }
 
-std::vector<int> Adt3DPoint::retrieve(const Extent &domain)
-{
+std::vector<int> Adt3DPoint::retrieve(const Extent &domain) const {
     Extent search(unitTransformer.ToUnitSpace(domain.lo), 
                   unitTransformer.ToUnitSpace(domain.hi));
     return adt.retrieve(&search.lo[0]);

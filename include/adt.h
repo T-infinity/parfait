@@ -22,17 +22,17 @@ class Adt
 		~Adt();
 		Adt(int adt_type);
 		void store(int object_id, const double *x);	
-        std::vector<int> retrieve(const double *extent);
+        std::vector<int> retrieve(const double *extent) const;
 		void print_debug_stats(FILE *f);
 	private:
 		Adt();
 		int ndim;
 		int type;
 		bool stored;
-		void retrieve(std::vector<int> &ids,double *a,double *b);
-		void create_hyper_rectangle_from_extent( const double *extent,double *a,double *b);
+		void retrieve(std::vector<int> &ids,double *a,double *b) const;
+		void create_hyper_rectangle_from_extent( const double *extent,double *a,double *b) const;
 		void store(int elem_id,int object_id, const double *x);	
-		void retrieve(int elem_id,std::vector<int> &ids,double *a,double *b);
+		void retrieve(int elem_id,std::vector<int> &ids,double *a,double *b) const;
 };
 
 

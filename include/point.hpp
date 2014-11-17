@@ -103,11 +103,21 @@ inline bool Point::operator==(const Point &rhs){
 }
 
 inline bool Point::operator!=(const Point &rhs){
-    if(pos[0] == rhs.pos[0])
+    if(pos[0] != rhs.pos[0])
+        return true;
+    if(pos[1] != rhs.pos[1]) 
+        return true;
+    if(pos[2] != rhs.pos[2])
+        return true;
+    return false;
+}
+
+inline bool Point::approxEqual(const Point &rhs, double tol) const{
+    if(pos[0] +tol < rhs.pos[0] or pos[0] - tol > rhs.pos[0])
         return false;
-    if(pos[1] == rhs.pos[1])
+    if(pos[1] +tol < rhs.pos[1] or pos[1] - tol > rhs.pos[1])
         return false;
-    if(pos[2] == rhs.pos[2])
+    if(pos[2] +tol < rhs.pos[2] or pos[2] - tol > rhs.pos[2])
         return false;
     return true;
 }
@@ -139,4 +149,10 @@ inline Point Point::cross(const Point &a, const Point &b){
 inline void Point::normalize() {
     double mag = magnitude(*this);
     *this /= mag;
+}
+
+inline Point Point::normalize(const Point &a){
+    Point b{a};
+    b.normalize();
+    return b;
 }

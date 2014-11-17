@@ -32,7 +32,7 @@ T VtkField<T>::getElement(int id)
 }
 
 template<typename T>
-T* VtkField<T>::getBlock(int id)
+const T* VtkField<T>::getBlock(int id)
 {
 	return &data[blockSize*id];
 }

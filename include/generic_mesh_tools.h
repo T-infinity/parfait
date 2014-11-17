@@ -45,7 +45,7 @@ namespace GenericMeshTools {
 //          B                  
 //           
 //
-inline double CompTetVolume(Point &a, Point &b, Point &c, Point &d) {
+inline double CompTetVolume(const Point &a, const Point &b, const Point &c, const Point &d) {
 
     Point v1 = a - d;
     Point v2 = b - d;

@@ -45,7 +45,7 @@ TEST(VtkFieldTests,TestIntVectorData)
 {
 	vector<int> vec(4,1);
 	VtkField<int> field(true,"TestField",4,1,vec.data());
-	int *x = field.getBlock(0);
+	const int *x = field.getBlock(0);
 	LONGS_EQUAL(1,x[0]);
 }
 
@@ -53,7 +53,7 @@ TEST(VtkFieldTests,TestFloatVectorData)
 {
 	vector<float> vec(4,1.1);
 	VtkField<float> field(true,"TestField",4,1,vec.data());
-	float *x = field.getBlock(0);
+	const float *x = field.getBlock(0);
 	DOUBLES_EQUAL(1.1,x[0],1.0e-5);
 }
 
@@ -61,7 +61,7 @@ TEST(VtkFieldTests,TestDoubleVectorData)
 {
 	vector<double> vec(4,1.1);
 	VtkField<double> field(true,"TestField",4,1,vec.data());
-	double *x = field.getBlock(0);
+	const double *x = field.getBlock(0);
 	DOUBLES_EQUAL(1.1,x[0],1.0e-15);
 }
 

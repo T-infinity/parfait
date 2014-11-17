@@ -30,6 +30,7 @@ class Point
         Point operator-=(const Point &rhs) ;
         bool operator==(const Point &rhs);
         bool operator!=(const Point &rhs);
+        bool approxEqual(const Point &rhs, double tol = 1.0e-14) const;
         void normalize();
         friend Point operator*(double a, const Point &rhs);
 
@@ -37,6 +38,7 @@ class Point
         static double dot(const Point &a, const Point &b);
         static double magnitude(const Point &a);
         static Point cross(const Point &a, const Point &b);
+        static Point normalize(const Point &a);
 
         void Print() const;
 };
