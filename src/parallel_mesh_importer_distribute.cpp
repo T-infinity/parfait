@@ -1,10 +1,10 @@
-#include "parallel_mesh_importer.h"
+#include "parallel_mesh_reader_naive.h"
 
 using namespace UgridReader;
 using namespace MessagePasser;
 using std::vector;
 
-void ParallelMeshImporter::distributeNodes()
+void ParallelMeshReaderNaive::distributeNodes()
 {
 	if(Rank() == 0)
 	{
@@ -20,7 +20,7 @@ void ParallelMeshImporter::distributeNodes()
 		Recv(myNodes,0);
 }
 
-void ParallelMeshImporter::distributeTriangles()
+void ParallelMeshReaderNaive::distributeTriangles()
 {
 	if(Rank() == 0)
 	{
@@ -42,7 +42,7 @@ void ParallelMeshImporter::distributeTriangles()
 	}
 }
 
-void ParallelMeshImporter::distributeQuads()
+void ParallelMeshReaderNaive::distributeQuads()
 {
 	if(Rank() == 0)
 	{
@@ -64,7 +64,7 @@ void ParallelMeshImporter::distributeQuads()
 	}
 }
 
-void ParallelMeshImporter::distributeTets()
+void ParallelMeshReaderNaive::distributeTets()
 {
 	if(Rank() == 0)
 	{
@@ -80,7 +80,7 @@ void ParallelMeshImporter::distributeTets()
 		Recv(myTets,0);
 }
 
-void ParallelMeshImporter::distributePyramids()
+void ParallelMeshReaderNaive::distributePyramids()
 {
 	if(Rank() == 0)
 	{
@@ -96,7 +96,7 @@ void ParallelMeshImporter::distributePyramids()
 		Recv(myPyramids,0);
 }
 
-void ParallelMeshImporter::distributePrisms()
+void ParallelMeshReaderNaive::distributePrisms()
 {
 	if(Rank() == 0)
 	{
@@ -112,7 +112,7 @@ void ParallelMeshImporter::distributePrisms()
 		Recv(myPrisms,0);
 }
 
-void ParallelMeshImporter::distributeHexs()
+void ParallelMeshReaderNaive::distributeHexs()
 {
 	if(Rank() == 0)
 	{
@@ -128,7 +128,7 @@ void ParallelMeshImporter::distributeHexs()
 		Recv(myHexs,0);
 }
 
-std::vector<double> ParallelMeshImporter::getNodes(int begin,int end)
+std::vector<double> ParallelMeshReaderNaive::getNodes(int begin,int end)
 {
 	//printf("Grid node map ");
 	//for(int count:gridNodeMap)
@@ -181,7 +181,7 @@ std::vector<double> ParallelMeshImporter::getNodes(int begin,int end)
 	return nodeBuffer;
 }
 
-std::vector<int> ParallelMeshImporter::getTriangles(int begin,int end)
+std::vector<int> ParallelMeshReaderNaive::getTriangles(int begin,int end)
 {
 	std::vector<int> triangleBuffer(3*(end-begin),0.0);
 	int firstGrid  = getFirstGrid(gridTriangleMap,begin);
@@ -224,7 +224,7 @@ std::vector<int> ParallelMeshImporter::getTriangles(int begin,int end)
 	return triangleBuffer;
 }
 
-vector<int> ParallelMeshImporter::getTriangleTags(int begin,int end)
+vector<int> ParallelMeshReaderNaive::getTriangleTags(int begin,int end)
 {
 	std::vector<int> triangleTagBuffer(end-begin,0);
 	int firstGrid  = getFirstGrid(gridTriangleMap,begin);
@@ -267,7 +267,7 @@ vector<int> ParallelMeshImporter::getTriangleTags(int begin,int end)
 	return triangleTagBuffer;
 }
 
-std::vector<int> ParallelMeshImporter::getQuads(int begin,int end)
+std::vector<int> ParallelMeshReaderNaive::getQuads(int begin,int end)
 {
 	std::vector<int> quadBuffer(4*(end-begin),0.0);
 	int firstGrid  = getFirstGrid(gridQuadMap,begin);
@@ -310,7 +310,7 @@ std::vector<int> ParallelMeshImporter::getQuads(int begin,int end)
 	return quadBuffer;
 }
 
-vector<int> ParallelMeshImporter::getQuadTags(int begin,int end)
+vector<int> ParallelMeshReaderNaive::getQuadTags(int begin,int end)
 {
 	std::vector<int> quadTagBuffer(end-begin,0);
 	int firstGrid  = getFirstGrid(gridQuadMap,begin);
@@ -353,7 +353,7 @@ vector<int> ParallelMeshImporter::getQuadTags(int begin,int end)
 	return quadTagBuffer;
 }
 
-std::vector<int> ParallelMeshImporter::getTets(int begin,int end)
+std::vector<int> ParallelMeshReaderNaive::getTets(int begin,int end)
 {
 	std::vector<int> tetBuffer(4*(end-begin),0);
 	int firstGrid  = getFirstGrid(gridTetMap,begin);
@@ -395,7 +395,7 @@ std::vector<int> ParallelMeshImporter::getTets(int begin,int end)
 	return tetBuffer;
 }
 
-std::vector<int> ParallelMeshImporter::getPyramids(int begin,int end)
+std::vector<int> ParallelMeshReaderNaive::getPyramids(int begin,int end)
 {
 	std::vector<int> pyramidBuffer(5*(end-begin),0.0);
 	int firstGrid  = getFirstGrid(gridPyramidMap,begin);
@@ -438,7 +438,7 @@ std::vector<int> ParallelMeshImporter::getPyramids(int begin,int end)
 	return pyramidBuffer;
 }
 
-std::vector<int> ParallelMeshImporter::getPrisms(int begin,int end)
+std::vector<int> ParallelMeshReaderNaive::getPrisms(int begin,int end)
 {
 	std::vector<int> prismBuffer(6*(end-begin),0.0);
 	int firstGrid  = getFirstGrid(gridPrismMap,begin);
@@ -482,7 +482,7 @@ std::vector<int> ParallelMeshImporter::getPrisms(int begin,int end)
 	return prismBuffer;
 }
 
-std::vector<int> ParallelMeshImporter::getHexs(int begin,int end)
+std::vector<int> ParallelMeshReaderNaive::getHexs(int begin,int end)
 {
 	std::vector<int> hexBuffer(8*(end-begin),0.0);
 	int firstGrid  = getFirstGrid(gridHexMap,begin);
@@ -525,7 +525,7 @@ std::vector<int> ParallelMeshImporter::getHexs(int begin,int end)
 	return hexBuffer;
 }
 
-int ParallelMeshImporter::getFirstGrid(std::vector<int> &gridMap,int begin)
+int ParallelMeshReaderNaive::getFirstGrid(std::vector<int> &gridMap,int begin)
 {
 	int ngrid = (int)gridFiles.size();
 	for(int i=0;i<ngrid;i++)
@@ -534,7 +534,7 @@ int ParallelMeshImporter::getFirstGrid(std::vector<int> &gridMap,int begin)
 	assert(false);
 }
 
-int ParallelMeshImporter::getLastGrid(std::vector<int> &gridMap,int end)
+int ParallelMeshReaderNaive::getLastGrid(std::vector<int> &gridMap,int end)
 {
 	if(0==end){return 0;}
 	int ngrid = (int)gridFiles.size();
@@ -544,7 +544,7 @@ int ParallelMeshImporter::getLastGrid(std::vector<int> &gridMap,int end)
 	assert(false);
 }
 
-int ParallelMeshImporter::getBeginIndex(std::vector<int> &gridMap,int begin)
+int ParallelMeshReaderNaive::getBeginIndex(std::vector<int> &gridMap,int begin)
 {
 	int ngrid = (int)gridFiles.size();
 	for(int i=0;i<ngrid;i++)
@@ -555,7 +555,7 @@ int ParallelMeshImporter::getBeginIndex(std::vector<int> &gridMap,int begin)
 	assert(false);
 }
 
-int ParallelMeshImporter::getEndIndex(std::vector<int> &gridMap,int end)
+int ParallelMeshReaderNaive::getEndIndex(std::vector<int> &gridMap,int end)
 {
 	if(0==end){return 0;}
 	int ngrid = (int)gridFiles.size();
