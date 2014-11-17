@@ -3,9 +3,8 @@
 
 #include <string>
 #include <vector>
-#include <Point.h>
+#include <point.h>
 #include <stdint.h>
-#include "adt.h"
 
 using std::string;
 using std::vector;
@@ -50,17 +49,17 @@ class c_STL_FACET {
  */
 class c_STL {
     public:
-        c_STL():TreeIsInit(false), tree(ADT_3D_EXTENT){}
 
         string filename; 
         vector<c_STL_FACET> facets;
+        void    LoadFileB (string fname);
+        void    WriteFileA(string fname, string solid_name);
+#if 0
         Adt tree;
 
         unsigned long  size() {return facets.size();}
-        void    LoadFileB (string fname);
-        void    LoadFileA (string fname);
-        void    WriteFileA(string fname, string solid_name);
         void    Center();
+        void    LoadFileA (string fname);
         void    Rescale();
         void    Rescale(double scale);
         void    Translate(double shift[3]);
@@ -79,7 +78,7 @@ class c_STL {
 
         void    GetExtentsInsideExtent(std::vector<int> &inside, double extent[6]);
         Point   GetClosestPoint(Point &point, double &dist, int flag);
-
+#endif
 };
 
 
