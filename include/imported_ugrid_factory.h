@@ -20,6 +20,8 @@ class ImportedUgridFactory
     public:
         static ImportedUgrid readUgrid(std::string filename);
         static ImportedUgrid readUgrid(std::string filename,bool isBigEndian);
+        static ImportedUgrid readUgrid(std::vector<std::string> &filenames,
+									   std::vector<bool> &isBigEndian);
         static ImportedUgrid readUgridAscii(std::string filename);
 };
 
@@ -54,6 +56,14 @@ inline ImportedUgrid ImportedUgridFactory::readUgrid(std::string filename,bool i
     quadTags     = readQuadBoundaryTags(filename,isBigEndian);
 
 	return ImportedUgrid(nodes,triangles,quads,tets,pyramids,prisms,hexs, triangleTags, quadTags);
+}
+
+inline ImportedUgrid ImportedUgridFactory::readUgrid(std::vector<std::string> &filenames,
+		vector<bool> &isBigEndian)
+{
+	std::vector<ImportedUgrid> grids;
+	for(int i=0;i<filenames.size();i++)
+		grids.push_back(readUgrid(filenames[i],isBigEndian[i]));
 }
 
 inline ImportedUgrid ImportedUgridFactory::readUgridAscii(std::string filename)
