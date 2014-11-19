@@ -20,14 +20,33 @@ class ImportedUgridFactory
     public:
         static ImportedUgrid readUgrid(std::string filename);
         static ImportedUgrid readUgrid(std::string filename,bool isBigEndian);
-        static ImportedUgrid readUgrid(std::vector<std::string> &filenames,
-									   std::vector<bool> &isBigEndian);
+        //static ImportedUgrid readUgrid(std::vector<std::string> &filenames,
+		//							   std::vector<bool> &isBigEndian);
         static ImportedUgrid readUgridAscii(std::string filename);
+
+		static void createBoundaryConditionsFromTags(
+				std::string filename,
+				std::vector<int> &triangleTags,
+				std::vector<int> &quadTags,
+				std::vector<int> &triangleBoundaryConditions,
+				std::vector<int> &quadBoundaryTags
+				);
 };
 
 inline ImportedUgrid ImportedUgridFactory::readUgrid(std::string filename)
 {
 	return readUgrid(filename,false);
+}
+
+inline void ImportedUgridFactory::createBoundaryConditionsFromTags(
+		std::string filename,
+		std::vector<int> &triangleTags,
+		std::vector<int> &quadTags,
+		std::vector<int> &triangleBoundaryConditions,
+		std::vector<int> &quadBoundaryConditions
+		){
+
+	abort();
 }
 
 inline ImportedUgrid ImportedUgridFactory::readUgrid(std::string filename,bool isBigEndian)
@@ -43,6 +62,8 @@ inline ImportedUgrid ImportedUgridFactory::readUgrid(std::string filename,bool i
     vector<int> hexs;
     vector<int> triangleTags;
     vector<int> quadTags;
+	vector<int> triangleBoundaryConditions;
+	vector<int> quadBoundaryConditions;
 
 	using namespace UgridReader;
 	nodes        = readNodes(filename,isBigEndian);
@@ -54,10 +75,20 @@ inline ImportedUgrid ImportedUgridFactory::readUgrid(std::string filename,bool i
 	hexs         = readHexs(filename,isBigEndian);
     triangleTags = readTriangleBoundaryTags(filename,isBigEndian);
     quadTags     = readQuadBoundaryTags(filename,isBigEndian);
+	
+	createBoundaryConditionsFromTags(filename,
+									triangleTags,quadTags,
+									triangleBoundaryConditions,
+									quadBoundaryConditions);
 
-	return ImportedUgrid(nodes,triangles,quads,tets,pyramids,prisms,hexs, triangleTags, quadTags);
+
+	return ImportedUgrid(nodes,triangles,quads,tets,pyramids,prisms,hexs, 
+			triangleTags, quadTags,
+			triangleBoundaryConditions,
+			quadBoundaryConditions);
 }
 
+#if 0
 inline ImportedUgrid ImportedUgridFactory::readUgrid(std::vector<std::string> &filenames,
 		vector<bool> &isBigEndian)
 {
@@ -65,6 +96,7 @@ inline ImportedUgrid ImportedUgridFactory::readUgrid(std::vector<std::string> &f
 	for(int i=0;i<filenames.size();i++)
 		grids.push_back(readUgrid(filenames[i],isBigEndian[i]));
 }
+#endif
 
 inline ImportedUgrid ImportedUgridFactory::readUgridAscii(std::string filename)
 {
@@ -81,6 +113,8 @@ inline ImportedUgrid ImportedUgridFactory::readUgridAscii(std::string filename)
 
     vector<int> triangleTags;
     vector<int> quadTags;
+	vector<int> triangleBoundaryConditions;
+	vector<int> quadBoundaryConditions;
 
     FILE *fp = fopen(filename.c_str(), "r");
     if(fp == NULL){
@@ -164,10 +198,17 @@ inline ImportedUgrid ImportedUgridFactory::readUgridAscii(std::string filename)
             hexs[8*elem+i]--;
         }
     }
-    fflush(stdout);
+	
+	createBoundaryConditionsFromTags(filename,
+									triangleTags,quadTags,
+									triangleBoundaryConditions,
+									quadBoundaryConditions);
 
     fclose(fp);
-    return ImportedUgrid(nodes,triangles,quads,tets,pyramids,prisms,hexs, triangleTags, quadTags);
+    return ImportedUgrid(nodes,triangles,quads,tets,pyramids,prisms,hexs, 
+			triangleTags, quadTags,
+			triangleBoundaryConditions,
+			quadBoundaryConditions);
 }
 
 #endif

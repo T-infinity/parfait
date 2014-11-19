@@ -7,7 +7,9 @@ using std::vector;
 ImportedUgrid::ImportedUgrid(vector<double> nodes_in,vector<int> triangles_in,
 		vector<int> quads_in,vector<int> tets_in,vector<int> pyramids_in,
 		vector<int> prisms_in,vector<int> hexs_in,
-        vector<int> triangleTags_in, vector<int> quadTags_in)
+        vector<int> triangleTags_in, vector<int> quadTags_in,
+		vector<int> triangleBoundaryConditions_in,
+		vector<int> quadBoundaryConditions_in)
 	: nodes(nodes_in),
 	triangles(triangles_in),
 	quads(quads_in),
@@ -16,8 +18,9 @@ ImportedUgrid::ImportedUgrid(vector<double> nodes_in,vector<int> triangles_in,
 	prisms(prisms_in),
 	hexs(hexs_in),
     triangleTags(triangleTags_in),
-    quadTags(quadTags_in)
-
+    quadTags(quadTags_in),
+	triangleBoundaryConditions(triangleBoundaryConditions_in),
+	quadBoundaryConditions(quadBoundaryConditions_in)
 {
 	nnodes = (int)nodes.size()/3;
 	cellMap.push_back((int)tets.size()/4);

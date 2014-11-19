@@ -3,6 +3,7 @@
 #include <vector>
 #include <assert.h>
 #include <stdlib.h>
+#include "mapbc_reader.h"
 
 using std::vector;
 
@@ -43,11 +44,14 @@ class ImportedUgrid
 		// (i.e., this stuff doesn't have to be in your mesh)	
         
         int getBoundaryFaceTag(int boundaryFaceId) const;
+		int getBoundaryCondition(int BoundaryFaceId) const;
 
 		ImportedUgrid(vector<double> nodes,vector<int> triangles,
 				vector<int> quads,vector<int> tets,vector<int> pyramids,
 				vector<int> prisms,vector<int> hexs,
-                vector<int> triangleTags, vector<int> quadTags);
+                vector<int> triangleTags, vector<int> quadTags,
+				vector<int> triangleBoundaryConditions,
+				vector<int> quadBoundaryConditions);
 		vector<double> nodes;
 		vector<int> cellMap;
 		vector<int> faceMap;
@@ -59,6 +63,8 @@ class ImportedUgrid
 		vector<int> hexs;
         vector<int> triangleTags;
         vector<int> quadTags;
+		vector<int> triangleBoundaryConditions;
+		vector<int> quadBoundaryConditions;
     private:
 		int nnodes;
 		int ncells;

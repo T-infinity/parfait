@@ -20,6 +20,8 @@ TEST_GROUP(VtkGenericTests)
 	vector<int> hexs;
     vector<int> triangleTags;
     vector<int> quadTags;
+    vector<int> triangleBoundaryConditions;
+    vector<int> quadBoundaryConditions;
 	void setup()
 	{
 		nodes = {0.0,0.0,0.0,
@@ -31,6 +33,7 @@ TEST_GROUP(VtkGenericTests)
 					 0,3,2,
 					 2,3,1};
         triangleTags = {1,2,3,4};
+		triangleBoundaryConditions = {5050,5050,5050,5050};
 		tets = {0,1,2,3};
 	}
 	void teardown()
@@ -47,7 +50,9 @@ TEST(VtkGenericTests,Exists)
 		vertex += (double)Rank();
 	// create grid on each proc
 	ImportedUgrid ugrid(nodes,triangles,quads,
-		tets,pyramids,prisms,hexs, triangleTags, quadTags);
+		tets,pyramids,prisms,hexs, triangleTags, quadTags,
+		triangleBoundaryConditions,
+		quadBoundaryConditions);
 	// create writer on each proc	
 	std::string meshName = "test";
 	VtkWriter<ImportedUgrid> writer(ugrid,meshName);
