@@ -46,7 +46,21 @@ inline void ImportedUgridFactory::createBoundaryConditionsFromTags(
 		std::vector<int> &quadBoundaryConditions
 		){
 
-	//abort();
+	std::string mapbcFile = filename;
+	for(int i=0;i<5;i++)
+		mapbcFile.pop_back();
+	mapbcFile += "mapbc";
+	MapbcReader reader(mapbcFile);
+
+	triangleBoundaryConditions.clear();
+	triangleBoundaryConditions.reserve(triangleTags.size());
+	quadBoundaryConditions.clear();
+	quadBoundaryConditions.reserve(quadTags.size());
+	
+	for(int tag:triangleTags)
+		triangleBoundaryConditions.push_back(reader.boundaryCondition(tag));
+	for(int tag:quadTags)
+		quadBoundaryConditions.push_back(reader.boundaryCondition(tag));
 }
 
 inline ImportedUgrid ImportedUgridFactory::readUgrid(std::string filename,bool isBigEndian)

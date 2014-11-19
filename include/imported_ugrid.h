@@ -43,7 +43,7 @@ class ImportedUgrid
 		// has nothing to do with any other generic mesh
 		// (i.e., this stuff doesn't have to be in your mesh)	
         
-        int getBoundaryFaceTag(int boundaryFaceId) const;
+        int getBoundaryTag(int boundaryFaceId) const;
 		int getBoundaryCondition(int BoundaryFaceId) const;
 
 		ImportedUgrid(vector<double> nodes,vector<int> triangles,

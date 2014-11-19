@@ -429,7 +429,7 @@ void ImportedUgrid::getNodesInCell(int cellId,int *cell) const
 		cell[i] = cell_list[nvertices*id+i];
 }
 
-int ImportedUgrid::getBoundaryFaceTag(int id) const 
+int ImportedUgrid::getBoundaryTag(int id) const 
 {
     if(id < faceMap[0])
     {
@@ -440,6 +440,21 @@ int ImportedUgrid::getBoundaryFaceTag(int id) const
     {
         id -= triangles.size()/3;
         return quadTags[id];
+    }
+    assert(false);
+}
+
+int ImportedUgrid::getBoundaryCondition(int faceId) const 
+{
+    if(faceId < faceMap[0])
+    {
+        faceId -= 0;
+        return triangleBoundaryConditions[faceId];
+    }
+    if(faceId < faceMap[1])
+    {
+        faceId -= triangles.size()/3;
+        return quadBoundaryConditions[faceId];
     }
     assert(false);
 }
