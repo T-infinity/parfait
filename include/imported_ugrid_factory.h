@@ -46,7 +46,7 @@ inline void ImportedUgridFactory::createBoundaryConditionsFromTags(
 		std::vector<int> &quadBoundaryConditions
 		){
 
-	abort();
+	//abort();
 }
 
 inline ImportedUgrid ImportedUgridFactory::readUgrid(std::string filename,bool isBigEndian)
