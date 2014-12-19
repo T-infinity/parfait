@@ -194,27 +194,21 @@ Point CartMesh::faceArea(int cellId, int faceId) const
         case 0:
             area = block.get_dx() * block.get_dy();
             return Point(0,0,-area);
-            break;
         case 1:
             area = block.get_dx() * block.get_dz();
             return Point(0, -area, 0);
-            break;
         case 2:
             area = block.get_dy() * block.get_dz();
             return Point(area, 0, 0);
-            break;
         case 3:
             area = block.get_dx() * block.get_dz();
             return Point(0,  area, 0);
-            break;
         case 4:
             area = block.get_dy() * block.get_dz();
             return Point(-area, 0, 0);
-            break;
         case 5:
             area = block.get_dx() * block.get_dy();
             return Point(0,0,area);
-            break;
         default:
             std::domain_error("FaceId out of bounds for faceArea.");
     }

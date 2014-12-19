@@ -2,6 +2,7 @@
 #define GENERIC_MESH_ACCEPTANCE_CHECKS_H
 
 #include "generic_mesh.h"
+#include "generic_mesh_tools.h"
 
 namespace GenericMeshAcceptanceChecks
 {

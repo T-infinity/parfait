@@ -4,7 +4,7 @@ solution "MySolution"
 project "ALL_PARFAIT_TESTS.x"
    kind "ConsoleApp"
    language "C++"
-   includedirs { "../../include",
+   includedirs { "../../src",
    }
    files {
        "../../src/*.cpp",

@@ -41,7 +41,6 @@ class Adt3DPoint {
                 "Error: Nodes too close trying to create unique mapping of "
                 "There are " + std::to_string(inside.size()) + " nodes inside this box");
         }
-        return false;
     }
 
     void addPointToAdt(const Point &p, int Id) { this->store(Id, p); }

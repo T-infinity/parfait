@@ -56,8 +56,6 @@ Adt::Adt(int adt_type) {
     type = adt_type;
 }
 
-// ============= Public Interface ===============
-
 std::vector<int> Adt::retrieve(const double *extent) const {
     double a[6], b[6];
     std::vector<int> ids;
@@ -85,7 +83,6 @@ void Adt::store(int object_id, const double *x) {
     }
 }
 
-// ========== Private Implementation ==============
 void Adt::store(int elem_id, int object_id, const double *x) {
     if (stored) return;
     Adt_elem *elem = SearchTree[elem_id];
