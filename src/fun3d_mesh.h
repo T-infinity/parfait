@@ -34,6 +34,7 @@ class Fun3DMesh
 		int numberOfBoundaryFaces() const;
         int numberOfNodesInBoundaryFace(int boundaryFaceId) const;
         vector<int> getNodesInBoundaryFace(int boundaryFaceId) const;
+        void getNodesInBoundaryFace(int boundaryFaceId,int *face) const;
 
 		
 

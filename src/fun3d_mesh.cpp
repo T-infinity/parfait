@@ -149,6 +149,27 @@ vector<int> Fun3DMesh::getNodesInBoundaryFace(int faceId) const
 	return nodes;
 }
 
+void Fun3DMesh::getNodesInBoundaryFace(int faceId,int *face) const
+{
+    if(faceId < faceMap[0])
+    {
+        std::vector<int> nodes(3);
+        face[0] = triangles[3*faceId+0];
+        face[1] = triangles[3*faceId+1];
+        face[2] = triangles[3*faceId+2];
+    }
+	else if(faceId < faceMap[1])
+    {
+        faceId -= ntriangles;
+        std::vector<int> nodes(4);
+        face[0]  = quads[4*faceId+0];
+        face[1]  = quads[4*faceId+1];
+        face[2]  = quads[4*faceId+2];
+        face[3]  = quads[4*faceId+3];
+    }
+    assert(faceId < faceMap[1]);
+}
+
 int Fun3DMesh::numberOfFacesInCell(int id) const
 {
 	if(id < cellMap[0])

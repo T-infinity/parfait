@@ -13,7 +13,7 @@ class ParallelMeshReaderNaive
 	public:
 		ParallelMeshReaderNaive(std::vector<std::string> gridFiles,std::vector<bool> &isBigEndian);
 		~ParallelMeshReaderNaive();
-		ImportedUgrid importUgrid();
+		ImportedUgrid distributeGridsEvenly();
 		std::vector<int> getGridNodeMap();
 		std::vector<int> getProcNodeMap();
 		std::vector<int> getProcCellMap();
