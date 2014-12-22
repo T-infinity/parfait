@@ -1,7 +1,7 @@
-#include "CppUTest/CommandLineTestRunner.h"
 #include "node_to_node.h"
 #include "imported_ugrid_factory.h"
 #include "range_loop.h"
+#include "CppUTest/CommandLineTestRunner.h"
 
 
 TEST_GROUP(NodeToNodeTests)
