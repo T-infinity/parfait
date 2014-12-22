@@ -69,7 +69,6 @@ int CartBlock::getIdOfContainingCell(double point[3]) const
 {
 	assert(contains(Point(point)));
 	double hx,hy,hz;
-	//get_lo_point(lo);
 	hx = point[0] - lo[0]; // get distance from min point
 	hy = point[1] - lo[1];
 	hz = point[2] - lo[2];
@@ -87,13 +86,8 @@ std::vector<int> CartBlock::getCellIdsInExtent(const Extent &b) const
 	Point search_lo,search_hi;
     search_lo = b.lo;
     search_hi = b.hi;
-	//b.get_lo_point(search_lo);
-	//b.get_hi_point(search_hi);
-	// get distances to min point of mesh
 	double hx,hy,hz;
     Point mesh_lo,mesh_hi;
-	//get_lo_point(mesh_lo);
-	//get_hi_point(mesh_hi);
     mesh_lo = lo;
     mesh_hi = hi;
 	// return nothing if the box does not overlap
@@ -190,14 +184,7 @@ Extent CartBlock::createExtentFromCell(int cell_id) const
 
 int CartBlock::convert_ijk_ToCellId(int i,int j,int k) const
 {
-	//assert(i >= 0);
-	//assert(j >= 0);
-	//assert(k >= 0);
-	//assert(i < kx);
-	//assert(j < ky);
-	//assert(k < kz);
 	int id = i + j*kx + k*kx*ky;
-	//assert(id < numberOfCells());
 	return id;
 }
 
@@ -206,12 +193,6 @@ void CartBlock::convertCellIdTo_ijk(int cell_id,int &i,int &j,int &k) const
 	k = cell_id / (kx*ky);
 	j = (cell_id-k*kx*ky) / kx;
 	i = cell_id - k*kx*ky - j*kx;
-	//assert(i >= 0);
-	//assert(j >= 0);
-	//assert(k >= 0);
-	//assert(i < kx);
-	//assert(j < ky);
-	//assert(k < kz);
 }
 
 int CartBlock::convert_ijk_ToNodeId(int i,int j,int k) const
