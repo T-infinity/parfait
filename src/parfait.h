@@ -50,7 +50,6 @@
 #endif
 
 #ifdef PARFAIT_WITH_MPI
-#include "global_id_translator.h"
 #include "parallel_mesh_redistributor.h"
 #include "parallel_mesh_reader_naive.h"
 	#ifdef PARFAIT_WITH_PARMETIS
