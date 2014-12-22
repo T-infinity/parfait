@@ -1,5 +1,5 @@
-#include "CppUTest/CommandLineTestRunner.h"
 #include "message_passer.h"
+#include "CppUTest/CommandLineTestRunner.h"
 
 using namespace MessagePasser;
 
