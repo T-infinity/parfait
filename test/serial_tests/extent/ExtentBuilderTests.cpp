@@ -54,7 +54,7 @@ TEST(ExtentBuilderTests,addPointToExtent)
 	points.push_back(Point(0.5, 1.0, 0.3));
 	points.push_back(Point(0.7, 0.1, 1.0));
 	// initialize zero volume box at the origin
-	Extent e(Point(0,0,0),Point(0,0,0));
+	Extent e(Point(.5,.5,.5),Point(.5,.5,.5));
 	for(int i=0;i<4;i++)
 		ExtentBuilder::addPointToExtent(e,points[i]);
 	DOUBLES_EQUAL(0.0,e.lo[0],tol);
