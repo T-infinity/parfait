@@ -22,7 +22,9 @@ namespace ExtentBuilder
     template <typename P>
     Extent build(const P &p, double distance);
 
-
+	
+	template<typename P>
+	void addPointToExtent(Extent &e,const P &p);
 
 
 
@@ -62,6 +64,16 @@ namespace ExtentBuilder
             return Extent(min, max);
         }
 
+	template<typename P>
+		void addPointToExtent(Extent &e,const P &p){
+			e.lo[0] = std::min(e.lo[0],p[0]);
+			e.lo[1] = std::min(e.lo[1],p[1]);
+			e.lo[2] = std::min(e.lo[2],p[2]);
+			
+			e.hi[0] = std::max(e.hi[0],p[0]);
+			e.hi[1] = std::max(e.hi[1],p[1]);
+			e.hi[2] = std::max(e.hi[2],p[2]);
+		}
 }
 
 
