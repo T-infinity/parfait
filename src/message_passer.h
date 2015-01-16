@@ -69,6 +69,10 @@ namespace MessagePasser
 	template<typename T>
 	void AllGatherv(std::vector<T> &send_vec,std::vector<T> &recv_vec,std::vector<int> &map);
 
+	// Same as above but no map passed in/out
+	template<typename T>
+	void AllGatherv(std::vector<T> &send_vec,std::vector<T> &recv_vec);
+
 	// Gather vectors of a given size to the root
 	template<typename T>
 	void Gather(std::vector<T> &send_vec,int send_count,std::vector<T> &recv_vec,int rootId);
