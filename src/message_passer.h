@@ -122,6 +122,11 @@ namespace MessagePasser
 	template<typename T>
 	std::vector<T> ParallelMax(const std::vector<T> &vec,int rootId);
 
+	// get the min of values in a vector
+	template<typename T>
+	std::vector<T> ParallelMax(const std::vector<T> &vec,int rootId);
+	
+
 	// -------- Implementation files -------------------------------------
 	#include "message_passer_sends.hpp"
 	#include "message_passer_recvs.hpp"

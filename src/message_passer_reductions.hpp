@@ -27,3 +27,13 @@
 					vec.size(),Type(T()),MPI_MAX,rootId,MPI_COMM_WORLD);
 		return result;
 	}
+	
+	template<typename T>
+	std::vector<T> ParallelMin(const std::vector<T> &vec,int rootId)
+	{
+		std::vector<T> result(vec.size(),0);
+		if(vec.size() > 0)
+			MPI_Reduce((void*)vec.data(),result.data(),
+					vec.size(),Type(T()),MPI_MIN,rootId,MPI_COMM_WORLD);
+		return result;
+	}

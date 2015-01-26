@@ -970,6 +970,18 @@ TEST(MessagePasserTests,Exists)
 		}
 	}
 	
+	{
+		// test min for vector of integers
+		int root = 0;
+		std::vector<int> vec(NumberOfProcesses(),Rank());
+		std::vector<int> result = ParallelMax(vec,root);
+		if(Rank() == root)
+		{
+			for(int i=0;i<NumberOfProcesses();i++)
+				LONGS_EQUAL(0,result[i]);
+		}
+	}
+	
 }
 
 
