@@ -98,7 +98,7 @@ TEST(ugridWriterTests, Class){
     ugridWriter.setQuadTags(quadTags.data());
 
     ugridWriter.writeFile();
-    //CHECK(isTestGridValid("test1.ugrid"));
+    CHECK(isTestGridValid("test1.ugrid"));
 }
 
 TEST(ugridWriterTests,Exists)

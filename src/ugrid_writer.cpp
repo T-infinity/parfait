@@ -315,6 +315,14 @@ void UgridWriterFactory::writeFile() {
             numberOfPyramids,
             numberOfPrisms,
             numberOfHexes,
-            false); // native byte ordering
-    UgridWriter::writeNodes(fileName, numberOfNodes, points, false);
+            doByteSwap);
+    UgridWriter::writeNodes(fileName, numberOfNodes, points, doByteSwap);
+    UgridWriter::writeTriangles(fileName, numberOfTriangles, triangles, doByteSwap);
+    UgridWriter::writeQuads(fileName, numberOfQuads, quads, doByteSwap);
+    UgridWriter::writeTriangleBoundaryTags(fileName, numberOfTriangles, triangleTags, doByteSwap);
+    UgridWriter::writeQuadBoundaryTags(fileName, numberOfQuads, quadTags, doByteSwap);
+    UgridWriter::writeTets(fileName, numberOfTets, tets, doByteSwap);
+    UgridWriter::writePyramids(fileName, numberOfPyramids, pyramids, doByteSwap);
+    UgridWriter::writePrisms(fileName, numberOfPrisms, prisms, doByteSwap);
+    UgridWriter::writeHexs(fileName, numberOfHexes, hexes, doByteSwap);
 }
