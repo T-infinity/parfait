@@ -153,7 +153,7 @@ void UgridWriter::writeImportedUgrid(ImportedUgrid &ugrid, std::string filename,
 		Send(ugrid.hexs,0);
 }
 
-void UgridWriter::writeHeader(std::string &filename,int nnodes,
+void UgridWriter::writeHeader(std::string filename,int nnodes,
         int ntri,int nquad,
         int ntet,int npyr,int nprism,int nhex,bool swapBytes)
 {
@@ -184,7 +184,7 @@ void UgridWriter::writeHeader(std::string &filename,int nnodes,
     fclose(f);
 }
 
-void UgridWriter::writeNodes(std::string &filename,int nnodes,double *nodes,bool swapBytes)
+void UgridWriter::writeNodes(std::string filename,int nnodes,double *nodes,bool swapBytes)
 {
 	FILE *f = fopen(filename.c_str(),"ab");
 	assert(f != NULL);
@@ -195,60 +195,60 @@ void UgridWriter::writeNodes(std::string &filename,int nnodes,double *nodes,bool
 	fclose(f);
 }
 
-void UgridWriter::writeTriangles(std::string &filename,int ntriangles,int *triangles,bool swapBytes)
+void UgridWriter::writeTriangles(std::string filename,int ntriangles,int *triangles,bool swapBytes)
 {
 	vector<int> tris(3*ntriangles,0);
 	for(int i=0;i<3*ntriangles;i++) tris[i] = triangles[i]+1;
 	writeIntegerField(filename,3*ntriangles,tris.data(),swapBytes);
 }
 
-void UgridWriter::writeQuads(std::string &filename,int nquads,int *quads,bool swapBytes)
+void UgridWriter::writeQuads(std::string filename,int nquads,int *quads,bool swapBytes)
 {
 	vector<int> newQuads(4*nquads,0);
 	for(int i=0;i<4*nquads;i++) newQuads[i] = quads[i]+1;
 	writeIntegerField(filename,4*nquads,newQuads.data(),swapBytes);
 }
 
-void UgridWriter::writeTets(std::string &filename,int ntets,int *tets,bool swapBytes)
+void UgridWriter::writeTets(std::string filename,int ntets,int *tets,bool swapBytes)
 {
 	vector<int> newTets(4*ntets,0);
 	for(int i=0;i<4*ntets;i++) newTets[i] = tets[i]+1;
 	writeIntegerField(filename,4*ntets,newTets.data(),swapBytes);
 }
 
-void UgridWriter::writePyramids(std::string &filename,int npyramids,int *pyramids,bool swapBytes)
+void UgridWriter::writePyramids(std::string filename,int npyramids,int *pyramids,bool swapBytes)
 {
 	vector<int> newPyramids(5*npyramids,0);
 	for(int i=0;i<5*npyramids;i++) newPyramids[i] = pyramids[i]+1;
 	writeIntegerField(filename,5*npyramids,newPyramids.data(),swapBytes);
 }
 
-void UgridWriter::writePrisms(std::string &filename,int nprisms,int *prisms,bool swapBytes)
+void UgridWriter::writePrisms(std::string filename,int nprisms,int *prisms,bool swapBytes)
 {
 	vector<int> newPrisms(6*nprisms,0);
 	for(int i=0;i<6*nprisms;i++) newPrisms[i] = prisms[i]+1;
 	writeIntegerField(filename,6*nprisms,newPrisms.data(),swapBytes);
 }
 
-void UgridWriter::writeHexs(std::string &filename,int nhexs,int *hexs,bool swapBytes)
+void UgridWriter::writeHexs(std::string filename,int nhexs,int *hexs,bool swapBytes)
 {
 	vector<int> newHexs(8*nhexs,0);
 	for(int i=0;i<8*nhexs;i++) newHexs[i] = hexs[i]+1;
 	writeIntegerField(filename,8*nhexs,newHexs.data(),swapBytes);
 }
 
-void UgridWriter::writeTriangleBoundaryTags(std::string &filename,int ntriangles,int *triangleTags,bool swapBytes)
+void UgridWriter::writeTriangleBoundaryTags(std::string filename,int ntriangles,int *triangleTags,bool swapBytes)
 {
 	writeIntegerField(filename,ntriangles,triangleTags,swapBytes);
 }
 
-void UgridWriter::writeQuadBoundaryTags(std::string &filename,int nquads,int *quadTags,bool swapBytes)
+void UgridWriter::writeQuadBoundaryTags(std::string filename,int nquads,int *quadTags,bool swapBytes)
 {
 	writeIntegerField(filename,nquads,quadTags,swapBytes);
 }
 
 
-void UgridWriter::writeIntegerField(std::string &filename,int n,int *fieldData,bool swapBytes)
+void UgridWriter::writeIntegerField(std::string filename,int n,int *fieldData,bool swapBytes)
 {
 	FILE *f = fopen(filename.c_str(),"ab");
 	assert(f != NULL);
