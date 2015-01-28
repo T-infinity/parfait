@@ -26,8 +26,7 @@ class range
 		range(int high):hi(high),lo(0){}
 		template<typename T>
 		inline range(T container):lo(0),hi(container.end()-container.begin()){}
-		template<typename T>
-		inline range(T container,int stride):lo(0),hi((container.end()-container.begin())/stride){}
+
 		class Iterator
 		{
 			public:

@@ -263,6 +263,11 @@ void UgridWriterFactory::setName(std::string fileNameBase) {
     fileName = fileNameBase + ".ugrid";
 }
 
+void UgridWriterFactory::setPoints(double *points_in, int numberOfNodes_in) {
+    points = points_in;
+    numberOfNodes = numberOfNodes_in;
+}
+
 void UgridWriterFactory::setTets(int *tets_in, int numberOfTets_in) {
     tets = tets_in;
     numberOfTets = numberOfTets_in;
@@ -299,4 +304,17 @@ void UgridWriterFactory::setTriangleTags(int *triangleTags_in) {
 
 void UgridWriterFactory::setQuadTags(int *quadTags_in) {
     quadTags = quadTags_in;
+}
+
+void UgridWriterFactory::writeFile() {
+    UgridWriter::writeHeader(fileName,
+            numberOfNodes,
+            numberOfTriangles,
+            numberOfQuads,
+            numberOfTets,
+            numberOfPyramids,
+            numberOfPrisms,
+            numberOfHexes,
+            false); // native byte ordering
+    UgridWriter::writeNodes(fileName, numberOfNodes, points, false);
 }

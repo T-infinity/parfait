@@ -86,7 +86,8 @@ std::string gridFile;
 
 TEST(ugridWriterTests, Class){
     UgridWriterFactory ugridWriter;
-    ugridWriter.setName("test");
+    ugridWriter.setName("test1");
+    ugridWriter.setPoints(nodes.data(), nnodes);
     ugridWriter.setTets(tets.data(), ntet);
     ugridWriter.setHexes(hexs.data(), nhex);
     ugridWriter.setPyramids(pyramids.data(), npyr);
@@ -95,6 +96,9 @@ TEST(ugridWriterTests, Class){
     ugridWriter.setQuads(quads.data(), nquad);
     ugridWriter.setTriangleTags(triTags.data());
     ugridWriter.setQuadTags(quadTags.data());
+
+    ugridWriter.writeFile();
+    //CHECK(isTestGridValid("test1.ugrid"));
 }
 
 TEST(ugridWriterTests,Exists)
@@ -113,7 +117,6 @@ TEST(ugridWriterTests,Exists)
 	writeHexs(newGridName,nhex,hexs.data(),false);
 
     CHECK(isTestGridValid(newGridName));
-
 }
 
 TEST(ugridWriterTests,WriteWithOneFunctionCall)

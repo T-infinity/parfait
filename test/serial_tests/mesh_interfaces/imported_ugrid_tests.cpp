@@ -118,22 +118,22 @@ TEST(ImportedUgridTests,CellCollectionTests)
 	LONGS_EQUAL(4,mesh.numberOfFacesInCell(0));
 	LONGS_EQUAL(3,ugrid.numberOfNodesInCellFace(0,0));
 
-	printf("looping over cells in mesh....\n");
+	//printf("looping over cells in mesh....\n");
     int cellId = 0;
 	for(auto cell:mesh.cells())
 	{
         LONGS_EQUAL(cellId++, cell.Id());
-		printf("looping over faces in cell.....\n");
+		//printf("looping over faces in cell.....\n");
         int faceId = 0;
 		for(auto face:cell)
 		{
             LONGS_EQUAL(faceId++, face.Id());
-			printf("looping over nodes in face...\n");
+			//printf("looping over nodes in face...\n");
 			for(int node:face)
 			{
 				double p[3];
 				mesh.getNode(node,p);
-				printf("%lf %lf %lf\n",p[0],p[1],p[2]);
+				//printf("%lf %lf %lf\n",p[0],p[1],p[2]);
 			}
 		}
 	}

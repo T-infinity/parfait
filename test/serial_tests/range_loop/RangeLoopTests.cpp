@@ -27,6 +27,7 @@ TEST(RangeLoopTests, InsideARange)
     int index = 0;
     for (int i:range(9, 15)) LONGS_EQUAL(vec[index++], i);
 }
+
 TEST(RangeLoopTests, SingleNumber)
 {
     std::vector<int> vec = {0, 1, 2, 3, 4};
@@ -34,25 +35,9 @@ TEST(RangeLoopTests, SingleNumber)
     for (int i:range(5)) LONGS_EQUAL(vec[index++], i);
 }
 
-
-TEST(RangeLoopTests,AutoVectorIndex)
-{
+TEST(RangeLoopTests,AutoVectorIndex){
 	using std::vector;
 	vector<int> vec(3,0);
-	// you can do a range loop over the indices of
-	// any container with a random access iterator!
-	for(int i:range(vec))
-		printf("range in vector: %i\n",i);
-}
-
-TEST(RangeLoopTests,AutoVectorWithStride)
-{
-	using std::vector;
-	vector<int> triangles(12,0);
-	for(int i:range(triangles,3))
-	{
-		printf("range loop over vector with a stride %i\n",i);
-		// do something with
-		// triangles[3*i], triangles[3*i+1], etc
-	}
+    int index = 0;
+	for(int i:range(vec)) LONGS_EQUAL(index++, i);
 }

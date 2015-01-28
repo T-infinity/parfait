@@ -31,7 +31,7 @@ namespace UgridWriter
 class UgridWriterFactory{
 
 public:
-    UgridWriterFactory() = default;
+    UgridWriterFactory():doByteSwap(false){}
     void setName(std::string fileName);
 
     void setTets(int *tets, int numberOfTets);
@@ -42,7 +42,10 @@ public:
     void setQuads(int *quads, int numberOfQuads);
     void setTriangleTags(int *triangleTags);
     void setQuadTags(int *quadTags);
+    void writeFile();
+    void setPoints(double *points, int numberOfNodes);
 private:
+    bool doByteSwap;
     std::string fileName;
     int numberOfTets;
     int *tets;
@@ -63,6 +66,8 @@ private:
     int *quads;
     int *triangleTags;
     int *quadTags;
+    int numberOfNodes;
+    double *points;
 };
 
 #endif

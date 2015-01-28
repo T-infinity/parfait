@@ -112,7 +112,22 @@ TEST(GenericMeshToolsTests, UniqueEdges){
     auto edges = GenericMeshTools::getUniqueEdges(cartMesh);
     LONGS_EQUAL(12, edges.size());
 
+    std::vector<std::array<int,2>> validEdges(12);
+    validEdges[0]  = std::array<int, 2>{0,1};
+    validEdges[1]  = std::array<int, 2>{0,2};
+    validEdges[2]  = std::array<int, 2>{0,4};
+    validEdges[3]  = std::array<int, 2>{1,3};
+    validEdges[4]  = std::array<int, 2>{1,5};
+    validEdges[5]  = std::array<int, 2>{2,3};
+    validEdges[6]  = std::array<int, 2>{2,6};
+    validEdges[7]  = std::array<int, 2>{3,7};
+    validEdges[8]  = std::array<int, 2>{4,5};
+    validEdges[9]  = std::array<int, 2>{4,6};
+    validEdges[10] = std::array<int, 2>{5,7};
+    validEdges[11] = std::array<int, 2>{6,7};
+
+    int index = 0;
     for(auto edge : edges){
-        printf("\nEdge = %d %d", edge[0], edge[1]);
+        CHECK(validEdges[index++] == edge);
     }
-}
+};
