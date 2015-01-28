@@ -87,7 +87,7 @@ std::string gridFile;
 TEST(ugridWriterTests, Class){
     UgridWriterFactory ugridWriter;
     ugridWriter.setName("test1");
-    ugridWriter.setPoints(nodes.data(), nnodes);
+    ugridWriter.setNodes(nodes.data(), nnodes);
     ugridWriter.setTets(tets.data(), ntet);
     ugridWriter.setHexes(hexs.data(), nhex);
     ugridWriter.setPyramids(pyramids.data(), npyr);

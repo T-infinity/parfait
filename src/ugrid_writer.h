@@ -43,7 +43,7 @@ public:
     void setTriangleTags(int *triangleTags);
     void setQuadTags(int *quadTags);
     void writeFile();
-    void setPoints(double *points, int numberOfNodes);
+    void setNodes(double *points, int numberOfNodes);
 private:
     bool doByteSwap;
     std::string fileName;
@@ -64,10 +64,12 @@ private:
 
     int numberOfQuads;
     int *quads;
+
     int *triangleTags;
     int *quadTags;
+
     int numberOfNodes;
-    double *points;
+    double *nodes;
 };
 
 #endif
