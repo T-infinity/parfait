@@ -185,9 +185,10 @@ void ParallelMeshReaderNaive::buildDistributionMaps()
 	}
 }
 
-ImportedUgrid ParallelMeshReaderNaive::importUgrid()
+ImportedUgrid ParallelMeshReaderNaive::distributeGridsEvenly()
 {
-	//ImportedUgrid ugrid(myNodes,myTriangles,myQuads,myTets,
-	//		myPyramids,myPrisms,myHexs,myTriangleTags,myQuadTags);
-	//return ugrid;
+	ImportedUgrid ugrid(myNodes,myTriangles,myQuads,myTets,
+			myPyramids,myPrisms,myHexs,myTriangleTags,myQuadTags,
+			myTriangleTags,myQuadTags);
+	return ugrid;
 }

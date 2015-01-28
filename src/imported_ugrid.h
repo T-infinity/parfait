@@ -65,7 +65,7 @@ class ImportedUgrid
         vector<int> quadTags;
 		vector<int> triangleBoundaryConditions;
 		vector<int> quadBoundaryConditions;
-    private:
+    protected:
 		int nnodes;
 		int ncells;
 		int nfaces;

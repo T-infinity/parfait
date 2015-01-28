@@ -195,7 +195,7 @@ std::vector<std::vector<int>> buildNode2Cell(MeshType &mesh_in) {
 }
 
 template <typename MeshType, class CellType>
-bool containsPoint(MeshType &mesh, CellType &&cell, double p[3]) {
+bool containsPoint(MeshType &mesh, CellType &&cell,const Point& p) {
 	Point a,b,searchPoint(p);
 	for(auto face:cell)
 	{

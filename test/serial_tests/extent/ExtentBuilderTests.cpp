@@ -45,3 +45,22 @@ TEST(ExtentBuilderTests,Exists)
 	DOUBLES_EQUAL(1.0,extent.hi[1],tol);
 	DOUBLES_EQUAL(1.0,extent.hi[2],tol);
 }
+
+TEST(ExtentBuilderTests,addPointToExtent)
+{
+	std::vector<Point> points;
+	points.push_back(Point(0.0, 0.0, 0.0));
+	points.push_back(Point(1.0, 0.0, 0.0));
+	points.push_back(Point(0.5, 1.0, 0.3));
+	points.push_back(Point(0.7, 0.1, 1.0));
+	// initialize zero volume box at the origin
+	Extent e(Point(.5,.5,.5),Point(.5,.5,.5));
+	for(int i=0;i<4;i++)
+		ExtentBuilder::addPointToExtent(e,points[i]);
+	DOUBLES_EQUAL(0.0,e.lo[0],tol);
+	DOUBLES_EQUAL(0.0,e.lo[1],tol);
+	DOUBLES_EQUAL(0.0,e.lo[2],tol);
+	DOUBLES_EQUAL(1.0,e.hi[0],tol);
+	DOUBLES_EQUAL(1.0,e.hi[1],tol);
+	DOUBLES_EQUAL(1.0,e.hi[2],tol);
+}

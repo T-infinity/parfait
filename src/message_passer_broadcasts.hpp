@@ -11,12 +11,16 @@
 	void Broadcast(std::vector<T> &vec,int vecLength,int rootId)
 	{
 		T t;
-		if(vec.size() != vecLength)
-		{
-			fprintf(stderr,"MessagePasser::Broadcast: Target vector is not the ");
-			fprintf(stderr,"same size as the broadcast message\n");
-			fprintf(stderr,"-----------Rank: %i   Vector length: %i   Message size: %i\n",vec.size(),vecLength);
-			exit(0);
+		if(vec.size() != vecLength){
+			if(Rank() == rootId){
+				fprintf(stderr,"MessagePasser::Broadcast: Root is trying to ");
+				fprintf(stderr,"send a vector of the wrong length\n");
+				fprintf(stderr,"-----------Rank: %i   Vector length: %i   Message size: %i\n",
+						Rank(),vec.size(),vecLength);
+				exit(0);
+			}
+			else
+				vec.resize(vecLength);
 		}
 		if(vecLength != 0)
 			MPI_Bcast(&vec[0],vecLength,Type(t),rootId,MPI_COMM_WORLD);
