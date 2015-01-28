@@ -5,9 +5,9 @@
 #include <stdlib.h>
 #include <string>
 #include "imported_ugrid.h"
+
 namespace UgridWriter
 {
-
     void writeImportedUgrid(ImportedUgrid &ugrid, std::string filename, bool swapBytes);
 
 	/// Tools for writing files in native endianness
@@ -27,5 +27,42 @@ namespace UgridWriter
 
 	void writeIntegerField(std::string filename,int n,int *fieldData,bool swapBytes);
 }
+
+class UgridWriterFactory{
+
+public:
+    UgridWriterFactory() = default;
+    void setName(std::string fileName);
+
+    void setTets(int *tets, int numberOfTets);
+    void setHexes(int *hexes, int numberOfHexes);
+    void setPyramids(int *pyramids, int numberOfPyramids);
+    void setPrisms(int *prisms, int numberOfPrisms);
+    void setTriangles(int *triangles, int numberOfTriangles);
+    void setQuads(int *quads, int numberOfQuads);
+    void setTriangleTags(int *triangleTags);
+    void setQuadTags(int *quadTags);
+private:
+    std::string fileName;
+    int numberOfTets;
+    int *tets;
+
+    int numberOfHexes;
+    int * hexes;
+
+    int *pyramids;
+    int numberOfPyramids;
+
+    int *prisms;
+    int numberOfPrisms;
+
+    int *triangles;
+    int numberOfTriangles;
+
+    int numberOfQuads;
+    int *quads;
+    int *triangleTags;
+    int *quadTags;
+};
 
 #endif

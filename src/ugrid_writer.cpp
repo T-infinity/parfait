@@ -258,3 +258,45 @@ void UgridWriter::writeIntegerField(std::string filename,int n,int *fieldData,bo
 		fwrite(fieldData,sizeof(int),n,f);
 	fclose(f);
 }
+
+void UgridWriterFactory::setName(std::string fileNameBase) {
+    fileName = fileNameBase + ".ugrid";
+}
+
+void UgridWriterFactory::setTets(int *tets_in, int numberOfTets_in) {
+    tets = tets_in;
+    numberOfTets = numberOfTets_in;
+}
+
+void UgridWriterFactory::setHexes(int *hexes_in, int numberOfHexes_in) {
+    hexes = hexes_in;
+    numberOfHexes = numberOfHexes_in;
+}
+
+void UgridWriterFactory::setPyramids(int *pyramids_in, int numberOfPyramids_in) {
+    pyramids = pyramids_in;
+    numberOfPyramids = numberOfPyramids_in;
+}
+
+void UgridWriterFactory::setPrisms(int *prisms_in, int numberOfPrisms_in) {
+    prisms = prisms_in;
+    numberOfPrisms = numberOfPrisms_in;
+}
+
+void UgridWriterFactory::setTriangles(int *triangles_in, int numberOfTriangles_in) {
+    triangles = triangles_in;
+    numberOfTriangles = numberOfTriangles_in;
+}
+
+void UgridWriterFactory::setQuads(int *quads_in, int numberOfQuads_in) {
+    quads = quads_in;
+    numberOfQuads = numberOfQuads_in;
+}
+
+void UgridWriterFactory::setTriangleTags(int *triangleTags_in) {
+    triangleTags = triangleTags_in;
+}
+
+void UgridWriterFactory::setQuadTags(int *quadTags_in) {
+    quadTags = quadTags_in;
+}
