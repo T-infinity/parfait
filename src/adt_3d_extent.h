@@ -19,7 +19,7 @@ class Adt3DExtent
     public:
         Adt3DExtent(const Extent &domain);
         void store(int Id, const Extent &extent);
-        std::vector<int> retrieve(const Extent &domain);
+        std::vector<int> retrieve(const Extent &domain) const;
     private:
         UnitTransformer unitTransformer;
         Adt adt;

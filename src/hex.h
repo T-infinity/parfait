@@ -9,7 +9,7 @@
 #include "extent.h"
 #endif
 
-class Hex{
+class Hex {
     public:
         Hex(){}
         Hex(Extent extent);

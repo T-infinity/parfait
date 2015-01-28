@@ -12,7 +12,7 @@ void Adt3DExtent::store(int Id, const Extent &extent)
     adt.store(Id, &store.lo[0]);
 }
 
-std::vector<int> Adt3DExtent::retrieve(const Extent &domain)
+std::vector<int> Adt3DExtent::retrieve(const Extent &domain) const
 {
     Extent search(unitTransformer.ToUnitSpace(domain.lo), 
             unitTransformer.ToUnitSpace(domain.hi));

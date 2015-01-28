@@ -73,14 +73,5 @@ TEST(Adt3DPoint, StorePointOutsideDomain)
     Adt3DPoint adt(Extent(Point(-2,-2,-2), Point(2,2,2)));
     Point point(5,5,5);
 
-    //bool caught = false;
-    //try {
-    //    adt.store(10, point);
-    //}
-    //catch(std::domain_error &e){
-    //    printf("\n\n\nCaught Exception!");
-    //    std::cout << e.what() ;
-    //    caught = true;
-    //}
-    //CHECK_EQUAL(true, caught);
+    CHECK_THROWS(std::exception, adt.store(10, point));
 }

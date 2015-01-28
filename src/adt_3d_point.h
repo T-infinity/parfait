@@ -57,7 +57,9 @@ class Adt3DPoint {
         }
     }
 
-    private:
+    int getNodeId(const Point &p);
+
+private:
     UnitTransformer unitTransformer;
     Adt adt;
 };
