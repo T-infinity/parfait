@@ -8,7 +8,8 @@ class Point
 
         Point();
         Point(double x, double y, double z);
-        Point(const double p[3]);
+		template<typename T>
+        Point(const T& p);
         double *data() { return pos; }
         const double *data() const { return pos; }
 

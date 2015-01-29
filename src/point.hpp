@@ -11,13 +11,13 @@ inline Point::Point(double a, double b, double c){
     pos[2] = c;
 }
 
-inline Point::Point(const double p[3])
+template<typename PointType>
+inline Point::Point(const PointType& p)
 {
     pos[0] = p[0];
     pos[1] = p[1];
     pos[2] = p[2];
 }
-
 
 inline void Point::Print() const 
 {
