@@ -12,7 +12,6 @@ class Point
         Point();
         Point(double x, double y, double z);
         Point(const double*);
-        Point(const std::array<double, 3> &point);
         double *data() { return pos; }
         const double *data() const { return pos; }
 
