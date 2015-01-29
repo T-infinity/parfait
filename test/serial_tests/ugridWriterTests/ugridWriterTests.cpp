@@ -81,6 +81,8 @@ std::string gridFile;
             assert(triTags[i] == triTags2[i]);
         for(int i:range(quadTags))
             assert(quadTags[i] == quadTags2[i]);
+
+		return true;
     }
 };
 

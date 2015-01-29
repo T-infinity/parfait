@@ -70,7 +70,7 @@ void ParallelMeshReDistributor::shuffleTriangles()
 			neededNodeIds = recvIds;
 		Broadcast(neededNodeIds,proc);
 		// loop over triangles
-		for(int i:range(ugrid.triangles,3))
+		for(int i=0;i<ugrid.triangles.size()/3;i++)
 		{
 			// check if proc owns any nodes in the triangle
 			for(int j:range(3))
@@ -111,7 +111,7 @@ void ParallelMeshReDistributor::shuffleQuads()
 			neededNodeIds = recvIds;
 		Broadcast(neededNodeIds,proc);
 		// loop over quads
-		for(int i:range(ugrid.quads,4))
+		for(int i=0;i<ugrid.quads.size()/4;i++)
 		{
 			// check if proc owns any nodes in the quad
 			for(int j:range(4))
@@ -152,7 +152,7 @@ void ParallelMeshReDistributor::shuffleTets()
 			neededNodeIds = recvIds;
 		Broadcast(neededNodeIds,proc);
 		// loop over tets
-		for(int i:range(ugrid.tets,4))
+		for(int i=0;i<ugrid.tets.size()/4;i++)
 		{
 			// check if proc owns any nodes in the tet
 			for(int j:range(4))
@@ -187,7 +187,7 @@ void ParallelMeshReDistributor::shufflePyramids()
 			neededNodeIds = recvIds;
 		Broadcast(neededNodeIds,proc);
 		// loop over pyramids
-		for(int i:range(ugrid.pyramids,5))
+		for(int i=0;i<ugrid.pyramids.size()/5;i++)
 		{
 			// check if proc owns any nodes in the pyramid
 			for(int j:range(5))
@@ -222,7 +222,7 @@ void ParallelMeshReDistributor::shufflePrisms()
 			neededNodeIds = recvIds;
 		Broadcast(neededNodeIds,proc);
 		// loop over prisms
-		for(int i:range(ugrid.prisms,6))
+		for(int i=0;i<ugrid.prisms.size()/6;i++)
 		{
 			// check if proc owns any nodes in the prism
 			for(int j:range(6))
@@ -257,7 +257,7 @@ void ParallelMeshReDistributor::shuffleHexs()
 			neededNodeIds = recvIds;
 		Broadcast(neededNodeIds,proc);
 		// loop over hexs
-		for(int i:range(ugrid.hexs,8))
+		for(int i=0;i<ugrid.hexs.size()/8;i++)
 		{
 			// check if proc owns any nodes in the hex
 			for(int j:range(8))
