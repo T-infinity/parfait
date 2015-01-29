@@ -11,9 +11,13 @@ inline Point::Point(double a, double b, double c){
     pos[2] = c;
 }
 
-template<typename PointType>
-inline Point::Point(const PointType& p)
-{
+inline Point::Point(const std::array<double, 3> &point){
+    pos[0] = point[0];
+    pos[1] = point[1];
+    pos[2] = point[2];
+}
+
+inline Point::Point(const double *p){
     pos[0] = p[0];
     pos[1] = p[1];
     pos[2] = p[2];

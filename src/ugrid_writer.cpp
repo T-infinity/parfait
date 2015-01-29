@@ -307,6 +307,7 @@ void UgridWriterFactory::setQuadTags(int *quadTags_in) {
 }
 
 void UgridWriterFactory::writeFile() {
+
     UgridWriter::writeHeader(fileName,
             numberOfNodes,
             numberOfTriangles,

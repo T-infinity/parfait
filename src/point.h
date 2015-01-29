@@ -1,6 +1,9 @@
 #ifndef POINT_H
 #define POINT_H
 
+#include <array>
+#include <vector>
+
 class Point
 {
     public:
@@ -8,8 +11,8 @@ class Point
 
         Point();
         Point(double x, double y, double z);
-		template<typename T>
-        Point(const T& p);
+        Point(const double*);
+        Point(const std::array<double, 3> &point);
         double *data() { return pos; }
         const double *data() const { return pos; }
 

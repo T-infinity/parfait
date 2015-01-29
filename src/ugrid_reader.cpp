@@ -222,7 +222,7 @@ std::vector<int> UgridReader::readTriangles(std::string &filename,int begin,int 
 std::vector<int> UgridReader::readQuads(std::string &filename,bool swapBytes)
 {
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
-    readHeader(filename,nnodes,ntri,nquad,ntet,npyr,nprism,nhex,swapBytes);	
+    readHeader(filename,nnodes,ntri,nquad,ntet,npyr,nprism,nhex,swapBytes);
     return readQuads(filename,0,nquad,swapBytes);
 }
 
