@@ -37,7 +37,6 @@ void Gatherv(std::vector<T> &send_vec,std::vector<T> &recv_vec,
 	int nproc = NumberOfProcesses();
 	std::vector<int> recv_counts(nproc,0);
 	Gather(sendcount,recv_counts,rootId);
-	int messageSize = 0;
 	if(Rank() == rootId)
 	{
 		map.clear();
@@ -46,7 +45,6 @@ void Gatherv(std::vector<T> &send_vec,std::vector<T> &recv_vec,
 			map[i] = map[i-1] + recv_counts[i-1];
 		recv_vec.clear();
 		recv_vec.assign(map.back(),0);
-		messageSize = map.back();
 	}
 	MPI_Gatherv(&send_vec[0],sendcount,Type(T()),
 			&recv_vec[0],&recv_counts[0],&map[0],Type(T()),
@@ -67,14 +65,12 @@ void AllGatherv(std::vector<T> &send_vec,std::vector<T> &recv_vec,std::vector<in
 	int nproc = NumberOfProcesses();
 	std::vector<int> recv_counts(nproc,0);
 	AllGather(sendcount,recv_counts);
-	int messageSize = 0;
 	map.clear();
 	map.assign(nproc+1,0);
 	for(int i=1;i<nproc+1;i++)
 		map[i] = map[i-1] + recv_counts[i-1];
 	recv_vec.clear();
 	recv_vec.assign(map.back(),0);
-	messageSize = map.back();
 	MPI_Allgatherv(&send_vec[0],sendcount,Type(T()),
 			&recv_vec[0],&recv_counts[0],&map[0],Type(T()),
 			MPI_COMM_WORLD);	
