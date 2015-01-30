@@ -10,7 +10,6 @@
 	template<typename T>
 	void Broadcast(std::vector<T> &vec,int vecLength,int rootId)
 	{
-		T t;
 		if(vec.size() != vecLength){
 			if(Rank() == rootId){
 				fprintf(stderr,"MessagePasser::Broadcast: Root is trying to ");
@@ -23,7 +22,7 @@
 				vec.resize(vecLength);
 		}
 		if(vecLength != 0)
-			MPI_Bcast(&vec[0],vecLength,Type(t),rootId,MPI_COMM_WORLD);
+			MPI_Bcast(&vec[0],vecLength,Type(T()),rootId,MPI_COMM_WORLD);
 	}
 
 	// broadcast a vector of unknown size
@@ -39,6 +38,5 @@
 			vec.clear();
 			vec.assign(size,0);
 		}
-		T t;
-		MPI_Bcast(&vec[0],size,Type(t),rootId,MPI_COMM_WORLD);
+		MPI_Bcast(&vec[0],size,Type(T()),rootId,MPI_COMM_WORLD);
 	}
