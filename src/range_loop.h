@@ -23,7 +23,7 @@ class range
 {
 	public:
 		range(int low,int high):lo(low),hi(high){}
-		range(int high):hi(high),lo(0){}
+		range(int high):lo(0),hi(high){}
 		template<typename T>
 		inline range(T container):lo(0),hi(container.end()-container.begin()){}
 
