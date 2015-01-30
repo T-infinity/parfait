@@ -1,8 +1,9 @@
 template<class MeshType>
 CellFace<MeshType>::CellFace(MeshType &mesh_in,int cellId_in,int faceId_in)
-	: mesh(mesh_in),
+	: 
 	cellId(cellId_in),
-	faceId(faceId_in)
+	faceId(faceId_in),
+	mesh(mesh_in)
 {
 }
 
