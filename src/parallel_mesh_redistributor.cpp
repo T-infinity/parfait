@@ -8,8 +8,8 @@ using namespace MessagePasser;
 ParallelMeshReDistributor::ParallelMeshReDistributor(ImportedUgrid &ugrid_in,vector<int> &gridNodeMap_in,
 		vector<int> &part_in)
 	: ugrid(ugrid_in),
-	gridNodeMap(gridNodeMap_in),
 	part(part_in)
+	gridNodeMap(gridNodeMap_in),
 {
 	nproc = NumberOfProcesses();
 	nodeMap.assign(nproc,0);

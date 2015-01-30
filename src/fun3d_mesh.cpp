@@ -20,7 +20,7 @@ Fun3DMesh::Fun3DMesh(int nnodes0_in,int nnodes01_in,double *x_in,double *y_in,do
 	nprisms(nprisms_in),
 	nhexs(nhexs_in),
 	ncells(ntets+npyramids+nprisms+nhexs),
-	nfaces(ntriangles+nquads)
+	nfaces(ntriangles+nquads),
 	x(x_in),
 	y(y_in),
 	z(z_in),
@@ -34,7 +34,7 @@ Fun3DMesh::Fun3DMesh(int nnodes0_in,int nnodes01_in,double *x_in,double *y_in,do
 	tets(tets_in),
 	pyramids(pyramids_in),
 	prisms(prisms_in),
-	hexs(hexs_in),
+	hexs(hexs_in)
 {
 	cellMap[0] = ntets;
 	cellMap[1] = cellMap[0] + npyramids;
