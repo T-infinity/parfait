@@ -24,9 +24,8 @@ void Gather(std::vector<T> &send_vec,int send_count,std::vector<T> &recv_vec,int
 		recv_vec.clear();
 		recv_vec.assign(send_count*NumberOfProcesses(),0);
 	}
-	T t;	
-	MPI_Gather(&send_vec[0],send_count,Type(t),&recv_vec[0],send_count,
-			Type(t),rootId,MPI_COMM_WORLD);
+	MPI_Gather(&send_vec[0],send_count,Type(T()),&recv_vec[0],send_count,
+			Type(T()),rootId,MPI_COMM_WORLD);
 }
 
 // Gatherv vectors of different lengths to the root
@@ -49,9 +48,8 @@ void Gatherv(std::vector<T> &send_vec,std::vector<T> &recv_vec,
 		recv_vec.assign(map.back(),0);
 		messageSize = map.back();
 	}
-	T t;
-	MPI_Gatherv(&send_vec[0],sendcount,Type(t),
-			&recv_vec[0],&recv_counts[0],&map[0],Type(t),
+	MPI_Gatherv(&send_vec[0],sendcount,Type(T()),
+			&recv_vec[0],&recv_counts[0],&map[0],Type(T()),
 			rootId,MPI_COMM_WORLD);	
 }
 
@@ -77,8 +75,7 @@ void AllGatherv(std::vector<T> &send_vec,std::vector<T> &recv_vec,std::vector<in
 	recv_vec.clear();
 	recv_vec.assign(map.back(),0);
 	messageSize = map.back();
-	T t;
-	MPI_Allgatherv(&send_vec[0],sendcount,Type(t),
-			&recv_vec[0],&recv_counts[0],&map[0],Type(t),
+	MPI_Allgatherv(&send_vec[0],sendcount,Type(T()),
+			&recv_vec[0],&recv_counts[0],&map[0],Type(T()),
 			MPI_COMM_WORLD);	
 }

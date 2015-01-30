@@ -6,8 +6,7 @@
 		vec.clear();
 		vec.assign(length,0);
 		MPI_Status status;
-		T t;
-		MPI_Recv(&vec[0],length,Type(t),source,0,MPI_COMM_WORLD,&status);
+		MPI_Recv(&vec[0],length,Type(T()),source,0,MPI_COMM_WORLD,&status);
 	}
 	
 	// send a vector (receiver doesn't know length)

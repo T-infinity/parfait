@@ -49,8 +49,7 @@ void VtkField<T>::append(std::string filename)
 	FILE *f = fopen(filename.c_str(),"a");
 	assert(f!=NULL);
 	std::string typeName;
-	T t;
-	int type = Type(t);
+	int type = Type(T());
 	if(INT32_FIELD == type)
 		typeName = "Int32";
 	else if(FLOAT32_FIELD == type)
