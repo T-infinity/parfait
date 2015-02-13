@@ -45,7 +45,7 @@ TEST(GenericMeshToolsTests, FaceCenter)
     Mesh<CartMesh> mesh(cartMesh);
 
     auto cell = mesh.cell(0);
-    auto face = cell.faces(0);
+    auto face = cell.getFace(0);
     auto faceCenter = GenericMeshTools::faceCenter(mesh, face);
     DOUBLES_EQUAL(0.25, faceCenter[0], tol);
     DOUBLES_EQUAL(0.25, faceCenter[1], tol);
@@ -58,7 +58,7 @@ TEST(GenericMeshToolsTests, FaceArea)
     Mesh<CartMesh> mesh(cartMesh);
 
     auto cell = mesh.cell(0);
-    auto face = cell.faces(0);
+    auto face = cell.getFace(0);
     auto areaVector = GenericMeshTools::getFaceArea(mesh, face);
     DOUBLES_EQUAL(0,    areaVector[0], tol);
     DOUBLES_EQUAL(0,    areaVector[1], tol);

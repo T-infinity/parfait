@@ -55,7 +55,7 @@ CellFace<MeshType> Cell<MeshType>::Iterator::operator*()
 }
 
 template <class MeshType>
-CellFace<MeshType> Cell<MeshType>::faces(int faceId)
+CellFace<MeshType> Cell<MeshType>::getFace(int faceId)
 {
     return CellFace<MeshType> (mesh, cellId, faceId);
 }

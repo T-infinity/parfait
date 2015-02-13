@@ -195,7 +195,7 @@ TEST(ImportedUgridTests, DirectFaceAccess)
 			quadBoundaryConditions);
 	Mesh<ImportedUgrid> mesh(ugrid);	
     auto cell = mesh.cell(0);
-    auto face = cell.faces(0);
+    auto face = cell.getFace(0);
     LONGS_EQUAL(3, face.numberOfNodes());
 }
 

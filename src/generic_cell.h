@@ -26,7 +26,7 @@ public:
   };
   Iterator begin() { return Iterator(*this, 0); }
   Iterator end() { return Iterator(*this, mesh.numberOfFacesInCell(cellId)); }
-  CellFace<MeshType> faces(int faceId);
+  CellFace<MeshType> getFace(int faceId);
 
 private:
   MeshType &mesh;

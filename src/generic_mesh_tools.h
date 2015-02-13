@@ -88,7 +88,7 @@ inline double computeCellVolume(MeshType &mesh_in, CellType &&cell) {
     Point centerOfCell = cellCenter(mesh, cell);
 
     for (int faceId : range(cell.numberOfFaces())) {
-        auto face = cell.faces(faceId);
+        auto face = cell.getFace(faceId);
         auto faceNodes = face.getNodes();
         Point faceCenter = computeCenter(mesh, faceNodes);
 
