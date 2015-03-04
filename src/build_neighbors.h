@@ -13,7 +13,7 @@ public:
     std::vector<std::vector<int>> neighbors;
 
     NeighborBuilder(MeshType &mesh_interface)
-    : mesh(mesh_interface), neighbors(mesh.numberOfCells()){
+            : mesh(mesh_interface), neighbors(mesh.numberOfCells()){
         for(int cellId = 0; cellId < mesh.numberOfCells(); cellId++){
             neighbors[cellId].resize(mesh.numberOfFacesInCell(cellId), -1);
         }
@@ -21,24 +21,37 @@ public:
         nodeToCell = buildNodeToCell(mesh_interface);
 
         for(auto cell : mesh.cells()){
-            auto cellNodes = cell.getNodes();
-            std::vector<int> neighborMaybe;
-            for(int cellNode : cellNodes){
-                for(int candidate : nodeToCell[cellNode])
-                    insertUnique(neighborMaybe, candidate);
-            }
-            for(int candidateId : neighborMaybe){
-                if(candidateId == cell.Id()) continue;
-                for(auto face: cell){
-                    for(auto neighborFace : mesh.cell(candidateId)){
-                        if(facesMatch(face, neighborFace)){
-                            neighbors[cell.Id()][face.Id()] = candidateId;
-                            break;
-                        }
-                    }
+            setCellNeighbors(cell);
+        }
+    }
+
+    void setCellNeighbors(Cell<MeshType> &cell) {
+        auto cellNodes = cell.getNodes();
+        std::vector<int> neighborMaybe = getCandidateNeighbors(cellNodes);
+        for(auto face: cell){
+            neighbors[cell.Id()][face.Id()] = getFaceNeighbor(cell, neighborMaybe, face);
+        }
+    }
+
+    int getFaceNeighbor(Cell<MeshType> &cell, vector<int> &neighborMaybe, CellFace<MeshType> &face) {
+        for(int candidateId : neighborMaybe){
+            if(candidateId == cell.Id()) continue;
+            for(auto neighborFace : mesh.cell(candidateId)){
+                if(facesMatch(face, neighborFace)){
+                    return candidateId;
                 }
             }
         }
+        return -1;
+    }
+
+    std::vector<int> getCandidateNeighbors(vector<int> &cellNodes) {
+        vector<int> neighborMaybe;
+        for(int cellNode : cellNodes){
+            for(int candidate : nodeToCell[cellNode])
+                insertUnique(neighborMaybe, candidate);
+        }
+        return neighborMaybe;
     }
 };
 
