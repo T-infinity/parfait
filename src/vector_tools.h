@@ -5,7 +5,7 @@
 // Searches Linearly if an item is in a vector
 // Can be used on non-sorted arrays (and non-sortable data structures)
 template <class T>
-inline bool isIn(std::vector<T> &vec, T t){
+inline bool isIn(const std::vector<T> &vec, T t){
 
     for(auto u : vec){
         if(t == u){

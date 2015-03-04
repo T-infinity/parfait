@@ -74,6 +74,15 @@ void putAllNodesIntoList(Mesh<T> &mesh, vector<int> &nodeIds) {
 }
 
 template<typename T>
+std::vector<std::vector<int>> buildNodeToNode(T &meshInterface){
+    std::vector<int> nodeIds(meshInterface.numberOfNodes());
+    for(int i = 0; i < nodeIds.size(); i++){
+        nodeIds[i] = i;
+    }
+    return buildNodeToNode(meshInterface, nodeIds);
+}
+
+template<typename T>
 vector<vector<int> > buildNodeToNode(T &meshInterface,vector<int> &nodeIds) {
 	Mesh<T> mesh(meshInterface);
 
