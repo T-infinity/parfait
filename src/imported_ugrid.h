@@ -16,7 +16,7 @@ using std::vector;
 class ImportedUgrid
 {
 	public:
-		// Any Generic mesh must implement the following 
+		// Any Generic mesh must implement the following
 		// functions (no inheritance required)
 		void getNode(int nodeId,double node[3]) const;
 		int numberOfNodes() const;

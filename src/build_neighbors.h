@@ -2,6 +2,7 @@
 #include "generic_mesh.h"
 #include "node_to_cell.h"
 #include <vector>
+#include <tuple>
 
 template <class MeshType>
 class NeighborBuilder{
@@ -29,20 +30,26 @@ public:
         auto cellNodes = cell.getNodes();
         std::vector<int> neighborMaybe = getCandidateNeighbors(cellNodes);
         for(auto face: cell){
-            neighbors[cell.Id()][face.Id()] = getFaceNeighbor(cell, neighborMaybe, face);
+            if(neighbors[cell.Id()][face.Id()] != -1) continue;
+            int neighborCellId, neighborFaceId;
+            std::tie(neighborCellId, neighborFaceId) = getCellIdAndFaceIdOfNeighbor(cell, neighborMaybe, face);
+            neighbors[cell.Id()][face.Id()] = neighborCellId;
+            if(neighborCellId != -1)
+                neighbors[neighborCellId][neighborFaceId] = cell.Id();
         }
     }
 
-    int getFaceNeighbor(Cell<MeshType> &cell, vector<int> &neighborMaybe, CellFace<MeshType> &face) {
+    std::tuple<int, int> getCellIdAndFaceIdOfNeighbor(Cell<MeshType> &cell, vector<int> &neighborMaybe, CellFace<MeshType> &face) {
         for(int candidateId : neighborMaybe){
             if(candidateId == cell.Id()) continue;
+            int faceId = 0;
             for(auto neighborFace : mesh.cell(candidateId)){
-                if(facesMatch(face, neighborFace)){
-                    return candidateId;
-                }
+                if(facesMatch(face, neighborFace))
+                    return std::tuple<int,int>{candidateId, faceId};
+                faceId++;
             }
         }
-        return -1;
+        return std::tuple<int,int>{-1,-1};
     }
 
     std::vector<int> getCandidateNeighbors(vector<int> &cellNodes) {
