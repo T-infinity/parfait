@@ -11,5 +11,10 @@ void MessagePasser::Recv(double &value,int source){}
 void MessagePasser::Recv(float &value,int source){}
 void MessagePasser::Recv(int &value,int source){}
 
+// recv a single value from any source
+void MessagePasser::Recv(double &value){}
+void MessagePasser::Recv(float &value){}
+void MessagePasser::Recv(int &value){}
+
 
 #endif

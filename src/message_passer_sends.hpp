@@ -1,13 +1,6 @@
 
 	
 
-	// recv a single value from any source
-	template<typename T>	
-	void Recv(T &value)
-	{
-		MPI_Status status;
-		MPI_Recv(&value,1,Type(value),MPI_ANY_SOURCE,0,MPI_COMM_WORLD,&status);
-	}
 
 	// send a vector (receiver knows length)
 	template<typename T>

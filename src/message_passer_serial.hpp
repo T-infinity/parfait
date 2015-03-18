@@ -18,8 +18,9 @@ namespace MessagePasser
     void Recv(int& value,int source);
     
 	// recv a single value from any source
-	template<typename T>	
-	void Recv(T &value){}
+	void Recv(double& value);
+	void Recv(float& value);
+	void Recv(int& value);
 
 	// send a vector (receiver knows length)
 	template<typename T>
