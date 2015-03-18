@@ -1,8 +1,7 @@
 // send a vector (receiver knows length)
 template<typename T>
 void Send(std::vector<T> &vec,int length,int destination){
-    T t;
-    MPI_Send(&vec[0],length,Type(t),destination,0,MPI_COMM_WORLD);
+    MPI_Send(&vec[0],length,Type(T()),destination,0,MPI_COMM_WORLD);
 }
 
 // send a vector (receiver doesn't know length)
