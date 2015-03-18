@@ -21,8 +21,9 @@ namespace MessagePasser
 	
 	//-------------- point to point communication ---------------------
 	//Send a single value
-	template<typename T>
-	void Send(T value,int destination);
+	void Send(double value,int destination);
+	void Send(float value,int destination);
+	void Send(int value,int destination);
 	
 	// recv a single value
 	template<typename T>	

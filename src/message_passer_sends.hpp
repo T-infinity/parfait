@@ -1,10 +1,4 @@
 
-	//Send a single value
-	template<typename T>
-	void Send(T value,int destination)
-	{
-		MPI_Send(&value,1,Type(value),destination,0,MPI_COMM_WORLD);
-	}
 	
 	// recv a single value
 	template<typename T>	

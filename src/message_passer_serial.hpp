@@ -8,9 +8,6 @@ namespace MessagePasser
 	inline void Barrier() {}
 	
 	//-------------- point to point communication ---------------------
-	//Send a single value
-	template<typename T>
-	void Send(T value,int destination){}
 	
 	// recv a single value
 	template<typename T>	
