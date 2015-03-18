@@ -26,8 +26,9 @@ namespace MessagePasser
 	void Send(int value,int destination);
 	
 	// recv a single value
-	template<typename T>	
-	void Recv(T &value,int source);
+	void Recv(double &value,int source);
+	void Recv(float &value,int source);
+	void Recv(int &value,int source);
 
 	// recv a single value from any source
 	template<typename T>	

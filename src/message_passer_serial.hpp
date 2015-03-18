@@ -9,10 +9,14 @@ namespace MessagePasser
 	
 	//-------------- point to point communication ---------------------
 	
-	// recv a single value
-	template<typename T>	
-	void Recv(T &value,int source){}
+    void Send(double value,int source);
+    void Send(float value,int source);
+    void Send(int value,int source);
 
+    void Recv(double& value,int source);
+    void Recv(float& value,int source);
+    void Recv(int& value,int source);
+    
 	// recv a single value from any source
 	template<typename T>	
 	void Recv(T &value){}

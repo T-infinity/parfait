@@ -1,12 +1,5 @@
 
 	
-	// recv a single value
-	template<typename T>	
-	void Recv(T &value,int source)
-	{
-		MPI_Status status;
-		MPI_Recv(&value,1,Type(value),source,0,MPI_COMM_WORLD,&status);
-	}
 
 	// recv a single value from any source
 	template<typename T>	

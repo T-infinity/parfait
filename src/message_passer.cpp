@@ -38,6 +38,19 @@ void MessagePasser::Send(int value,int destination){
 }
 
 
+// recv a single value
+void MessagePasser::Recv(double &value,int source){
+    MPI_Status status;
+    MPI_Recv(&value,1,Type(value),source,0,MPI_COMM_WORLD,&status);
+}
+void MessagePasser::Recv(float &value,int source){
+    MPI_Status status;
+    MPI_Recv(&value,1,Type(value),source,0,MPI_COMM_WORLD,&status);
+}
+void MessagePasser::Recv(int &value,int source){
+    MPI_Status status;
+    MPI_Recv(&value,1,Type(value),source,0,MPI_COMM_WORLD,&status);
+}
 
 #endif
 
