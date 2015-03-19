@@ -121,3 +121,16 @@ TEST(Adt, CornerCaseStoreMinus10){
 
     LONGS_EQUAL(1, inside.size());
 }
+
+TEST(Adt, copyable){
+    Adt adt(ADT_3D_POINT);
+
+    double domain[6] = {0,0,0,0,0,0};
+    adt.store(-10, domain);
+
+    Adt adt2 = adt;
+    double extent[6] = {0,0,0,1,1,1};
+    auto inside = adt2.retrieve(extent);
+    LONGS_EQUAL(1, inside.size());
+    LONGS_EQUAL(-10, inside[0]);
+}

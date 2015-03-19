@@ -3,13 +3,6 @@
 #include <stdlib.h>
 #include <assert.h>
 
-Adt_elem::Adt_elem() {
-    printf("Are you sure you want to call this constructor?\n");
-    abort();
-}
-
-Adt_elem::~Adt_elem() {}
-
 Adt_elem::Adt_elem(int set_level, const double *set_xmin,
                    const double *set_xmax, int ndim) {
     double blank_x[ndim];
@@ -41,22 +34,23 @@ void Adt_elem::construct(int set_level, const double *set_xmin,
     }
 }
 
-bool Adt_elem::contains_object(const double *x_in, int ndim) {
+bool Adt_elem::contains_object(const double *x_in, int ndim) const {
     for (int i = 0; i < ndim; i++)
         if (x_in[i] < xmin[i] - ADT_TOL || x_in[i] > xmax[i] + ADT_TOL)
             return false;
     return true;
 }
 
-bool Adt_elem::contains_hyper_rectangle(const double *a, const double *b,
-                                        int ndim) {
+bool Adt_elem::contains_hyper_rectangle(const double *a,
+        const double *b, int ndim) const {
+
     for (int i = 0; i < ndim; i++)
         if (b[i] < xmin[i] - ADT_TOL || a[i] > xmax[i] + ADT_TOL) return false;
     return true;
 }
 
 bool Adt_elem::hyper_rectangle_contains_object(const double *a, const double *b,
-                                               int ndim) {
+                                               int ndim) const {
     for (int i = 0; i < ndim; i++)
         if (b[i] < object_x[i] - ADT_TOL || a[i] > object_x[i] + ADT_TOL)
             return false;

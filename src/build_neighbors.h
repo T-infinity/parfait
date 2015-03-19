@@ -28,8 +28,8 @@ public:
 
     void setCellNeighbors(Cell<MeshType> &cell) {
         auto cellNodes = cell.getNodes();
-        std::vector<int> neighborMaybe = getCandidateNeighbors(cellNodes);
         for(auto face: cell){
+            std::vector<int> neighborMaybe = nodeToCell[face.getNodes()[0]];
             if(neighbors[cell.Id()][face.Id()] != -1) continue;
             int neighborCellId, neighborFaceId;
             std::tie(neighborCellId, neighborFaceId) = getCellIdAndFaceIdOfNeighbor(cell, neighborMaybe, face);
@@ -43,8 +43,12 @@ public:
         for(int candidateId : neighborMaybe){
             if(candidateId == cell.Id()) continue;
             int faceId = 0;
+            auto faceNodes = face.getNodes();
+            std::sort(faceNodes.begin(), faceNodes.end());
             for(auto neighborFace : mesh.cell(candidateId)){
-                if(facesMatch(face, neighborFace))
+                auto neighborNodes = neighborFace.getNodes();
+                std::sort(neighborNodes.begin(), neighborNodes.end());
+                if(faceNodes == neighborNodes)
                     return std::tuple<int,int>{candidateId, faceId};
                 faceId++;
             }
