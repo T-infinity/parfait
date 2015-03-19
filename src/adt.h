@@ -18,8 +18,7 @@ class Adt
 {
 	public:
 		int nelem;
-		std::vector<Adt_elem*> SearchTree;
-		~Adt();
+		std::vector<Adt_elem> SearchTree;
 		Adt(int adt_type);
 		void store(int object_id, const double *x);	
         std::vector<int> retrieve(const double *extent) const;

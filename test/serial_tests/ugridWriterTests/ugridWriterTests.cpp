@@ -5,7 +5,7 @@
 using std::vector;
 
 TEST_GROUP(ugridWriterTests){
-std::string gridFile;
+    std::string gridFile;
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     vector<double> nodes;
     vector<int> triangles;
@@ -143,6 +143,6 @@ TEST(ugridWriterTests,WriteWithOneFunctionCall)
 	using namespace UgridWriter;
 	writeImportedUgrid(ugrid,newGridName,false);
 
-    CHECK(isTestGridValid(newGridName));
+  CHECK(isTestGridValid(newGridName));
 
 }

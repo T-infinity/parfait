@@ -22,15 +22,14 @@ using std::string;
 template<typename T>
 bool facesMatch(T faceOne,T faceTwo)
 {
-	auto nodeList = faceOne.getNodes();
-	std::sort(nodeList.begin(),nodeList.end());
-	
-	for(int node : faceTwo.getNodes())
-		insertUnique(nodeList,node);
-	
-	if(faceOne.numberOfNodes() == nodeList.size())
-		return true;
-	return false;
+	auto face1Nodes = faceOne.getNodes();
+    auto face2Nodes = faceTwo.getNodes();
+    if(face1Nodes.size() != face2Nodes.size())
+        return false;
+	std::sort(face1Nodes.begin(), face1Nodes.end());
+    std::sort(face2Nodes.begin(), face2Nodes.end());
+
+	return face1Nodes == face2Nodes;
 }
 #if 0
 template <typename MeshType> 

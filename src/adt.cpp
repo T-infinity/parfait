@@ -7,12 +7,12 @@ Adt::Adt() {
     abort();
 }
 
-Adt::~Adt() {
-
-     for (int i = 0; i < SearchTree.size(); i++) {
-        delete SearchTree[i];
-    }
-}
+//Adt::~Adt() {
+//
+//     for (int i = 0; i < SearchTree.size(); i++) {
+//        delete SearchTree[i];
+//    }
+//}
 
 Adt::Adt(int adt_type) {
     //------------------------------------------------------------------
@@ -76,7 +76,7 @@ void Adt::store(int object_id, const double *x) {
             xmin[i] = 0.0;
             xmax[i] = 1.0;
         }
-        SearchTree.push_back(new Adt_elem(4, xmin, xmax, ndim, object_id, x));
+        SearchTree.push_back(Adt_elem{4, xmin, xmax, ndim, object_id, x});
         nelem = 1;
     } else {
         store(0, object_id, x);
@@ -85,7 +85,7 @@ void Adt::store(int object_id, const double *x) {
 
 void Adt::store(int elem_id, int object_id, const double *x) {
     if (stored) return;
-    Adt_elem *elem = SearchTree[elem_id];
+    Adt_elem *elem = &SearchTree[elem_id];
     if (elem->contains_object(x, ndim)) {
         // if kids exist, pass to them
         if (elem->lchild != ADT_NO_CHILD) store(elem->lchild, object_id, x);
@@ -132,7 +132,7 @@ void Adt::store(int elem_id, int object_id, const double *x) {
             elem->rchild = nelem;
         }
         SearchTree.push_back(
-            new Adt_elem(child_level, xmin, xmax, ndim, object_id, x));
+            Adt_elem{child_level, xmin, xmax, ndim, object_id, x});
         nelem++;
         stored = true;
     }
@@ -143,7 +143,7 @@ void Adt::retrieve(std::vector<int> &ids, double *a, double *b) const {
 }
 
 void Adt::retrieve(int elem_id, std::vector<int> &ids, double *a, double *b) const {
-    Adt_elem *elem = SearchTree[elem_id];
+    const Adt_elem *elem = &SearchTree[elem_id];
     if (!elem->contains_hyper_rectangle(a, b, ndim)) return;
     if (elem->hyper_rectangle_contains_object(a, b, ndim))
         ids.push_back(elem->object_id);
@@ -209,17 +209,17 @@ void Adt::print_debug_stats(FILE *f) {
     // to help see how balanced / unbalanced it is
     int no_kids = 0, left_kid = 0, right_kid = 0, two_kids = 0;
     for (int i = 0; i < nelem; i++) {
-        if ((SearchTree[i]->lchild != ADT_NO_CHILD) &&
-            (SearchTree[i]->rchild != ADT_NO_CHILD))
+        if ((SearchTree[i].lchild != ADT_NO_CHILD) &&
+            (SearchTree[i].rchild != ADT_NO_CHILD))
             two_kids++;
-        if ((SearchTree[i]->lchild == ADT_NO_CHILD) &&
-            (SearchTree[i]->rchild == ADT_NO_CHILD))
+        if ((SearchTree[i].lchild == ADT_NO_CHILD) &&
+            (SearchTree[i].rchild == ADT_NO_CHILD))
             no_kids++;
-        if ((SearchTree[i]->lchild != ADT_NO_CHILD) &&
-            (SearchTree[i]->rchild == ADT_NO_CHILD))
+        if ((SearchTree[i].lchild != ADT_NO_CHILD) &&
+            (SearchTree[i].rchild == ADT_NO_CHILD))
             left_kid++;
-        if ((SearchTree[i]->lchild == ADT_NO_CHILD) &&
-            (SearchTree[i]->rchild != ADT_NO_CHILD))
+        if ((SearchTree[i].lchild == ADT_NO_CHILD) &&
+            (SearchTree[i].rchild != ADT_NO_CHILD))
             right_kid++;
     }
 
