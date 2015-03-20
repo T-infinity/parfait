@@ -8,7 +8,6 @@ void Send(std::vector<T> &vec,int length,int destination){
 template<typename T>
 void Send(std::vector<T> &vec,int destination){
     int length = (int)vec.size();
-    Send(length,destination);
     Send(vec,length,destination);
 }
 

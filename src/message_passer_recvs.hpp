@@ -11,10 +11,12 @@ void Recv(std::vector<T> &vec,int length,int source){
 // recv a vector (receiver doesn't know length)
 template<typename T>
 void Recv(std::vector<T> &vec,int source){
-    vec.clear();
-    int length=0;
-    Recv(length,source);
-    Recv(vec,length,source);
+    int n=0;
+    MPI_Status status;
+    MPI_Probe(source,0,MPI_COMM_WORLD,&status);
+    MPI_Get_count(&status,Type(T()),&n);
+    vec.assign(n,0);
+    MPI_Recv(vec.data(),n,Type(T()),source,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE);
 }
 
 // Recv a vector of vectors
