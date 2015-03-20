@@ -14,6 +14,8 @@ class UnitTransformer {
     public:
     UnitTransformer(const Extent &extent_i) : extent(extent_i) { GetScale(); }
 
+    inline Extent getDomain() const { return extent;}
+
     inline double GetScale() {
         double dx = extent.hi[0] - extent.lo[0];
         double dy = extent.hi[1] - extent.lo[1];

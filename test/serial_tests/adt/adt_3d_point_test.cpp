@@ -85,3 +85,12 @@ TEST(Adt3DPoint, copyable){
     LONGS_EQUAL(1,inside.size());
     LONGS_EQUAL(1, inside[0]);
 }
+
+TEST(Adt3DPoint, copyableBig){
+    Adt3DPoint adt({{0,0,0},{1,1,1}});
+    for(int i = 0; i < 1e3; i++)
+    adt.store(1, {.5,.5,.5});
+
+
+
+}

@@ -85,32 +85,33 @@ void Adt::store(int object_id, const double *x) {
 
 void Adt::store(int elem_id, int object_id, const double *x) {
     if (stored) return;
-    Adt_elem *elem = &SearchTree[elem_id];
-    if (elem->contains_object(x, ndim)) {
+    if (SearchTree[elem_id].contains_object(x, ndim)) {
         // if kids exist, pass to them
-        if (elem->lchild != ADT_NO_CHILD) store(elem->lchild, object_id, x);
-        if (elem->rchild != ADT_NO_CHILD) store(elem->rchild, object_id, x);
+        if (SearchTree[elem_id].lchild != ADT_NO_CHILD)
+            store(SearchTree[elem_id].lchild, object_id, x);
+        if (SearchTree[elem_id].rchild != ADT_NO_CHILD)
+            store(SearchTree[elem_id].rchild, object_id, x);
         if (stored) return;
         // now both branches have been attempted if they
         // exist, so there are 3 possibilities
         // 1. both kids blank
         // 2. left kid blank
         // 3. right kid blank
-        int split_axis = elem->level % ndim;
-        int child_level = elem->level + 1;
-        double midpoint = 0.5 * (elem->xmax[split_axis] + elem->xmin[split_axis]);
+        int split_axis = SearchTree[elem_id].level % ndim;
+        int child_level = SearchTree[elem_id].level + 1;
+        double midpoint = 0.5 * (SearchTree[elem_id].xmax[split_axis] + SearchTree[elem_id].xmin[split_axis]);
         bool create_left_child = false;
         bool create_right_child = false;
-        if ((elem->lchild == ADT_NO_CHILD) && (elem->rchild == ADT_NO_CHILD)) {
+        if ((SearchTree[elem_id].lchild == ADT_NO_CHILD) && (SearchTree[elem_id].rchild == ADT_NO_CHILD)) {
             // figure out which child contains the object
             if (x[split_axis] < midpoint)
                 create_left_child = true;
             else
                 create_right_child = true;
-        } else if ((elem->lchild == ADT_NO_CHILD) &&
-                   (elem->rchild != ADT_NO_CHILD))
+        } else if ((SearchTree[elem_id].lchild == ADT_NO_CHILD) &&
+                   (SearchTree[elem_id].rchild != ADT_NO_CHILD))
             create_left_child = true;
-        else if ((elem->lchild != ADT_NO_CHILD) && (elem->rchild == ADT_NO_CHILD))
+        else if ((SearchTree[elem_id].lchild != ADT_NO_CHILD) && (SearchTree[elem_id].rchild == ADT_NO_CHILD))
             create_right_child = true;
         else
             assert(false);
@@ -119,17 +120,17 @@ void Adt::store(int elem_id, int object_id, const double *x) {
         double xmin[ndim], xmax[ndim];
         // clone the extent of elem
         for (int i = 0; i < ndim; i++) {
-            xmin[i] = elem->xmin[i];
-            xmax[i] = elem->xmax[i];
+            xmin[i] = SearchTree[elem_id].xmin[i];
+            xmax[i] = SearchTree[elem_id].xmax[i];
         }
         // then split in half, on the correct axis
         // and create the child
         if (create_left_child) {
             xmax[split_axis] = midpoint;
-            elem->lchild = nelem;
+            SearchTree[elem_id].lchild = nelem;
         } else {
             xmin[split_axis] = midpoint;
-            elem->rchild = nelem;
+            SearchTree[elem_id].rchild = nelem;
         }
         SearchTree.push_back(
             Adt_elem{child_level, xmin, xmax, ndim, object_id, x});
