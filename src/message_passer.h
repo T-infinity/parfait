@@ -21,16 +21,19 @@ namespace MessagePasser
 	
 	//-------------- point to point communication ---------------------
 	//Send a single value
-	template<typename T>
-	void Send(T value,int destination);
+	void Send(double value,int destination);
+	void Send(float value,int destination);
+	void Send(int value,int destination);
 	
 	// recv a single value
-	template<typename T>	
-	void Recv(T &value,int source);
+	void Recv(double &value,int source);
+	void Recv(float &value,int source);
+	void Recv(int &value,int source);
 
 	// recv a single value from any source
-	template<typename T>	
-	void Recv(T &value);
+	void Recv(double &value);
+	void Recv(float &value);
+	void Recv(int &value);
 
 	// send a vector (receiver knows length)
 	template<typename T>
