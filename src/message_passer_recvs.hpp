@@ -32,3 +32,11 @@ void Recv(std::vector<std::vector<T>> &vec,int source){
         for(int j=recvBufferMap[i];j<recvBufferMap[i+1];j++)
             vec[i].push_back(recvBuffer[j]);
 }
+
+template<typename T>
+MessageStatus NonBlockingRecv(std::vector<T>& vec,int length,int source){
+    MessageStatus status;
+    vec.assign(length,0);
+    MPI_Irecv(vec.data(),length,Type(T()),source,0,MPI_COMM_WORLD,status.request());
+    return status;
+}

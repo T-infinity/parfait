@@ -54,6 +54,9 @@ namespace MessagePasser
     template<typename T>
     MessageStatus NonBlockingSend(std::vector<T>& vec,int destination);
 
+    template<typename T>
+    MessageStatus NonBlockingRecv(std::vector<T>& vec,int length,int source);
+
 	// recv a vector (receiver knows length)
 	template<typename T>
 	void Recv(std::vector<T> &vec,int length,int source);

@@ -21,15 +21,21 @@ TEST_GROUP(MessagePasserStatusTests)
 
 TEST(MessagePasserStatusTests,CheckSendStatus)
 {   
+    vector<int> recv_ones;
+    MessageStatus recv_status = NonBlockingRecv(recv_ones,30000,0);
+    
     vector<MessageStatus> statuses;
     if(Rank() == 0){
-        vector<int> ones(300000);
+        vector<int> ones(30000,1);
         for(int i=0;i<NumberOfProcesses();i++)
             statuses.push_back(NonBlockingSend(ones,i));
     }
-    vector<int> recv_ones;
-    Recv(recv_ones,0);
     
+    Wait(recv_status);
+
+    LONGS_EQUAL(30000,recv_ones.size());
+    LONGS_EQUAL(1,recv_ones[0]);
+
     if(Rank() == 0){
         WaitAll(statuses);
     }
