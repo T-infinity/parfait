@@ -275,6 +275,19 @@ TEST(MessagePasserTests,Exists)
 		// check that everyone has the right size vector
 		LONGS_EQUAL(0,(int)vec.size());
 	}
+
+    {
+        // test ready send
+        vector<int> vec(300000,0);
+        if(Rank() == 0){
+            for(int i=0;i<NumberOfProcesses();i++){
+                 NonBlockingSend(vec,i);     
+            }
+        }
+        vector<int> recv_vec;
+        Recv(recv_vec,0);
+        LONGS_EQUAL(300000,recv_vec.size());
+    }
 	
 	// test Send for vector of vector of integers
 	{
@@ -760,6 +773,23 @@ TEST(MessagePasserTests,Exists)
 				}	
 			}
 		}
+	}
+	
+    {
+		// test Gatherv for integers (but don't pass a map
+		int root = 0;
+		std::vector<int> send_vec;
+		std::vector<int> recv_vec;
+		int num = 0;
+		// even and odd procs have size 2 & 3 vectors respectively
+		if(Rank() % 2 == 0)
+			num = 2;
+		else 
+			num = 3;
+		for(int i=0;i<num;i++)
+			send_vec.push_back(Rank()+i);
+		Gatherv(send_vec,recv_vec,root);
+        // just make sure it gets called, since it is just a delegation
 	}
 	
 	{

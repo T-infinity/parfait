@@ -29,3 +29,15 @@ void Send(std::vector<std::vector<T>> &vec,int destination){
     Send(sendBuffer,destination);
 }
 
+// ready send a vector
+template<typename T>
+MessageStatus NonBlockingSend(std::vector<T>& vec,int length,int destination){
+    MessageStatus status;
+    MPI_Isend(vec.data(),length,Type(T()),destination,0,MPI_COMM_WORLD,status.request()); 
+    return status;
+}
+
+template<typename T>
+MessageStatus NonBlockingSend(std::vector<T>& vec,int destination){
+    return NonBlockingSend(vec,vec.size(),destination);
+}

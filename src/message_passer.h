@@ -5,6 +5,8 @@
 #ifdef PARFAIT_WITH_MPI
 
 #include <mpi.h>
+#include "message_passer_status.h"
+
 namespace MessagePasser
 {
 	// Basic utility functions
@@ -24,8 +26,14 @@ namespace MessagePasser
 	void Send(double value,int destination);
 	void Send(float value,int destination);
 	void Send(int value,int destination);
+
+	template<typename StatusType>
+    void Wait(StatusType& status);
+
+    template<typename StatusType>
+    void WaitAll(std::vector<StatusType>& statuses);
 	
-	// recv a single value
+    // recv a single value
 	void Recv(double &value,int source);
 	void Recv(float &value,int source);
 	void Recv(int &value,int source);
@@ -38,6 +46,13 @@ namespace MessagePasser
 	// send a vector (receiver knows length)
 	template<typename T>
 	void Send(std::vector<T> &vec,int length,int destination);
+
+    // ready send vector
+    template<typename T>
+    MessageStatus NonBlockingSend(std::vector<T>& vec,int length,int destination);
+
+    template<typename T>
+    MessageStatus NonBlockingSend(std::vector<T>& vec,int destination);
 
 	// recv a vector (receiver knows length)
 	template<typename T>
@@ -87,6 +102,11 @@ namespace MessagePasser
 	template<typename T>
 	void Gatherv(std::vector<T> &send_vec,std::vector<T> &recv_vec,
 			std::vector<int> &map,int rootId);
+	
+    // same as above, but no map passed
+    template<typename T>
+	void Gatherv(std::vector<T> &send_vec,std::vector<T> &recv_vec,
+			int rootId);
 
 	// broadcast a value
 	template<typename T>
@@ -133,6 +153,7 @@ namespace MessagePasser
 	// -------- Implementation files -------------------------------------
 	#include "message_passer_sends.hpp"
 	#include "message_passer_recvs.hpp"
+    #include "message_passer_wait.hpp"
 	#include "message_passer_gathers.hpp"
 	#include "message_passer_broadcasts.hpp"
 	#include "message_passer_scatters.hpp"
