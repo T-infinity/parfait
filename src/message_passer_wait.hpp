@@ -6,8 +6,8 @@ void Wait(StatusType& status){
 
 template<typename StatusType>
 void WaitAll(std::vector<StatusType>& statuses){
-    for(int i=0;i<NumberOfProcesses();i++){
+    for(auto& status:statuses){
         MPI_Status s;
-        MPI_Wait(statuses[i].request(),&s);
+        MPI_Wait(status.request(),&s);
     }
 }
