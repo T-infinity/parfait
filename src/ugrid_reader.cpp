@@ -10,106 +10,106 @@ void UgridReader::readHeader(std::string filename,int &nnodes,
 	readHeader(filename,nnodes,ntri,nquad,ntet,npyr,nprism,nhex,false);
 }
 
-std::vector<double> UgridReader::readNodes(std::string &filename)
+std::vector<double> UgridReader::readNodes(std::string filename)
 {
 	return readNodes(filename,false);
 }
 
-std::vector<int> UgridReader::readTriangles(std::string &filename)
+std::vector<int> UgridReader::readTriangles(std::string filename)
 {
 	return readTriangles(filename,false);
 }
 
-std::vector<int> UgridReader::readQuads(std::string &filename)
+std::vector<int> UgridReader::readQuads(std::string filename)
 {
 	return readQuads(filename,false);
 }
 
-std::vector<int> UgridReader::readTets(std::string &filename)
+std::vector<int> UgridReader::readTets(std::string filename)
 {
 	return readTets(filename,false);
 }
 
-std::vector<int> UgridReader::readPyramids(std::string &filename)
+std::vector<int> UgridReader::readPyramids(std::string filename)
 {
 	return readPyramids(filename,false);
 }
 
-std::vector<int> UgridReader::readPrisms(std::string &filename)
+std::vector<int> UgridReader::readPrisms(std::string filename)
 {
 	return readPrisms(filename,false);
 }
 
-std::vector<int> UgridReader::readHexs(std::string &filename)
+std::vector<int> UgridReader::readHexs(std::string filename)
 {
 	return readHexs(filename,false);
 }
 
-std::vector<int> UgridReader::readTriangleBoundaryTags(std::string &filename)
+std::vector<int> UgridReader::readTriangleBoundaryTags(std::string filename)
 {
 	return readTriangleBoundaryTags(filename,false);
 }
 
-std::vector<int> UgridReader::readQuadBoundaryTags(std::string &filename)
+std::vector<int> UgridReader::readQuadBoundaryTags(std::string filename)
 {
 	return readQuadBoundaryTags(filename,false);
 }
 
-std::vector<double> UgridReader::readNodes(std::string &filename,
+std::vector<double> UgridReader::readNodes(std::string filename,
 		int begin,int end)
 {
 	return readNodes(filename,begin,end,false);
 }
 
-std::vector<int> UgridReader::readTriangles(std::string &filename,
+std::vector<int> UgridReader::readTriangles(std::string filename,
 		int begin,int end)
 {
 	return readTriangles(filename,begin,end,false);
 }
 
-std::vector<int> UgridReader::readQuads(std::string &filename,
+std::vector<int> UgridReader::readQuads(std::string filename,
 		int begin,int end)
 {
 	return readQuads(filename,begin,end,false);
 }
 
-std::vector<int> UgridReader::readTets(std::string &filename,
+std::vector<int> UgridReader::readTets(std::string filename,
 		int begin,int end)
 {
 	return readTets(filename,begin,end,false);
 }
 
-std::vector<int> UgridReader::readPyramids(std::string &filename,
+std::vector<int> UgridReader::readPyramids(std::string filename,
 		int begin,int end)
 {
 	return readPyramids(filename,begin,end,false);
 }
 
-std::vector<int> UgridReader::readPrisms(std::string &filename,
+std::vector<int> UgridReader::readPrisms(std::string filename,
 		int begin,int end)
 {
 	return readPrisms(filename,begin,end,false);
 }
 
-std::vector<int> UgridReader::readHexs(std::string &filename,
+std::vector<int> UgridReader::readHexs(std::string filename,
 		int begin,int end)
 {
 	return readHexs(filename,begin,end,false);
 }
 
-std::vector<int> UgridReader::readBoundaryTags(std::string &filename,
+std::vector<int> UgridReader::readBoundaryTags(std::string filename,
 		int begin,int end)
 {
 	return readBoundaryTags(filename,begin,end,false);
 }
 
-std::vector<int> UgridReader::readTriangleBoundaryTags(std::string &filename,
+std::vector<int> UgridReader::readTriangleBoundaryTags(std::string filename,
 		int begin,int end)
 {
 	return readTriangleBoundaryTags(filename,begin,end,false);
 }
 
-std::vector<int> UgridReader::readQuadBoundaryTags(std::string &filename,
+std::vector<int> UgridReader::readQuadBoundaryTags(std::string filename,
 		int begin,int end)
 {
 	return readQuadBoundaryTags(filename,begin,end,false);
@@ -125,7 +125,7 @@ std::vector<int> UgridReader::readQuadBoundaryTags(std::string &filename,
 
 
 
-void UgridReader::readHeader(std::string &filename,int &nnodes,
+void UgridReader::readHeader(std::string filename,int &nnodes,
         int &ntri,int &nquad,
         int &ntet,int &npyr,int &nprism,int &nhex,bool swapBytes)
 {
@@ -156,14 +156,14 @@ void UgridReader::readHeader(std::string &filename,int &nnodes,
     fclose(f);
 }
 
-std::vector<double> UgridReader::readNodes(std::string &filename,bool swapBytes)
+std::vector<double> UgridReader::readNodes(std::string filename,bool swapBytes)
 {
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     readHeader(filename,nnodes,ntri,nquad,ntet,npyr,nprism,nhex,swapBytes);	
     return readNodes(filename,0,nnodes,swapBytes);
 }
 
-std::vector<double> UgridReader::readNodes(std::string &filename,int begin,int end,bool swapBytes)
+std::vector<double> UgridReader::readNodes(std::string filename,int begin,int end,bool swapBytes)
 {
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     // get header info and allocate space for triangles
@@ -186,14 +186,14 @@ std::vector<double> UgridReader::readNodes(std::string &filename,int begin,int e
     return nodes;
 }
 
-std::vector<int> UgridReader::readTriangles(std::string &filename,bool swapBytes)
+std::vector<int> UgridReader::readTriangles(std::string filename,bool swapBytes)
 {
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     readHeader(filename,nnodes,ntri,nquad,ntet,npyr,nprism,nhex,swapBytes);	
     return readTriangles(filename,0,ntri,swapBytes);
 }
 
-std::vector<int> UgridReader::readTriangles(std::string &filename,int begin,int end,bool swapBytes)
+std::vector<int> UgridReader::readTriangles(std::string filename,int begin,int end,bool swapBytes)
 {
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     // get header info and allocate space for triangles
@@ -219,14 +219,14 @@ std::vector<int> UgridReader::readTriangles(std::string &filename,int begin,int 
     return triangles;
 }
 
-std::vector<int> UgridReader::readQuads(std::string &filename,bool swapBytes)
+std::vector<int> UgridReader::readQuads(std::string filename,bool swapBytes)
 {
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     readHeader(filename,nnodes,ntri,nquad,ntet,npyr,nprism,nhex,swapBytes);
     return readQuads(filename,0,nquad,swapBytes);
 }
 
-std::vector<int> UgridReader::readQuads(std::string &filename,int begin,int end,bool swapBytes)
+std::vector<int> UgridReader::readQuads(std::string filename,int begin,int end,bool swapBytes)
 {
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     // get header info and allocate space for triangles
@@ -254,14 +254,14 @@ std::vector<int> UgridReader::readQuads(std::string &filename,int begin,int end,
     return quads;
 }
 
-std::vector<int> UgridReader::readTets(std::string &filename,bool swapBytes)
+std::vector<int> UgridReader::readTets(std::string filename,bool swapBytes)
 {
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     readHeader(filename,nnodes,ntri,nquad,ntet,npyr,nprism,nhex,swapBytes);	
     return readTets(filename,0,ntet,swapBytes);
 }
 
-std::vector<int> UgridReader::readTets(std::string &filename,int begin,int end,bool swapBytes)
+std::vector<int> UgridReader::readTets(std::string filename,int begin,int end,bool swapBytes)
 {
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     // get header info and allocate space for triangles
@@ -291,14 +291,14 @@ std::vector<int> UgridReader::readTets(std::string &filename,int begin,int end,b
     return tets;
 }
 
-std::vector<int> UgridReader::readPyramids(std::string &filename,bool swapBytes)
+std::vector<int> UgridReader::readPyramids(std::string filename,bool swapBytes)
 {
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     readHeader(filename,nnodes,ntri,nquad,ntet,npyr,nprism,nhex,swapBytes);	
     return readPyramids(filename,0,npyr,swapBytes);
 }
 
-std::vector<int> UgridReader::readPyramids(std::string &filename,int begin,int end,bool swapBytes)
+std::vector<int> UgridReader::readPyramids(std::string filename,int begin,int end,bool swapBytes)
 {
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     // get header info and allocate space for triangles
@@ -329,14 +329,14 @@ std::vector<int> UgridReader::readPyramids(std::string &filename,int begin,int e
     return pyrs;
 }
 
-std::vector<int> UgridReader::readPrisms(std::string &filename,bool swapBytes)
+std::vector<int> UgridReader::readPrisms(std::string filename,bool swapBytes)
 {
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     readHeader(filename,nnodes,ntri,nquad,ntet,npyr,nprism,nhex,swapBytes);	
     return readPrisms(filename,0,nprism,swapBytes);
 }
 
-std::vector<int> UgridReader::readPrisms(std::string &filename,int begin,int end,bool swapBytes)
+std::vector<int> UgridReader::readPrisms(std::string filename,int begin,int end,bool swapBytes)
 {
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     // get header info and allocate space for triangles
@@ -368,14 +368,14 @@ std::vector<int> UgridReader::readPrisms(std::string &filename,int begin,int end
     return prisms;
 }
 
-std::vector<int> UgridReader::readHexs(std::string &filename,bool swapBytes)
+std::vector<int> UgridReader::readHexs(std::string filename,bool swapBytes)
 {
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     readHeader(filename,nnodes,ntri,nquad,ntet,npyr,nprism,nhex,swapBytes);	
     return readHexs(filename,0,nhex,swapBytes);
 }
 
-std::vector<int> UgridReader::readHexs(std::string &filename,int begin,int end,bool swapBytes)
+std::vector<int> UgridReader::readHexs(std::string filename,int begin,int end,bool swapBytes)
 {
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     // get header info and allocate space for triangles
@@ -408,35 +408,35 @@ std::vector<int> UgridReader::readHexs(std::string &filename,int begin,int end,b
     return hexs;
 }
 
-std::vector<int> UgridReader::readTriangleBoundaryTags(std::string &filename,bool swapBytes)
+std::vector<int> UgridReader::readTriangleBoundaryTags(std::string filename,bool swapBytes)
 {
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     readHeader(filename,nnodes,ntri,nquad,ntet,npyr,nprism,nhex,swapBytes);	
     return readBoundaryTags(filename,0,ntri,swapBytes);
 }
 
-std::vector<int> UgridReader::readTriangleBoundaryTags(std::string &filename,int begin,int end,bool swapBytes)
+std::vector<int> UgridReader::readTriangleBoundaryTags(std::string filename,int begin,int end,bool swapBytes)
 {
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     readHeader(filename,nnodes,ntri,nquad,ntet,npyr,nprism,nhex,swapBytes);	
     return readBoundaryTags(filename,begin,end,swapBytes);
 }
 
-std::vector<int> UgridReader::readQuadBoundaryTags(std::string &filename,bool swapBytes)
+std::vector<int> UgridReader::readQuadBoundaryTags(std::string filename,bool swapBytes)
 {
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     readHeader(filename,nnodes,ntri,nquad,ntet,npyr,nprism,nhex,swapBytes);	
     return readBoundaryTags(filename,ntri,ntri+nquad,swapBytes);
 }
 
-std::vector<int> UgridReader::readQuadBoundaryTags(std::string &filename,int begin,int end,bool swapBytes)
+std::vector<int> UgridReader::readQuadBoundaryTags(std::string filename,int begin,int end,bool swapBytes)
 {
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     readHeader(filename,nnodes,ntri,nquad,ntet,npyr,nprism,nhex,swapBytes);	
     return readBoundaryTags(filename,ntri+begin,ntri+end,swapBytes);
 }
 
-std::vector<int> UgridReader::readBoundaryTags(std::string &filename,int begin,int end,bool swapBytes)
+std::vector<int> UgridReader::readBoundaryTags(std::string filename,int begin,int end,bool swapBytes)
 {
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     // get header info and allocate space for triangles
