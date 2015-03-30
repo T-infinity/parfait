@@ -7,7 +7,7 @@
 namespace UgridReader
 {
 	/// Tools for reading files in native endianness
-	void readHeader(std::string &filename,int &nnodes,
+	void readHeader(std::string filename,int &nnodes,
 		int &ntri,int &nquad,
 		int &ntet,int &npyr,int &prism,int &hex);
 	// read all elements of a type

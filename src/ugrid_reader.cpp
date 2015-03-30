@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 
-void UgridReader::readHeader(std::string &filename,int &nnodes,
+void UgridReader::readHeader(std::string filename,int &nnodes,
 		int &ntri,int &nquad,
 		int &ntet,int &npyr,int &nprism,int &nhex)
 {
