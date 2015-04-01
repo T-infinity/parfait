@@ -1,5 +1,6 @@
-#include "vtk_generic_writer.h"
+#include "vtk_surface_writer.h"
 #include "imported_ugrid_factory.h"
+#include "mapbc_reader.h"
 #include "input.h"
 #include <string>
 #include <iostream>
@@ -13,9 +14,13 @@ int main(int argc,char* argv[]){
         printf("Reading: %s as little endian\n",input.gridName().c_str());
 
     auto ugrid = ImportedUgridFactory::readUgrid(input.gridName());
-    
-    printf("Creating: %s.vtu\n",input.projectName().c_str());
-    VtkWriter<ImportedUgrid> writer(ugrid,input.projectName());
+    vector<int> tags;
+    for(int i=0;i<ugrid.numberOfBoundaryFaces();i++)
+        tags.push_back(ugrid.getBoundaryTag(i));
+
+    printf("Creating: %s_surface.vtu\n",input.projectName().c_str());
+    VtkSurfaceWriter<ImportedUgrid> writer(ugrid,input.projectName()+"_surface");
+    writer.addScalarField(false,"Boundary Tags",tags.data());
     writer.writeAscii();
     
     return 0;
