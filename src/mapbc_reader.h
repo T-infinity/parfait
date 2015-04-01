@@ -8,6 +8,7 @@ class MapbcReader
 	public: 
 		MapbcReader(std::string filename);
 		int boundaryCondition(int tag);
+        std::map<int,int> getMap(){return bcMap;}
 		void print();
 	private:
 		bool failedToOpenMapbc;
