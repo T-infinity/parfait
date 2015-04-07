@@ -25,11 +25,7 @@ void MeshAnalyzer<MeshType>::printStats(){
 template<typename MeshType>
 void MeshAnalyzer<MeshType>::throwIfBadIndexFound(){
     for(auto cell:mesh.cells()){
-        printf("cell: %i\n",cell.Id());
-
         for(int id:cell.getNodes()){
-                printf("%i\n",id);
-                fflush(stdout);
             if(id > mesh.numberOfNodes()){
                 throw std::logic_error("Bad node id");
             }

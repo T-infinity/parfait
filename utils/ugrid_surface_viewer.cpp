@@ -13,7 +13,7 @@ int main(int argc,char* argv[]){
     else
         printf("Reading: %s as little endian\n",input.gridName().c_str());
 
-    auto ugrid = ImportedUgridFactory::readUgrid(input.gridName());
+    auto ugrid = ImportedUgridFactory::readUgrid(input.gridName(),input.isBigEndian());
     vector<int> tags;
     for(int i=0;i<ugrid.numberOfBoundaryFaces();i++)
         tags.push_back(ugrid.getBoundaryTag(i));
