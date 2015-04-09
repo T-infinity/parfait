@@ -17,21 +17,22 @@
 class Adt
 {
 	public:
-		int nelem;
-		std::vector<Adt_elem> SearchTree;
+        Adt() = delete;
+        Adt(const Adt &) = delete;
 		Adt(int adt_type);
+        Adt(Adt && other);
+        ~Adt();
 		void store(int object_id, const double *x);	
         std::vector<int> retrieve(const double *extent) const;
-		void print_debug_stats(FILE *f);
 	private:
-		Adt();
+        Adt_elem *root;
 		int ndim;
 		int type;
 		bool stored;
 		void retrieve(std::vector<int> &ids,double *a,double *b) const;
 		void create_hyper_rectangle_from_extent( const double *extent,double *a,double *b) const;
-		void store(int elem_id,int object_id, const double *x);	
-		void retrieve(int elem_id,std::vector<int> &ids,double *a,double *b) const;
+		void store(Adt_elem *elem_id, int object_id, const double *x);
+		void retrieve(Adt_elem *elem, std::vector<int> &ids, double *a, double *b) const;
 };
 
 

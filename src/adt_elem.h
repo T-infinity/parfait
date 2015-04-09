@@ -6,19 +6,20 @@
 #define ADT_OBJECT_NOT_SET -10
 
 #include <vector>
+#include <memory>
 
 class Adt_elem {
     public:
     int level;
     int object_id;
-    int lchild;
-    int rchild;
+    Adt_elem* lchild;
+    Adt_elem* rchild;
     std::vector<double> xmin;
     std::vector<double> xmax;
     std::vector<double> object_x;
 
     Adt_elem() = delete;
-    ~Adt_elem() = default;
+    ~Adt_elem();
     Adt_elem(int set_level, const double *set_xmin, const double *set_xmax,
              int ndim);
     Adt_elem(int set_level, const double *set_xmin, const double *set_xmax,

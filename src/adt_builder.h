@@ -15,9 +15,8 @@ namespace AdtBuilder
 		Adt3DExtent adt(domain);
 		for(auto cell : mesh.cells())
 			adt.store(cell.Id(),ExtentBuilder::build(cell));
-		return adt;
+		return std::move(adt);
 	}
-
 };
 
 

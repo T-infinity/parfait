@@ -122,6 +122,7 @@ TEST(Adt, CornerCaseStoreMinus10){
     LONGS_EQUAL(1, inside.size());
 }
 
+#if 0
 TEST(Adt, copyable){
     Adt adt(ADT_3D_POINT);
 
@@ -134,3 +135,4 @@ TEST(Adt, copyable){
     LONGS_EQUAL(1, inside.size());
     LONGS_EQUAL(-10, inside[0]);
 }
+#endif

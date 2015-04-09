@@ -21,8 +21,8 @@ void Adt_elem::construct(int set_level, const double *set_xmin,
                          const double *set_object_x) {
     level = set_level;
     object_id = set_object;
-    lchild = ADT_NO_CHILD;
-    rchild = ADT_NO_CHILD;
+    lchild = nullptr;
+    rchild = nullptr;
 
     xmin.resize(ndim);
     xmax.resize(ndim);
@@ -55,4 +55,9 @@ bool Adt_elem::hyper_rectangle_contains_object(const double *a, const double *b,
         if (b[i] < object_x[i] - ADT_TOL || a[i] > object_x[i] + ADT_TOL)
             return false;
     return true;
+}
+
+Adt_elem::~Adt_elem() {
+    if(lchild != nullptr) delete lchild;
+    if(rchild != nullptr) delete rchild;
 }

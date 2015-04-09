@@ -2,6 +2,15 @@
 #define VECTOR_TOOLS_H
 #include <vector>
 
+template <class Container, class T>
+inline bool isIn(const Container & container, T t){
+    for(auto u : container){
+        if(t == u)
+            return true;
+    }
+    return false;
+}
+
 // Searches Linearly if an item is in a vector
 // Can be used on non-sorted arrays (and non-sortable data structures)
 template <class T>

@@ -2,17 +2,18 @@
 #include <stdexcept>
 #include <memory>
 
-Adt::Adt() {
-    printf("Did you mean to call this constructor?\n");
-    abort();
+
+Adt::~Adt() {
+    delete root;
 }
 
-//Adt::~Adt() {
-//
-//     for (int i = 0; i < SearchTree.size(); i++) {
-//        delete SearchTree[i];
-//    }
-//}
+Adt::Adt(Adt &&other) {
+    root = other.root;
+    other.root = nullptr;
+    ndim = other.ndim;
+    type = other.type;
+    stored = other.stored;
+}
 
 Adt::Adt(int adt_type) {
     //------------------------------------------------------------------
@@ -54,12 +55,13 @@ Adt::Adt(int adt_type) {
             assert(false);
     }
     type = adt_type;
+    root = nullptr;
 }
 
 std::vector<int> Adt::retrieve(const double *extent) const {
     double a[6], b[6];
     std::vector<int> ids;
-    if(SearchTree.size() == 0){
+    if(root == nullptr){
         return ids;    
     }
     create_hyper_rectangle_from_extent(extent, a, b);
@@ -69,49 +71,48 @@ std::vector<int> Adt::retrieve(const double *extent) const {
 
 void Adt::store(int object_id, const double *x) {
     stored = false;
-    if(SearchTree.size() == 0){
+    if(root == nullptr){
         double xmin[ndim];
         double xmax[ndim];
         for(int i = 0; i < ndim; i++){
             xmin[i] = 0.0;
             xmax[i] = 1.0;
         }
-        SearchTree.push_back(Adt_elem{4, xmin, xmax, ndim, object_id, x});
-        nelem = 1;
+        root = new Adt_elem{4, xmin, xmax, ndim, object_id, x};
     } else {
-        store(0, object_id, x);
+        store(root, object_id, x);
     }
 }
 
-void Adt::store(int elem_id, int object_id, const double *x) {
+void Adt::store(Adt_elem *elem, int object_id, const double *x) {
     if (stored) return;
-    if (SearchTree[elem_id].contains_object(x, ndim)) {
+    if (elem->contains_object(x, ndim)) {
         // if kids exist, pass to them
-        if (SearchTree[elem_id].lchild != ADT_NO_CHILD)
-            store(SearchTree[elem_id].lchild, object_id, x);
-        if (SearchTree[elem_id].rchild != ADT_NO_CHILD)
-            store(SearchTree[elem_id].rchild, object_id, x);
+        if (elem->lchild != nullptr)
+            store(elem->lchild, object_id, x);
+        if (elem->rchild != nullptr)
+            store(elem->rchild, object_id, x);
         if (stored) return;
         // now both branches have been attempted if they
         // exist, so there are 3 possibilities
         // 1. both kids blank
         // 2. left kid blank
         // 3. right kid blank
-        int split_axis = SearchTree[elem_id].level % ndim;
-        int child_level = SearchTree[elem_id].level + 1;
-        double midpoint = 0.5 * (SearchTree[elem_id].xmax[split_axis] + SearchTree[elem_id].xmin[split_axis]);
+        int split_axis = elem->level % ndim;
+        int child_level = elem->level + 1;
+        double midpoint = 0.5 * (elem->xmax[split_axis] + elem->xmin[split_axis]);
         bool create_left_child = false;
         bool create_right_child = false;
-        if ((SearchTree[elem_id].lchild == ADT_NO_CHILD) && (SearchTree[elem_id].rchild == ADT_NO_CHILD)) {
+        if ((elem->lchild == nullptr) && (elem->rchild == nullptr)) {
             // figure out which child contains the object
             if (x[split_axis] < midpoint)
                 create_left_child = true;
             else
                 create_right_child = true;
-        } else if ((SearchTree[elem_id].lchild == ADT_NO_CHILD) &&
-                   (SearchTree[elem_id].rchild != ADT_NO_CHILD))
+        } else if ((elem->lchild == nullptr) &&
+                   (elem->rchild != nullptr))
             create_left_child = true;
-        else if ((SearchTree[elem_id].lchild != ADT_NO_CHILD) && (SearchTree[elem_id].rchild == ADT_NO_CHILD))
+        else if ((elem->lchild != nullptr) && (elem->rchild == nullptr))
             create_right_child = true;
         else
             assert(false);
@@ -120,36 +121,32 @@ void Adt::store(int elem_id, int object_id, const double *x) {
         double xmin[ndim], xmax[ndim];
         // clone the extent of elem
         for (int i = 0; i < ndim; i++) {
-            xmin[i] = SearchTree[elem_id].xmin[i];
-            xmax[i] = SearchTree[elem_id].xmax[i];
+            xmin[i] = elem->xmin[i];
+            xmax[i] = elem->xmax[i];
         }
         // then split in half, on the correct axis
         // and create the child
         if (create_left_child) {
             xmax[split_axis] = midpoint;
-            SearchTree[elem_id].lchild = nelem;
+            elem->lchild = new Adt_elem{child_level, xmin, xmax, ndim, object_id, x};
         } else {
             xmin[split_axis] = midpoint;
-            SearchTree[elem_id].rchild = nelem;
+            elem->rchild = new Adt_elem{child_level, xmin, xmax, ndim, object_id, x};
         }
-        SearchTree.push_back(
-            Adt_elem{child_level, xmin, xmax, ndim, object_id, x});
-        nelem++;
         stored = true;
     }
 }
 
 void Adt::retrieve(std::vector<int> &ids, double *a, double *b) const {
-    retrieve(0, ids, a, b);
+    retrieve(root, ids, a, b);
 }
 
-void Adt::retrieve(int elem_id, std::vector<int> &ids, double *a, double *b) const {
-    const Adt_elem *elem = &SearchTree[elem_id];
+void Adt::retrieve(Adt_elem *elem, std::vector<int> &ids, double *a, double *b) const {
     if (!elem->contains_hyper_rectangle(a, b, ndim)) return;
     if (elem->hyper_rectangle_contains_object(a, b, ndim))
         ids.push_back(elem->object_id);
-    if (elem->lchild != ADT_NO_CHILD) retrieve(elem->lchild, ids, a, b);
-    if (elem->rchild != ADT_NO_CHILD) retrieve(elem->rchild, ids, a, b);
+    if (elem->lchild != nullptr) retrieve(elem->lchild, ids, a, b);
+    if (elem->rchild != nullptr) retrieve(elem->rchild, ids, a, b);
 }
 
 void Adt::create_hyper_rectangle_from_extent(const double *extent, double *a,
@@ -198,35 +195,8 @@ void Adt::create_hyper_rectangle_from_extent(const double *extent, double *a,
         b[4] = 1.0;
         b[5] = 1.0;
     } else {
-        printf(
-            "ADT ERROR: Only 2d and 3d extent boxes can be turned into hyper "
-            "rectangles\n");
-        abort();
+        throw std::logic_error(
+                "ADT ERROR: Only 2d and 3d extent boxes can be turned"
+                        " into hyper rectangles\n");
     }
-}
-
-void Adt::print_debug_stats(FILE *f) {
-    // count how many nodes of the tree have 0,1,2 kids
-    // to help see how balanced / unbalanced it is
-    int no_kids = 0, left_kid = 0, right_kid = 0, two_kids = 0;
-    for (int i = 0; i < nelem; i++) {
-        if ((SearchTree[i].lchild != ADT_NO_CHILD) &&
-            (SearchTree[i].rchild != ADT_NO_CHILD))
-            two_kids++;
-        if ((SearchTree[i].lchild == ADT_NO_CHILD) &&
-            (SearchTree[i].rchild == ADT_NO_CHILD))
-            no_kids++;
-        if ((SearchTree[i].lchild != ADT_NO_CHILD) &&
-            (SearchTree[i].rchild == ADT_NO_CHILD))
-            left_kid++;
-        if ((SearchTree[i].lchild == ADT_NO_CHILD) &&
-            (SearchTree[i].rchild != ADT_NO_CHILD))
-            right_kid++;
-    }
-
-    fprintf(f, "Adt\n");
-    fprintf(f, " -- nodes with 0 kids %i\n", no_kids);
-    fprintf(f, " -- nodes with 2 kids %i\n", two_kids);
-    fprintf(f, " -- nodes with only left kid  %i\n", left_kid);
-    fprintf(f, " -- nodes with only right kid %i\n", right_kid);
 }
