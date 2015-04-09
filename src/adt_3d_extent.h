@@ -22,7 +22,7 @@ class Adt3DExtent
         std::vector<int> retrieve(const Extent &domain) const;
     private:
         UnitTransformer unitTransformer;
-        Adt adt;
+        Adt<6> adt;
 
 };
 

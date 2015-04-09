@@ -61,7 +61,7 @@ class Adt3DPoint {
 
 private:
     UnitTransformer unitTransformer;
-    Adt adt;
+    Adt<3> adt;
 };
 
 #endif

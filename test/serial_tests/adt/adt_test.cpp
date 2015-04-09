@@ -10,7 +10,7 @@ TEST_GROUP(Adt)
 
 TEST(Adt, StoreNothing){
 
-    Adt adt(ADT_3D_POINT);
+    Adt<3> adt;
     double extent[6] = {0,0,0,1,1,1};
     auto inside = adt.retrieve(extent);
 
@@ -20,7 +20,7 @@ TEST(Adt, StoreNothing){
 
 TEST(Adt, Store3DPoints){
 
-    Adt adt(ADT_3D_POINT);
+    Adt<3> adt;
     double extent[6] = {0,0,0,1,1,1};
     double point1[3] = {0.1,0.1,0.1};
     double point2[3] = {0.7,0.7,0.7};
@@ -55,7 +55,7 @@ TEST(Adt, Store3DPoints){
 
 TEST(Adt, Store2DPoints){
 
-    Adt adt(ADT_2D_POINT);
+    Adt<2> adt;
     double extent[4] = {0,0,1,1};
     double point1[2] = {0.1,0.1};
     double point2[2] = {0.7,0.7};
@@ -86,7 +86,7 @@ TEST(Adt, Store2DPoints){
 
 TEST(Adt, Store3DExtents)
 {
-    Adt adt(ADT_3D_EXTENT);
+    Adt<6> adt;
 
     double extent1[6] = {.1,.1,.1, .2,.2,.2,};
     double extent2[6] = {.7,.7,.7, .9,.9,.9,};
@@ -113,7 +113,7 @@ TEST(Adt, Store3DExtents)
 
 TEST(Adt, CornerCaseStoreMinus10){
 
-    Adt adt(ADT_3D_POINT);
+    Adt<3> adt;
     double extent[6] = {0,0,0,1,1,1};
     double domain[6] = {0,0,0,0,0,0};
     adt.store(-10, domain);
