@@ -53,5 +53,30 @@ project "ugrid_surface_viewer"
      defines { "NDEBUG" }
      flags { "Symbols" }
 
+project "ugrid_analyzer"
+   kind "ConsoleApp"
+   language "C++"
+   includedirs { "../src",
+   }
+   files {
+       "../src/*.cpp",
+        "ugrid_analyzer.cpp",
+   }
+
+  excludes {
+	}
+
+   buildoptions{ "--std=c++11", "-fprofile-arcs", "-ftest-coverage"}
+   linkoptions{ "-fprofile-arcs", "-ftest-coverage"}
+
+
+   configuration "Debug"
+     defines("_DEBUG")
+     flags { "Symbols" }
+
+  configuration "Release"
+     flags { "Optimize" }
+     defines { "NDEBUG" }
+     flags { "Symbols" }
 
 premake.gcc.cxx = "g++"

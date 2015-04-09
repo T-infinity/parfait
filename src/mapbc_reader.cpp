@@ -3,7 +3,9 @@
 #include <assert.h>
 #include <string>
 
-MapbcReader::MapbcReader(std::string filename_in)
+using namespace std;
+
+MapbcReader::MapbcReader(string filename_in)
 	:filename(filename_in)
 {
 	FILE *f = fopen(filename.c_str(),"r");
@@ -24,7 +26,7 @@ MapbcReader::MapbcReader(std::string filename_in)
 			int tag,boundaryCondition;
 			char name[80];
 			fscanf(f,"%i %i %s",&tag,&boundaryCondition,name);
-			bcMap.insert(std::pair<int,int>(tag,boundaryCondition));
+			bcMap[tag] = make_pair(boundaryCondition,string(name));
 		}
 
 		fclose(f);
@@ -36,14 +38,14 @@ int MapbcReader::boundaryCondition(int tag)
 {
 	if(failedToOpenMapbc)
 		return 0;
-	return bcMap.find(tag)->second;
+	return bcMap.find(tag)->second.first;
 }
 
 void MapbcReader::print()
 {
 	if(!failedToOpenMapbc){
 		for(auto &item:bcMap){
-			printf("Tag: %i Boundary Condition: %i\n",item.first,item.second);
+			printf("Tag: %i Boundary Condition: %i\n",item.first,item.second.first);
 		}
 	}
 }
