@@ -1,7 +1,7 @@
 #include "adt_3d_extent.h"
 
     Adt3DExtent::Adt3DExtent(const Extent &domain)
-: unitTransformer(domain), adt(ADT_3D_EXTENT) 
+: unitTransformer(domain)
 {}
 
 void Adt3DExtent::store(int Id, const Extent &extent)

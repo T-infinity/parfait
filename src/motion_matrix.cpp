@@ -56,6 +56,13 @@ void MotionMatrix::addRotation(const double line_start[3],const double line_end[
 	setMotionMatrix(result);
 }
 
+void MotionMatrix::addMotion(const MotionMatrix& motion){
+    double A[16],result[16];
+    motion.getMatrix(A);
+    MatrixMatrixMultiply(A,mat,4,4,4,4,result);
+    setMotionMatrix(result);
+}
+
 void MotionMatrix::setTranslation(const double translation[3])
 {
 	clearMotions();

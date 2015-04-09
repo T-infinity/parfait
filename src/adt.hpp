@@ -1,21 +1,17 @@
-#include "adt.h"
-#include <stdexcept>
-#include <memory>
-
-
-Adt::~Adt() {
+template<int ndim>
+Adt<ndim>::~Adt() {
     delete root;
 }
 
-Adt::Adt(Adt &&other) {
+template<int ndim>
+Adt<ndim>::Adt(Adt<ndim> &&other) {
     root = other.root;
     other.root = nullptr;
-    ndim = other.ndim;
-    type = other.type;
     stored = other.stored;
 }
 
-Adt::Adt(int adt_type) {
+template<int ndim>
+Adt<ndim>::Adt() {
     //------------------------------------------------------------------
     // Explanation of how the dimension of the tree is
     // chosen:
@@ -34,31 +30,11 @@ Adt::Adt(int adt_type) {
     //  	International Journal for Numerical Methods In Eng, vol 31,
     //  	1-17, (1991)
     //------------------------------------------------------------------
-    switch (adt_type) {
-        case ADT_2D_POINT:
-            ndim = 2;
-            // printf("# Creating Adt for storing 2d points\n");
-            break;
-        case ADT_3D_POINT:
-            ndim = 3;
-            // printf("# Creating Adt for storing 3d points\n");
-            break;
-        case ADT_2D_EXTENT:
-            ndim = 4;
-            // printf("# Creating Adt for storing 2d objects (extents)\n");
-            break;
-        case ADT_3D_EXTENT:
-            ndim = 6;
-            // printf("# Creating Adt for storing 3d objects (extents)\n");
-            break;
-        default:
-            assert(false);
-    }
-    type = adt_type;
     root = nullptr;
 }
 
-std::vector<int> Adt::retrieve(const double *extent) const {
+template<int ndim>
+std::vector<int> Adt<ndim>::retrieve(const double *extent) const {
     double a[6], b[6];
     std::vector<int> ids;
     if(root == nullptr){
@@ -69,7 +45,8 @@ std::vector<int> Adt::retrieve(const double *extent) const {
     return ids;
 }
 
-void Adt::store(int object_id, const double *x) {
+template<int ndim>
+void Adt<ndim>::store(int object_id, const double *x) {
     stored = false;
     if(root == nullptr){
         double xmin[ndim];
@@ -78,15 +55,16 @@ void Adt::store(int object_id, const double *x) {
             xmin[i] = 0.0;
             xmax[i] = 1.0;
         }
-        root = new Adt_elem{4, xmin, xmax, ndim, object_id, x};
+        root = new Adt_elem<ndim>{4, xmin, xmax, object_id, x};
     } else {
         store(root, object_id, x);
     }
 }
 
-void Adt::store(Adt_elem *elem, int object_id, const double *x) {
+template<int ndim>
+void Adt<ndim>::store(Adt_elem<ndim> *elem, int object_id, const double *x) {
     if (stored) return;
-    if (elem->contains_object(x, ndim)) {
+    if (elem->contains_object(x)) {
         // if kids exist, pass to them
         if (elem->lchild != nullptr)
             store(elem->lchild, object_id, x);
@@ -128,28 +106,31 @@ void Adt::store(Adt_elem *elem, int object_id, const double *x) {
         // and create the child
         if (create_left_child) {
             xmax[split_axis] = midpoint;
-            elem->lchild = new Adt_elem{child_level, xmin, xmax, ndim, object_id, x};
+            elem->lchild = new Adt_elem<ndim>{child_level, xmin, xmax, object_id, x};
         } else {
             xmin[split_axis] = midpoint;
-            elem->rchild = new Adt_elem{child_level, xmin, xmax, ndim, object_id, x};
+            elem->rchild = new Adt_elem<ndim>{child_level, xmin, xmax, object_id, x};
         }
         stored = true;
     }
 }
 
-void Adt::retrieve(std::vector<int> &ids, double *a, double *b) const {
+template<int ndim>
+void Adt<ndim>::retrieve(std::vector<int> &ids, double *a, double *b) const {
     retrieve(root, ids, a, b);
 }
 
-void Adt::retrieve(Adt_elem *elem, std::vector<int> &ids, double *a, double *b) const {
-    if (!elem->contains_hyper_rectangle(a, b, ndim)) return;
-    if (elem->hyper_rectangle_contains_object(a, b, ndim))
+template<int ndim>
+void Adt<ndim>::retrieve(Adt_elem<ndim> *elem, std::vector<int> &ids, double *a, double *b) const {
+    if (!elem->contains_hyper_rectangle(a, b)) return;
+    if (elem->hyper_rectangle_contains_object(a, b))
         ids.push_back(elem->object_id);
     if (elem->lchild != nullptr) retrieve(elem->lchild, ids, a, b);
     if (elem->rchild != nullptr) retrieve(elem->rchild, ids, a, b);
 }
 
-void Adt::create_hyper_rectangle_from_extent(const double *extent, double *a,
+template<int ndim>
+void Adt<ndim>::create_hyper_rectangle_from_extent(const double *extent, double *a,
                                              double *b) const {
     if (ndim == 2) {
         a[0] = extent[0];

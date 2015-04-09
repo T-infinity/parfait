@@ -2,7 +2,7 @@
 #include <stdexcept>
 
 Adt3DPoint::Adt3DPoint(const Extent &domain)
-    : unitTransformer(domain), adt(ADT_3D_POINT) 
+    : unitTransformer(domain)
 {}
 
 void Adt3DPoint::store(int Id, const Point &point)
