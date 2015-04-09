@@ -18,6 +18,7 @@ class MotionMatrix
 		void addTranslation(const double translation[3]);
 		void setRotation(const double line_start[3],const double line_end[3],double angle);
 		void addRotation(const double line_start[3],const double line_end[3],double angle);
+        void addMotion(const MotionMatrix& motion);
 		void setMotionMatrix(const double matrix[16]);
 		void getMatrix(double matrix[16]) const;
 		void movePoint(double p[3]) const;
