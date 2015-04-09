@@ -16,12 +16,9 @@ class Adt_elem {
     int object_id;
     Adt_elem* lchild;
     Adt_elem* rchild;
-    //std::array<double,ndim> xmin;
-    //std::array<double,ndim> xmax;
-    //std::array<double,ndim> object_x;
-    std::vector<double> xmin;
-    std::vector<double> xmax;
-    std::vector<double> object_x;
+    std::array<double,ndim> xmin;
+    std::array<double,ndim> xmax;
+    std::array<double,ndim> object_x;
 
     Adt_elem() = delete;
     ~Adt_elem();

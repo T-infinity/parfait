@@ -22,9 +22,6 @@ void Adt_elem<ndim>::construct(int set_level, const double *set_xmin,
     lchild = nullptr;
     rchild = nullptr;
     
-    xmin.resize(ndim);
-    xmax.resize(ndim);
-    object_x.resize(ndim);
     for (int i = 0; i < ndim; i++) {
         xmin[i] = set_xmin[i];
         xmax[i] = set_xmax[i];
