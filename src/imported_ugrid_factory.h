@@ -47,8 +47,13 @@ inline void ImportedUgridFactory::createBoundaryConditionsFromTags(
 		){
 
 	std::string mapbcFile = filename;
-	for(int i=0;i<5;i++)
-		mapbcFile.pop_back();
+    mapbcFile.resize(filename.size()-5);
+    auto position = mapbcFile.find("lb8.");
+    if(std::string::npos != position)
+        mapbcFile.resize(position);
+    position = mapbcFile.find("b8.");
+    if(std::string::npos != position)
+        mapbcFile.resize(position);
 	mapbcFile += "mapbc";
 	MapbcReader reader(mapbcFile);
 
