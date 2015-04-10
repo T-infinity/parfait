@@ -12,7 +12,7 @@ void Adt3DPoint::store(int Id, const Point &point)
         if(storePoint[i] < 0 or storePoint[i] > 1.0)
             throw std::logic_error("Cannot store points in ADT which are outside the ADT domain.");
     }
-    adt.store(Id, &storePoint[0]);
+    adt.store(Id,storePoint.data());
 }
 
 std::vector<int> Adt3DPoint::retrieve(const Extent &domain) const {

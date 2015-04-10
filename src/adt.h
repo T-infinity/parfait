@@ -8,11 +8,7 @@
 #include <assert.h>
 #include "unit_transformer.h"
 #include <memory>
-
-#define ADT_2D_POINT  1
-#define ADT_3D_POINT  2
-#define ADT_2D_EXTENT 3
-#define ADT_3D_EXTENT 4
+#include <mutex>
 
 template<int ndim>
 class Adt
@@ -22,16 +18,21 @@ class Adt
 		Adt();
         Adt(Adt && other);
         ~Adt();
-		void store(int object_id, const double *x);	
+		void store(int object_id, const double *x);
         std::vector<int> retrieve(const double *extent) const;
 	private:
+        enum ChildType {LEFT, RIGHT};
         Adt_elem<ndim> *root;
-		bool stored;
+        std::mutex rootLock;
+
 		void retrieve(std::vector<int> &ids,double *a,double *b) const;
 		void create_hyper_rectangle_from_extent( const double *extent,double *a,double *b) const;
 		void store(Adt_elem<ndim> *elem_id, int object_id, const double *x);
 		void retrieve(Adt_elem<ndim> *elem, std::vector<int> &ids, double *a, double *b) const;
-};
+        ChildType determineChild(Adt_elem<ndim> *elem, double const *x);
+        Adt_elem<ndim> *& getChildPointer(Adt_elem<ndim> *elem, Adt<ndim>::ChildType & whichChild);
+
+    };
 
 #include "adt.hpp"
 

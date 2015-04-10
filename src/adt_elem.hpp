@@ -1,22 +1,23 @@
 template<int ndim>
-Adt_elem<ndim>::Adt_elem(int set_level, const double *set_xmin,
-                   const double *set_xmax) {
+Adt_elem<ndim>::Adt_elem(int set_level, std::array<double,ndim> const &set_xmin,
+                         std::array<double,ndim> const &set_xmax) {
     double blank_x[ndim];
     for (int i = 0; i < ndim; i++) blank_x[i] = 0.0;
     construct(set_level, set_xmin, set_xmax,ADT_OBJECT_NOT_SET, blank_x);
 }
 
 template<int ndim>
-Adt_elem<ndim>::Adt_elem(int set_level, const double *set_xmin,
-                   const double *set_xmax, int set_object,
-                   const double *set_object_x) {
+Adt_elem<ndim>::Adt_elem(int set_level,
+                         std::array<double, ndim> const &set_xmin,
+                         std::array<double, ndim> const &set_xmax, int set_object,
+                         const double *set_object_x) {
     construct(set_level, set_xmin, set_xmax,set_object, set_object_x);
 }
 
 template<int ndim>
-void Adt_elem<ndim>::construct(int set_level, const double *set_xmin,
-                         const double *set_xmax, int set_object,
-                         const double *set_object_x) {
+void Adt_elem<ndim>::construct(int set_level, std::array<double, ndim> const &set_xmin,
+                               std::array<double, ndim> const &set_xmax, int set_object,
+                               const double *set_object_x) {
     level = set_level;
     object_id = set_object;
     lchild = nullptr;

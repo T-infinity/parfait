@@ -7,7 +7,6 @@ template<int ndim>
 Adt<ndim>::Adt(Adt<ndim> &&other) {
     root = other.root;
     other.root = nullptr;
-    stored = other.stored;
 }
 
 template<int ndim>
@@ -38,7 +37,7 @@ std::vector<int> Adt<ndim>::retrieve(const double *extent) const {
     double a[6], b[6];
     std::vector<int> ids;
     if(root == nullptr){
-        return ids;    
+        return ids;
     }
     create_hyper_rectangle_from_extent(extent, a, b);
     retrieve(ids, a, b);
@@ -47,71 +46,82 @@ std::vector<int> Adt<ndim>::retrieve(const double *extent) const {
 
 template<int ndim>
 void Adt<ndim>::store(int object_id, const double *x) {
-    stored = false;
-    if(root == nullptr){
-        double xmin[ndim];
-        double xmax[ndim];
-        for(int i = 0; i < ndim; i++){
-            xmin[i] = 0.0;
-            xmax[i] = 1.0;
+
+    if(root == nullptr) {
+        rootLock.lock();
+        if (root == nullptr) {
+            std::array<double, ndim> xmin;
+            std::array<double, ndim> xmax;
+            for (int i = 0; i < ndim; i++) {
+                xmin[i] = 0.0;
+                xmax[i] = 1.0;
+            }
+            root = new Adt_elem<ndim>{4, xmin, xmax, object_id, x};
+            rootLock.unlock();
+        } else {
+            rootLock.unlock();
+            store(root, object_id, x);
         }
-        root = new Adt_elem<ndim>{4, xmin, xmax, object_id, x};
-    } else {
+    }
+    else {
         store(root, object_id, x);
     }
 }
 
 template<int ndim>
 void Adt<ndim>::store(Adt_elem<ndim> *elem, int object_id, const double *x) {
-    if (stored) return;
-    if (elem->contains_object(x)) {
-        // if kids exist, pass to them
-        if (elem->lchild != nullptr)
+
+    auto whichChild = determineChild(elem, x);
+
+    int split_axis = elem->level % ndim;
+    double midpoint = 0.5 * (elem->xmax[split_axis] + elem->xmin[split_axis]);
+    int child_level = elem->level+1;
+    std::array<double,ndim> xmin = elem->xmin;
+    std::array<double,ndim> xmax = elem->xmax;
+    if(whichChild == LEFT)
+        xmax[split_axis] = midpoint;
+    else
+        xmin[split_axis] = midpoint;
+
+    if(whichChild == LEFT){
+        if(elem->lchild == nullptr) {
+            elem->leftLock.lock();
+            if(elem->lchild == nullptr) {
+                elem->lchild = new Adt_elem<ndim>{child_level, xmin, xmax, object_id, x};
+                elem->leftLock.unlock();
+                return;
+            }else{
+                elem->leftLock.unlock();
+                store(elem->lchild, object_id, x);
+                return;
+            }
+        }
+        else {
             store(elem->lchild, object_id, x);
-        if (elem->rchild != nullptr)
+            return;
+        }
+    }
+    if(whichChild == RIGHT){
+        if(elem->rchild == nullptr) {
+            elem->rightLock.lock();
+            if(elem->rchild == nullptr) {
+                elem->rchild = new Adt_elem<ndim>{child_level, xmin, xmax, object_id, x};
+                elem->rightLock.unlock();
+                return;
+            }
+            else {
+                elem->rightLock.unlock();
+                store(elem->rchild, object_id, x);
+                return;
+            }
+        }
+        else {
             store(elem->rchild, object_id, x);
-        if (stored) return;
-        // now both branches have been attempted if they
-        // exist, so there are 3 possibilities
-        // 1. both kids blank
-        // 2. left kid blank
-        // 3. right kid blank
-        int split_axis = elem->level % ndim;
-        int child_level = elem->level + 1;
-        double midpoint = 0.5 * (elem->xmax[split_axis] + elem->xmin[split_axis]);
-        bool create_left_child = false;
-        bool create_right_child = false;
-        if ((elem->lchild == nullptr) && (elem->rchild == nullptr)) {
-            // figure out which child contains the object
-            if (x[split_axis] < midpoint)
-                create_left_child = true;
-            else
-                create_right_child = true;
-        } else if ((elem->lchild == nullptr) &&
-                   (elem->rchild != nullptr))
-            create_left_child = true;
-        else if ((elem->lchild != nullptr) && (elem->rchild == nullptr))
-            create_right_child = true;
-        else
-            assert(false);
-        // since ndim will be a max of 6, allocate
-        // on the stack C99 style for speed.
-        double xmin[ndim], xmax[ndim];
-        // clone the extent of elem
-        for (int i = 0; i < ndim; i++) {
-            xmin[i] = elem->xmin[i];
-            xmax[i] = elem->xmax[i];
+            return;
         }
-        // then split in half, on the correct axis
-        // and create the child
-        if (create_left_child) {
-            xmax[split_axis] = midpoint;
-            elem->lchild = new Adt_elem<ndim>{child_level, xmin, xmax, object_id, x};
-        } else {
-            xmin[split_axis] = midpoint;
-            elem->rchild = new Adt_elem<ndim>{child_level, xmin, xmax, object_id, x};
-        }
-        stored = true;
+    }
+    else {
+        throw std::logic_error("Adt child was not determined to be left or right");
     }
 }
 
@@ -131,7 +141,7 @@ void Adt<ndim>::retrieve(Adt_elem<ndim> *elem, std::vector<int> &ids, double *a,
 
 template<int ndim>
 void Adt<ndim>::create_hyper_rectangle_from_extent(const double *extent, double *a,
-                                             double *b) const {
+                                                   double *b) const {
     if (ndim == 2) {
         a[0] = extent[0];
         a[1] = extent[1];
@@ -181,3 +191,16 @@ void Adt<ndim>::create_hyper_rectangle_from_extent(const double *extent, double 
                         " into hyper rectangles\n");
     }
 }
+
+template <int ndim>
+typename Adt<ndim>::ChildType Adt<ndim>::determineChild(Adt_elem<ndim> *elem, double const *x) {
+
+    int split_axis = elem->level % ndim;
+    double midpoint = 0.5 * (elem->xmax[split_axis] + elem->xmin[split_axis]);
+    if (x[split_axis] < midpoint)
+        return LEFT;
+    else
+        return RIGHT;
+
+}
+
