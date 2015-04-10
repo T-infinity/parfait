@@ -22,7 +22,7 @@ class Adt_elem {
 
     Adt_elem() = delete;
     ~Adt_elem();
-    Adt_elem(int set_level, const double *set_xmin, const double *set_xmax);
+    Adt_elem(int set_level, std::array<double> const &set_xmin, std::array<double> const &set_xmax);
     Adt_elem(int set_level, const double *set_xmin, const double *set_xmax,
              int set_object_id, const double *set_object_x);
     bool contains_object(const double *x_in) const;
