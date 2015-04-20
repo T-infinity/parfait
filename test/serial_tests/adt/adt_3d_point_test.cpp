@@ -75,3 +75,9 @@ TEST(Adt3DPoint, StorePointOutsideDomain)
 
     CHECK_THROWS(std::exception, adt.store(10, point));
 }
+
+
+
+
+
+

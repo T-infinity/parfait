@@ -27,8 +27,8 @@ class Adt3DPoint {
     void store(int Id, const Point &point);
     std::vector<int> retrieve(const Extent &domain) const;
 
-    bool isPointInAdt(const Point &p, int &Id) const {
-        Extent box = Extent::extentAroundPoint(p, 1.0e-13);
+    bool isPointInAdt(const Point &p, int &Id, double tol = 1.0e-13) const {
+        Extent box = Extent::extentAroundPoint(p, tol);
         auto inside = this->retrieve(box);
 
         if (0 == inside.size()) {
