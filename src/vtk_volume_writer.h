@@ -8,6 +8,11 @@
 #include <vtkUnstructuredGrid.h>
 #include <vtkCellArray.h>
 #include <vtkTetra.h>
+#include <vtkIntArray.h>
+#include <vtkFloatArray.h>
+#include <vtkDoubleArray.h>
+#include <vtkCellData.h>
+#include <vtkPointData.h>
 #include <stdio.h>
 class VtkVolumeWriter{
     public:
@@ -15,11 +20,12 @@ class VtkVolumeWriter{
         VtkVolumeWriter(std::string name,MeshType& mesh);
 
         void writeBinary();
-
-        void addNodeData(std::string name,int* data,int number_of_components);
-        void addNodeData(std::string name,float* data,int number_of_components);
-        void addNodeData(std::string name,double* data,int number_of_components);
-        void addCellData(std::string name,int* data,int number_of_components);
+        
+        template<typename T>
+        void addNodeData(std::string name,T* data,int number_of_components);
+       
+        template<typename T>
+        void addCellData(std::string name,T* data,int number_of_components);
     private:
         std::string base_name;
         vtkSmartPointer<vtkUnstructuredGrid> vtk_grid =
@@ -31,6 +37,9 @@ class VtkVolumeWriter{
         template<typename MeshType>
         void setCells(MeshType& mesh);
 
+        vtkSmartPointer<vtkIntArray> createVtkArrayPointer(int* data){
+            return vtkSmartPointer<vtkIntArray>::New();
+        }
 };
 
 

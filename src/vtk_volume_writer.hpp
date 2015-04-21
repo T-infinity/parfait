@@ -42,3 +42,25 @@ void VtkVolumeWriter::setCells(MeshType& mesh){
     }
     vtk_grid->SetCells(VTK_TETRA,tets);
 }
+
+template<typename T>
+void VtkVolumeWriter::addNodeData(std::string name,
+        T* data,int number_of_components){
+    auto stuff = createVtkArrayPointer(data);
+    stuff->SetNumberOfComponents(number_of_components);
+    stuff->SetName(name.c_str());
+    for(int i=0;i<vtk_grid->GetNumberOfPoints();i++)
+        stuff->InsertNextValue(data[i]);
+    vtk_grid->GetPointData()->AddArray(stuff);
+}
+
+template<typename T>
+void VtkVolumeWriter::addCellData(std::string name,
+        T* data,int number_of_components){
+    auto stuff = createVtkArrayPointer(data);
+    stuff->SetNumberOfComponents(number_of_components);
+    stuff->SetName(name.c_str());
+    for(int i=0;i<vtk_grid->GetNumberOfCells();i++)
+        stuff->InsertNextValue(data[i]);
+    vtk_grid->GetCellData()->AddArray(stuff);
+}
