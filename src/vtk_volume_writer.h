@@ -40,6 +40,12 @@ class VtkVolumeWriter{
         vtkSmartPointer<vtkIntArray> createVtkArrayPointer(int* data){
             return vtkSmartPointer<vtkIntArray>::New();
         }
+        vtkSmartPointer<vtkFloatArray> createVtkArrayPointer(float* data){
+            return vtkSmartPointer<vtkFloatArray>::New();
+        }
+        vtkSmartPointer<vtkDoubleArray> createVtkArrayPointer(double* data){
+            return vtkSmartPointer<vtkDoubleArray>::New();
+        }
 };
 
 
