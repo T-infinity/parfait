@@ -29,6 +29,7 @@ class ImportedUgrid
 
         std::vector<int> getNodesInCell(int cellId) const;
 		void getNodesInCell(int cellId,int *cell) const;
+        std::vector<int> getVtkOrderedNodesInCell(int cellId) const;
 
 		void setNode(int nodeId,double node[3]);
 

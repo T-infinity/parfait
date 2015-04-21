@@ -1,0 +1,34 @@
+template<typename MeshType>
+VtkVolumeWriter::VtkVolumeWriter(std::string name,MeshType& mesh)
+    :base_name(name)
+{
+    setPoints(mesh);
+}
+
+template<typename MeshType>
+void VtkVolumeWriter::setPoints(MeshType& mesh){
+    vtkSmartPointer<vtkPoints> points = 
+        vtkSmartPointer<vtkPoints>::New();
+    for(int i=0;i<mesh.numberOfNodes();i++){
+        double p[3];
+        mesh.getNode(i,p);
+        points->InsertNextPoint(p[0],p[1],p[2]);
+    }
+}
+
+template<typename MeshType>
+void VtkVolumeWriter::setCells(MeshType& mesh){
+    vtkSmartPointer<vtkCellArray> tets = 
+        vtkSmartPointer<vtkCellArray>::New();
+    vtkSmartPointer<vtkCellArray> pyramids = 
+        vtkSmartPointer<vtkCellArray>::New();
+    vtkSmartPointer<vtkCellArray> prisms = 
+        vtkSmartPointer<vtkCellArray>::New();
+    vtkSmartPointer<vtkCellArray> hexs = 
+        vtkSmartPointer<vtkCellArray>::New();
+
+    for(int i=0;i<mesh.numberOfCells();i++){
+        auto cell = mesh.getVtkOrderedNodesInCell(i);
+
+    }
+}
