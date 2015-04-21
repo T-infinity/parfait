@@ -6,11 +6,15 @@
 #include <vector>
 #include <vtkSmartPointer.h>
 #include <vtkUnstructuredGrid.h>
+#include <vtkCellArray.h>
 #include <vtkTetra.h>
+#include <stdio.h>
 class VtkVolumeWriter{
     public:
         template<typename MeshType>
         VtkVolumeWriter(std::string name,MeshType& mesh);
+
+        void writeBinary();
 
         void addNodeData(std::string name,int* data,int number_of_components);
     private:
