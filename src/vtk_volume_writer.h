@@ -17,6 +17,8 @@ class VtkVolumeWriter{
         void writeBinary();
 
         void addNodeData(std::string name,int* data,int number_of_components);
+        void addNodeData(std::string name,float* data,int number_of_components);
+        void addNodeData(std::string name,double* data,int number_of_components);
         void addCellData(std::string name,int* data,int number_of_components);
     private:
         std::string base_name;
@@ -28,6 +30,7 @@ class VtkVolumeWriter{
 
         template<typename MeshType>
         void setCells(MeshType& mesh);
+
 };
 
 
