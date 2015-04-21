@@ -21,6 +21,9 @@ void VtkVolumeWriter::setPoints(MeshType& mesh){
 
 template<typename MeshType>
 void VtkVolumeWriter::setCells(MeshType& mesh){
+    vtkSmartPointer<vtkTetra> tet = 
+        vtkSmartPointer<vtkTetra>::New();
+    
     vtkSmartPointer<vtkCellArray> tets = 
         vtkSmartPointer<vtkCellArray>::New();
     vtkSmartPointer<vtkCellArray> pyramids = 
@@ -31,12 +34,11 @@ void VtkVolumeWriter::setCells(MeshType& mesh){
         vtkSmartPointer<vtkCellArray>::New();
 
     for(int i=0;i<mesh.numberOfCells();i++){
-        auto cell = mesh.getVtkOrderedNodesInCell(i);
-        if(4 == cell.size()){
-            vtkSmartPointer<vtkTetra> tet = 
-                vtkSmartPointer<vtkTetra>::New();
-            for(int j=0;j<4;j++)
-                tet->GetPointIds()->SetId(j,cell[j]);
+        auto cell_nodes = mesh.getVtkOrderedNodesInCell(i);
+        int n = cell_nodes.size();
+        if(4 == n){
+            for(int j=0;j<n;j++)
+                tet->GetPointIds()->SetId(j,cell_nodes[j]);
             tets->InsertNextCell(tet);
         }
     }

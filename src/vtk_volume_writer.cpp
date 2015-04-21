@@ -1,3 +1,4 @@
+#ifdef PARFAIT_WITH_VTK
 #include "vtk_volume_writer.h"
 #include <vtkXMLUnstructuredGridWriter.h>
 
@@ -10,3 +11,4 @@ void VtkVolumeWriter::writeBinary(){
     writer->SetInputData(vtk_grid);
     writer->Write();
 }
+#endif
