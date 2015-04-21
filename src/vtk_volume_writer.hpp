@@ -23,6 +23,12 @@ template<typename MeshType>
 void VtkVolumeWriter::setCells(MeshType& mesh){
     vtkSmartPointer<vtkTetra> tet = 
         vtkSmartPointer<vtkTetra>::New();
+    vtkSmartPointer<vtkPyramid> pyramid = 
+        vtkSmartPointer<vtkPyramid>::New();
+    vtkSmartPointer<vtkWedge> prism = 
+        vtkSmartPointer<vtkWedge>::New();
+    vtkSmartPointer<vtkHexahedron> hex = 
+        vtkSmartPointer<vtkHexahedron>::New();
     
     vtkSmartPointer<vtkCellArray> tets = 
         vtkSmartPointer<vtkCellArray>::New();
@@ -40,6 +46,21 @@ void VtkVolumeWriter::setCells(MeshType& mesh){
             for(int j=0;j<n;j++)
                 tet->GetPointIds()->SetId(j,cell_nodes[j]);
             tets->InsertNextCell(tet);
+        }
+        if(5 == n){
+            for(int j=0;j<n;j++)
+                pyramid->GetPointIds()->SetId(j,cell_nodes[j]);
+            pyramids->InsertNextCell(tet);
+        }
+        if(6 == n){
+            for(int j=0;j<n;j++)
+                prism->GetPointIds()->SetId(j,cell_nodes[j]);
+            prisms->InsertNextCell(tet);
+        }
+        if(8 == n){
+            for(int j=0;j<n;j++)
+                hex->GetPointIds()->SetId(j,cell_nodes[j]);
+            hexs->InsertNextCell(tet);
         }
     }
     vtk_grid->SetCells(VTK_TETRA,tets);
