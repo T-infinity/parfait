@@ -6,6 +6,7 @@
 #include <vector>
 #include <vtkSmartPointer.h>
 #include <vtkUnstructuredGrid.h>
+#include <vtkTetra.h>
 class VtkVolumeWriter{
     public:
         template<typename MeshType>

@@ -3,6 +3,7 @@ VtkVolumeWriter::VtkVolumeWriter(std::string name,MeshType& mesh)
     :base_name(name)
 {
     setPoints(mesh);
+    setCells(mesh);
 }
 
 template<typename MeshType>
@@ -29,6 +30,11 @@ void VtkVolumeWriter::setCells(MeshType& mesh){
 
     for(int i=0;i<mesh.numberOfCells();i++){
         auto cell = mesh.getVtkOrderedNodesInCell(i);
-
+        if(4 == cell.size()){
+            vtkSmartPointer<vtkTetra> tet = 
+                vtkSmartPointer<vtkTetra>::New();
+            for(int j=0;j<4;j++)
+                tet->GetPointIds()->SetId(j,cell[j]);
+        }
     }
 }

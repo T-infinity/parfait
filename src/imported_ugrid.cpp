@@ -398,6 +398,10 @@ std::vector<int> ImportedUgrid::getNodesInCell(int cellId) const
     return cell;
 }
 
+std::vector<int> ImportedUgrid::getVtkOrderedNodesInCell(int cellId) const{
+    return getNodesInCell(cellId); // update correct ordering later...
+}
+
 void ImportedUgrid::getNodesInCell(int cellId,int *cell) const
 {
 	int nvertices = numberOfNodesInCell(cellId);
