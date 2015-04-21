@@ -8,11 +8,22 @@ void VtkVolumeWriter::addNodeData(std::string name,
         int* data,int number_of_components){
     vtkSmartPointer<vtkIntArray> stuff =
         vtkSmartPointer<vtkIntArray>::New();
-    stuff->SetNumberOfComponents(1);
+    stuff->SetNumberOfComponents(number_of_components);
     stuff->SetName(name.c_str());
     for(int i=0;i<vtk_grid->GetNumberOfPoints();i++)
         stuff->InsertNextValue(data[i]);
     vtk_grid->GetPointData()->AddArray(stuff);
+}
+
+void VtkVolumeWriter::addCellData(std::string name,
+        int* data,int number_of_components){
+    vtkSmartPointer<vtkIntArray> stuff =
+        vtkSmartPointer<vtkIntArray>::New();
+    stuff->SetNumberOfComponents(number_of_components);
+    stuff->SetName(name.c_str());
+    for(int i=0;i<vtk_grid->GetNumberOfCells();i++)
+        stuff->InsertNextValue(data[i]);
+    vtk_grid->GetCellData()->AddArray(stuff);
 }
 
 void VtkVolumeWriter::writeBinary(){

@@ -17,6 +17,7 @@ class VtkVolumeWriter{
         void writeBinary();
 
         void addNodeData(std::string name,int* data,int number_of_components);
+        void addCellData(std::string name,int* data,int number_of_components);
     private:
         std::string base_name;
         vtkSmartPointer<vtkUnstructuredGrid> vtk_grid =
