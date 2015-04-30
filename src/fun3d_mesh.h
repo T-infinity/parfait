@@ -27,8 +27,9 @@ class Fun3DMesh
 		int numberOfFacesInCell(int id) const;
 		int numberOfNodesInCellFace(int cellId,int faceId) const;
 		vector<int> getNodesInCellFace(int cellId,int faceId) const;
+        vector<int> getVtkOrderedNodesInCell(int cellId) const;
 		void getNodesInCell(int cellId,int cell[]) const;
-		vector<int> getNodesInCell(int cellId);
+		vector<int> getNodesInCell(int cellId) const;
 
         // Any Generic Surface mesh must implement the following
 		int numberOfBoundaryFaces() const;

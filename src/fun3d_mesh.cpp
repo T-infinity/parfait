@@ -409,11 +409,16 @@ void Fun3DMesh::getNodesInCell(int cellId,int cell[]) const
 		cell[i] = cell_list[nvertices*id+i];
 }
 
-vector<int> Fun3DMesh::getNodesInCell(int cellId)
+vector<int> Fun3DMesh::getNodesInCell(int cellId) const
 {
 	int nvertices = numberOfNodesInCell(cellId);
 	vector<int> cell(nvertices,0);
 	getNodesInCell(cellId,cell.data());
 	return cell;
+}
+
+vector<int> Fun3DMesh::getVtkOrderedNodesInCell(int cellId) const
+{
+    return getNodesInCell(cellId); // actually fix ordering later
 }
 
