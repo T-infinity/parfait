@@ -16,7 +16,7 @@ TEST_GROUP(ImportedUgridFactoryTests)
 
 TEST(ImportedUgridFactoryTests,Exists)
 {
-	std::string filename = "grids/6cell.ugrid";
+	std::string filename = "../grids/6cell.ugrid";
 	ImportedUgrid ugrid = ImportedUgridFactory::readUgrid(filename);
 	LONGS_EQUAL(18,ugrid.numberOfBoundaryFaces());
 	for(int i=0;i<18;i++)
