@@ -50,15 +50,14 @@ def findOpenScope(file_name):
         lines = f.readlines()
         function_begin = 0
         function_end = 0
-        function_count = 0
+        function_lengths = []
         while function_begin < len(lines):
-            function_begin = findNextFunctionStart(lines,function_end)
+            function_begin = findNextFunctionStart(lines,function_end+1)
             function_end = findFunctionEnd(lines,function_begin)
             function_length = function_end - function_begin
             if function_length > 0:
-                function_count += 1
-                print("function length: ",function_length)
-        print("Number of functions in file:", function_count)
+                function_lengths.append(function_length)
+    return function_lengths
 
 def lineOpensScope(lines,i):
     if '{' in lines[i]:
@@ -69,5 +68,9 @@ def lineOpensScope(lines,i):
 source_names = getCPlusPlusSourceFileNames("./")
 for source in source_names:
     print("Analyzing file: ",source)
-    findOpenScope(source)
+    function_lengths = findOpenScope(source)
+    print("Number of functions in file: ", len(function_lengths))
+    print("Longest function:            ",max(function_lengths))
+    print("Shortest function:           ",min(function_lengths))
+    print("Average function:            ",int(statistics.mean(function_lengths)))
 
