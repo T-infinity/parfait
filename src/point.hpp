@@ -147,6 +147,7 @@ inline Point Point::cross(const Point &a, const Point &b){
 
 inline void Point::normalize() {
     double mag = magnitude(*this);
+    mag += 1.0e-200;
     *this /= mag;
 }
 
