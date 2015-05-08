@@ -41,10 +41,7 @@ def printCMAKE(sources,headers):
         f.write("cmake_minimum_required(VERSION 2.8)\n\n")
         f.write("PROJECT("+name+")\n\n")
         f.write('set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")\n\n')
-        f.write('set('+name+'_DIR "'+directory+'")\n\n')
         f.write('set('+name+'_SRC "'+'"\n      "'.join(sources)+'")\n\n')
-        if len(headers)>0:
-            f.write('include_directories(${'+name+'_DIR})\n\n')
         f.write('add_library('+name+' STATIC ${'+name+'_SRC})\n\n')
 
 

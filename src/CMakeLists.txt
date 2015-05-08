@@ -29,6 +29,5 @@ set(parfait_lib_SRC "parallel_mesh_redistributor_ghost.cpp"
       "byteswap.cpp"
       "parallel_mesh_redistributor.cpp")
 
-
 add_library(parfait_lib STATIC ${parfait_lib_SRC})
 
