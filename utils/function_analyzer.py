@@ -45,7 +45,7 @@ def findFunctionEnd(lines,n):
     return n
 
 
-def findOpenScope(file_name):
+def getFunctionLengths(file_name):
     with open(file_name,'r') as f:
         lines = f.readlines()
         function_begin = 0
@@ -57,6 +57,8 @@ def findOpenScope(file_name):
             function_length = function_end - function_begin
             if function_length > 0:
                 function_lengths.append(function_length)
+    if function_lengths == []:
+        function_lengths.append(0)
     return function_lengths
 
 def lineOpensScope(lines,i):
@@ -68,7 +70,7 @@ def lineOpensScope(lines,i):
 source_names = getCPlusPlusSourceFileNames("./")
 for source in source_names:
     print("Analyzing file: ",source)
-    function_lengths = findOpenScope(source)
+    function_lengths = getFunctionLengths(source)
     print("Number of functions in file: ", len(function_lengths))
     print("Longest function:            ",max(function_lengths))
     print("Shortest function:           ",min(function_lengths))
