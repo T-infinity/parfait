@@ -2,7 +2,6 @@
 # Note: Requires Python 3.X for statistics
 import os, math
 import statistics
-import matplotlib
 
 def isSourceFile(file):
     if(file.endswith('.h') or file.endswith('.hpp') 
