@@ -18,6 +18,7 @@ set(PARFAIT_SERIAL_TESTS_SRC
         extent/extent_test.cpp
         VtkFieldTests/VtkFieldTests.cpp
         VtkGenericTests/VtkGenericTests.cpp
+        VtkSurfaceTests/VtkSurfaceTests.cpp
        )
 
 
