@@ -16,7 +16,8 @@ TEST_GROUP(NodeToNodeTests)
 
 TEST(NodeToNodeTests,Exists)
 {
-	ImportedUgrid ugrid = ImportedUgridFactory::readUgrid("../grids/6cell.ugrid");
+    printf("%s\n",SIX_CELL_TEST_GRID);
+	ImportedUgrid ugrid = ImportedUgridFactory::readUgrid(SIX_CELL_TEST_GRID);
 
 	vector<int> nodeList = buildUniqueNodeList(ugrid);
 	vector<vector<int> > n2n = buildNodeToNode(ugrid,nodeList);
