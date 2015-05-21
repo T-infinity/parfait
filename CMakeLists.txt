@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 project(parfait)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(mpi_installed true)
+set(mpi_installed false)
 set(parmetis_installed true)
 set(vtk_installed true)
 
