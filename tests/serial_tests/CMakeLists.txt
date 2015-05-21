@@ -3,13 +3,13 @@ cmake_minimum_required(VERSION 2.8)
 
 PROJECT(ParfaitSerialTests)
 set(CATCH_DIR "/ump/fldmd/home/cdruyorj/cdruyor_local/catch/include")
-add_definitions(-DSIX_CELL_TEST_GRID="${parfait_DIR}/tests/grids/6cell.ugrid")
-find_package(parfait REQUIRED)
+add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/tests/grids/6cell.ugrid")
 
 include_directories(
     "${CATCH_DIR}"
-    "${parfait_DIR}/src"
+    "${CMAKE_SOURCE_DIR}/src"
     )
+
 
 set(PARFAIT_SERIAL_TESTS_SRC
         AllTests.cpp  
@@ -25,9 +25,18 @@ set(PARFAIT_SERIAL_TESTS_SRC
         build_neighbors/build_neighbors_test.cpp
         cart_block/CartBlockTests.cpp  
         cart_mesh/cart_mesh_test.cpp
-        connectivity/CellToCellTests.cpp  
         connectivity/NodeToNodeTests.cpp
-
+        edge_map/edge_map_test.cpp
+        generic_mesh_tools/GenericMeshToolsTests.cpp
+        high_level_mesh_searching/AdtBuilderTests.cpp
+        mesh_interfaces/fun3d_mesh_tests.cpp
+        mesh_interfaces/imported_ugrid_tests.cpp
+        point/point_test.cpp
+        range_loop/RangeLoopTests.cpp
+        ugridWriterTests/ugridWriterTests.cpp
+        ugrid_factory/ugrid_factory_tests.cpp
+        vectors/LegacyArrayTests.cpp  
+        vectors/vector_tools_tests.cpp
        )
 
 

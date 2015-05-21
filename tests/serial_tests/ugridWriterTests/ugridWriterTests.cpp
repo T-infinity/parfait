@@ -19,7 +19,7 @@ TEST_GROUP(ugridWriterTests){
 
     void setup() {
         using namespace UgridReader;
-        gridFile = "../grids/6cell.ugrid";
+        gridFile = SIX_CELL_TEST_GRID;
         readHeader(gridFile,nnodes,ntri,nquad,ntet,npyr,nprism,nhex);
         nodes = readNodes(gridFile);
         triangles = readTriangles(gridFile);
@@ -123,7 +123,7 @@ TEST(ugridWriterTests,Exists)
 
 TEST(ugridWriterTests,WriteWithOneFunctionCall)
 {
-	std::string gridFile = "../grids/6cell.ugrid";
+	std::string gridFile = SIX_CELL_TEST_GRID;
 	using namespace UgridReader;
 	int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
 	readHeader(gridFile,nnodes,ntri,nquad,ntet,npyr,nprism,nhex);
