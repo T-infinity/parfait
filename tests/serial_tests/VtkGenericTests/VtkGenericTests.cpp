@@ -44,7 +44,6 @@ TEST_GROUP(VtkGenericTests)
 TEST(VtkGenericTests,Exists)
 {
 	using namespace MessagePasser;
-	Init();
 	// shift each tet so they don't overlap
 	for(double &vertex:nodes)
 		vertex += (double)Rank();
@@ -76,7 +75,6 @@ TEST(VtkGenericTests,Exists)
 	writer.addVectorField(false,"Double vector field",5,cellDoubleField.data());
 
 	writer.writeAscii();
-	Finalize();	
 }
 
 TEST(VtkGenericTests, ExtentWriter)

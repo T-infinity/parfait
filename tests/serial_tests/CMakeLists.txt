@@ -2,14 +2,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 PROJECT(ParfaitSerialTests)
-set(CATCH_DIR "/ump/fldmd/home/cdruyorj/cdruyor_local/catch/include")
 add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/tests/grids/6cell.ugrid")
-
-include_directories(
-    "${CATCH_DIR}"
-    "${CMAKE_SOURCE_DIR}/src"
-    )
-
 
 set(PARFAIT_SERIAL_TESTS_SRC
         AllTests.cpp  
