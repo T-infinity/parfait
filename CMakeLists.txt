@@ -18,6 +18,7 @@ endif()
 
 include_directories(
     src
+    utils
     )
 
 

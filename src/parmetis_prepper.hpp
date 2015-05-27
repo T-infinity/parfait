@@ -3,7 +3,6 @@
 #include "message_passer.h"
 #include "parmetis_wrapper.h"
 #include "range_loop.h"
-#include "parfait_checkpoint.h"
 
 using std::vector;
 using namespace MessagePasser;
@@ -11,7 +10,6 @@ using namespace MessagePasser;
 template<class MeshType>
 void ParMetisPrepper<MeshType>::buildNodeToNodeConnectivity()
 {
-    checkpoint("inside");
 	int nproc = NumberOfProcesses();
 	vector<int> nodeIds = buildUniqueNodeList(mesh);
 	vector<vector<int> > nodeToNode = buildNodeToNode(mesh,nodeIds); 
@@ -23,13 +21,14 @@ void ParMetisPrepper<MeshType>::buildNodeToNodeConnectivity()
 	procNodeMap.insert(procNodeMap.begin(),0);
 	for(int i=1;i<=nproc;i++)
 		procNodeMap[i] += procNodeMap[i-1];
+    printf("Rank %i: map size %i\n",Rank(),procNodeMap.size());
+    fflush(stdout);
 	// combine local nodeToNode maps to get a full map
 	vector<int> sendIds;
 	vector<int> sendValence;
 	vector<int> sendNodeToNode;
 	for(int proc=0;proc<nproc;proc++)
 	{
-        checkpoint("for proc "+std::to_string(proc));
 		if(Rank() == 0)
 			printf("Sending partial n2n to proc %i\n",proc);
 		// count how many nodes you have for proc
@@ -66,20 +65,18 @@ void ParMetisPrepper<MeshType>::buildNodeToNodeConnectivity()
 			printf("Packing up n2n\n");
 		for(auto id:nodeIds)
 		{
-            checkpoint(std::to_string(id));
 			if(id >= procNodeMap[proc] && id < procNodeMap[proc+1])
 				for(auto nbr:nodeToNode[index])
 					sendNodeToNode.push_back(nbr);
 			index++;
 		}	
-        checkpoint();
 		// get on proc
 		vector<int> mapOfGlobalNodeToNode;
 		vector<int> globalNodeToNode;
-		if(Rank() == 0)
+		if(Rank() == 0){
 			printf("Gathering n2n\n");
+        }
 		Gatherv(sendNodeToNode,globalNodeToNode,mapOfGlobalNodeToNode,proc);
-
 		if(Rank() == proc)
 		{
 			index = 0;
