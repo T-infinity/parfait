@@ -29,8 +29,8 @@ set(parfait_parallel_SRC
 
 set(parfait_links
     metis
-    irc
-    imf
+    #irc
+    #imf
     )
 
 set(parallel_links

@@ -1,5 +1,5 @@
-#include <CppUTest/CommandLineTestRunner.h>
 #include "point.h"
+#include <CppUTest/CommandLineTestRunner.h>
 
 TEST_GROUP(Point){
 

@@ -1,6 +1,6 @@
-#include "CppUTest/CommandLineTestRunner.h"
 #include "extent_builder.h"
 #include <vector>
+#include "CppUTest/CommandLineTestRunner.h"
 
 using std::vector;
 

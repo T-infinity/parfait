@@ -1,8 +1,8 @@
-#include "CppUTest/CommandLineTestRunner.h"
 #include "range_loop.h"
 #include <stdio.h>
 #include <algorithm>
 #include <vector>
+#include "CppUTest/CommandLineTestRunner.h"
 
 TEST_GROUP(RangeLoopTests)
 {

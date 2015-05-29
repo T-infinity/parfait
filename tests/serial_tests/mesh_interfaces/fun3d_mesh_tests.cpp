@@ -1,6 +1,6 @@
 #include "fun3d_mesh.h"
-#include "CppUTest/CommandLineTestRunner.h"
 #include <vector>
+#include "CppUTest/CommandLineTestRunner.h"
 
 using std::vector;
 TEST_GROUP(Fun3DMeshTests)
