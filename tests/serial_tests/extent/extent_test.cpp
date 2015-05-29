@@ -1,7 +1,7 @@
-#include <CppUTest/CommandLineTestRunner.h>
 #ifndef __EXTENT_H
 #include "extent.h"
 #endif
+#include <CppUTest/CommandLineTestRunner.h>
 
 TEST_GROUP(Extent){
 

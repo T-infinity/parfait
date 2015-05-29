@@ -1,6 +1,6 @@
-#include "CppUTest/CommandLineTestRunner.h"
 #include "legacy_array.h"
 #include "range_loop.h"
+#include "CppUTest/CommandLineTestRunner.h"
 
 TEST_GROUP(LegacyArrayTests)
 {
