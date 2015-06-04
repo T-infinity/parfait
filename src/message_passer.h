@@ -2,6 +2,7 @@
 #define MESSAGE_PASSER_H
 #include <vector>
 #include <assert.h>
+#include <stdio.h>
 #ifdef PARFAIT_WITH_MPI
 
 #include <mpi.h>
