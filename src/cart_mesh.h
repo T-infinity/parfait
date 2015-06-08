@@ -5,20 +5,18 @@
 #include "cart_block.h"
 #include <vector>
 
-class CartMesh
-{
+namespace Parfait {
+    class CartMesh {
     public:
-        CartMesh
-            (
-             const Point& lo, 
-             const Point &hi, 
-             int numCellsX,
-             int numCellsY,
-             int numCellsZ
-            );
+        CartMesh(
+                const Point &lo,
+                const Point &hi,
+                int numCellsX,
+                int numCellsY,
+                int numCellsZ
+        );
 
-        int numberOfCells() const
-        { return block.numberOfCells(); }
+        int numberOfCells() const { return block.numberOfCells(); }
 
         int numberOfNodes() const;
         int numberOfNodesInCell(int Id) const;
@@ -38,11 +36,11 @@ class CartMesh
         double cellVolume(int cellId) const;
 
         void getNode(int nodeId, double node[3]) const;
-		void getNode(int i,int j,int k,double node[3]) const;
-		int getNodeId(int i,int j,int k) const;
-		void getLogicalDimensions(int &nX,int &nY,int &nZ) const;
-		void getSpacings(double &hx,double &hy,double &hz) const;
-		void getLogicalCoordinates(int nodeId,int &i,int &j,int &k) const;
+        void getNode(int i, int j, int k, double node[3]) const;
+        int getNodeId(int i, int j, int k) const;
+        void getLogicalDimensions(int &nX, int &nY, int &nZ) const;
+        void getSpacings(double &hx, double &hy, double &hz) const;
+        void getLogicalCoordinates(int nodeId, int &i, int &j, int &k) const;
 
     private:
         CartBlock block;
@@ -50,7 +48,7 @@ class CartMesh
 
         int numberOfCellsOnSide(int faceId) const;
         int whatSideIsCellFaceOn(int cellId, int faceId) const;
-
-};
+    };
+}
 
 #endif

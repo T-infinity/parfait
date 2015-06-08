@@ -6,6 +6,8 @@
 
 #include <assert.h>
 
+using namespace Parfait;
+
 void writePoints(FILE *f, std::vector<Extent> &boxes);
 void writeConnectivity(FILE *f, std::vector<Extent> &boxes);
 void writeOffsets(FILE *f, std::vector<Extent> &boxes);

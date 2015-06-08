@@ -2,6 +2,7 @@
 #include "cart_mesh.h"
 #include "generic_mesh_tools.h"
 #include "CppUTest/CommandLineTestRunner.h"
+using namespace Parfait;
 
 TEST_GROUP(GenericMeshToolsTests)
 {

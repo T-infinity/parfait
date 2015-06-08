@@ -14,20 +14,18 @@
 // arbitrary combinations of translations and
 // rotations.)
 //
-
-namespace MeshMover
-{
-	template<typename Mesh>
-	void move(Mesh &mesh,const MotionMatrix &motion)
-	{
-		int nnodes = mesh.numberOfNodes();
-		for(int i=0;i<nnodes;i++)
-		{
-			double p[3];
-			mesh.getNode(i,p);
-			motion.movePoint(p);
-			mesh.setNode(i,p);
-		}
-	}
+namespace Parfait {
+    namespace MeshMover {
+        template<typename Mesh>
+        void move(Mesh &mesh, const MotionMatrix &motion) {
+            int nnodes = mesh.numberOfNodes();
+            for (int i = 0; i < nnodes; i++) {
+                double p[3];
+                mesh.getNode(i, p);
+                motion.movePoint(p);
+                mesh.setNode(i, p);
+            }
+        }
+    }
 }
 #endif

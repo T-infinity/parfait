@@ -4,6 +4,8 @@
 
 #include "CppUTest/CommandLineTestRunner.h"
 
+using namespace Parfait;
+
 TEST_GROUP(Adt3DExtent) {} ;
 
 TEST(Adt3DExtent, StoreExtent)

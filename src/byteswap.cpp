@@ -15,6 +15,9 @@
  ******************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
+#include "byteswap.h"
+
+
 
 #if ( ( (defined(__BYTE_ORDER) && (__BYTE_ORDER==__LITTLE_ENDIAN)) || \
         (defined(_BYTE_ORDER) && (_BYTE_ORDER==_LITTLE_ENDIAN)) ||    \
@@ -37,43 +40,42 @@
 #else
 #define IO_ENDIANSWAP(size_,x) {}
 #endif
+namespace Parfait {
+// ----------------------------------------------------------------------------
+    size_t private_fread(void *ptr, size_t size, size_t nmemb, FILE *stream) {
+        int i;
+        size_t ret;
+        char *tmp = (char *) ptr;
+
+        ret = fread(ptr, size, nmemb, stream);
+
+        for (i = 0; i < nmemb; i++) {
+            IO_ENDIANSWAP(size, tmp);
+            tmp += size;
+        }
+
+        return (ret);
+    }
+
 
 // ----------------------------------------------------------------------------
-size_t private_fread( void *ptr, size_t size, size_t nmemb, FILE *stream)
-{
-  int    i;
-  size_t ret;
-  char   *tmp=(char *)ptr;
+    size_t private_fwrite(void *ptr, size_t size, size_t nmemb, FILE *stream) {
+        int i;
+        size_t ret;
+        char *tmp;
 
-  ret = fread(ptr,size,nmemb,stream);
+        for (i = 0, tmp = (char *) ptr; i < nmemb; i++) {
+            IO_ENDIANSWAP(size, tmp);
+            tmp += size;
+        }
 
-  for( i=0; i<nmemb; i++ ) {
-    IO_ENDIANSWAP(size,tmp);
-    tmp += size;
-  }
+        ret = fwrite(ptr, size, nmemb, stream);
 
-  return( ret );
-}
+        for (i = 0, tmp = (char *) ptr; i < nmemb; i++) {
+            IO_ENDIANSWAP(size, tmp);
+            tmp += size;
+        }
 
-
-// ----------------------------------------------------------------------------
-size_t private_fwrite( void *ptr, size_t size, size_t nmemb, FILE *stream)
-{
-  int    i;
-  size_t ret;
-  char   *tmp;
-
-  for( i=0,tmp=(char *)ptr; i<nmemb; i++ ) {
-    IO_ENDIANSWAP(size,tmp);
-    tmp += size;
-  }
-
-  ret = fwrite(ptr,size,nmemb,stream);
-	
-  for( i=0,tmp=(char *)ptr; i<nmemb; i++ ) {
-    IO_ENDIANSWAP(size,tmp);
-    tmp += size;
-  }
-  
-  return( ret );
+        return (ret);
+    }
 }

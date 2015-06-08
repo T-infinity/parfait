@@ -1,5 +1,6 @@
 #include "point.h"
 #include <CppUTest/CommandLineTestRunner.h>
+using namespace Parfait;
 
 TEST_GROUP(Point){
 

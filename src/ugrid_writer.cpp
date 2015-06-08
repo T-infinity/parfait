@@ -5,6 +5,7 @@
 #include <vector>
 
 using std::vector;
+using namespace Parfait;
 
 void UgridWriter::writeImportedUgrid(ImportedUgrid &ugrid, std::string filename, bool swapBytes)
 {

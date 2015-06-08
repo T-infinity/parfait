@@ -9,68 +9,68 @@
 #include <exception>
 #include <stdexcept>
 
-template <typename MeshType>
-class MeshSlice
-{
+namespace Parfait {
+    template<typename MeshType>
+    class MeshSlice {
     public:
-        MeshSlice(MeshType &mesh_in, const Extent &domain_in) : 
-            mesh(mesh_in), 
-            domain(domain_in) {
-                Init();
+        MeshSlice(MeshType &mesh_in, const Extent &domain_in) :
+                mesh(mesh_in),
+                domain(domain_in) {
+            Init();
+        }
+
+        template<typename T>
+        MeshSlice(MeshType &mesh_in, bool isNodeData,
+                  T *data, int blocksize, int offset,
+                  T lo, T hi) : mesh(mesh_in) {
+            globalToLocal_cellId.resize(mesh.numberOfCells(), -1);
+            globalToLocal_nodeId.resize(mesh.numberOfNodes(), -1);
+
+            Mesh<MeshType> genMesh(mesh);
+
+            if (isNodeData) {
+                throw std::logic_error("MeshSlice threshold only supports cell "
+                                               "data at this time.");
             }
 
-        template <typename T> 
-            MeshSlice(MeshType &mesh_in, bool isNodeData, 
-                    T* data, int blocksize, int offset, 
-                    T lo, T hi) : mesh(mesh_in) {
-                globalToLocal_cellId.resize(mesh.numberOfCells(), -1);
-                globalToLocal_nodeId.resize(mesh.numberOfNodes(), -1);
-
-                Mesh<MeshType> genMesh(mesh);
-
-                if(isNodeData){
-                    throw std::logic_error("MeshSlice threshold only supports cell " 
-                            "data at this time.");
-                }
-
-                int cellId = 0;
-                for(auto cell : genMesh.cells()){
-                    Extent cellExtent = ExtentBuilder::build(cell);
-                    T item = data[blocksize*cell.Id() + offset];
-                    if(item > lo && item < hi){
-                        globalToLocal_cellId[cell.Id()] = cellId++;
-                        for(int node : cell.getNodes()){
-                            globalToLocal_nodeId[node] = 1; // Just turn it on.
-                        }
-                    }
-                }
-                num_cells = cellId;
-
-                int nodeId = 0;
-                for(int node = 0; node < genMesh.numberOfNodes(); node++){
-                    if(globalToLocal_nodeId[node] == 1){
-                        globalToLocal_nodeId[node] = nodeId++;
-                    }
-                }
-                num_nodes = nodeId;
-
-                localToGlobal_cellId.resize(num_cells, -1);
-                localToGlobal_nodeId.resize(num_nodes, -1);
-
-                for(int index = 0; index < globalToLocal_cellId.size(); index++){
-                    int localId = globalToLocal_cellId[index];
-                    if(localId != -1){
-                        localToGlobal_cellId[localId] = index;
-                    }
-                }
-
-                for(int index = 0; index < globalToLocal_nodeId.size(); index++){
-                    int localId = globalToLocal_nodeId[index];
-                    if(localId != -1){
-                        localToGlobal_nodeId[localId] = index;
+            int cellId = 0;
+            for (auto cell : genMesh.cells()) {
+                Extent cellExtent = ExtentBuilder::build(cell);
+                T item = data[blocksize * cell.Id() + offset];
+                if (item > lo && item < hi) {
+                    globalToLocal_cellId[cell.Id()] = cellId++;
+                    for (int node : cell.getNodes()) {
+                        globalToLocal_nodeId[node] = 1; // Just turn it on.
                     }
                 }
             }
+            num_cells = cellId;
+
+            int nodeId = 0;
+            for (int node = 0; node < genMesh.numberOfNodes(); node++) {
+                if (globalToLocal_nodeId[node] == 1) {
+                    globalToLocal_nodeId[node] = nodeId++;
+                }
+            }
+            num_nodes = nodeId;
+
+            localToGlobal_cellId.resize(num_cells, -1);
+            localToGlobal_nodeId.resize(num_nodes, -1);
+
+            for (int index = 0; index < globalToLocal_cellId.size(); index++) {
+                int localId = globalToLocal_cellId[index];
+                if (localId != -1) {
+                    localToGlobal_cellId[localId] = index;
+                }
+            }
+
+            for (int index = 0; index < globalToLocal_nodeId.size(); index++) {
+                int localId = globalToLocal_nodeId[index];
+                if (localId != -1) {
+                    localToGlobal_nodeId[localId] = index;
+                }
+            }
+        }
 
         int numberOfNodes() const;
         int numberOfCells() const;
@@ -96,96 +96,95 @@ class MeshSlice
         int num_nodes, num_cells;
 
         void Init();
-};
+    };
 
-template <typename MeshType>
-int MeshSlice<MeshType>::numberOfNodes() const { return num_nodes;}
+    template<typename MeshType>
+    int MeshSlice<MeshType>::numberOfNodes() const { return num_nodes; }
 
-template <typename MeshType>
-int MeshSlice<MeshType>:: numberOfCells() const { return num_cells;}
+    template<typename MeshType>
+    int MeshSlice<MeshType>::numberOfCells() const { return num_cells; }
 
-template <typename MeshType>
-int MeshSlice<MeshType>::numberOfNodesInCell(int cellId) const 
-{ return mesh.numberOfNodesInCell(localToGlobal_cellId[cellId]);}
+    template<typename MeshType>
+    int MeshSlice<MeshType>::numberOfNodesInCell(
+            int cellId) const { return mesh.numberOfNodesInCell(localToGlobal_cellId[cellId]); }
 
-template <typename MeshType>
-int MeshSlice<MeshType>::numberOfFacesInCell(int cellId) const 
-{ return mesh.numberOfFacesInCell(localToGlobal_cellId[cellId]);}
+    template<typename MeshType>
+    int MeshSlice<MeshType>::numberOfFacesInCell(
+            int cellId) const { return mesh.numberOfFacesInCell(localToGlobal_cellId[cellId]); }
 
-template <typename MeshType>
-int MeshSlice<MeshType>::numberOfNodesInCellFace(int cellId, int faceId) const 
-{ return mesh.numberOfNodesInCellFace(localToGlobal_cellId[cellId], faceId);}
-
-template <typename MeshType>
-std::vector<int> MeshSlice<MeshType>::getNodesInCellFace(int cellId, int faceId) const 
-{ 
-    auto nodes = mesh.getNodesInCellFace(localToGlobal_cellId[cellId], faceId);
-    for(int& node : nodes){
-        node = globalToLocal_nodeId[node];
+    template<typename MeshType>
+    int MeshSlice<MeshType>::numberOfNodesInCellFace(int cellId, int faceId) const {
+        return mesh.numberOfNodesInCellFace(localToGlobal_cellId[cellId], faceId);
     }
-    return nodes;
-}
 
-template <typename MeshType>
-std::vector<int> MeshSlice<MeshType>::getNodesInCell(int cellId) const 
-{ 
-    auto nodes = mesh.getNodesInCell(localToGlobal_cellId[cellId]);
-    for(int& node : nodes){
-        node = globalToLocal_nodeId[node];
+    template<typename MeshType>
+    std::vector<int> MeshSlice<MeshType>::getNodesInCellFace(int cellId, int faceId) const {
+        auto nodes = mesh.getNodesInCellFace(localToGlobal_cellId[cellId], faceId);
+        for (int &node : nodes) {
+            node = globalToLocal_nodeId[node];
+        }
+        return nodes;
     }
-    return nodes;
-}
 
-template <typename MeshType>
-void MeshSlice<MeshType>::getNode(int nodeId, double node[3]) const 
-{
-    mesh.getNode(localToGlobal_nodeId[nodeId], node);
-}
+    template<typename MeshType>
+    std::vector<int> MeshSlice<MeshType>::getNodesInCell(int cellId) const {
+        auto nodes = mesh.getNodesInCell(localToGlobal_cellId[cellId]);
+        for (int &node : nodes) {
+            node = globalToLocal_nodeId[node];
+        }
+        return nodes;
+    }
+
+    template<typename MeshType>
+    void MeshSlice<MeshType>::getNode(int nodeId, double node[3]) const {
+        mesh.getNode(localToGlobal_nodeId[nodeId], node);
+    }
 
 
-template <typename MeshType>
-void MeshSlice<MeshType>::Init(){
+    template<typename MeshType>
+    void MeshSlice<MeshType>::Init() {
 
-    globalToLocal_cellId.resize(mesh.numberOfCells(), -1);
-    globalToLocal_nodeId.resize(mesh.numberOfNodes(), -1);
+        globalToLocal_cellId.resize(mesh.numberOfCells(), -1);
+        globalToLocal_nodeId.resize(mesh.numberOfNodes(), -1);
 
-    Mesh<MeshType> genMesh(mesh);
+        Mesh<MeshType> genMesh(mesh);
 
-    int cellId = 0;
-    for(auto cell : genMesh.cells()){
-        Extent cellExtent = ExtentBuilder::build(cell);
-        if(domain.contains(cellExtent)){
-            globalToLocal_cellId[cell.Id()] = cellId++;
-            for(int node : cell.getNodes()){
-                globalToLocal_nodeId[node] = 1; // Just turn it on.
+        int cellId = 0;
+        for (auto cell : genMesh.cells()) {
+            Extent cellExtent = ExtentBuilder::build(cell);
+            if (domain.contains(cellExtent)) {
+                globalToLocal_cellId[cell.Id()] = cellId++;
+                for (int node : cell.getNodes()) {
+                    globalToLocal_nodeId[node] = 1; // Just turn it on.
+                }
             }
         }
-    }
 
-    num_cells = cellId;
+        num_cells = cellId;
 
-    int nodeId = 0;
-    for(int node = 0; node < genMesh.numberOfNodes(); node++){
-        if(globalToLocal_nodeId[node] == 1){
-            globalToLocal_nodeId[node] = nodeId++;
+        int nodeId = 0;
+        for (int node = 0; node < genMesh.numberOfNodes(); node++) {
+            if (globalToLocal_nodeId[node] == 1) {
+                globalToLocal_nodeId[node] = nodeId++;
+            }
         }
-    }
-    num_nodes = nodeId;
+        num_nodes = nodeId;
 
-    localToGlobal_cellId.resize(num_cells, -1);
-    localToGlobal_nodeId.resize(num_nodes, -1);
+        localToGlobal_cellId.resize(num_cells, -1);
+        localToGlobal_nodeId.resize(num_nodes, -1);
 
-    for(int index = 0; index < globalToLocal_cellId.size(); index++){
-        int localId = globalToLocal_cellId[index];
-        if(localId != -1){
-            localToGlobal_cellId[localId] = index;
+        for (int index = 0; index < globalToLocal_cellId.size(); index++) {
+            int localId = globalToLocal_cellId[index];
+            if (localId != -1) {
+                localToGlobal_cellId[localId] = index;
+            }
         }
-    }
 
-    for(int index = 0; index < globalToLocal_nodeId.size(); index++){
-        int localId = globalToLocal_nodeId[index];
-        if(localId != -1){
-            localToGlobal_nodeId[localId] = index;
+        for (int index = 0; index < globalToLocal_nodeId.size(); index++) {
+            int localId = globalToLocal_nodeId[index];
+            if (localId != -1) {
+                localToGlobal_nodeId[localId] = index;
+            }
         }
     }
 }

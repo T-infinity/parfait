@@ -3,15 +3,11 @@
 #include "CppUTest/CommandLineTestRunner.h"
 
 using std::vector;
+using namespace Parfait;
 
 TEST_GROUP(ImportedUgridFactoryTests)
 {
-	void setup()
-	{
-	}
-	void teardown()
-	{
-	}
+
 };
 
 TEST(ImportedUgridFactoryTests,Exists)

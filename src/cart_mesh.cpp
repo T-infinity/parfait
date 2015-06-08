@@ -3,6 +3,7 @@
 #include "range_loop.h"
 #include <string>
 
+using namespace Parfait;
 CartMesh::CartMesh(
         const Point& lo, 
         const Point &hi, 

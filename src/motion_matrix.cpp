@@ -1,5 +1,7 @@
 #include "motion_matrix.h"
 
+using namespace Parfait;
+
 MotionMatrix::MotionMatrix()
 {
 	clearMotions();

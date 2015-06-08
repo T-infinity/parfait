@@ -8,8 +8,8 @@
 #include "hex.h"
 #endif
 
-class VtkHexWriter
-{
+namespace Parfait{
+    class VtkHexWriter {
     public:
         VtkHexWriter(std::string filename);
         void addHex(Hex b);
@@ -20,7 +20,7 @@ class VtkHexWriter
         std::vector<Hex> boxes;
         std::vector<int> tags;
         std::string filename;
-
-};
+    };
+}
 
 #endif

@@ -9,36 +9,38 @@
 #include <vector>
 #include <memory>
 #include <mutex>
-
-template<int ndim>
-class Adt_elem {
+namespace Parfait {
+    template<int ndim>
+    class Adt_elem {
     public:
-    int level;
-    int object_id;
-    Adt_elem* lchild;
-    Adt_elem* rchild;
-    std::array<double,ndim> xmin;
-    std::array<double,ndim> xmax;
-    std::array<double,ndim> object_x;
-    std::mutex leftLock;
-    std::mutex rightLock;
+        int level;
+        int object_id;
+        Adt_elem *lchild;
+        Adt_elem *rchild;
+        std::array<double, ndim> xmin;
+        std::array<double, ndim> xmax;
+        std::array<double, ndim> object_x;
+        std::mutex leftLock;
+        std::mutex rightLock;
 
 
-    Adt_elem() = delete;
-    ~Adt_elem();
-    Adt_elem(int set_level, std::array<double, ndim> const &set_xmin, std::array<double, ndim> const &set_xmax);
-    Adt_elem(int set_level, std::array<double, ndim> const &set_xmin, std::array<double, ndim> const &set_xmax,
-             int set_object_id, const double *set_object_x);
-    bool contains_object(const double *x_in) const;
-    bool contains_hyper_rectangle(const double *a, const double *b) const;
-    bool hyper_rectangle_contains_object(const double *a, const double *b) const;
+        Adt_elem() = delete;
+        ~Adt_elem();
+        Adt_elem(int set_level, std::array<double, ndim> const &set_xmin,
+                 std::array<double, ndim> const &set_xmax);
+        Adt_elem(int set_level, std::array<double, ndim> const &set_xmin,
+                 std::array<double, ndim> const &set_xmax,
+                 int set_object_id, const double *set_object_x);
+        bool contains_object(const double *x_in) const;
+        bool contains_hyper_rectangle(const double *a, const double *b) const;
+        bool hyper_rectangle_contains_object(const double *a, const double *b) const;
 
     private:
-    void construct(int set_level, std::array<double, ndim> const &set_xmin,
-                   std::array<double, ndim> const &set_xmax, int set_object_id,
-                   const double *set_object_x);
-};
-
+        void construct(int set_level, std::array<double, ndim> const &set_xmin,
+                       std::array<double, ndim> const &set_xmax, int set_object_id,
+                       const double *set_object_x);
+    };
+}
 #include "adt_elem.hpp"
 
 #endif

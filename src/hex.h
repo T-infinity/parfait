@@ -1,32 +1,32 @@
 #ifndef __HEX_H
 #define __HEX_H
 
-#ifndef __POINT_H
 #include "point.h"
-#endif
-
-#ifndef __EXTENT_H
 #include "extent.h"
-#endif
 
-class Hex {
+namespace Parfait {
+    class Hex {
     public:
-        Hex(){}
+        Hex() { }
+
         Hex(Extent extent);
         Point points[8];
-        const Point &operator[] (const int i) const 
-        {
+
+        const Point &operator[](const int i) const {
             return points[i];
         }
-        Point &operator[](const int i){
+
+        Point &operator[](const int i) {
             return points[i];
         }
-        void Print (){
+
+        void Print() {
             for (unsigned int i = 0; i < 8; i++) {
                 points[i].Print();
             }
         }
-};
+    };
+}
 
 
 
@@ -42,7 +42,7 @@ class Hex {
 //       - x+
 
 
-inline Hex::Hex(Extent extent){
+inline Parfait::Hex::Hex(Extent extent){
     points[0] = extent.lo;
     points[6] = extent.hi;
 

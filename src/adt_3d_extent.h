@@ -13,9 +13,8 @@
 #include "unit_transformer.h"
 #endif
 
-
-class Adt3DExtent
-{
+namespace Parfait {
+    class Adt3DExtent {
     public:
         Adt3DExtent() = delete;
         Adt3DExtent(const Extent &domain);
@@ -24,7 +23,7 @@ class Adt3DExtent
     private:
         UnitTransformer unitTransformer;
         Adt<6> adt;
-
-};
+    };
+}
 
 #endif

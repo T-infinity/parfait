@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "extent.h"
-
+using namespace Parfait;
 Extent::Extent() {
     lo = Point(0, 0, 0);
     hi = Point(0, 0, 0);

@@ -3,6 +3,7 @@
 #include "CppUTest/CommandLineTestRunner.h"
 
 using std::vector;
+using namespace Parfait;
 
 TEST_GROUP(ugridWriterTests){
     std::string gridFile;

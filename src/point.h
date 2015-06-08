@@ -4,25 +4,27 @@
 #include <array>
 #include <vector>
 
-class Point
-{
+namespace Parfait {
+    class Point {
     public:
         double pos[3];
 
         Point();
         Point(double x, double y, double z);
-        Point(const double*);
+        Point(const double *);
+
         double *data() { return pos; }
+
         const double *data() const { return pos; }
 
-        inline double &operator[] (int i) 
-        {
+        inline double &operator[](int i) {
             return pos[i];
         }
-        inline const double &operator[] (int i) const 
-        {
+
+        inline const double &operator[](int i) const {
             return pos[i];
         }
+
         Point operator+(const Point &rhs) const;
         Point operator-(const Point &rhs) const;
         Point operator*(const double a) const;
@@ -30,7 +32,7 @@ class Point
         Point operator*=(const double a);
         Point operator/=(const double a);
         Point operator+=(const Point &rhs);
-        Point operator-=(const Point &rhs) ;
+        Point operator-=(const Point &rhs);
         bool operator==(const Point &rhs);
         bool operator!=(const Point &rhs);
         bool approxEqual(const Point &rhs, double tol = 1.0e-14) const;
@@ -44,7 +46,8 @@ class Point
         static Point normalize(const Point &a);
 
         void Print() const;
-};
+    };
+}
 
 #include "point.hpp"
 

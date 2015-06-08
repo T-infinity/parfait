@@ -1,6 +1,7 @@
 #include "adt_3d_point.h"
 #include <stdexcept>
 
+using namespace Parfait;
 Adt3DPoint::Adt3DPoint(const Extent &domain)
     : unitTransformer(domain)
 {}

@@ -2,6 +2,7 @@
 #include "byteswap.h"
 #include <stdexcept>
 
+using namespace Parfait;
 
 void UgridReader::readHeader(std::string filename,int &nnodes,
 		int &ntri,int &nquad,

@@ -2,6 +2,7 @@
 #include "range_loop.h"
 #include <stdio.h>
 
+using namespace Parfait;
 using namespace UgridReader;
 using namespace MessagePasser;
 

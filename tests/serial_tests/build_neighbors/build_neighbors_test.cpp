@@ -2,6 +2,8 @@
 #include "build_neighbors.h"
 #include "CppUTest/CommandLineTestRunner.h"
 
+using namespace Parfait;
+
 TEST_GROUP(BuildNeighbors){
     CartMesh cartMesh = {{0,0,0},{2,1,1},2,1,1};
 };

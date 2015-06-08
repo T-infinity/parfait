@@ -7,39 +7,38 @@
 
 using std::vector;
 using std::string;
+namespace Parfait {
+    template<typename Mesh>
+    class VtkSurfaceWriter {
+    public:
+        VtkSurfaceWriter(Mesh &mesh, string name);
+        void writeAscii();
 
-template<typename Mesh>
-class VtkSurfaceWriter
-{
-	public:	
-		VtkSurfaceWriter(Mesh &mesh,string name);
-		void writeAscii();
+        void addScalarField(bool isNodeData, string fieldName, int *data);
+        void addScalarField(bool isNodeData, string fieldName, float *data);
+        void addScalarField(bool isNodeData, string fieldName, double *data);
+        void addVectorField(bool isNodeData, string fieldName, int blockSize, int *data);
+        void addVectorField(bool isNodeData, string fieldName, int blockSize, float *data);
+        void addVectorField(bool isNodeData, string fieldName, int blockSize, double *data);
 
-		void addScalarField(bool isNodeData,string fieldName,int *data);
-		void addScalarField(bool isNodeData,string fieldName,float *data);
-		void addScalarField(bool isNodeData,string fieldName,double *data);
-		void addVectorField(bool isNodeData,string fieldName,int blockSize,int *data);
-		void addVectorField(bool isNodeData,string fieldName,int blockSize,float *data);
-		void addVectorField(bool isNodeData,string fieldName,int blockSize,double *data);
+    private:
+        std::string filename;
+        Mesh &mesh;
+        int numberOfSurfaceNodes;
+        vector<int> boundaryNodeIdMap;
+        vector<VtkField<int> > intFields;
+        vector<VtkField<float> > floatFields;
+        vector<VtkField<double> > doubleFields;
 
-	private:
-		std::string filename;
-		Mesh &mesh;
-		int numberOfSurfaceNodes;
-		vector<int> boundaryNodeIdMap;
-		vector<VtkField<int> >    intFields;
-		vector<VtkField<float> >  floatFields;
-		vector<VtkField<double> > doubleFields;
-
-		void setUpLocalLists();
-		void writeHeader();
-		void writeFooter();
-		void writePiece();
-		void writeNodes();
-		void writeCellConnectivity();
-		void writeCellOffsets();
-		void writeCellTypes();
-		void writeFieldData();
+        void setUpLocalLists();
+        void writeHeader();
+        void writeFooter();
+        void writePiece();
+        void writeNodes();
+        void writeCellConnectivity();
+        void writeCellOffsets();
+        void writeCellTypes();
+        void writeFieldData();
 #if 0
 		
 		std::vector<VtkField*> fields;	
@@ -79,8 +78,8 @@ class VtkSurfaceWriter
 		// from global ids to local ids (local to the boundaries)
 		std::vector<int>  boundary_node_id_map;	
 #endif
-};
-
+    };
+}
 #include "vtk_surface_writer.hpp"
 
 #endif

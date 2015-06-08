@@ -4,6 +4,8 @@
 #include <string>
 
 using std::vector;
+using namespace Parfait;
+
 ImportedUgrid::ImportedUgrid(vector<double> nodes_in,vector<int> triangles_in,
 		vector<int> quads_in,vector<int> tets_in,vector<int> pyramids_in,
 		vector<int> prisms_in,vector<int> hexs_in,

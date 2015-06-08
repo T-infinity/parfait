@@ -3,6 +3,8 @@
 
 #include <CppUTest/CommandLineTestRunner.h>
 
+using namespace Parfait;
+
 TEST_GROUP(EdgeMap){};
 
 TEST(EdgeMap, CreateUniqueEdges){

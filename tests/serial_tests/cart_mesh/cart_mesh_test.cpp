@@ -2,7 +2,7 @@
 #include "vector_tools.h"
 
 #include <CppUTest/CommandLineTestRunner.h>
-
+using namespace Parfait;
 TEST_GROUP(CartMesh)
 {
 };

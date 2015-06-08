@@ -4,6 +4,7 @@
 #include <string>
 
 using namespace std;
+using namespace Parfait;
 
 MapbcReader::MapbcReader(string filename_in)
 	:filename(filename_in)

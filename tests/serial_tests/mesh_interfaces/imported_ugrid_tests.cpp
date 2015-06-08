@@ -6,6 +6,7 @@
 #include "CppUTest/CommandLineTestRunner.h"
 
 using std::vector;
+using namespace Parfait;
 
 template <class MeshType> void constFunction(const MeshType &mesh);
 

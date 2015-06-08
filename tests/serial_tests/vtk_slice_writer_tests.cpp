@@ -8,7 +8,7 @@
 #include "generic_mesh_tools.h"
 
 #include "CppUTest/CommandLineTestRunner.h"
-
+using namespace Parfait;
 TEST_GROUP(VtkSliceWriter) {
 
 };

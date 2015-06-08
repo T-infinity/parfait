@@ -1,12 +1,8 @@
-#ifndef CART_BLOCK_H
 #include "cart_block.h"
-#endif
-
 #include "point.h"
-
 #include <cmath>
-
 #include "CppUTest/CommandLineTestRunner.h"
+using namespace Parfait;
 
 TEST_GROUP(CartBlockTests)
 {

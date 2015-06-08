@@ -1,7 +1,7 @@
 #include "fun3d_mesh.h"
 #include <vector>
 #include "CppUTest/CommandLineTestRunner.h"
-
+using namespace Parfait;
 using std::vector;
 TEST_GROUP(Fun3DMeshTests)
 {

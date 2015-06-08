@@ -2,16 +2,9 @@
 #include "imported_ugrid_factory.h"
 #include "range_loop.h"
 #include "CppUTest/CommandLineTestRunner.h"
+using namespace Parfait;
 
-
-TEST_GROUP(NodeToNodeTests)
-{
-	void setup()
-	{
-	}
-	void teardown()
-	{
-	}
+TEST_GROUP(NodeToNodeTests) {
 };
 
 TEST(NodeToNodeTests,Exists)

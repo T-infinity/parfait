@@ -1,5 +1,7 @@
 #include "cart_block.h"
 
+using namespace Parfait;
+
 CartBlock::CartBlock()
 	: Extent(),
 	  kx(0),

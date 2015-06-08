@@ -3,6 +3,7 @@
 #endif
 
 #include "CppUTest/CommandLineTestRunner.h"
+using namespace Parfait;
 
 TEST_GROUP(Adt)
 {

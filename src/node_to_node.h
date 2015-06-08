@@ -42,71 +42,71 @@ using MessagePasser::Rank;
 //       yet.  The resulting n2n connectivity is a partial n2n on each
 //       process.  Comminication will have to be done after the fact in
 //       order to resolve the complete n2n connectivity.
-template <typename T>
-void putAllNodesIntoList(Mesh<T> &mesh, vector<int> &nodeIds);
+namespace Parfait {
+    template<typename T>
+    void putAllNodesIntoList(Mesh<T> &mesh, vector<int> &nodeIds);
 
-template<typename T>
-vector<int> buildUniqueNodeList(T &meshInterface)
-{
-	Mesh<T> mesh(meshInterface);
-	int sizeEstimate = 6*mesh.numberOfCells();
-	vector<int> nodeIds;
-	nodeIds.reserve(sizeEstimate);
-    putAllNodesIntoList(mesh, nodeIds);
+    template<typename T>
+    vector<int> buildUniqueNodeList(T &meshInterface) {
+        Mesh<T> mesh(meshInterface);
+        int sizeEstimate = 6 * mesh.numberOfCells();
+        vector<int> nodeIds;
+        nodeIds.reserve(sizeEstimate);
+        putAllNodesIntoList(mesh, nodeIds);
 
-    sort(nodeIds.begin(),nodeIds.end());
-	// remove duplicates
-	nodeIds.erase(unique(nodeIds.begin(),nodeIds.end()),nodeIds.end());
-	return nodeIds;
-}
-
-template<typename T>
-void putAllNodesIntoList(Mesh<T> &mesh, vector<int> &nodeIds) {
-// put all nodes from all cells into list
-    for(auto cell : mesh.cells()) {
-		int nnodes = cell.numberOfNodes();
-		vector<int> tmp = cell.getNodes();
-		for(int i=0;i<nnodes;i++)
-			nodeIds.push_back(tmp[i]);
-		for(int i=0;i<nnodes;i++)
-			nodeIds.push_back(tmp[i]);
-	}
-}
-
-template<typename T>
-std::vector<std::vector<int>> buildNodeToNode(T &meshInterface){
-    std::vector<int> nodeIds(meshInterface.numberOfNodes());
-    for(int i = 0; i < nodeIds.size(); i++){
-        nodeIds[i] = i;
+        sort(nodeIds.begin(), nodeIds.end());
+        // remove duplicates
+        nodeIds.erase(unique(nodeIds.begin(), nodeIds.end()), nodeIds.end());
+        return nodeIds;
     }
-    return buildNodeToNode(meshInterface, nodeIds);
+
+    template<typename T>
+    void putAllNodesIntoList(Mesh<T> &mesh, vector<int> &nodeIds) {
+// put all nodes from all cells into list
+        for (auto cell : mesh.cells()) {
+            int nnodes = cell.numberOfNodes();
+            vector<int> tmp = cell.getNodes();
+            for (int i = 0; i < nnodes; i++)
+                nodeIds.push_back(tmp[i]);
+            for (int i = 0; i < nnodes; i++)
+                nodeIds.push_back(tmp[i]);
+        }
+    }
+
+    template<typename T>
+    std::vector<std::vector<int>> buildNodeToNode(T &meshInterface) {
+        std::vector<int> nodeIds(meshInterface.numberOfNodes());
+        for (int i = 0; i < nodeIds.size(); i++) {
+            nodeIds[i] = i;
+        }
+        return buildNodeToNode(meshInterface, nodeIds);
+    }
+
+    template<typename T>
+    vector<vector<int> > buildNodeToNode(T &meshInterface, vector<int> &nodeIds) {
+        Mesh<T> mesh(meshInterface);
+
+        vector<vector<int> > n2n;
+        n2n.resize((int) nodeIds.size());
+        // populate n2n connectivity
+        int percentDone = 0;
+        int count = 0;
+        for (auto cell:mesh.cells()) {
+            for (auto face:cell) {
+                int nvert = face.numberOfNodes();
+                vector<int> tmp = face.getNodes();
+                for (int i = 0; i < nvert; i++) {
+                    int left = tmp[i];
+                    int right = tmp[(i + 1) % nvert];
+                    int position = (int) (std::lower_bound(nodeIds.begin(), nodeIds.end(), left)
+                                          - nodeIds.begin());
+                    assert(nodeIds[position] == left);
+                    insertUnique(n2n[position], right);
+                }
+            }
+        }
+
+        return n2n;
+    }
 }
-
-template<typename T>
-vector<vector<int> > buildNodeToNode(T &meshInterface,vector<int> &nodeIds) {
-	Mesh<T> mesh(meshInterface);
-
-	vector<vector<int> > n2n;
-	n2n.resize((int)nodeIds.size());
-	// populate n2n connectivity
-	int percentDone = 0;
-	int count = 0;
-	for(auto cell:mesh.cells()) {
-		for(auto face:cell) {
-			int nvert = face.numberOfNodes();
-			vector<int> tmp = face.getNodes();
-			for(int i=0;i<nvert;i++) {
-				int left = tmp[i];
-				int right = tmp[(i+1)%nvert];
-				int position  = (int)(std::lower_bound(nodeIds.begin(),nodeIds.end(),left)
-					            - nodeIds.begin());
-				assert(nodeIds[position] == left);
-				insertUnique(n2n[position],right);
-			}
-		}
-	}
-
-	return n2n;
-}
-
 #endif

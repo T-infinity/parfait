@@ -1,4 +1,5 @@
 #include "fun3d_mesh.h"
+using namespace Parfait;
 
 Fun3DMesh::Fun3DMesh(int nnodes0_in,int nnodes01_in,double *x_in,double *y_in,double *z_in,
 		int *globalNodeIds_in,
