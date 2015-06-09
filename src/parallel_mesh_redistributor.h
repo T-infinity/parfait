@@ -14,7 +14,7 @@ using std::vector;
 class ParallelMeshReDistributor
 {
 	public: 
-		ParallelMeshReDistributor(ImportedUgrid &ugrid,vector<int> &gridNodeMap,vector<int> &part);
+		ParallelMeshReDistributor(Parfait::ImportedUgrid &ugrid,vector<int> &gridNodeMap,vector<int> &part);
 		void shuffleNodes();
 		void shuffleTriangles();
 		void shuffleQuads();
@@ -25,10 +25,10 @@ class ParallelMeshReDistributor
 		void identifyGhostNodes();
 		void shuffleGhostNodes();
 
-		Fun3DMesh createFun3DMesh(vector<MapbcReader> &mapbcVector);
+		Parfait::Fun3DMesh createFun3DMesh(vector<Parfait::MapbcReader> &mapbcVector);
 	private:
 		int nproc;
-		ImportedUgrid &ugrid;
+		Parfait::ImportedUgrid &ugrid;
 		vector<int> part;
 		vector<int> nodeMap;
 		vector<int> gridNodeMap;

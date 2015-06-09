@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #ifdef PARFAIT_WITH_MPI
+using namespace Parfait;
 using namespace MessagePasser;
 
 ParallelMeshReDistributor::ParallelMeshReDistributor(ImportedUgrid &ugrid_in,vector<int> &gridNodeMap_in,
