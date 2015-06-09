@@ -19,6 +19,7 @@ include_directories(
 set(PARFAIT_PARALLEL_TESTS_SRC
         AllTests.cpp  
         message_passer_tests.cpp
+        parallel_sum_tests.cpp
        )
 
 message("about to build parallel tests")
