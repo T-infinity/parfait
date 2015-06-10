@@ -1,5 +1,6 @@
 #include "parallel_mesh_reader_naive.h"
 
+using namespace Parfait;
 using namespace UgridReader;
 using namespace MessagePasser;
 using std::vector;
