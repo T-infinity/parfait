@@ -21,6 +21,8 @@ set(PARFAIT_SERIAL_TESTS_SRC
         connectivity/NodeToNodeTests.cpp
         edge_map/edge_map_test.cpp
         generic_mesh_tools/GenericMeshToolsTests.cpp
+        Geometry/stl_test.cpp
+        Geometry/facet_test.cpp
         high_level_mesh_searching/AdtBuilderTests.cpp
         mesh_interfaces/fun3d_mesh_tests.cpp
         mesh_interfaces/imported_ugrid_tests.cpp
