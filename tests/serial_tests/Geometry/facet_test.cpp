@@ -7,9 +7,9 @@ TEST_GROUP(Facet){};
 TEST(Facet, Exists){
 
     Facet f;
-    Point a{0,1,2};
-    Point b{3,4,5};
-    Point c{6,7,8};
+    Point<double> a{0,1,2};
+    Point<double> b{3,4,5};
+    Point<double> c{6,7,8};
 
     Facet g(a, b, c);
 
@@ -28,10 +28,10 @@ TEST(Facet, FacetRayIntersection){
             {.5,0,0},
             {0,.5,0});
 
-    Point lo{0.25, 0.25, 1};
-    Point hi{0.25, 0.25, -1};
+    Point<double> lo{0.25, 0.25, 1};
+    Point<double> hi{0.25, 0.25, -1};
 
-    Point intersect;
+    Point<double> intersect;
     CHECK(f.WhereDoesEdgeIntersect(lo, hi, intersect));
 
     CHECK(0.25 == intersect[0]);
@@ -44,7 +44,7 @@ TEST(Facet, NormalVector){
     {.5,0,0},
     {0,.5,0});
 
-    Point normal = f.computeNormal();
+    auto normal = f.computeNormal();
     CHECK(0  == normal[0]);
     CHECK(0  == normal[1]);
     CHECK(1  == normal[2]);

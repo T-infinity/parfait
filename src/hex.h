@@ -9,14 +9,14 @@ namespace Parfait {
     public:
         Hex() { }
 
-        Hex(Extent extent);
-        Point points[8];
+        Hex(Extent<double> extent);
+        Point<double> points[8];
 
-        const Point &operator[](const int i) const {
+        const Point<double> &operator[](const int i) const {
             return points[i];
         }
 
-        Point &operator[](const int i) {
+        Point<double> &operator[](const int i) {
             return points[i];
         }
 
@@ -42,7 +42,7 @@ namespace Parfait {
 //       - x+
 
 
-inline Parfait::Hex::Hex(Extent extent){
+inline Parfait::Hex::Hex(Extent<double> extent){
     points[0] = extent.lo;
     points[6] = extent.hi;
 

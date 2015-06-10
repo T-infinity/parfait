@@ -12,8 +12,8 @@
 
 namespace Parfait {
     class STL {
-        typedef Parfait::Extent Extent;
-        typedef Parfait::Point Point;
+        typedef Parfait::Extent<double> Extent;
+        typedef Parfait::Point<double> Point;
     public:
         STL() = default;
 
@@ -34,8 +34,8 @@ namespace Parfait {
     };
 
     class SearchSTL {
-        typedef Parfait::Extent Extent;
-        typedef Parfait::Point Point;
+        typedef Parfait::Extent<double> Extent;
+        typedef Parfait::Point<double> Point;
     public:
         SearchSTL(const STL &stl_in);
 

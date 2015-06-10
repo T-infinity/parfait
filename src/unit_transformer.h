@@ -13,9 +13,10 @@ namespace Parfait {
     class UnitTransformer {
 
     public:
-        UnitTransformer(const Extent &extent_i) : extent(extent_i) { GetScale(); }
+        UnitTransformer(const Extent<double> &extent_i)
+            : extent(extent_i) { GetScale(); }
 
-        inline Extent getDomain() const { return extent; }
+        inline Extent<double> getDomain() const { return extent; }
 
         inline double GetScale() {
             double dx = extent.hi[0] - extent.lo[0];
@@ -23,25 +24,25 @@ namespace Parfait {
             double dz = extent.hi[2] - extent.lo[2];
             double ddum = (dx > dy) ? (dx) : (dy);
             scale = (ddum > dz) ? (ddum) : (dz);
-            ooscale = 1.0 / scale;
+            oneOverScale = 1.0 / scale;
             return scale;
         }
 
-        inline Point ToUnitSpace(const Point &physicalPoint) const {
-            Point temp(physicalPoint);
+        inline Point<double> ToUnitSpace(const Point<double> &physicalPoint) const {
+            Point<double> temp(physicalPoint);
             temp[0] -= extent.lo[0];
             temp[1] -= extent.lo[1];
             temp[2] -= extent.lo[2];
 
-            temp[0] *= ooscale;
-            temp[1] *= ooscale;
-            temp[2] *= ooscale;
+            temp[0] *= oneOverScale;
+            temp[1] *= oneOverScale;
+            temp[2] *= oneOverScale;
 
             return temp;
         }
 
-        inline Point ToPhysicalSpace(const Point &unitPoint) const {
-            Point temp(unitPoint);
+        inline Point<double> ToPhysicalSpace(const Point<double> &unitPoint) const {
+            Point<double> temp(unitPoint);
             temp[0] *= scale;
             temp[1] *= scale;
             temp[2] *= scale;
@@ -54,9 +55,9 @@ namespace Parfait {
         }
 
     private:
-        Extent extent;
+        Extent<double> extent;
         double scale;
-        double ooscale;  // One over scale;
+        double oneOverScale;
     };
 }
 

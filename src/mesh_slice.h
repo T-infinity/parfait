@@ -13,7 +13,7 @@ namespace Parfait {
     template<typename MeshType>
     class MeshSlice {
     public:
-        MeshSlice(MeshType &mesh_in, const Extent &domain_in) :
+        MeshSlice(MeshType &mesh_in, const Extent<double> &domain_in) :
                 mesh(mesh_in),
                 domain(domain_in) {
             Init();
@@ -35,7 +35,7 @@ namespace Parfait {
 
             int cellId = 0;
             for (auto cell : genMesh.cells()) {
-                Extent cellExtent = ExtentBuilder::build(cell);
+                Extent<double> cellExtent = ExtentBuilder::build(cell);
                 T item = data[blocksize * cell.Id() + offset];
                 if (item > lo && item < hi) {
                     globalToLocal_cellId[cell.Id()] = cellId++;
@@ -91,7 +91,7 @@ namespace Parfait {
         std::vector<int> localToGlobal_nodeId;
     private:
         MeshType &mesh;
-        Extent domain;
+        Extent<double> domain;
 
         int num_nodes, num_cells;
 
@@ -151,7 +151,7 @@ namespace Parfait {
 
         int cellId = 0;
         for (auto cell : genMesh.cells()) {
-            Extent cellExtent = ExtentBuilder::build(cell);
+            auto cellExtent = ExtentBuilder::build(cell);
             if (domain.contains(cellExtent)) {
                 globalToLocal_cellId[cell.Id()] = cellId++;
                 for (int node : cell.getNodes()) {

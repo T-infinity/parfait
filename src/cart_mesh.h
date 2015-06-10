@@ -9,8 +9,8 @@ namespace Parfait {
     class CartMesh {
     public:
         CartMesh(
-                const Point &lo,
-                const Point &hi,
+                const Point<double> &lo,
+                const Point<double> &hi,
                 int numCellsX,
                 int numCellsY,
                 int numCellsZ
@@ -30,9 +30,9 @@ namespace Parfait {
         int faceNeighbor(int cellId, int faceId) const;
         int faceBoundaryTag(int cellId, int faceId) const;
         bool isFaceBoundary(int cellId, int faceId) const;
-        Point faceArea(int cellId, int faceId) const;
+        Point<double> faceArea(int cellId, int faceId) const;
 
-        Point cellCentroid(int cellId) const;
+        Point<double> cellCentroid(int cellId) const;
         double cellVolume(int cellId) const;
 
         void getNode(int nodeId, double node[3]) const;

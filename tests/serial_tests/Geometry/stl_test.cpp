@@ -24,7 +24,7 @@ TEST(STLTests, Closest){
 TEST(STLTests, ClosestBugFixCheck){
 
     SearchSTL searchSTL(stl);
-    Point p(-1,1,1);
-    Point closest = searchSTL.getClosestPoint(p);
+    Point<double> p(-1,1,1);
+    auto closest = searchSTL.getClosestPoint(p);
     CHECK(closest.approxEqual({-.5,.5,.5}));
 }

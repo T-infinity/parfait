@@ -202,15 +202,15 @@ TEST(CartBlockTests, LegacyTests){
 	// this also relies on the centroid being in the right cell
 	int cell_id = a.getIdOfContainingCell(p3);
 	double lo[3],hi[3];
-	Extent cell = a.createExtentFromCell(cell_id);
+	auto cell = a.createExtentFromCell(cell_id);
 	//cell.get_lo_point(lo);
 	//cell.get_hi_point(hi);
-	assert(cell.contains(Point(p3)));
+	assert(cell.contains(Point<double>(p3)));
 
 	std::vector<int> ids;
 	// make a box around the whole mesh, and make sure you get
 	// all the cells
-	Extent query_box(p1,p2);
+	Extent<double> query_box(p1,p2);
 	ids = a.getCellIdsInExtent(query_box);
 	assert(my_ncells == (int)ids.size());
 	
@@ -222,7 +222,7 @@ TEST(CartBlockTests, LegacyTests){
 	extent[4] = 10.0;
 	extent[5] = 10.0;
 	//query_box.resize(extent);
-    query_box = Extent(extent);
+    query_box = Extent<double>(extent);
 	ids = a.getCellIdsInExtent(query_box);
 
 	assert((int)ids.size() == 0);
@@ -230,7 +230,7 @@ TEST(CartBlockTests, LegacyTests){
 	// make a box bigger than the mesh and make sure it returns all of them
 	extent[3] = 10.0;
 	//query_box.resize(extent);
-    query_box = Extent(extent);
+    query_box = Extent<double>(extent);
 	ids = a.getCellIdsInExtent(query_box);
 	assert(my_ncells == (int)ids.size());
 
@@ -238,7 +238,7 @@ TEST(CartBlockTests, LegacyTests){
 	extent[3] = 10.0;
 	extent[5] = p1[2];
 	//query_box.resize(extent);
-    query_box = Extent(extent);
+    query_box = Extent<double>(extent);
 	ids = a.getCellIdsInExtent(query_box);
 	assert(ncells_x*ncells_y == (int)ids.size());
 
@@ -246,7 +246,7 @@ TEST(CartBlockTests, LegacyTests){
 	extent[5] = 10.0;
 	extent[2] = p2[2];
 	//query_box.resize(extent);
-    query_box = Extent(extent);
+    query_box = Extent<double>(extent);
 	ids = a.getCellIdsInExtent(query_box);
 	assert(ncells_x*ncells_y == (int)ids.size());
 	
@@ -254,7 +254,7 @@ TEST(CartBlockTests, LegacyTests){
 	extent[2] = -10.0;
 	extent[3] = p1[0];
 	//query_box.resize(extent);
-    query_box = Extent(extent);
+    query_box = Extent<double>(extent);
 	ids = a.getCellIdsInExtent(query_box);
 	assert(ncells_z*ncells_y == (int)ids.size());
 
@@ -262,7 +262,7 @@ TEST(CartBlockTests, LegacyTests){
 	extent[3] = 10.0;
 	extent[0] = p2[0];
 	//query_box.resize(extent);
-    query_box = Extent(extent);
+    query_box = Extent<double>(extent);
 	ids = a.getCellIdsInExtent(query_box);
 	assert(ncells_z*ncells_y == (int)ids.size());
 	
@@ -270,7 +270,7 @@ TEST(CartBlockTests, LegacyTests){
 	extent[0] = -10.0;
 	extent[4] = p1[1];
 	//query_box.resize(extent);
-    query_box = Extent(extent);
+    query_box = Extent<double>(extent);
 	ids = a.getCellIdsInExtent(query_box);
 	assert(ncells_z*ncells_x == (int)ids.size());
 	
@@ -278,7 +278,7 @@ TEST(CartBlockTests, LegacyTests){
 	extent[4] = 10.0;
 	extent[1] = p2[1];
 	//query_box.resize(extent);
-    query_box = Extent(extent);
+    query_box = Extent<double>(extent);
 	ids = a.getCellIdsInExtent(query_box);
 	assert(ncells_z*ncells_x == (int)ids.size());
 		
@@ -369,22 +369,3 @@ TEST(CartBlockTests, LegacyTests){
 	assert(fabs(p5[2]-p4[2]) < 1.0e-15);
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

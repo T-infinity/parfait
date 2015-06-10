@@ -10,7 +10,7 @@ namespace Parfait {
         template<typename MeshType>
         Adt3DExtent putCellsInAdt(MeshType &mesh_in) {
             Mesh<MeshType> mesh(mesh_in);
-            Extent domain = ExtentBuilder::build(mesh);
+            auto domain = ExtentBuilder::build(mesh);
             Adt3DExtent adt(domain);
             for (auto cell : mesh.cells())
                 adt.store(cell.Id(), ExtentBuilder::build(cell));

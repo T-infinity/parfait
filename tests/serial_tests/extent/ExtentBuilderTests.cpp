@@ -37,7 +37,7 @@ TEST(ExtentBuilderTests,Exists)
 				  0.5, 1.0, 0.3,
 				  0.7, 0.1, 1.0};
 
-	Extent extent = ExtentBuilder::build(mesh);
+	Extent<double> extent = ExtentBuilder::build(mesh);
 	DOUBLES_EQUAL(0.0,extent.lo[0],tol);
 	DOUBLES_EQUAL(0.0,extent.lo[1],tol);
 	DOUBLES_EQUAL(0.0,extent.lo[2],tol);
@@ -48,13 +48,13 @@ TEST(ExtentBuilderTests,Exists)
 
 TEST(ExtentBuilderTests,addPointToExtent)
 {
-	std::vector<Point> points;
-	points.push_back(Point(0.0, 0.0, 0.0));
-	points.push_back(Point(1.0, 0.0, 0.0));
-	points.push_back(Point(0.5, 1.0, 0.3));
-	points.push_back(Point(0.7, 0.1, 1.0));
+	std::vector<Point<double>> points;
+	points.push_back({0.0, 0.0, 0.});
+	points.push_back({1.0, 0.0, 0.0});
+	points.push_back({0.5, 1.0, 0.3});
+	points.push_back({0.7, 0.1, 1.0});
 	// initialize zero volume box at the origin
-	Extent e(Point(.5,.5,.5),Point(.5,.5,.5));
+	Extent<double> e({.5,.5,.5},{.5,.5,.5});
 	for(int i=0;i<4;i++)
 		ExtentBuilder::addPointToExtent(e,points[i]);
 	DOUBLES_EQUAL(0.0,e.lo[0],tol);
@@ -63,4 +63,4 @@ TEST(ExtentBuilderTests,addPointToExtent)
 	DOUBLES_EQUAL(1.0,e.hi[0],tol);
 	DOUBLES_EQUAL(1.0,e.hi[1],tol);
 	DOUBLES_EQUAL(1.0,e.hi[2],tol);
-}
+};

@@ -16,7 +16,7 @@ set(parfait_SRC
     "checkpoint.h"
     "parallel_mesh_redistributor.cpp"
     "contiguous_matrix_multiplication.cpp"  
-    "extent.cpp"
+    "extent.hpp"
     "edge_map.h"
     "extent_builder.h"
     "parmetis_wrapper.cpp"

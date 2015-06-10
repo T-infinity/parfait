@@ -1,14 +1,13 @@
 #ifndef CART_BLOCK_H
 #define CART_BLOCK_H
 
-//#include "box.h"
 #include "extent.h"
 #include <vector>
 #include <assert.h>
 #include <stdio.h>
 
 namespace Parfait {
-    class CartBlock : public Extent {
+    class CartBlock : public Extent<double> {
     public:
         CartBlock();
         CartBlock(const double min_xyz[3], const double max_xyz[3]);
@@ -35,12 +34,12 @@ namespace Parfait {
         int numberOfNodes() const;
 
         int getIdOfContainingCell(double point[3]) const;
-        std::vector<int> getCellIdsInExtent(const Extent &b) const;
+        std::vector<int> getCellIdsInExtent(const Extent<double> &b) const;
         //void   get_node_ids_in_box(Box &b, std::vector<int> &node_ids); // not implemented yet
         //
         void getNode(int node, double point[3]) const;
         void getCellCentroid(int cell_id, double centroid[3]) const;
-        Extent createExtentFromCell(int cell) const;
+        Extent<double> createExtentFromCell(int cell) const;
 
         int convert_ijk_ToCellId(int i, int j, int k) const;
         int convert_ijk_ToNodeId(int i, int j, int k) const;

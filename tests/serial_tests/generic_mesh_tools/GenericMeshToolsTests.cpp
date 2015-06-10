@@ -23,7 +23,7 @@ TEST(GenericMeshToolsTests,CellCenter)
     Mesh<CartMesh> mesh(cartMesh);
 
     auto cell = mesh.cell(0);
-    Point center = GenericMeshTools::cellCenter(mesh, cell);
+    auto center = GenericMeshTools::cellCenter(mesh, cell);
     DOUBLES_EQUAL(0.5, center[0], tol);
     DOUBLES_EQUAL(1.0, center[1], tol);
     DOUBLES_EQUAL(2.5, center[2], tol);
