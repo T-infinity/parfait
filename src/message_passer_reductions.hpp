@@ -1,5 +1,5 @@
 
-	// ----------- Reduction operations ----------------------------------
+// ----------- Reduction operations ----------------------------------
 	// sum single values to the root
 	template<typename T>
 	T ParallelSum(T value,int rootId)

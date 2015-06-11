@@ -1,7 +1,7 @@
 
 // Gather values to a vector on the root
 template<typename T>
-void Gather(T value,std::vector<T> &vec,int rootId)
+void MessagePasser::Gather(T value,std::vector<T> &vec,int rootId)
 {
 	vec.assign(NumberOfProcesses(),0);
 	MPI_Gather(&value,1,Type(value),&vec[0],1,Type(value),rootId,MPI_COMM_WORLD);
@@ -9,7 +9,7 @@ void Gather(T value,std::vector<T> &vec,int rootId)
 
 // Gather values to a vector on every proc
 template<typename T>
-void AllGather(T value,std::vector<T> &vec)
+void MessagePasser::AllGather(T value,std::vector<T> &vec)
 {
 	vec.assign(NumberOfProcesses(),0);
 	MPI_Allgather(&value,1,Type(value),&vec[0],1,Type(value),MPI_COMM_WORLD);
@@ -17,7 +17,7 @@ void AllGather(T value,std::vector<T> &vec)
 
 // Gather vectors of a given size to the root
 template<typename T>
-void Gather(std::vector<T> &send_vec,int send_count,std::vector<T> &recv_vec,int rootId)
+void MessagePasser::Gather(const std::vector<T> &send_vec,int send_count,std::vector<T> &recv_vec,int rootId)
 {
 	if(Rank() == rootId)
 	{
@@ -30,7 +30,7 @@ void Gather(std::vector<T> &send_vec,int send_count,std::vector<T> &recv_vec,int
 
 // Gatherv vectors of different lengths to the root
 template<typename T>
-void Gatherv(std::vector<T> &send_vec,std::vector<T> &recv_vec,
+void MessagePasser::Gatherv(const std::vector<T> &send_vec,std::vector<T> &recv_vec,
 		std::vector<int> &map,int rootId)
 {
 	int sendcount = (int)send_vec.size();	
@@ -52,21 +52,21 @@ void Gatherv(std::vector<T> &send_vec,std::vector<T> &recv_vec,
 }
 
 template<typename T>
-void Gatherv(std::vector<T> &send_vec,std::vector<T> &recv_vec,
+void MessagePasser::Gatherv(const std::vector<T> &send_vec,std::vector<T> &recv_vec,
 		int rootId){
     std::vector<int> m;
     Gatherv(send_vec,recv_vec,m,rootId);
 }
 
 template<typename T>
-void AllGatherv(std::vector<T> &send_vec,std::vector<T> &recv_vec){
+void MessagePasser::AllGatherv(const std::vector<T> &send_vec,std::vector<T> &recv_vec){
 	std::vector<int> m;
 	AllGatherv(send_vec,recv_vec,m);
 }
 
 
 template<typename T>
-void AllGatherv(std::vector<T> &send_vec,std::vector<T> &recv_vec,std::vector<int> &map)
+void MessagePasser::AllGatherv(const std::vector<T> &send_vec,std::vector<T> &recv_vec,std::vector<int> &map)
 {
 	int sendcount = (int)send_vec.size();	
 	int nproc = NumberOfProcesses();
