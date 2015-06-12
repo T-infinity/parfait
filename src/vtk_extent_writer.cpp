@@ -1,30 +1,28 @@
 #include "vtk_extent_writer.h"
 
-#ifndef POINT_H
 #include "point.h"
-#endif
 
 #include <assert.h>
 
 using namespace Parfait;
 
-void writePoints(FILE *f, std::vector<Extent> &boxes);
-void writeConnectivity(FILE *f, std::vector<Extent> &boxes);
-void writeOffsets(FILE *f, std::vector<Extent> &boxes);
-void writeTypes(FILE *f, std::vector<Extent> &boxes);
+void writePoints(FILE *f, std::vector<Extent<double>> &boxes);
+void writeConnectivity(FILE *f, std::vector<Extent<double>> &boxes);
+void writeOffsets(FILE *f, std::vector<Extent<double>> &boxes);
+void writeTypes(FILE *f, std::vector<Extent<double>> &boxes);
 
 VtkExtentWriter::VtkExtentWriter(std::string filename_i): filename(filename_i)
 {
     filename += ".vtu";
 }
 
-void VtkExtentWriter::addExtent(const Extent &b)
+void VtkExtentWriter::addExtent(const Extent<double> &b)
 {
     boxes.push_back(b);
     tags.push_back(0);
 }
 
-void VtkExtentWriter::addExtent(const Extent &b, int tag)
+void VtkExtentWriter::addExtent(const Extent<double> &b, int tag)
 {
 
     boxes.push_back(b);
@@ -36,7 +34,7 @@ void VtkExtentWriter::writeFile()
     VtkExtentWriter::writeExtents(filename, boxes, tags);
 }
 
-void VtkExtentWriter::writeExtents(std::string filename, std::vector<Extent> &boxes, std::vector<int> &tags)
+void VtkExtentWriter::writeExtents(std::string filename, std::vector<Extent<double>> &boxes, std::vector<int> &tags)
 {
     FILE *f = fopen(filename.c_str(),"w");
 
@@ -61,24 +59,23 @@ void VtkExtentWriter::writeTags(FILE *f, std::vector<int> &tags)
     fwrite(&tags[0], sizeof(int), tags.size(), f);
 }
 
-void writePoints(FILE *f, std::vector<Extent> &boxes)
+void writePoints(FILE *f, std::vector<Extent<double>> &boxes)
 {
-    //Print the points
     uint32_t points_length = 192*boxes.size();
     fwrite(&points_length, sizeof(int), 1, f);
 
     for(auto &b : boxes)
     {
-        Point lo = b.lo;
-        Point hi = b.hi;
-        Point one    = Point(lo[0],lo[1],lo[2]);
-        Point two    = Point(hi[0],lo[1],lo[2]); 
-        Point three  = Point(hi[0],hi[1],lo[2]); 
-        Point four   = Point(lo[0],hi[1],lo[2]);
-        Point five   = Point(lo[0],lo[1],hi[2]);
-        Point six    = Point(hi[0],lo[1],hi[2]);
-        Point seven  = Point(hi[0],hi[1],hi[2]); 
-        Point eight  = Point(lo[0],hi[1],hi[2]); 
+        Point<double> lo = b.lo;
+        Point<double> hi = b.hi;
+        Point<double> one    = Point<double>(lo[0],lo[1],lo[2]);
+        Point<double> two    = Point<double>(hi[0],lo[1],lo[2]);
+        Point<double> three  = Point<double>(hi[0],hi[1],lo[2]);
+        Point<double> four   = Point<double>(lo[0],hi[1],lo[2]);
+        Point<double> five   = Point<double>(lo[0],lo[1],hi[2]);
+        Point<double> six    = Point<double>(hi[0],lo[1],hi[2]);
+        Point<double> seven  = Point<double>(hi[0],hi[1],hi[2]);
+        Point<double> eight  = Point<double>(lo[0],hi[1],hi[2]);
 
         fwrite(&one[0],  sizeof(double), 3, f);
         fwrite(&two[0],  sizeof(double), 3, f);
@@ -91,7 +88,7 @@ void writePoints(FILE *f, std::vector<Extent> &boxes)
     }
 }
 
-void writeConnectivity(FILE *f, std::vector<Extent> &boxes)
+void writeConnectivity(FILE *f, std::vector<Extent<double>> &boxes)
 {
     uint32_t connectivity_length = 8*sizeof(int64_t)*boxes.size();
     fwrite(&connectivity_length, sizeof(int), 1, f);
@@ -109,7 +106,7 @@ void writeConnectivity(FILE *f, std::vector<Extent> &boxes)
 
 }
 
-void writeOffsets(FILE *f, std::vector<Extent> &boxes)
+void writeOffsets(FILE *f, std::vector<Extent<double>> &boxes)
 {
     uint32_t offset_length = sizeof(int64_t)*boxes.size();
     fwrite(&offset_length, sizeof(int), 1, f);
@@ -122,7 +119,7 @@ void writeOffsets(FILE *f, std::vector<Extent> &boxes)
     }
 }
 
-void writeTypes(FILE *f, std::vector<Extent> &boxes)
+void writeTypes(FILE *f, std::vector<Extent<double>> &boxes)
 {
     uint32_t types_length = sizeof(int64_t)*boxes.size();
     fwrite(&types_length, sizeof(int), 1, f);

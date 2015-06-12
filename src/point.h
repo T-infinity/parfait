@@ -5,48 +5,50 @@
 #include <vector>
 
 namespace Parfait {
-    class Point {
-    public:
-        double pos[3];
+  template <typename T>
+  class Point {
+  public:
+    T pos[3];
 
-        Point();
-        Point(double x, double y, double z);
-        Point(const double *);
+    Point();
+    Point(T x, T y, T z);
+    Point(const T *);
 
-        double *data() { return pos; }
+    T *data() { return pos; }
 
-        const double *data() const { return pos; }
+    const T *data() const { return pos; }
 
-        inline double &operator[](int i) {
-            return pos[i];
-        }
+    inline T &operator[](int i) {
+      return pos[i];
+    }
 
-        inline const double &operator[](int i) const {
-            return pos[i];
-        }
+    inline const T &operator[](int i) const {
+      return pos[i];
+    }
 
-        Point operator+(const Point &rhs) const;
-        Point operator-(const Point &rhs) const;
-        Point operator*(const double a) const;
-        Point operator/(const double a) const;
-        Point operator*=(const double a);
-        Point operator/=(const double a);
-        Point operator+=(const Point &rhs);
-        Point operator-=(const Point &rhs);
-        bool operator==(const Point &rhs);
-        bool operator!=(const Point &rhs);
-        bool approxEqual(const Point &rhs, double tol = 1.0e-14) const;
-        void normalize();
-        friend Point operator*(double a, const Point &rhs);
+    Point operator+(const Point &rhs) const;
+    Point operator-(const Point &rhs) const;
+    Point operator*(const T a) const;
+    Point operator/(const T a) const;
+    Point operator*=(const T a);
+    Point operator/=(const T a);
+    Point operator+=(const Point &rhs);
+    Point operator-=(const Point &rhs);
+    bool operator==(const Point &rhs);
+    bool operator!=(const Point &rhs);
+    bool approxEqual(const Point &rhs, T tol = 1.0e-14) const;
+    void normalize();
+    template <typename U>
+    friend Point<U> operator*(double a, const Point<U> &rhs);
 
-        static double distance(const Point &a, const Point &b);
-        static double dot(const Point &a, const Point &b);
-        static double magnitude(const Point &a);
-        static Point cross(const Point &a, const Point &b);
-        static Point normalize(const Point &a);
+    static T distance(const Point &a, const Point &b);
+    static T dot(const Point &a, const Point &b);
+    static T magnitude(const Point &a);
+    static Point cross(const Point &a, const Point &b);
+    static Point normalize(const Point &a);
 
-        void Print() const;
-    };
+    void Print() const;
+  };
 }
 
 #include "point.hpp"

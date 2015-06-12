@@ -13,25 +13,25 @@ namespace Parfait {
         // 1. int numberOfNodes();
         // 2. void getNode(int,double[3]);
         template<typename T>
-        Extent build(const T &objectWithPointsInIt);
+        Extent<double> build(const T &objectWithPointsInIt);
 
         // build an extent around a point like object
         // must be able to access object with [] operators
         // to get x, y, and z coords.
         template<typename P>
-        Extent build(const P &p, double distance);
+        Extent<double> build(const P &p, double distance);
 
 
         template<typename P>
-        void addPointToExtent(Extent &e, const P &p);
+        void addPointToExtent(Extent<double> &e, const P &p);
 
 
         //------------Implementation---------------------
         template<typename T>
-        Extent build(const T &objectWithPointsInIt) {
+        Extent<double> build(const T &objectWithPointsInIt) {
             double p[3];
             objectWithPointsInIt.getNode(0, p);
-            Point min(p), max(p);
+            Point<double> min(p), max(p);
             int n = objectWithPointsInIt.numberOfNodes();
             for (int i = 1; i < n; i++) {
                 objectWithPointsInIt.getNode(i, p);
@@ -42,12 +42,12 @@ namespace Parfait {
                         max[j] = p[j];
                 }
             }
-            return Extent(min, max);
+            return Extent<double>(min, max);
         }
 
         template<typename P>
-        Extent build(const P &p, double dist) {
-            Point min(p), max(p);
+        Extent<double> build(const P &p, double dist) {
+            Point<double> min(p), max(p);
             min[0] -= dist;
             min[1] -= dist;
             min[2] -= dist;
@@ -55,11 +55,11 @@ namespace Parfait {
             max[0] += dist;
             max[1] += dist;
             max[2] += dist;
-            return Extent(min, max);
+            return {min, max};
         }
 
         template<typename P>
-        void addPointToExtent(Extent &e, const P &p) {
+        void addPointToExtent(Extent<double> &e, const P &p) {
             e.lo[0] = std::min(e.lo[0], p[0]);
             e.lo[1] = std::min(e.lo[1], p[1]);
             e.lo[2] = std::min(e.lo[2], p[2]);

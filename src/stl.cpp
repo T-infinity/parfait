@@ -7,6 +7,8 @@
 #include <exception>
 
 using namespace Parfait;
+typedef Extent<double> Extent;
+typedef Point<double> Point;
 
 void STL::rescale(double scale){
 
@@ -142,7 +144,7 @@ void STL::writeAsciiFile(std::string fname, std::string solidName) const {
     fclose(fp);
 }
 
-Extent STL::findDomain() const {
+Parfait::Extent<double> STL::findDomain() const {
     Extent domain(Point(20e20,20e20,20e20), Point(-20e20, -20e20, -20e20));
 
     for(auto &facet : facets){
@@ -159,16 +161,16 @@ Extent STL::findDomain() const {
     return domain;
 }
 
-Point SearchSTL::getClosestPoint(const Point &p, double &dist) const{
+Parfait::Point<double> SearchSTL::getClosestPoint(const Point &p, double &dist) const{
     dist = 0.001;
     return LoopClosest(p, dist);
 }
 
-Point SearchSTL::getClosestPointWithSeed(const Point &point, double &dist) const {
+Parfait::Point<double> SearchSTL::getClosestPointWithSeed(const Point &point, double &dist) const {
     return LoopClosest(point, dist);
 }
 
-Point SearchSTL::LoopClosest(const Point &point, double &dist) const {
+Parfait::Point<double> SearchSTL::LoopClosest(const Point &point, double &dist) const {
     // Refactor this and below so we can check if a point returned is inside the extent box.
     bool found = false;
     Point closest;
@@ -241,7 +243,7 @@ Facet & STL::operator[] (const int i){
     return facets[i];
 }
 
-Point SearchSTL::getClosestPoint(const Point &point) const {
+Parfait::Point<double> SearchSTL::getClosestPoint(const Point &point) const {
     double distance;
     return getClosestPoint(point, distance);
 }

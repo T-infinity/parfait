@@ -24,12 +24,12 @@
 namespace Parfait {
     class Adt3DPoint {
     public:
-        Adt3DPoint(const Extent &domain);
-        void store(int Id, const Point &point);
-        std::vector<int> retrieve(const Extent &domain) const;
+        Adt3DPoint(const Extent<double> &domain);
+        void store(int Id, const Point<double> &point);
+        std::vector<int> retrieve(const Extent<double> &domain) const;
 
-        bool isPointInAdt(const Point &p, int &Id, double tol = 1.0e-18) const {
-            Extent box = Extent::extentAroundPoint(p, tol);
+        bool isPointInAdt(const Point<double> &p, int &Id, double tol = 1.0e-18) const {
+            auto box = Extent<double>::extentAroundPoint(p, tol);
             auto inside = this->retrieve(box);
 
             if (0 == inside.size()) {
@@ -45,9 +45,9 @@ namespace Parfait {
             }
         }
 
-        void addPointToAdt(const Point &p, int Id) { this->store(Id, p); }
+        void addPointToAdt(const Point<double> &p, int Id) { this->store(Id, p); }
 
-        int getNodeIdOrAddPoint(const Point &p, int Id) {
+        int getNodeIdOrAddPoint(const Point<double> &p, int Id) {
 
             int nodeId = Id;
 
@@ -59,7 +59,7 @@ namespace Parfait {
             }
         }
 
-        int getNodeId(const Point &p);
+        int getNodeId(const Point<double> &p);
 
     private:
         UnitTransformer unitTransformer;

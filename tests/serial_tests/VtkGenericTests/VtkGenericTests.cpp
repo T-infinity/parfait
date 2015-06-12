@@ -81,7 +81,7 @@ TEST(VtkGenericTests,Exists)
 TEST(VtkGenericTests, ExtentWriter)
 {
     VtkExtentWriter writer("binary_extent_writer");
-    Extent e({0,0,0}, {1,1,1});
+    Extent<double> e({0,0,0}, {1,1,1});
     writer.addExtent(e);
     writer.writeFile();
 }

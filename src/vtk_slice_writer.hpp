@@ -2,7 +2,7 @@
 namespace Parfait {
     template<class MeshType>
     VtkSliceWriter<MeshType>::VtkSliceWriter(MeshType &mesh,
-                                             const Extent &domain_in,
+                                             const Extent<double> &domain_in,
                                              string vtkFilename)
             : slice(mesh, domain_in), domain(domain_in), filename(vtkFilename),
               writer(slice, filename) { }

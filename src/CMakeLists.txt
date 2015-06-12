@@ -16,7 +16,7 @@ set(parfait_SRC
     "checkpoint.h"
     "parallel_mesh_redistributor.cpp"
     "contiguous_matrix_multiplication.cpp"  
-    "extent.cpp"
+    "extent.hpp"
     "edge_map.h"
     "extent_builder.h"
     "parmetis_wrapper.cpp"
@@ -106,5 +106,5 @@ if(mpi_installed AND parmetis_installed)
     message("Parfait configured for parallel")
 endif()
 
-add_library(parfait STATIC ${parfait_SRC})
-target_link_libraries(parfait ${parfait_links})
+#add_library(parfait STATIC ${parfait_SRC})
+#target_link_libraries(parfait ${parfait_links})

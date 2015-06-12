@@ -89,27 +89,27 @@ namespace MessagePasser
 
 	// Gather distributed vectors to a single vector on every proc
 	template<typename T>
-	void AllGatherv(std::vector<T> &send_vec,std::vector<T> &recv_vec,std::vector<int> &map);
+	void AllGatherv(const std::vector<T> &send_vec,std::vector<T> &recv_vec,std::vector<int> &map);
 
 	// Same as above but no map passed in/out
 	template<typename T>
-	void AllGatherv(std::vector<T> &send_vec,std::vector<T> &recv_vec);
+	void AllGatherv(const std::vector<T> &send_vec,std::vector<T> &recv_vec);
 
 	// Gather vectors of a given size to the root
 	template<typename T>
-	void Gather(std::vector<T> &send_vec,int send_count,std::vector<T> &recv_vec,int rootId);
+	void Gather(const std::vector<T> &send_vec,int send_count,std::vector<T> &recv_vec,int rootId);
 	// Gather vectors of a given size to the root
 	template<typename T>
-	void Gather(std::vector<T> &send_vec,int send_count,std::vector<T> &recv_vec,int rootId);
+	void Gather(const std::vector<T> &send_vec,int send_count,std::vector<T> &recv_vec,int rootId);
 
 	// Gatherv vectors of different lengths to the root
 	template<typename T>
-	void Gatherv(std::vector<T> &send_vec,std::vector<T> &recv_vec,
+	void Gatherv(const std::vector<T> &send_vec,std::vector<T> &recv_vec,
 			std::vector<int> &map,int rootId);
 	
     // same as above, but no map passed
     template<typename T>
-	void Gatherv(std::vector<T> &send_vec,std::vector<T> &recv_vec,
+	void Gatherv(const std::vector<T> &send_vec,std::vector<T> &recv_vec,
 			int rootId);
 
 	// broadcast a value
@@ -158,11 +158,12 @@ namespace MessagePasser
 	#include "message_passer_sends.hpp"
 	#include "message_passer_recvs.hpp"
     #include "message_passer_wait.hpp"
-	#include "message_passer_gathers.hpp"
 	#include "message_passer_broadcasts.hpp"
 	#include "message_passer_scatters.hpp"
 	#include "message_passer_reductions.hpp"	
 }
+
+#include "message_passer_gathers.hpp"
 
 #else // define non-mpi dependent versions
 

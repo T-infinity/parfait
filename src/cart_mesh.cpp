@@ -5,8 +5,8 @@
 
 using namespace Parfait;
 CartMesh::CartMesh(
-        const Point& lo, 
-        const Point &hi, 
+        const Point<double> &lo,
+        const Point<double> &hi,
         int numCellsX,
         int numCellsY,
         int numCellsZ )
@@ -169,7 +169,7 @@ double CartMesh::cellVolume(int cellId) const
     return volume;
 }
 
-Point CartMesh::cellCentroid(int cellId) const
+Point<double> CartMesh::cellCentroid(int cellId) const
 {
     int i,j,k;
 
@@ -181,40 +181,38 @@ Point CartMesh::cellCentroid(int cellId) const
     getNode(loNodeId, lo);
     getNode(hiNodeId, hi);
 
-    return Point(
+    return Point<double>(
             0.5*(lo[0] + hi[0]), 
             0.5*(lo[1] + hi[1]), 
             0.5*(lo[2] + hi[2])
             );
 }
 
-Point CartMesh::faceArea(int cellId, int faceId) const
+Point<double> CartMesh::faceArea(int cellId, int faceId) const
 {
     double area;
     switch (faceId) {
         case 0:
             area = block.get_dx() * block.get_dy();
-            return Point(0,0,-area);
+            return {0,0,-area};
         case 1:
             area = block.get_dx() * block.get_dz();
-            return Point(0, -area, 0);
+            return {0, -area, 0};
         case 2:
             area = block.get_dy() * block.get_dz();
-            return Point(area, 0, 0);
+            return {area, 0, 0};
         case 3:
             area = block.get_dx() * block.get_dz();
-            return Point(0,  area, 0);
+            return {0,  area, 0};
         case 4:
             area = block.get_dy() * block.get_dz();
-            return Point(-area, 0, 0);
+            return {-area, 0, 0};
         case 5:
             area = block.get_dx() * block.get_dy();
-            return Point(0,0,area);
+            return {0,0,area};
         default:
-            std::domain_error("FaceId out of bounds for faceArea.");
-    }
-    std::domain_error("FaceId out of bounds for faceArea.");
-    return Point(0,0,0);
+            throw std::domain_error("FaceId out of bounds for faceArea.");
+    };
 }
 
 std::vector<int> CartMesh::getNodesInCellFace(int cellId, int faceId) const

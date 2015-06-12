@@ -16,7 +16,7 @@ namespace Parfait {
     template<class MeshType>
     class VtkSliceWriter {
     public:
-        VtkSliceWriter(MeshType &mesh, const Extent &domain, string vtkFilename);
+        VtkSliceWriter(MeshType &mesh, const Extent<double> &domain, string vtkFilename);
         void writeAscii();
         void addScalarField(bool isNodeData, string fieldName, int *data);
         void addScalarField(bool isNodeData, string fieldName, float *data);
@@ -30,7 +30,7 @@ namespace Parfait {
 
     private:
         MeshSlice<MeshType> slice;
-        Extent domain;
+        Extent<double> domain;
         vector<vector<int>> intFields;
         vector<vector<float>> floatFields;
         vector<vector<double>> doubleFields;

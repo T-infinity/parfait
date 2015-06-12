@@ -6,30 +6,33 @@
 #endif
 
 namespace Parfait {
-    class Extent {
+  template <typename T>
+  class Extent {
 
-    public:
-        Point lo, hi;
+  public:
+    Point<T> lo, hi;
 
-        Extent();
-        Extent(const double extent[6]);
-        Extent(const Point &lo, const Point &hi);
+    Extent();
+    Extent(const T extent[6]);
+    Extent(const Point<T> &lo, const Point<T> &hi);
 
-        bool contains(const Point &p) const;
-        bool contains(const Extent &box) const;
-        double getLength_X() const;
-        double getLength_Y() const;
-        double getLength_Z() const;
-        Point center() const;
+    bool contains(const Point<T> &p) const;
+    bool contains(const Extent &box) const;
+    T getLength_X() const;
+    T getLength_Y() const;
+    T getLength_Z() const;
+    Point<T> center() const;
 
-        void resize(double scale);
-        void resize(double scaleX, double scaleY, double scaleZ);
+    void resize(double scale);
+    void resize(double scaleX, double scaleY, double scaleZ);
 
-        void Print() const;
+    void Print() const;
 
-        static Extent extentAroundPoint(const Point &p, double tol);
-        static double volume(const Extent &domain);
-    };
+    static Extent extentAroundPoint(const Point<T> &p, T tol);
+    static double volume(const Extent &domain);
+  };
 }
+
+#include <extent.hpp>
 
 #endif

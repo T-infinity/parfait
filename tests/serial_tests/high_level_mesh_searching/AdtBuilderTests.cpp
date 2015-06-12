@@ -40,7 +40,7 @@ TEST(AdtBuilderTests, Exists) {
 
     // get all cells that overlap with the origin
     // (should be just the one cell of the mock mesh)
-    auto cellIds = adt.retrieve(Extent({0, 0, 0}, {0, 0, 0}));
+    auto cellIds = adt.retrieve(Extent<double>({0, 0, 0}, {0, 0, 0}));
     LONGS_EQUAL(1, cellIds.size());
     LONGS_EQUAL(0, cellIds[0]);
 }

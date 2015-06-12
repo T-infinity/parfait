@@ -9,8 +9,8 @@ TEST_GROUP(CartMesh)
 
 TEST(CartMesh, Exists)
 {
-    Point lo(0,0,0);
-    Point hi(1,1,1);
+    Point<double> lo(0,0,0);
+    Point<double> hi(1,1,1);
     int numCells = 2;
     CartMesh mesh(lo, hi, numCells, numCells, numCells);
 
@@ -22,12 +22,12 @@ TEST(CartMesh, Exists)
 
 TEST(CartMesh, Centroid){
 
-    Point lo(0,0,0);
-    Point hi(1,1,1);
+    Point<double> lo(0,0,0);
+    Point<double> hi(1,1,1);
     int numCells = 2;
     CartMesh mesh(lo, hi, numCells, numCells, numCells);
 
-    Point centroid = mesh.cellCentroid(0);
+    Point<double> centroid = mesh.cellCentroid(0);
     double tol = 1.0e-14;
     DOUBLES_EQUAL(0.25, centroid[0], tol);
     DOUBLES_EQUAL(0.25, centroid[1], tol);
@@ -41,8 +41,8 @@ TEST(CartMesh, Centroid){
 
 TEST(CartMesh, GetCellNodes)
 {
-    Point lo(0,0,0);
-    Point hi(1,1,1);
+    Point<double> lo(0,0,0);
+    Point<double> hi(1,1,1);
     int numCells = 2;
     CartMesh mesh(lo, hi, numCells, numCells, numCells);
 
@@ -61,8 +61,8 @@ TEST(CartMesh, GetCellNodes)
 
 TEST(CartMesh, GetFaceNodes)
 {
-    Point lo(0,0,0);
-    Point hi(1,1,1);
+    Point<double> lo(0,0,0);
+    Point<double> hi(1,1,1);
     int numCells = 2;
     CartMesh mesh(lo, hi, numCells, numCells, numCells);
 
@@ -108,23 +108,23 @@ TEST(CartMesh, GetFaceNodes)
 TEST(CartMesh, PlotMesh)
 {
 
-    Point lo(0,0,0);
-    Point hi(1,1,1);
+    Point<double> lo(0,0,0);
+    Point<double> hi(1,1,1);
     int numCells = 2;
     CartMesh mesh(lo, hi, numCells, numCells, numCells);
 }
 
 TEST(CartMesh, FaceArea)
 {
-    Point lo(0,0,0);
-    Point hi(1,1,1);
+    Point<double> lo(0,0,0);
+    Point<double> hi(1,1,1);
     int numCells = 2;
     CartMesh mesh(lo, hi, numCells, numCells, numCells);
 
     double area = 0.25;
     double tol = 1.0e-14;
 
-    Point faceArea = mesh.faceArea(0,0);
+    Point<double> faceArea = mesh.faceArea(0,0);
     DOUBLES_EQUAL(0    , faceArea[0], tol);
     DOUBLES_EQUAL(0    , faceArea[1], tol);
     DOUBLES_EQUAL(-area, faceArea[2], tol);
@@ -162,8 +162,8 @@ TEST(CartMesh, FaceArea)
 
 TEST(CartMesh, Neighbors)
 {
-    Point lo(0,0,0);
-    Point hi(1,1,1);
+    Point<double> lo(0,0,0);
+    Point<double> hi(1,1,1);
     int numCells = 2;
     CartMesh mesh(lo, hi, numCells, numCells, numCells);
 
@@ -248,8 +248,8 @@ TEST(CartMesh, Neighbors)
 
 TEST(CartMesh, isBoundary)
 {
-    Point lo(0,0,0);
-    Point hi(1,1,1);
+    Point<double> lo(0,0,0);
+    Point<double> hi(1,1,1);
     int numCells = 2;
     CartMesh mesh(lo, hi, numCells, numCells, numCells);
 
@@ -260,16 +260,10 @@ TEST(CartMesh, isBoundary)
     CHECK_EQUAL(false, isBoundary);
 }
 
-int myCoolTest(){
-    
-    printf("\nWoo!");
-    return 98;
-}
-
 TEST(CartMesh, BoundaryTag)
 {
-    Point lo(0,0,0);
-    Point hi(1,1,1);
+    Point<double> lo(0,0,0);
+    Point<double> hi(1,1,1);
     int numCells = 2;
     CartMesh mesh(lo, hi, numCells, numCells, numCells);
 

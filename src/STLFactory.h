@@ -12,7 +12,7 @@ namespace Parfait {
 
     inline STL STLFactory::getLShapedSurface() {
         STL stl;
-        std::vector <Point> points(6);
+        std::vector <Point<double>> points(6);
         points[0] = {0, 0, 0};
         points[1] = {1, 0, 0};
         points[2] = {1, 1, 0};

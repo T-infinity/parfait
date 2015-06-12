@@ -6,7 +6,7 @@
 
 using namespace Parfait;
 
-double squaredMagnitude(const Point &a){
+double squaredMagnitude(const Point<double> &a){
     return a.pos[0]*a.pos[0] + a.pos[1]*a.pos[1] + a.pos[2]*a.pos[2];
 }
 
@@ -26,17 +26,17 @@ void  SUB(double *dest, const double *v1, const double *v2) {
     dest[2] = v1[2]-v2[2];
 }
 
-Facet::Facet(const Point &p1, const Point &p2, const Point &p3) {
-    points = std::array<Point, 3>{p1, p2, p3};
+Facet::Facet(const Point<double> &p1, const Point<double> &p2, const Point<double> &p3) {
+    points = std::array<Point<double>, 3>{p1, p2, p3};
 }
 
-Point &Facet::operator[](int i) {
+Point<double> &Facet::operator[](int i) {
     if (i < 0 or i > 2)
         throw std::domain_error("Invalid access to facet.");
     return points[i];
 }
 
-const Point& Facet::operator[] (int i) const {
+const Point<double>& Facet::operator[] (int i) const {
     if (i < 0 or i > 2)
         throw std::domain_error("Invalid access to facet.");
     return points[i];
@@ -131,7 +131,7 @@ bool Facet::DoesRayIntersect(const double orig[3],
     return true;
 }
 
-bool Facet::WhereDoesEdgeIntersect(const Point &edgelo, const Point &edgehi, Point &point) const {
+bool Facet::WhereDoesEdgeIntersect(const Point<double> &edgelo, const Point<double> &edgehi, Point<double> &point) const {
 
     double dir[3];
     double dist;
@@ -160,9 +160,9 @@ bool Facet::WhereDoesEdgeIntersect(const Point &edgelo, const Point &edgehi, Poi
     return true;
 }
 
-Extent Facet::getExtent() const{
+Extent<double> Facet::getExtent() const{
 
-    Extent extent;
+    Extent<double> extent;
     double x,y,z;
     x = (points[0][0] < points[1][0])?(points[0][0]):(points[1][0]);
     x = (x     < points[2][0])?(x    ):(points[2][0]);
@@ -209,18 +209,18 @@ void Facet::getNode(int i, double p[3]) const {
     }
 }
 
-Point Facet::GetClosestPoint(Point safe, double &dist) const{
+Point<double> Facet::GetClosestPoint(Point<double> safe, double &dist) const{
 
-    Point point = safe;
-    Point diff  =  points[0] - point;
-    const Point edge0 =  points[1] - points[0];
-    const Point edge1 =  points[2] - points[0];
+    Point<double> point = safe;
+    Point<double> diff  =  points[0] - point;
+    const Point<double> edge0 =  points[1] - points[0];
+    const Point<double> edge1 =  points[2] - points[0];
 
     double a00 = squaredMagnitude(edge0);
-    double a01 = Point::dot(edge0, edge1);
+    double a01 = Point<double>::dot(edge0, edge1);
     double a11 = squaredMagnitude(edge1);
-    double b0  = Point::dot(diff, edge0);
-    double b1  = Point::dot(diff, edge1);
+    double b0  = Point<double>::dot(diff, edge0);
+    double b1  = Point<double>::dot(diff, edge1);
     double det = fabs(a00*a11 - a01*a01);
     double s   = a01*b1 - a11*b0;
     double t   = a01*b0 - a00*b1;
@@ -450,15 +450,15 @@ Point Facet::GetClosestPoint(Point safe, double &dist) const{
     }
 
     point = points[0] + s*edge0 + t*edge1;
-    dist = Point::distance(safe,point);
+    dist = Point<double>::distance(safe,point);
     return point;
 }
 
-Point Facet::computeNormal() {
-    Point a = points[1] - points[0];
-    Point b = points[2] - points[0];
+Point<double> Facet::computeNormal() const{
+    Point<double> a = points[1] - points[0];
+    Point<double> b = points[2] - points[0];
 
-    Point c = Point::cross(a, b);
+    Point<double> c = Point<double>::cross(a, b);
     c.normalize();
     return c;
 }
@@ -469,7 +469,7 @@ double Facet::getLargestAngleBetween(const std::vector<Facet> &facets) {
         auto ui = fi.computeNormal();
         for(auto fj : facets){
             auto uj = fj.computeNormal();
-            double dot = fabs(Point::dot(ui,uj));
+            double dot = fabs(Point<double>::dot(ui,uj));
             min = std::min(dot, min);
         }
     }

@@ -4,7 +4,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(mpi_installed true)
 set(parmetis_installed true)
-set(vtk_installed false)
+set(vtk_installed true)
 
 
 if(mpi_installed AND parmetis_installed)

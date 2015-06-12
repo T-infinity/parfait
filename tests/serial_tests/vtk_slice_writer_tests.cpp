@@ -16,18 +16,18 @@ TEST_GROUP(VtkSliceWriter) {
 TEST(VtkSliceWriter, Exists) {
     CartMesh cartMesh({0, 0, 0}, {1, 1, 1}, 10, 10, 10);
 
-    Extent domain({.49, 0, 0}, {.49, 1, 1});
+    Extent<double> domain({.49, 0, 0}, {.49, 1, 1});
 }
 
 TEST(VtkSliceWriter, CellCenterData_double){
 
     CartMesh cartMesh({0, 0, 0}, {1, 1, 1}, 10, 10, 10);
-    Extent domain({.49, 0, 0}, {.49, 1, 1});
+    Extent<double> domain({.49, 0, 0}, {.49, 1, 1});
 
     std::vector<double> Q(cartMesh.numberOfCells(), -1);
     Mesh<CartMesh> genMesh(cartMesh);
     for (auto cell : genMesh.cells()) {
-        Point center = GenericMeshTools::cellCenter(genMesh, cell);
+        Point<double> center = GenericMeshTools::cellCenter(genMesh, cell);
         Q[cell.Id()] = center[0] + center[1] + center[2];
     }
 
@@ -47,12 +47,12 @@ TEST(VtkSliceWriter, CellCenterData_double){
 TEST(VtkSliceWriter, CellCenterData_float){
 
     CartMesh cartMesh({0, 0, 0}, {1, 1, 1}, 10, 10, 10);
-    Extent domain({.49, 0, 0}, {.49, 1, 1});
+    Extent<double> domain({.49, 0, 0}, {.49, 1, 1});
 
     std::vector<float> Q(cartMesh.numberOfCells(), -1);
     Mesh<CartMesh> genMesh(cartMesh);
     for (auto cell : genMesh.cells()) {
-        Point center = GenericMeshTools::cellCenter(genMesh, cell);
+        Point<double> center = GenericMeshTools::cellCenter(genMesh, cell);
         Q[cell.Id()] = center[0] + center[1] + center[2];
     }
 
@@ -72,7 +72,7 @@ TEST(VtkSliceWriter, CellCenterData_float){
 TEST(VtkSliceWriter, CellCenterData_int){
 
     CartMesh cartMesh({0, 0, 0}, {1, 1, 1}, 10, 10, 10);
-    Extent domain({.49, 0, 0}, {.49, 1, 1});
+    Extent<double> domain({.49, 0, 0}, {.49, 1, 1});
 
     std::vector<int> Q(cartMesh.numberOfCells(), -1);
     Mesh<CartMesh> genMesh(cartMesh);
@@ -96,13 +96,13 @@ TEST(VtkSliceWriter, CellCenterData_int){
 TEST(VtkSliceWriter, NodeCenterData_double){
 
     CartMesh cartMesh({0, 0, 0}, {1, 1, 1}, 10, 10, 10);
-    Extent domain({.49, 0, 0}, {.49, 1, 1});
+    Extent<double> domain({.49, 0, 0}, {.49, 1, 1});
 
     std::vector<double> Q(cartMesh.numberOfNodes(), -1);
     Mesh<CartMesh> genMesh(cartMesh);
 
     for(int nodeId : range(cartMesh.numberOfNodes())){
-        Point p;
+        Point<double> p;
         cartMesh.getNode(nodeId, &p[0]);
         Q[nodeId] = p[0] + p[1] + p[2];
     }
@@ -123,13 +123,13 @@ TEST(VtkSliceWriter, NodeCenterData_double){
 TEST(VtkSliceWriter, NodeCenterData_float){
 
     CartMesh cartMesh({0, 0, 0}, {1, 1, 1}, 10, 10, 10);
-    Extent domain({.49, 0, 0}, {.49, 1, 1});
+    Extent<double> domain({.49, 0, 0}, {.49, 1, 1});
 
     std::vector<float> Q(cartMesh.numberOfNodes(), -1);
     Mesh<CartMesh> genMesh(cartMesh);
 
     for(int nodeId : range(cartMesh.numberOfNodes())){
-        Point p;
+        Point<double> p;
         cartMesh.getNode(nodeId, &p[0]);
         Q[nodeId] = p[0] + p[1] + p[2];
     }
@@ -150,7 +150,7 @@ TEST(VtkSliceWriter, NodeCenterData_float){
 TEST(VtkSliceWriter, NodeCenterData_int){
     CartMesh cartMesh({0, 0, 0}, {1, 1, 1}, 10, 10, 10);
 
-    Extent domain({.49, 0, 0}, {.49, 1, 1});
+    Extent<double> domain({.49, 0, 0}, {.49, 1, 1});
 
     std::vector<int> Q(cartMesh.numberOfNodes(), -1);
     Mesh<CartMesh> genMesh(cartMesh);
