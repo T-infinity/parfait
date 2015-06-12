@@ -1,17 +1,18 @@
-#include "imported_ugrid.h"
 #include <stdio.h>
 #include <stdexcept>
 #include <string>
 
-using std::vector;
-using namespace Parfait;
-
-ImportedUgrid::ImportedUgrid(vector<double> nodes_in,vector<int> triangles_in,
-		vector<int> quads_in,vector<int> tets_in,vector<int> pyramids_in,
-		vector<int> prisms_in,vector<int> hexs_in,
-        vector<int> triangleTags_in, vector<int> quadTags_in,
-		vector<int> triangleBoundaryConditions_in,
-		vector<int> quadBoundaryConditions_in)
+inline Parfait::ImportedUgrid::ImportedUgrid(std::vector<double> nodes_in,
+																						 std::vector<int> triangles_in,
+																						 std::vector<int> quads_in,
+																						 std::vector<int> tets_in,
+																						 std::vector<int> pyramids_in, 
+																						 std::vector<int> prisms_in,
+																						 std::vector<int> hexs_in, 
+																						 std::vector<int> triangleTags_in, 
+																						 std::vector<int> quadTags_in,
+																						 std::vector<int> triangleBoundaryConditions_in,
+																						 std::vector<int> quadBoundaryConditions_in)
 	: nodes(nodes_in),
 	triangles(triangles_in),
 	quads(quads_in),
@@ -35,36 +36,36 @@ ImportedUgrid::ImportedUgrid(vector<double> nodes_in,vector<int> triangles_in,
 	nfaces = faceMap.back();
 }
 
-void ImportedUgrid::getNode(int nodeId,double node[3]) const
+inline void Parfait::ImportedUgrid::getNode(int nodeId,double node[3]) const
 {
 	node[0] = nodes[3*nodeId+0];
 	node[1] = nodes[3*nodeId+1];
 	node[2] = nodes[3*nodeId+2];
 }
 
-void ImportedUgrid::setNode(int nodeId,double node[3])
+inline void Parfait::ImportedUgrid::setNode(int nodeId,double node[3])
 {
 	nodes[3*nodeId+0] = node[0];
 	nodes[3*nodeId+1] = node[1];
 	nodes[3*nodeId+2] = node[2];
 }
 
-int ImportedUgrid::numberOfNodes() const
+inline int Parfait::ImportedUgrid::numberOfNodes() const
 {
 	return nnodes;
 }
 
-int ImportedUgrid::numberOfCells() const
+inline int Parfait::ImportedUgrid::numberOfCells() const
 {
 	return ncells;
 }
 
-int ImportedUgrid::numberOfBoundaryFaces() const
+inline int Parfait::ImportedUgrid::numberOfBoundaryFaces() const
 {
 	return nfaces;
 }
 
-int ImportedUgrid::numberOfFacesInCell(int id) const
+inline int Parfait::ImportedUgrid::numberOfFacesInCell(int id) const
 {
 	if(id < cellMap[0])
 		return 4;
@@ -75,7 +76,7 @@ int ImportedUgrid::numberOfFacesInCell(int id) const
 	assert(false);
 }
 
-int ImportedUgrid::numberOfNodesInCell(int id) const
+inline int Parfait::ImportedUgrid::numberOfNodesInCell(int id) const
 {
 	if(id < cellMap[0])
 		return 4;
@@ -88,7 +89,7 @@ int ImportedUgrid::numberOfNodesInCell(int id) const
 	assert(false);
 }
 
-int ImportedUgrid::numberOfNodesInBoundaryFace(int id) const
+inline int Parfait::ImportedUgrid::numberOfNodesInBoundaryFace(int id) const
 {
     if(id < faceMap[0])
         return 3;
@@ -97,7 +98,7 @@ int ImportedUgrid::numberOfNodesInBoundaryFace(int id) const
     assert(false);
 }
 
-int ImportedUgrid::numberOfNodesInCellFace(int cellId,int faceId) const
+inline int Parfait::ImportedUgrid::numberOfNodesInCellFace(int cellId,int faceId) const
 {
 	if(cellId < cellMap[0])
 		return 3;
@@ -120,7 +121,7 @@ int ImportedUgrid::numberOfNodesInCellFace(int cellId,int faceId) const
 	assert(false);
 }
 
-std::vector<int> ImportedUgrid::getNodesInBoundaryFace(int faceId) const
+inline std::vector<int> Parfait::ImportedUgrid::getNodesInBoundaryFace(int faceId) const
 {
 
     if(faceId < faceMap[0])
@@ -146,7 +147,7 @@ std::vector<int> ImportedUgrid::getNodesInBoundaryFace(int faceId) const
     return std::vector<int>();
 }
 
-void ImportedUgrid::getNodesInBoundaryFace(int faceId,int *face) const
+inline void Parfait::ImportedUgrid::getNodesInBoundaryFace(int faceId,int *face) const
 {
     if(faceId < faceMap[0])
     {
@@ -168,7 +169,7 @@ void ImportedUgrid::getNodesInBoundaryFace(int faceId,int *face) const
 }
 
 
-std::vector<int> ImportedUgrid::getNodesInCellFace(int cellId,int faceId) const
+inline std::vector<int> Parfait::ImportedUgrid::getNodesInCellFace(int cellId,int faceId) const
 {
 	assert(cellId >= 0);
     const int *cell = NULL;
@@ -367,7 +368,7 @@ std::vector<int> ImportedUgrid::getNodesInCellFace(int cellId,int faceId) const
     throw std::domain_error("ERROR: Cell "+std::to_string(cellId)+" is not in the cellMap.");
 }
 
-std::vector<int> ImportedUgrid::getNodesInCell(int cellId) const
+inline std::vector<int> Parfait::ImportedUgrid::getNodesInCell(int cellId) const
 {
 	int nvertices = numberOfNodesInCell(cellId);
 	const int *cell_list=NULL;
@@ -400,11 +401,11 @@ std::vector<int> ImportedUgrid::getNodesInCell(int cellId) const
     return cell;
 }
 
-std::vector<int> ImportedUgrid::getVtkOrderedNodesInCell(int cellId) const{
+inline std::vector<int> Parfait::ImportedUgrid::getVtkOrderedNodesInCell(int cellId) const{
     return getNodesInCell(cellId); // update correct ordering later...
 }
 
-void ImportedUgrid::getNodesInCell(int cellId,int *cell) const
+inline void Parfait::ImportedUgrid::getNodesInCell(int cellId,int *cell) const
 {
 	int nvertices = numberOfNodesInCell(cellId);
 	const int *cell_list=NULL;
@@ -435,7 +436,7 @@ void ImportedUgrid::getNodesInCell(int cellId,int *cell) const
 		cell[i] = cell_list[nvertices*id+i];
 }
 
-int ImportedUgrid::getBoundaryTag(int id) const 
+inline int Parfait::ImportedUgrid::getBoundaryTag(int id) const
 {
     if(id < faceMap[0])
     {
@@ -450,7 +451,7 @@ int ImportedUgrid::getBoundaryTag(int id) const
     assert(false);
 }
 
-int ImportedUgrid::getBoundaryCondition(int faceId) const 
+inline int Parfait::ImportedUgrid::getBoundaryCondition(int faceId) const
 {
     if(faceId < faceMap[0])
     {

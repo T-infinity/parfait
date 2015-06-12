@@ -1,12 +1,13 @@
 #include "parallel_mesh_reader_naive.h"
 #include "range_loop.h"
 #include <stdio.h>
-
+#include <vector>
 using namespace Parfait;
 using namespace UgridReader;
 using namespace MessagePasser;
 
-ParallelMeshReaderNaive::ParallelMeshReaderNaive(std::vector<std::string> gridFiles_in,vector<bool> &isBigEndian_in)
+ParallelMeshReaderNaive::ParallelMeshReaderNaive(std::vector<std::string> gridFiles_in,
+																								 std::vector<bool> &isBigEndian_in)
 	:isBigEndian(isBigEndian_in)
 {
 
@@ -67,17 +68,17 @@ ParallelMeshReaderNaive::~ParallelMeshReaderNaive()
 {
 }
 
-vector<int> ParallelMeshReaderNaive::getGridNodeMap()
+std::vector<int> ParallelMeshReaderNaive::getGridNodeMap()
 {
 	return gridNodeMap;
 }
 
-vector<int> ParallelMeshReaderNaive::getProcNodeMap()
+std::vector<int> ParallelMeshReaderNaive::getProcNodeMap()
 {
 	return procCellMap;
 }
 
-vector<int> ParallelMeshReaderNaive::getProcCellMap()
+std::vector<int> ParallelMeshReaderNaive::getProcCellMap()
 {
 	std::vector<int> procCellMap;
 	int ncells = myTets.size()/4 + myPyramids.size()/5 + myPrisms.size()/6 + myHexs.size()/8;

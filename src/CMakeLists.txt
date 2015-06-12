@@ -73,7 +73,7 @@ set(parfait_SRC
     "legacy_array.h"
     "mesh_mover.h"
     "mesh_slice.h"
-    "imported_ugrid.cpp"                    
+    "imported_ugrid.hpp"
     "ugrid_writer.cpp"
     "kd_tree.cpp"                           
     "vtk_extent_writer.cpp"
