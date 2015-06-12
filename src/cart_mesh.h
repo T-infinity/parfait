@@ -51,4 +51,6 @@ namespace Parfait {
     };
 }
 
+#include "cart_mesh.hpp"
+
 #endif

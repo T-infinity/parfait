@@ -11,7 +11,7 @@ set(parfait_SRC
     "byteswap.hpp"
     "cart_block.hpp"
     "parallel_mesh_reader_naive.cpp"
-    "cart_mesh.cpp"
+    "cart_mesh.hpp"
     "cell_to_cell.h"
     "checkpoint.h"
     "parallel_mesh_redistributor.cpp"

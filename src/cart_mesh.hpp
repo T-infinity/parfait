@@ -1,10 +1,8 @@
 #include <stdexcept>
-#include "cart_mesh.h"
 #include "range_loop.h"
 #include <string>
 
-using namespace Parfait;
-CartMesh::CartMesh(
+inline Parfait::CartMesh::CartMesh(
         const Point<double> &lo,
         const Point<double> &hi,
         int numCellsX,
@@ -15,7 +13,7 @@ CartMesh::CartMesh(
         volume = block.get_dx() * block.get_dy() * block.get_dz();
     }
 
-int CartMesh::numberOfBoundaryFaces() const
+inline int Parfait::CartMesh::numberOfBoundaryFaces() const
 {
     int nx = block.numberOfCells_X();
     int ny = block.numberOfCells_Y();
@@ -23,62 +21,62 @@ int CartMesh::numberOfBoundaryFaces() const
     return 2*(nx*ny) + 2*(nx*nz) + 2*(ny*nz); 
 }
 
-void CartMesh::getNode(int nodeId, double node[3]) const 
+inline void Parfait::CartMesh::getNode(int nodeId, double node[3]) const
 {
     block.getNode(nodeId, node);
 }
 
-void CartMesh::getNode(int i,int j,int k,double node[3]) const
+inline void Parfait::CartMesh::getNode(int i,int j,int k,double node[3]) const
 {
     int nodeId = block.convert_ijk_ToNodeId(i,j,k);
 	block.getNode(nodeId,node);
 }
 
-int CartMesh::getNodeId(int i,int j,int k) const
+inline int Parfait::CartMesh::getNodeId(int i,int j,int k) const
 {
 	return block.convert_ijk_ToNodeId(i,j,k);
 }
 
-void CartMesh::getLogicalDimensions(int &nx,int &ny,int &nz) const
+inline void Parfait::CartMesh::getLogicalDimensions(int &nx,int &ny,int &nz) const
 {
 	nx = block.numberOfNodes_X();
 	ny = block.numberOfNodes_Y();
 	nz = block.numberOfNodes_Z();
 }
 
-void CartMesh::getSpacings(double &hx,double &hy,double &hz) const
+inline void Parfait::CartMesh::getSpacings(double &hx,double &hy,double &hz) const
 {
 	hx = block.get_dx();
 	hy = block.get_dy();
 	hz = block.get_dz();
 }
 
-void CartMesh::getLogicalCoordinates(int nodeId,int &i,int &j,int &k) const
+inline void Parfait::CartMesh::getLogicalCoordinates(int nodeId,int &i,int &j,int &k) const
 {
 	block.convertNodeIdTo_ijk(nodeId,i,j,k);
 }
 
-int CartMesh::numberOfNodes() const
+inline int Parfait::CartMesh::numberOfNodes() const
 {
     return block.numberOfNodes();
 }
 
-int CartMesh::numberOfNodesInCell(int cellId) const 
+inline int Parfait::CartMesh::numberOfNodesInCell(int cellId) const
 {
     return 8;
 }
 
-int CartMesh::numberOfNodesInCellFace(int cellId, int faceId) const
+inline int Parfait::CartMesh::numberOfNodesInCellFace(int cellId, int faceId) const
 {
     return 4;
 }
 
-int CartMesh::numberOfFacesInCell(int cellId) const
+inline int Parfait::CartMesh::numberOfFacesInCell(int cellId) const
 {
     return 6;
 }
 
-int CartMesh::faceNeighbor(int cellId, int faceId) const 
+inline int Parfait::CartMesh::faceNeighbor(int cellId, int faceId) const
 {
     int i, j, k;
     block.convertCellIdTo_ijk(cellId, i, j, k);
@@ -153,7 +151,7 @@ int CartMesh::faceNeighbor(int cellId, int faceId) const
     return block.convert_ijk_ToCellId(i, j, k);
 }
 
-bool CartMesh::isFaceBoundary(int cellId, int faceId) const 
+inline bool Parfait::CartMesh::isFaceBoundary(int cellId, int faceId) const
 {
     int neighbor = faceNeighbor(cellId, faceId);
     if(neighbor >= numberOfCells()){
@@ -164,12 +162,12 @@ bool CartMesh::isFaceBoundary(int cellId, int faceId) const
     }
 }
 
-double CartMesh::cellVolume(int cellId) const 
+inline double Parfait::CartMesh::cellVolume(int cellId) const
 {
     return volume;
 }
 
-Point<double> CartMesh::cellCentroid(int cellId) const
+inline Parfait::Point<double> Parfait::CartMesh::cellCentroid(int cellId) const
 {
     int i,j,k;
 
@@ -188,7 +186,7 @@ Point<double> CartMesh::cellCentroid(int cellId) const
             );
 }
 
-Point<double> CartMesh::faceArea(int cellId, int faceId) const
+inline Parfait::Point<double> Parfait::CartMesh::faceArea(int cellId, int faceId) const
 {
     double area;
     switch (faceId) {
@@ -215,7 +213,7 @@ Point<double> CartMesh::faceArea(int cellId, int faceId) const
     };
 }
 
-std::vector<int> CartMesh::getNodesInCellFace(int cellId, int faceId) const
+inline std::vector<int> Parfait::CartMesh::getNodesInCellFace(int cellId, int faceId) const
 {
     int i, j, k;
     block.convertCellIdTo_ijk(cellId, i, j, k);
@@ -273,7 +271,7 @@ std::vector<int> CartMesh::getNodesInCellFace(int cellId, int faceId) const
     }
 }
 
-std::vector<int> CartMesh::getNodesInCell(int cellId) const
+inline std::vector<int> Parfait::CartMesh::getNodesInCell(int cellId) const
 {
     int i, j, k;
     block.convertCellIdTo_ijk(cellId, i, j, k);
@@ -290,7 +288,7 @@ std::vector<int> CartMesh::getNodesInCell(int cellId) const
     return cellNodes;
 }
 
-int CartMesh::numberOfCellsOnSide(int side) const
+inline int Parfait::CartMesh::numberOfCellsOnSide(int side) const
 {
     switch (side) {
         // z-plane faces
@@ -310,12 +308,12 @@ int CartMesh::numberOfCellsOnSide(int side) const
     }
 }
 
-int CartMesh::faceBoundaryTag(int cellId, int faceId) const
+inline int Parfait::CartMesh::faceBoundaryTag(int cellId, int faceId) const
 {
     return whatSideIsCellFaceOn(cellId, faceId);
 }
 
-int CartMesh::whatSideIsCellFaceOn(int cellId, int faceId) const
+inline int Parfait::CartMesh::whatSideIsCellFaceOn(int cellId, int faceId) const
 {
     int i, j, k;
     block.convertCellIdTo_ijk(cellId, i, j, k);
