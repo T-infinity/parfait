@@ -20,7 +20,7 @@ set(parfait_SRC
     "edge_map.h"
     "extent_builder.h"
     "parmetis_wrapper.cpp"
-    "fun3d_mesh.cpp"
+    "fun3d_mesh.hpp"
     "generic_cell.h"
     "generic_cell.hpp"
     "generic_face.h"

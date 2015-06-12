@@ -71,4 +71,7 @@ namespace Parfait { ;
         int faceMap[2];
     };
 }
+
+#include "fun3d_mesh.hpp"
+
 #endif

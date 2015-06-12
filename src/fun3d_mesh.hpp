@@ -1,7 +1,6 @@
 #include "fun3d_mesh.h"
-using namespace Parfait;
 
-Fun3DMesh::Fun3DMesh(int nnodes0_in,int nnodes01_in,double *x_in,double *y_in,double *z_in,
+inline Parfait::Fun3DMesh::Fun3DMesh(int nnodes0_in,int nnodes01_in,double *x_in,double *y_in,double *z_in,
 		int *globalNodeIds_in,
 		int *imesh_in,
 		int ntriangles_in,int *triangles_in,int *triangleTags_in,int *triangleBcs_in,
@@ -45,7 +44,7 @@ Fun3DMesh::Fun3DMesh(int nnodes0_in,int nnodes01_in,double *x_in,double *y_in,do
 	faceMap[1] = faceMap[0] + nquads;
 }
 
-void Fun3DMesh::freePointers()
+inline void Parfait::Fun3DMesh::freePointers()
 {
 	free(x);
 	free(y);
@@ -64,60 +63,60 @@ void Fun3DMesh::freePointers()
 	free(hexs);
 }
 
-void Fun3DMesh::getNode(int nodeId,double node[3]) const
+inline void Parfait::Fun3DMesh::getNode(int nodeId,double node[3]) const
 {
 	node[0] = x[nodeId];
 	node[1] = y[nodeId];
 	node[2] = z[nodeId];
 }
 
-void Fun3DMesh::setNode(int nodeId,double node[3]) 
+inline void Parfait::Fun3DMesh::setNode(int nodeId,double node[3])
 {
 	x[nodeId] = node[0];
 	y[nodeId] = node[1];
 	z[nodeId] = node[2];
 }
 
-int Fun3DMesh::getGlobalNodeId(int localNodeId)
+inline int Parfait::Fun3DMesh::getGlobalNodeId(int localNodeId)
 {
 	return globalNodeIds[localNodeId];
 }
 
-int Fun3DMesh::getImesh(int localNodeId)
+inline int Parfait::Fun3DMesh::getImesh(int localNodeId)
 {
 	return imesh[localNodeId];
 }
 
-int Fun3DMesh::getBoundaryTag(int boundaryFaceId)
+inline int Parfait::Fun3DMesh::getBoundaryTag(int boundaryFaceId)
 {
 	if(boundaryFaceId < ntriangles)
 		return triangleTags[boundaryFaceId];
 	return quadTags[boundaryFaceId-ntriangles];
 }
 
-int Fun3DMesh::getBoundaryCondition(int boundaryFaceId)
+inline int Parfait::Fun3DMesh::getBoundaryCondition(int boundaryFaceId)
 {
 	if(boundaryFaceId < ntriangles)
 		return triangleBcs[boundaryFaceId];
 	return quadBcs[boundaryFaceId-ntriangles];
 }
 
-int Fun3DMesh::numberOfNodes() const
+inline int Parfait::Fun3DMesh::numberOfNodes() const
 {
 	return nnodes01;
 }
 
-int Fun3DMesh::numberOfCells() const
+inline int Parfait::Fun3DMesh::numberOfCells() const
 {
 	return ncells;
 }
 
-int Fun3DMesh::numberOfBoundaryFaces() const
+inline int Parfait::Fun3DMesh::numberOfBoundaryFaces() const
 {
 	return nfaces;
 }
 
-int Fun3DMesh::numberOfNodesInBoundaryFace(int id) const
+inline int Parfait::Fun3DMesh::numberOfNodesInBoundaryFace(int id) const
 {
     if(id < faceMap[0])
         return 3;
@@ -126,7 +125,7 @@ int Fun3DMesh::numberOfNodesInBoundaryFace(int id) const
 	assert(false);
 }
 
-vector<int> Fun3DMesh::getNodesInBoundaryFace(int faceId) const
+inline vector<int> Parfait::Fun3DMesh::getNodesInBoundaryFace(int faceId) const
 {
 	vector<int> nodes(3,0);
     if(faceId < faceMap[0])
@@ -151,7 +150,7 @@ vector<int> Fun3DMesh::getNodesInBoundaryFace(int faceId) const
 	return nodes;
 }
 
-void Fun3DMesh::getNodesInBoundaryFace(int faceId,int *face) const
+inline void Parfait::Fun3DMesh::getNodesInBoundaryFace(int faceId,int *face) const
 {
     if(faceId < faceMap[0])
     {
@@ -172,7 +171,7 @@ void Fun3DMesh::getNodesInBoundaryFace(int faceId,int *face) const
     assert(faceId < faceMap[1]);
 }
 
-int Fun3DMesh::numberOfFacesInCell(int id) const
+inline int Parfait::Fun3DMesh::numberOfFacesInCell(int id) const
 {
 	if(id < cellMap[0])
 		return 4;
@@ -183,7 +182,7 @@ int Fun3DMesh::numberOfFacesInCell(int id) const
 	assert(false);
 }
 
-int Fun3DMesh::numberOfNodesInCell(int id) const
+inline int Parfait::Fun3DMesh::numberOfNodesInCell(int id) const
 {
 	if(id < cellMap[0])
 		return 4;
@@ -196,7 +195,7 @@ int Fun3DMesh::numberOfNodesInCell(int id) const
 	assert(false);
 }
 
-int Fun3DMesh::numberOfNodesInCellFace(int cellId,int faceId) const
+inline int Parfait::Fun3DMesh::numberOfNodesInCellFace(int cellId,int faceId) const
 {
 	if(cellId < cellMap[0])
 		return 3;
@@ -219,7 +218,7 @@ int Fun3DMesh::numberOfNodesInCellFace(int cellId,int faceId) const
 	assert(false);
 }
 
-vector<int> Fun3DMesh::getNodesInCellFace(int cellId,int faceId) const
+inline vector<int> Parfait::Fun3DMesh::getNodesInCellFace(int cellId,int faceId) const
 {
 	assert(cellId >= 0);
 	assert(cellId < cellMap[3]);
@@ -382,7 +381,7 @@ vector<int> Fun3DMesh::getNodesInCellFace(int cellId,int faceId) const
 	return face;
 }
 
-void Fun3DMesh::getNodesInCell(int cellId,int cell[]) const
+inline void Parfait::Fun3DMesh::getNodesInCell(int cellId,int cell[]) const
 {
 	int nvertices = numberOfNodesInCell(cellId);
 	const int *cell_list=NULL;
@@ -410,7 +409,7 @@ void Fun3DMesh::getNodesInCell(int cellId,int cell[]) const
 		cell[i] = cell_list[nvertices*id+i];
 }
 
-vector<int> Fun3DMesh::getNodesInCell(int cellId) const
+inline vector<int> Parfait::Fun3DMesh::getNodesInCell(int cellId) const
 {
 	int nvertices = numberOfNodesInCell(cellId);
 	vector<int> cell(nvertices,0);
@@ -418,7 +417,7 @@ vector<int> Fun3DMesh::getNodesInCell(int cellId) const
 	return cell;
 }
 
-vector<int> Fun3DMesh::getVtkOrderedNodesInCell(int cellId) const
+inline vector<int> Parfait::Fun3DMesh::getVtkOrderedNodesInCell(int cellId) const
 {
     return getNodesInCell(cellId); // actually fix ordering later
 }
