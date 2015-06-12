@@ -48,7 +48,7 @@ set(parfait_SRC
     "point.h"
     "point.hpp"
     "range_loop.h"
-    "stl.cpp"
+    "stl.hpp"
     "stl.h"
     "STLFactory.h"
     "facet.h"

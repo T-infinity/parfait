@@ -1,5 +1,4 @@
 #include <assert.h>
-#include "stl.h"
 #include <math.h>
 #include "point.h"
 #include "extent.h"
@@ -10,7 +9,7 @@ using namespace Parfait;
 typedef Extent<double> Extent;
 typedef Point<double> Point;
 
-void STL::rescale(double scale){
+inline void STL::rescale(double scale){
 
     for (unsigned int i = 0; i < facets.size(); i++) {
         for (unsigned int j = 0; j < 3; j++) {facets[i][0][j] /= scale;}
@@ -19,14 +18,14 @@ void STL::rescale(double scale){
     }
 }
 
-void STL::scaleToUnitLength(){
+inline void STL::scaleToUnitLength(){
 
     translateCenterToOrigin();
     double length = getLongestCartesianLength();
     rescale(length);
 }
 
-double STL::getLongestCartesianLength(){
+inline double STL::getLongestCartesianLength(){
     Extent domain = findDomain();
 
     double dx = domain.hi[0] - domain.lo[0];
@@ -39,7 +38,7 @@ double STL::getLongestCartesianLength(){
     return max;
 }
 
-void STL::translateCenterToOrigin(){
+inline void STL::translateCenterToOrigin(){
 
     double x_min = 20e20; double x_max = -20e20;
     double y_min = 20e20; double y_max = -20e20;
@@ -85,7 +84,7 @@ void STL::translateCenterToOrigin(){
     }
 }
 
-void STL::loadBinaryFile(std::string fileName){
+inline void STL::loadBinaryFile(std::string fileName){
 
     filename = fileName;
     FILE *fp = fopen(filename.c_str(), "r");
@@ -123,7 +122,7 @@ void STL::loadBinaryFile(std::string fileName){
     fclose(fp);
 }
 
-void STL::writeAsciiFile(std::string fname, std::string solidName) const {
+inline void STL::writeAsciiFile(std::string fname, std::string solidName) const {
 
     fname += ".stl";
     FILE *fp = fopen(fname.c_str(), "w");
@@ -144,7 +143,7 @@ void STL::writeAsciiFile(std::string fname, std::string solidName) const {
     fclose(fp);
 }
 
-Parfait::Extent<double> STL::findDomain() const {
+inline Parfait::Extent<double> STL::findDomain() const {
     Extent domain(Point(20e20,20e20,20e20), Point(-20e20, -20e20, -20e20));
 
     for(auto &facet : facets){
@@ -161,16 +160,16 @@ Parfait::Extent<double> STL::findDomain() const {
     return domain;
 }
 
-Parfait::Point<double> SearchSTL::getClosestPoint(const Point &p, double &dist) const{
+inline Parfait::Point<double> SearchSTL::getClosestPoint(const Point &p, double &dist) const{
     dist = 0.001;
     return LoopClosest(p, dist);
 }
 
-Parfait::Point<double> SearchSTL::getClosestPointWithSeed(const Point &point, double &dist) const {
+inline Parfait::Point<double> SearchSTL::getClosestPointWithSeed(const Point &point, double &dist) const {
     return LoopClosest(point, dist);
 }
 
-Parfait::Point<double> SearchSTL::LoopClosest(const Point &point, double &dist) const {
+inline Parfait::Point<double> SearchSTL::LoopClosest(const Point &point, double &dist) const {
     // Refactor this and below so we can check if a point returned is inside the extent box.
     bool found = false;
     Point closest;
@@ -220,7 +219,7 @@ Parfait::Point<double> SearchSTL::LoopClosest(const Point &point, double &dist) 
     return closest;
 }
 
-std::vector<Facet> SearchSTL::getFacetsInsideExtent(const Extent &domain) const{
+inline std::vector<Facet> SearchSTL::getFacetsInsideExtent(const Extent &domain) const{
 
     auto ids = adt.retrieve(domain);
     fflush(stdout);
@@ -231,7 +230,7 @@ std::vector<Facet> SearchSTL::getFacetsInsideExtent(const Extent &domain) const{
     return inside;
 }
 
-SearchSTL::SearchSTL(const STL &stl_in) : stl(stl_in), adt(stl_in.findDomain()){
+inline SearchSTL::SearchSTL(const STL &stl_in) : stl(stl_in), adt(stl_in.findDomain()){
     #pragma omp parallel for
     for(int facetId = 0; facetId < stl.facets.size(); facetId++) {
         auto &facet = stl.facets[facetId];
@@ -239,11 +238,11 @@ SearchSTL::SearchSTL(const STL &stl_in) : stl(stl_in), adt(stl_in.findDomain()){
     }
 }
 
-Facet & STL::operator[] (const int i){
+inline Facet & STL::operator[] (const int i){
     return facets[i];
 }
 
-Parfait::Point<double> SearchSTL::getClosestPoint(const Point &point) const {
+inline Parfait::Point<double> SearchSTL::getClosestPoint(const Point &point) const {
     double distance;
     return getClosestPoint(point, distance);
 }

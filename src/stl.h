@@ -54,5 +54,7 @@ namespace Parfait {
     };
 }
 
+#include "stl.hpp"
+
 #endif
 
