@@ -52,7 +52,7 @@ set(parfait_SRC
     "stl.h"
     "STLFactory.h"
     "facet.h"
-    "facet.cpp"
+    "facet.hpp"
     "unit_transformer.h"
     "vector_tools.h"
     "vtk_field.h"

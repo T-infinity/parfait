@@ -53,4 +53,7 @@ namespace Parfait {
         double GetMin(int i);
     };
 }
+
+#include "facet.hpp"
+
 #endif

@@ -1,81 +1,84 @@
-#include "facet.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include <stdexcept>
 
-using namespace Parfait;
 
-double squaredMagnitude(const Point<double> &a){
+inline double squaredMagnitude(const Parfait::Point<double> &a){
     return a.pos[0]*a.pos[0] + a.pos[1]*a.pos[1] + a.pos[2]*a.pos[2];
 }
 
-void CROSS(double *dest, const double *v1, const double *v2) {
+inline void CROSS(double *dest, const double *v1, const double *v2) {
     dest[0] = v1[1]*v2[2]-v1[2]*v2[1];
     dest[1] = v1[2]*v2[0]-v1[0]*v2[2];
     dest[2] = v1[0]*v2[1]-v1[1]*v2[0];
 }
 
-double DOT(const double *v1, const double *v2) {
+inline double DOT(const double *v1, const double *v2) {
     return (v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2]);
 }
 
-void  SUB(double *dest, const double *v1, const double *v2) {
+inline void  SUB(double *dest, const double *v1, const double *v2) {
     dest[0] = v1[0]-v2[0];
     dest[1] = v1[1]-v2[1];
     dest[2] = v1[2]-v2[2];
 }
 
-Facet::Facet(const Point<double> &p1, const Point<double> &p2, const Point<double> &p3) {
+inline Parfait::Facet::Facet(const Point<double> &p1, const Point<double> &p2, const Point<double> &p3) {
     points = std::array<Point<double>, 3>{p1, p2, p3};
 }
 
-Point<double> &Facet::operator[](int i) {
+inline Parfait::Point<double> &Parfait::Facet::operator[](int i) {
     if (i < 0 or i > 2)
         throw std::domain_error("Invalid access to facet.");
     return points[i];
 }
 
-const Point<double>& Facet::operator[] (int i) const {
+inline const Parfait::Point<double>& Parfait::Facet::operator[] (int i) const {
     if (i < 0 or i > 2)
         throw std::domain_error("Invalid access to facet.");
     return points[i];
 }
 
-double Facet::GetMin(int i){
+inline double Parfait::Facet::GetMin(int i){
     double t = points[0][i];
     t = (t < points[1][i])?(t):(points[1][i]);
     t = (t < points[2][i])?(t):(points[2][i]);
     return t;
 }
 
-double Facet::GetMax(int i){
+inline double Parfait::Facet::GetMax(int i){
     double t = points[0][i];
     t = (t > points[1][i])?(t):(points[1][i]);
     t = (t > points[2][i])?(t):(points[2][i]);
     return t;
 }
 
-double Facet::GetXMin(){
+inline double Parfait::Facet::GetXMin(){
     return GetMin(0);
 }
-double Facet::GetYMin(){
+
+inline double Parfait::Facet::GetYMin(){
     return GetMin(1);
 }
-double Facet::GetZMin(){
+
+inline double Parfait::Facet::GetZMin(){
     return GetMin(2);
 }
-double Facet::GetXMax(){
+
+inline double Parfait::Facet::GetXMax(){
     return GetMax(0);
 }
-double Facet::GetYMax(){
+
+inline double Parfait::Facet::GetYMax(){
     return GetMax(1);
 }
-double Facet::GetZMax(){
+
+inline double Parfait::Facet::GetZMax(){
     return GetMax(2);
 }
 
-bool Facet::DoesRayIntersect(const double orig[3],
+inline bool Parfait::Facet::DoesRayIntersect(const double orig[3],
         const double dir[3], double &t, bool *confident) const{
 
     double edge1[3], edge2[3], tvec[3], pvec[3], qvec[3];
@@ -131,7 +134,7 @@ bool Facet::DoesRayIntersect(const double orig[3],
     return true;
 }
 
-bool Facet::WhereDoesEdgeIntersect(const Point<double> &edgelo, const Point<double> &edgehi, Point<double> &point) const {
+inline bool Parfait::Facet::WhereDoesEdgeIntersect(const Point<double> &edgelo, const Point<double> &edgehi, Point<double> &point) const {
 
     double dir[3];
     double dist;
@@ -160,7 +163,7 @@ bool Facet::WhereDoesEdgeIntersect(const Point<double> &edgelo, const Point<doub
     return true;
 }
 
-Extent<double> Facet::getExtent() const{
+inline Parfait::Extent<double> Parfait::Facet::getExtent() const{
 
     Extent<double> extent;
     double x,y,z;
@@ -189,7 +192,7 @@ Extent<double> Facet::getExtent() const{
     return extent;
 }
 
-void Facet::getNode(int i, double p[3]) const {
+inline void Parfait::Facet::getNode(int i, double p[3]) const {
     switch (i)  {
         case 0:
             p[0] = points[0][0];
@@ -209,7 +212,7 @@ void Facet::getNode(int i, double p[3]) const {
     }
 }
 
-Point<double> Facet::GetClosestPoint(Point<double> safe, double &dist) const{
+inline Parfait::Point<double> Parfait::Facet::GetClosestPoint(Point<double> safe, double &dist) const{
 
     Point<double> point = safe;
     Point<double> diff  =  points[0] - point;
@@ -454,7 +457,7 @@ Point<double> Facet::GetClosestPoint(Point<double> safe, double &dist) const{
     return point;
 }
 
-Point<double> Facet::computeNormal() const{
+inline Parfait::Point<double> Parfait::Facet::computeNormal() const{
     Point<double> a = points[1] - points[0];
     Point<double> b = points[2] - points[0];
 
@@ -463,7 +466,7 @@ Point<double> Facet::computeNormal() const{
     return c;
 }
 
-double Facet::getLargestAngleBetween(const std::vector<Facet> &facets) {
+inline double Parfait::Facet::getLargestAngleBetween(const std::vector<Facet> &facets) {
     double min = 10e20;
     for(auto fi : facets){
         auto ui = fi.computeNormal();
