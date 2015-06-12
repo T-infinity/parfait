@@ -29,4 +29,6 @@ namespace Parfait {
     };
 }
 
+#include "motion_matrix.hpp"
+
 #endif

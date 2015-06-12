@@ -1,13 +1,12 @@
-#include "motion_matrix.h"
 
 using namespace Parfait;
 
-MotionMatrix::MotionMatrix()
+inline MotionMatrix::MotionMatrix()
 {
 	clearMotions();
 }
 
-MotionMatrix::MotionMatrix(double dx,double dy,double dz)
+inline MotionMatrix::MotionMatrix(double dx,double dy,double dz)
 {
 	double translation[3];
 	translation[0] = dx;
@@ -16,18 +15,18 @@ MotionMatrix::MotionMatrix(double dx,double dy,double dz)
 	setTranslation(translation);
 }
 
-MotionMatrix::MotionMatrix(const double translation[3])
+inline MotionMatrix::MotionMatrix(const double translation[3])
 {
 	setTranslation(translation);
 }
 
 
-MotionMatrix::MotionMatrix(const double line_start[3],const double line_end[3],double rotation_angle)
+inline MotionMatrix::MotionMatrix(const double line_start[3],const double line_end[3],double rotation_angle)
 {
 	setRotation(line_start,line_end,rotation_angle);
 }
 
-void MotionMatrix::clearMotions()
+inline void MotionMatrix::clearMotions()
 {
 	// sets the motion matrix to the identity matrix
 	for(int i=0;i<16;i++)
@@ -36,7 +35,7 @@ void MotionMatrix::clearMotions()
 		mat[4*i+i] = 1.0;
 }
 
-void MotionMatrix::addTranslation(const double translation[3])
+inline void MotionMatrix::addTranslation(const double translation[3])
 {
 	MotionMatrix tran;
 	tran.setTranslation(translation);
@@ -47,7 +46,7 @@ void MotionMatrix::addTranslation(const double translation[3])
 	setMotionMatrix(result);
 }
 
-void MotionMatrix::addRotation(const double line_start[3],const double line_end[3],double angle)
+inline void MotionMatrix::addRotation(const double line_start[3],const double line_end[3],double angle)
 {
 	MotionMatrix rot;
 	rot.setRotation(line_start,line_end,angle);
@@ -58,14 +57,14 @@ void MotionMatrix::addRotation(const double line_start[3],const double line_end[
 	setMotionMatrix(result);
 }
 
-void MotionMatrix::addMotion(const MotionMatrix& motion){
+inline void MotionMatrix::addMotion(const MotionMatrix& motion){
     double A[16],result[16];
     motion.getMatrix(A);
     MatrixMatrixMultiply(A,mat,4,4,4,4,result);
     setMotionMatrix(result);
 }
 
-void MotionMatrix::setTranslation(const double translation[3])
+inline void MotionMatrix::setTranslation(const double translation[3])
 {
 	clearMotions();
 	mat[3] = translation[0];
@@ -73,7 +72,7 @@ void MotionMatrix::setTranslation(const double translation[3])
 	mat[11]= translation[2];
 }
 
-void MotionMatrix::setRotation(const double line_start[3],const double line_end[3],double angle)
+inline void MotionMatrix::setRotation(const double line_start[3],const double line_end[3],double angle)
 {
 	double a,b,c,u,v,w,L,sin_theta,cos_theta,theta,pi;
 	a = line_start[0];
@@ -106,19 +105,20 @@ void MotionMatrix::setRotation(const double line_start[3],const double line_end[
 	mat[14] = 0.0;
 	mat[15] = 1.0;
 }
-void MotionMatrix::setMotionMatrix(const double matrix[16])
+
+inline void MotionMatrix::setMotionMatrix(const double matrix[16])
 {
 	for(int i=0;i<16;i++)
 		mat[i] = matrix[i];
 }
 
-void MotionMatrix::getMatrix(double matrix[16]) const
+inline void MotionMatrix::getMatrix(double matrix[16]) const
 {
 	for(int i=0;i<16;i++)
 		matrix[i] = mat[i];
 }
 
-void MotionMatrix::movePoint(double p[3]) const
+inline void MotionMatrix::movePoint(double p[3]) const
 {
 	double vec_in[4],vec_out[4];
 	vec_in[0] = p[0];
@@ -131,7 +131,7 @@ void MotionMatrix::movePoint(double p[3]) const
 	p[2] = vec_out[2];
 }
 
-void MotionMatrix::printMatrix(FILE *f)
+inline void MotionMatrix::printMatrix(FILE *f)
 {
 	fprintf(f,"\n%lf %lf %lf %lf\n",mat[0],mat[1],mat[2],mat[3]);
 	fprintf(f,"%lf %lf %lf %lf\n",mat[4],mat[5],mat[6],mat[7]);

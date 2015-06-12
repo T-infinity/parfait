@@ -30,7 +30,6 @@ inline Parfait::MapbcReader::MapbcReader(std::string filename_in)
 	}
 }
 
-
 inline int Parfait::MapbcReader::boundaryCondition(int tag)
 {
 	if(failedToOpenMapbc)

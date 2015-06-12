@@ -7,7 +7,7 @@ set(parfait_SRC
     "adt_elem.hpp"
     "build_neighbors.h"
     "adt_3d_point.hpp"
-    "motion_matrix.cpp"
+    "motion_matrix.hpp"
     "byteswap.hpp"
     "cart_block.hpp"
     "parallel_mesh_reader_naive.cpp"
