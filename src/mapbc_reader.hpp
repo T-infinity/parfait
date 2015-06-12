@@ -1,12 +1,8 @@
-#include "mapbc_reader.h"
 #include <stdio.h>
 #include <assert.h>
 #include <string>
 
-using namespace std;
-using namespace Parfait;
-
-MapbcReader::MapbcReader(string filename_in)
+inline Parfait::MapbcReader::MapbcReader(std::string filename_in)
 	:filename(filename_in)
 {
 	FILE *f = fopen(filename.c_str(),"r");
@@ -27,7 +23,7 @@ MapbcReader::MapbcReader(string filename_in)
 			int tag,boundaryCondition;
 			char name[80];
 			fscanf(f,"%i %i %s",&tag,&boundaryCondition,name);
-			bcMap[tag] = make_pair(boundaryCondition,string(name));
+			bcMap[tag] = std::make_pair(boundaryCondition,std::string(name));
 		}
 
 		fclose(f);
@@ -35,14 +31,14 @@ MapbcReader::MapbcReader(string filename_in)
 }
 
 
-int MapbcReader::boundaryCondition(int tag)
+inline int Parfait::MapbcReader::boundaryCondition(int tag)
 {
 	if(failedToOpenMapbc)
 		return 0;
 	return bcMap.find(tag)->second.first;
 }
 
-void MapbcReader::print()
+inline void Parfait::MapbcReader::print()
 {
 	if(!failedToOpenMapbc){
 		for(auto &item:bcMap){

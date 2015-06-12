@@ -21,5 +21,6 @@ namespace Parfait {
     };
 }
 
+#include "mapbc_reader.hpp"
 
 #endif

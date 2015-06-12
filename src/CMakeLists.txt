@@ -77,7 +77,7 @@ set(parfait_SRC
     "ugrid_writer.cpp"
     "kd_tree.cpp"                           
     "vtk_extent_writer.cpp"
-    "mapbc_reader.cpp"                      
+    "mapbc_reader.hpp"
     "vtk_hex_writer.cpp"
     "vtk_volume_writer.cpp")
 
