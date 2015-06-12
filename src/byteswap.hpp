@@ -42,7 +42,7 @@
 #endif
 namespace Parfait {
 // ----------------------------------------------------------------------------
-    size_t private_fread(void *ptr, size_t size, size_t nmemb, FILE *stream) {
+    inline size_t private_fread(void *ptr, size_t size, size_t nmemb, FILE *stream) {
         int i;
         size_t ret;
         char *tmp = (char *) ptr;
@@ -59,7 +59,7 @@ namespace Parfait {
 
 
 // ----------------------------------------------------------------------------
-    size_t private_fwrite(void *ptr, size_t size, size_t nmemb, FILE *stream) {
+    inline size_t private_fwrite(void *ptr, size_t size, size_t nmemb, FILE *stream) {
         int i;
         size_t ret;
         char *tmp;

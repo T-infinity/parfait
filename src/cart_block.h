@@ -51,4 +51,7 @@ namespace Parfait {
         int kx, ky, kz;
     };
 }
+
+#include "cart_block.hpp"
+
 #endif

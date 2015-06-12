@@ -1,8 +1,6 @@
 #include "cart_block.h"
 
-using namespace Parfait;
-
-CartBlock::CartBlock()
+inline Parfait::CartBlock::CartBlock()
     : Extent(),
       kx(0),
       ky(0),
@@ -10,17 +8,17 @@ CartBlock::CartBlock()
 {
 }
 
-CartBlock::CartBlock(const double min_xyz[3],const double max_xyz[3])
+inline Parfait::CartBlock::CartBlock(const double min_xyz[3],const double max_xyz[3])
     : Extent(min_xyz, max_xyz)
 {
 }
 
-CartBlock::CartBlock(const double extent[6])
+inline Parfait::CartBlock::CartBlock(const double extent[6])
     : Extent(extent)
 {
 }
 
-CartBlock::CartBlock(const double min_xyz[3], const double max_xyz[3],
+inline Parfait::CartBlock::CartBlock(const double min_xyz[3], const double max_xyz[3],
                      int ncells_x,int ncells_y,int ncells_z)
     : Extent(min_xyz, max_xyz),
       kx(ncells_x),
@@ -30,7 +28,7 @@ CartBlock::CartBlock(const double min_xyz[3], const double max_xyz[3],
   number_of_cells = kx*ky*kz;
 }
 
-CartBlock::CartBlock(const double extent[3],
+inline Parfait::CartBlock::CartBlock(const double extent[3],
                      int ncells_x,int ncells_y,int ncells_z)
     : Extent(extent),
       kx(ncells_x),
@@ -40,7 +38,7 @@ CartBlock::CartBlock(const double extent[3],
   number_of_cells = kx*ky*kz;
 }
 
-void CartBlock::setDimensions(int ncells_x,int ncells_y,int ncells_z)
+inline void Parfait::CartBlock::setDimensions(int ncells_x,int ncells_y,int ncells_z)
 {
   kx = ncells_x;
   ky = ncells_y;
@@ -50,24 +48,24 @@ void CartBlock::setDimensions(int ncells_x,int ncells_y,int ncells_z)
 
 
 
-double CartBlock::get_dx() const {return getLength_X() / (double) kx;}
+inline double Parfait::CartBlock::get_dx() const {return getLength_X() / (double) kx;}
 
-double CartBlock::get_dy() const {return getLength_Y() / (double) ky;}
+inline double Parfait::CartBlock::get_dy() const {return getLength_Y() / (double) ky;}
 
-double CartBlock::get_dz() const {return getLength_Z() / (double) kz;}
+inline double Parfait::CartBlock::get_dz() const {return getLength_Z() / (double) kz;}
 
-int CartBlock::numberOfCells_X() const {return kx;}
-int CartBlock::numberOfCells_Y() const {return ky;}
-int CartBlock::numberOfCells_Z() const {return kz;}
-int CartBlock::numberOfNodes_X() const {return kx+1;}
-int CartBlock::numberOfNodes_Y() const {return ky+1;}
-int CartBlock::numberOfNodes_Z() const {return kz+1;}
+inline int Parfait::CartBlock::numberOfCells_X() const {return kx;}
+inline int Parfait::CartBlock::numberOfCells_Y() const {return ky;}
+inline int Parfait::CartBlock::numberOfCells_Z() const {return kz;}
+inline int Parfait::CartBlock::numberOfNodes_X() const {return kx+1;}
+inline int Parfait::CartBlock::numberOfNodes_Y() const {return ky+1;}
+inline int Parfait::CartBlock::numberOfNodes_Z() const {return kz+1;}
 
-int CartBlock::numberOfCells() const {return number_of_cells;}
+inline int Parfait::CartBlock::numberOfCells() const {return number_of_cells;}
 
-int CartBlock::numberOfNodes() const {return (kx+1)*(ky+1)*(kz+1);}
+inline int Parfait::CartBlock::numberOfNodes() const {return (kx+1)*(ky+1)*(kz+1);}
 
-int CartBlock::getIdOfContainingCell(double point[3]) const
+inline int Parfait::CartBlock::getIdOfContainingCell(double point[3]) const
 {
   assert(contains(Point<double>(point)));
   double hx,hy,hz;
@@ -81,7 +79,7 @@ int CartBlock::getIdOfContainingCell(double point[3]) const
   return convert_ijk_ToCellId(i,j,k);
 }
 
-std::vector<int> CartBlock::getCellIdsInExtent(const Extent<double> &b) const
+inline std::vector<int> Parfait::CartBlock::getCellIdsInExtent(const Extent<double> &b) const
 {
   std::vector<int> cell_ids;
   Point<double> search_lo,search_hi;
@@ -145,7 +143,7 @@ std::vector<int> CartBlock::getCellIdsInExtent(const Extent<double> &b) const
 }
 
 
-void CartBlock::getNode(int node_id,double point[3]) const
+inline void Parfait::CartBlock::getNode(int node_id,double point[3]) const
 {
   int i,j,k;
   convertNodeIdTo_ijk(node_id,i,j,k);
@@ -154,7 +152,7 @@ void CartBlock::getNode(int node_id,double point[3]) const
   point[2] = lo[2] + (get_dz())*((double)(k));
 }
 
-void CartBlock::getCellCentroid(int cell_id,double point[3]) const
+inline void Parfait::CartBlock::getCellCentroid(int cell_id,double point[3]) const
 {
   int i,j,k;
   convertCellIdTo_ijk(cell_id,i,j,k);
@@ -163,7 +161,7 @@ void CartBlock::getCellCentroid(int cell_id,double point[3]) const
   point[2] = lo[2] + (get_dz())*((double)(k))+0.5*get_dz();
 }
 
-Extent<double> CartBlock::createExtentFromCell(int cell_id) const
+inline Parfait::Extent<double> Parfait::CartBlock::createExtentFromCell(int cell_id) const
 {
   int i,j,k;
   convertCellIdTo_ijk(cell_id,i,j,k);
@@ -183,27 +181,27 @@ Extent<double> CartBlock::createExtentFromCell(int cell_id) const
   return b;
 }
 
-int CartBlock::convert_ijk_ToCellId(int i,int j,int k) const
+inline int Parfait::CartBlock::convert_ijk_ToCellId(int i,int j,int k) const
 {
   int id = i + j*kx + k*kx*ky;
   return id;
 }
 
-void CartBlock::convertCellIdTo_ijk(int cell_id,int &i,int &j,int &k) const
+inline void Parfait::CartBlock::convertCellIdTo_ijk(int cell_id,int &i,int &j,int &k) const
 {
   k = cell_id / (kx*ky);
   j = (cell_id-k*kx*ky) / kx;
   i = cell_id - k*kx*ky - j*kx;
 }
 
-int CartBlock::convert_ijk_ToNodeId(int i,int j,int k) const
+inline int Parfait::CartBlock::convert_ijk_ToNodeId(int i,int j,int k) const
 {
   int nx = kx+1;
   int ny = ky+1;
   return i + j*nx + k*nx*ny;
 }
 
-void CartBlock::convertNodeIdTo_ijk(int node_id,int &i,int &j,int &k) const
+inline void Parfait::CartBlock::convertNodeIdTo_ijk(int node_id,int &i,int &j,int &k) const
 {
   int nx = kx+1;
   int ny = ky+1;

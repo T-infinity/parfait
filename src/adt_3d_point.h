@@ -67,4 +67,6 @@ namespace Parfait {
     };
 }
 
+#include "adt_3d_point.hpp"
+
 #endif
