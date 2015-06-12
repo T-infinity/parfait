@@ -1,5 +1,5 @@
 set(parfait_SRC
-    "adt_3d_extent.cpp"
+    "adt_3d_extent.hpp"
     "adt.h"
     "adt.hpp"
     "adt_builder.h"
@@ -79,13 +79,12 @@ set(parfait_SRC
     "vtk_extent_writer.cpp"
     "mapbc_reader.cpp"                      
     "vtk_hex_writer.cpp"
-    "message_passer_serial.cpp"
     "vtk_volume_writer.cpp")
 
 set(parfait_parallel_SRC
     "parallel_mesh_importer_distribute.cpp"
     "parallel_mesh_redistributor_ghost.cpp"
-    "message_passer.cpp"                    
+    "message_passer.hpp"
     )
 
 set(parfait_links
@@ -106,5 +105,5 @@ if(mpi_installed AND parmetis_installed)
     message("Parfait configured for parallel")
 endif()
 
-#add_library(parfait STATIC ${parfait_SRC})
-#target_link_libraries(parfait ${parfait_links})
+add_library(parfait STATIC ${parfait_SRC})
+target_link_libraries(parfait ${parfait_links})

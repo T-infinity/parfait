@@ -8,19 +8,18 @@ namespace MessagePasser
 	inline void Barrier() {}
 	
 	//-------------- point to point communication ---------------------
-	
-    void Send(double value,int source);
-    void Send(float value,int source);
-    void Send(int value,int source);
 
-    void Recv(double& value,int source);
-    void Recv(float& value,int source);
-    void Recv(int& value,int source);
-    
-	// recv a single value from any source
-	void Recv(double& value);
-	void Recv(float& value);
-	void Recv(int& value);
+	inline void Send(double value,int destination){}
+	inline void Send(float value,int destination){}
+	inline void Send(int value,int destination){}
+
+	inline void Recv(double &value,int source){}
+	inline void Recv(float &value,int source){}
+	inline void Recv(int &value,int source){}
+
+	inline void Recv(double &value){}
+	void Recv(float &value){}
+	void Recv(int &value){}
 
 	// send a vector (receiver knows length)
 	template<typename T>

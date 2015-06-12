@@ -162,7 +162,7 @@ namespace MessagePasser
 	#include "message_passer_scatters.hpp"
 	#include "message_passer_reductions.hpp"	
 }
-
+#include "message_passer.hpp"
 #include "message_passer_gathers.hpp"
 
 #else // define non-mpi dependent versions

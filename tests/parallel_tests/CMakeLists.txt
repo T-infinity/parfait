@@ -28,4 +28,4 @@ if(NOT ${PARFAIT_WITH_MPI})
 endif()
 
 add_executable(ParfaitParallelTests ${PARFAIT_PARALLEL_TESTS_SRC})
-#target_link_libraries(ParfaitParallelTests CppUTest)
+target_link_libraries(ParfaitParallelTests parfait CppUTest)

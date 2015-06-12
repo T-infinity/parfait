@@ -25,5 +25,6 @@ namespace Parfait {
         Adt<6> adt;
     };
 }
+#include "adt_3d_extent.hpp"
 
 #endif
