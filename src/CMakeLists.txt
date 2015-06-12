@@ -106,5 +106,5 @@ if(mpi_installed AND parmetis_installed)
     message("Parfait configured for parallel")
 endif()
 
-add_library(parfait STATIC ${parfait_SRC})
-target_link_libraries(parfait ${parfait_links})
+#add_library(parfait STATIC ${parfait_SRC})
+#target_link_libraries(parfait ${parfait_links})
