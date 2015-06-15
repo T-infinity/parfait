@@ -6,7 +6,6 @@ set(mpi_installed true)
 set(parmetis_installed true)
 set(vtk_installed true)
 
-
 if(mpi_installed AND parmetis_installed)
     add_definitions(
         -DPARFAIT_WITH_MPI 
@@ -14,6 +13,14 @@ if(mpi_installed AND parmetis_installed)
         -DCATCH_WITH_MPI)
     find_package(MPI)
     include_directories(${MPI_INCLUDE_PATH})
+endif()
+
+if(vtk_installed)
+    add_definitions(
+        -DPARFAIT_WITH_VTK
+    )
+    find_package(VTK REQUIRED)
+	include(${VTK_USE_FILE})
 endif()
 
 include_directories(

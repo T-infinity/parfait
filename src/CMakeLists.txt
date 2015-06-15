@@ -14,12 +14,11 @@ set(parfait_SRC
     "cart_mesh.hpp"
     "cell_to_cell.h"
     "checkpoint.h"
-    "parallel_mesh_redistributor.cpp"
-    "contiguous_matrix_multiplication.cpp"  
+    "parallel_mesh_redistributor.hpp"
     "extent.hpp"
     "edge_map.h"
     "extent_builder.h"
-    "parmetis_wrapper.cpp"
+    "parmetis_wrapper.hpp"
     "fun3d_mesh.hpp"
     "generic_cell.h"
     "generic_cell.hpp"
@@ -79,11 +78,9 @@ set(parfait_SRC
     "vtk_extent_writer.hpp"
     "mapbc_reader.hpp"
     "vtk_hex_writer.hpp"
-    "vtk_volume_writer.cpp")
+    )
 
 set(parfait_parallel_SRC
-    "parallel_mesh_importer_distribute.cpp"
-    "parallel_mesh_redistributor_ghost.cpp"
     "message_passer.hpp"
     )
 

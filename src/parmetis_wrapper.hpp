@@ -4,10 +4,9 @@
 
 #ifdef PARFAIT_WITH_PARMETIS
 
-#include "parmetis_wrapper.h"
 #include "message_passer.h"
 
-void PartitionMesh(int rank,int nproc,
+inline void PartitionMesh(int rank,int nproc,
 		int *proc_node_map,
 		int *ia,
 		int *ja,

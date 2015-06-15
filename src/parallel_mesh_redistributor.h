@@ -9,12 +9,10 @@
 #include "mapbc_reader.h"
 #include <vector>
 
-using std::vector;
-
-class ParallelMeshReDistributor
-{
-	public: 
-		ParallelMeshReDistributor(Parfait::ImportedUgrid &ugrid,vector<int> &gridNodeMap,vector<int> &part);
+namespace Parfait {
+	class ParallelMeshReDistributor {
+	public:
+		ParallelMeshReDistributor(Parfait::ImportedUgrid &ugrid, std::vector<int> &gridNodeMap, std::vector<int> &part);
 		void shuffleNodes();
 		void shuffleTriangles();
 		void shuffleQuads();
@@ -25,31 +23,33 @@ class ParallelMeshReDistributor
 		void identifyGhostNodes();
 		void shuffleGhostNodes();
 
-		Parfait::Fun3DMesh createFun3DMesh(vector<Parfait::MapbcReader> &mapbcVector);
+		Parfait::Fun3DMesh createFun3DMesh(std::vector<Parfait::MapbcReader> &mapbcVector);
 	private:
 		int nproc;
 		Parfait::ImportedUgrid &ugrid;
-		vector<int> part;
-		vector<int> nodeMap;
-		vector<int> gridNodeMap;
-		
-		vector<int> recvIds;
-		vector<int> ghostIds;
-		vector<double> recvNodes;
-		vector<int> recvTriangles;
-		vector<int> recvTriangleTags;
-		vector<int> recvQuads;
-		vector<int> recvQuadTags;
-		vector<int> recvTets;
-		vector<int> recvPyramids;
-		vector<int> recvPrisms;
-		vector<int> recvHexs;
-		vector<int> recvGhostIds;
-		vector<double> recvGhosts;
+		std::vector<int> part;
+		std::vector<int> nodeMap;
+		std::vector<int> gridNodeMap;
+
+		std::vector<int> recvIds;
+		std::vector<int> ghostIds;
+		std::vector<double> recvNodes;
+		std::vector<int> recvTriangles;
+		std::vector<int> recvTriangleTags;
+		std::vector<int> recvQuads;
+		std::vector<int> recvQuadTags;
+		std::vector<int> recvTets;
+		std::vector<int> recvPyramids;
+		std::vector<int> recvPrisms;
+		std::vector<int> recvHexs;
+		std::vector<int> recvGhostIds;
+		std::vector<double> recvGhosts;
 
 		int localId(int globalId);
 		int calcImesh(int localId);
-};
+	};
+}
+#include "parallel_mesh_redistributor.hpp"
 
 #endif
 #endif

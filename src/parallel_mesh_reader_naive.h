@@ -12,7 +12,6 @@ namespace Parfait {
     class ParallelMeshReaderNaive {
     public:
         ParallelMeshReaderNaive(std::vector<std::string> gridFiles, std::vector<bool> &isBigEndian);
-        ~ParallelMeshReaderNaive();
         ImportedUgrid distributeGridsEvenly();
         std::vector<int> getGridNodeMap();
         std::vector<int> getProcNodeMap();

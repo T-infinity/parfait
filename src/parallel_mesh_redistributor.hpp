@@ -3,18 +3,16 @@
 #include <algorithm>
 
 #ifdef PARFAIT_WITH_MPI
-using namespace Parfait;
-using namespace MessagePasser;
 
-ParallelMeshReDistributor::ParallelMeshReDistributor(ImportedUgrid &ugrid_in,vector<int> &gridNodeMap_in,
+inline Parfait::ParallelMeshReDistributor::ParallelMeshReDistributor(ImportedUgrid &ugrid_in,vector<int> &gridNodeMap_in,
 		vector<int> &part_in)
 	: ugrid(ugrid_in),
 	part(part_in),
 	gridNodeMap(gridNodeMap_in)
 {
-	nproc = NumberOfProcesses();
+	nproc = MessagePasser::NumberOfProcesses();
 	nodeMap.assign(nproc,0);
-	AllGather(ugrid.numberOfNodes(),nodeMap);
+	MessagePasser::AllGather(ugrid.numberOfNodes(),nodeMap);
 	nodeMap.insert(nodeMap.begin(),0);
 	for(int i=2;i<nodeMap.size();i++)
 		nodeMap[i] += nodeMap[i-1];
@@ -31,7 +29,7 @@ ParallelMeshReDistributor::ParallelMeshReDistributor(ImportedUgrid &ugrid_in,vec
 	shuffleGhostNodes();
 }
 
-void ParallelMeshReDistributor::shuffleNodes()
+inline void Parfait::ParallelMeshReDistributor::shuffleNodes()
 {
 	for(int proc:range(nproc))
 	{
@@ -47,19 +45,19 @@ void ParallelMeshReDistributor::shuffleNodes()
 		{
 			if(part[i] == proc)
 			{
-				sendIds.push_back(i+nodeMap[Rank()]);
+				sendIds.push_back(i+nodeMap[MessagePasser::Rank()]);
 				sendNodes.push_back(ugrid.nodes[3*i+0]);
 				sendNodes.push_back(ugrid.nodes[3*i+1]);
 				sendNodes.push_back(ugrid.nodes[3*i+2]);
-			}	
+			}
 		}
 		vector<int> tmpMap;
-		Gatherv(sendIds,recvIds,tmpMap,proc);
-		Gatherv(sendNodes,recvNodes,tmpMap,proc);
-	}	
+		MessagePasser::Gatherv(sendIds,recvIds,tmpMap,proc);
+		MessagePasser::Gatherv(sendNodes,recvNodes,tmpMap,proc);
+	}
 }
 
-void ParallelMeshReDistributor::shuffleTriangles()
+inline void Parfait::ParallelMeshReDistributor::shuffleTriangles()
 {
 	vector<int> sendTriangleIds;
 	sendTriangleIds.reserve(3*ugrid.triangles.size());
@@ -67,9 +65,9 @@ void ParallelMeshReDistributor::shuffleTriangles()
 	{
 		sendTriangleIds.clear();
 		vector<int> neededNodeIds;
-		if(Rank() == proc)
+		if(MessagePasser::Rank() == proc)
 			neededNodeIds = recvIds;
-		Broadcast(neededNodeIds,proc);
+		MessagePasser::Broadcast(neededNodeIds,proc);
 		// loop over triangles
 		for(int i=0;i<ugrid.triangles.size()/3;i++)
 		{
@@ -92,15 +90,15 @@ void ParallelMeshReDistributor::shuffleTriangles()
 		{
 			sendTriangleTags.push_back(ugrid.triangleTags[id]);
 			for(int j:range(3))
-				sendTriangles.push_back(ugrid.triangles[3*id+j]);	
+				sendTriangles.push_back(ugrid.triangles[3*id+j]);
 		}
 		vector<int> tmpMap;
-		Gatherv(sendTriangles,recvTriangles,tmpMap,proc);
-		Gatherv(sendTriangleTags,recvTriangleTags,tmpMap,proc);
+		MessagePasser::Gatherv(sendTriangles,recvTriangles,tmpMap,proc);
+		MessagePasser::Gatherv(sendTriangleTags,recvTriangleTags,tmpMap,proc);
 	}
 }
 
-void ParallelMeshReDistributor::shuffleQuads()
+inline void Parfait::ParallelMeshReDistributor::shuffleQuads()
 {
 	vector<int> sendQuadIds;
 	sendQuadIds.reserve(4*ugrid.quads.size());
@@ -108,9 +106,9 @@ void ParallelMeshReDistributor::shuffleQuads()
 	{
 		sendQuadIds.clear();
 		vector<int> neededNodeIds;
-		if(Rank() == proc)
+		if(MessagePasser::Rank() == proc)
 			neededNodeIds = recvIds;
-		Broadcast(neededNodeIds,proc);
+		MessagePasser::Broadcast(neededNodeIds,proc);
 		// loop over quads
 		for(int i=0;i<ugrid.quads.size()/4;i++)
 		{
@@ -133,15 +131,15 @@ void ParallelMeshReDistributor::shuffleQuads()
 		{
 			sendQuadTags.push_back(ugrid.quadTags[id]);
 			for(int j:range(4))
-				sendQuads.push_back(ugrid.quads[4*id+j]);	
+				sendQuads.push_back(ugrid.quads[4*id+j]);
 		}
 		vector<int> tmpMap;
-		Gatherv(sendQuads,recvQuads,tmpMap,proc);
-		Gatherv(sendQuadTags,recvQuadTags,tmpMap,proc);
+		MessagePasser::Gatherv(sendQuads,recvQuads,tmpMap,proc);
+		MessagePasser::Gatherv(sendQuadTags,recvQuadTags,tmpMap,proc);
 	}
 }
 
-void ParallelMeshReDistributor::shuffleTets()
+inline void Parfait::ParallelMeshReDistributor::shuffleTets()
 {
 	vector<int> sendTetIds;
 	sendTetIds.reserve(4*ugrid.tets.size());
@@ -149,9 +147,9 @@ void ParallelMeshReDistributor::shuffleTets()
 	{
 		sendTetIds.clear();
 		vector<int> neededNodeIds;
-		if(Rank() == proc)
+		if(MessagePasser::Rank() == proc)
 			neededNodeIds = recvIds;
-		Broadcast(neededNodeIds,proc);
+		MessagePasser::Broadcast(neededNodeIds,proc);
 		// loop over tets
 		for(int i=0;i<ugrid.tets.size()/4;i++)
 		{
@@ -170,13 +168,13 @@ void ParallelMeshReDistributor::shuffleTets()
 		sendTets.reserve(4*sendTetIds.size());
 		for(int id:sendTetIds)
 			for(int j:range(4))
-				sendTets.push_back(ugrid.tets[4*id+j]);	
+				sendTets.push_back(ugrid.tets[4*id+j]);
 		vector<int> tmpMap;
-		Gatherv(sendTets,recvTets,tmpMap,proc);
+		MessagePasser::Gatherv(sendTets,recvTets,tmpMap,proc);
 	}
 }
 
-void ParallelMeshReDistributor::shufflePyramids()
+inline void Parfait::ParallelMeshReDistributor::shufflePyramids()
 {
 	vector<int> sendPyramidIds;
 	sendPyramidIds.reserve(5*ugrid.pyramids.size());
@@ -184,9 +182,9 @@ void ParallelMeshReDistributor::shufflePyramids()
 	{
 		sendPyramidIds.clear();
 		vector<int> neededNodeIds;
-		if(Rank() == proc)
+		if(MessagePasser::Rank() == proc)
 			neededNodeIds = recvIds;
-		Broadcast(neededNodeIds,proc);
+		MessagePasser::Broadcast(neededNodeIds,proc);
 		// loop over pyramids
 		for(int i=0;i<ugrid.pyramids.size()/5;i++)
 		{
@@ -205,13 +203,13 @@ void ParallelMeshReDistributor::shufflePyramids()
 		sendPyramids.reserve(5*sendPyramidIds.size());
 		for(int id:sendPyramidIds)
 			for(int j:range(5))
-				sendPyramids.push_back(ugrid.pyramids[5*id+j]);	
+				sendPyramids.push_back(ugrid.pyramids[5*id+j]);
 		vector<int> tmpMap;
-		Gatherv(sendPyramids,recvPyramids,tmpMap,proc);
+		MessagePasser::Gatherv(sendPyramids,recvPyramids,tmpMap,proc);
 	}
 }
 
-void ParallelMeshReDistributor::shufflePrisms()
+inline void Parfait::ParallelMeshReDistributor::shufflePrisms()
 {
 	vector<int> sendPrismIds;
 	sendPrismIds.reserve(6*ugrid.prisms.size());
@@ -219,9 +217,9 @@ void ParallelMeshReDistributor::shufflePrisms()
 	{
 		sendPrismIds.clear();
 		vector<int> neededNodeIds;
-		if(Rank() == proc)
+		if(MessagePasser::Rank() == proc)
 			neededNodeIds = recvIds;
-		Broadcast(neededNodeIds,proc);
+		MessagePasser::Broadcast(neededNodeIds,proc);
 		// loop over prisms
 		for(int i=0;i<ugrid.prisms.size()/6;i++)
 		{
@@ -240,13 +238,13 @@ void ParallelMeshReDistributor::shufflePrisms()
 		sendPrisms.reserve(6*sendPrismIds.size());
 		for(int id:sendPrismIds)
 			for(int j:range(6))
-				sendPrisms.push_back(ugrid.prisms[6*id+j]);	
+				sendPrisms.push_back(ugrid.prisms[6*id+j]);
 		vector<int> tmpMap;
-		Gatherv(sendPrisms,recvPrisms,tmpMap,proc);
+		MessagePasser::Gatherv(sendPrisms,recvPrisms,tmpMap,proc);
 	}
 }
 
-void ParallelMeshReDistributor::shuffleHexs()
+inline void Parfait::ParallelMeshReDistributor::shuffleHexs()
 {
 	vector<int> sendHexIds;
 	sendHexIds.reserve(8*ugrid.hexs.size());
@@ -254,9 +252,9 @@ void ParallelMeshReDistributor::shuffleHexs()
 	{
 		sendHexIds.clear();
 		vector<int> neededNodeIds;
-		if(Rank() == proc)
+		if(MessagePasser::Rank() == proc)
 			neededNodeIds = recvIds;
-		Broadcast(neededNodeIds,proc);
+		MessagePasser::Broadcast(neededNodeIds,proc);
 		// loop over hexs
 		for(int i=0;i<ugrid.hexs.size()/8;i++)
 		{
@@ -275,13 +273,13 @@ void ParallelMeshReDistributor::shuffleHexs()
 		sendHexs.reserve(8*sendHexIds.size());
 		for(int id:sendHexIds)
 			for(int j:range(8))
-				sendHexs.push_back(ugrid.hexs[8*id+j]);	
+				sendHexs.push_back(ugrid.hexs[8*id+j]);
 		vector<int> tmpMap;
-		Gatherv(sendHexs,recvHexs,tmpMap,proc);
+		MessagePasser::Gatherv(sendHexs,recvHexs,tmpMap,proc);
 	}
 }
 
-int ParallelMeshReDistributor::localId(int globalId)
+inline int Parfait::ParallelMeshReDistributor::localId(int globalId)
 {
 	auto position = std::lower_bound(recvIds.begin(),recvIds.end(),globalId);
 	if(position == recvIds.end() or *position != globalId)
@@ -300,7 +298,7 @@ int ParallelMeshReDistributor::localId(int globalId)
 	}
 }
 
-Fun3DMesh ParallelMeshReDistributor::createFun3DMesh(vector<MapbcReader> &mapbcVector)
+inline Parfait::Fun3DMesh Parfait::ParallelMeshReDistributor::createFun3DMesh(vector<MapbcReader> &mapbcVector)
 {
 	// allocate space for Fun3D arrays
 	int nnodes0 = recvNodes.size()/3;
@@ -344,14 +342,14 @@ Fun3DMesh ParallelMeshReDistributor::createFun3DMesh(vector<MapbcReader> &mapbcV
 	assert(prisms != NULL);
 	int *hexs = (int*)malloc(8*nhexs*sizeof(int));
 	assert(hexs != NULL);
-	// copy nodes 
+	// copy nodes
 	for(int i:range(nnodes0))
 	{
 		x[i] = recvNodes[3*i+0];
 		y[i] = recvNodes[3*i+1];
 		z[i] = recvNodes[3*i+2];
 		globalNodeIds[i] = recvIds[i];
-		imesh[i] = calcImesh(globalNodeIds[i]);	
+		imesh[i] = calcImesh(globalNodeIds[i]);
 	}
 	// copy ghost nodes
 	for(int i:range(recvGhostIds))
@@ -403,13 +401,66 @@ Fun3DMesh ParallelMeshReDistributor::createFun3DMesh(vector<MapbcReader> &mapbcV
 	return funMesh;
 }
 
-int ParallelMeshReDistributor::calcImesh(int globalId)
+inline int Parfait::ParallelMeshReDistributor::calcImesh(int globalId)
 {
 	for(int i=1;i<gridNodeMap.size();i++)
 		if(globalId < gridNodeMap[i])
 			return i-1;
 	printf("globalId: %i, max: %i\n",globalId,gridNodeMap.size());
 	assert(false);
+}
+
+
+inline void Parfait::ParallelMeshReDistributor::identifyGhostNodes()
+{
+	for(int id:recvTets)
+		if(!std::binary_search(recvIds.begin(),recvIds.end(),id))
+			ghostIds.push_back(id);
+	for(int id:recvPyramids)
+		if(!std::binary_search(recvIds.begin(),recvIds.end(),id))
+			ghostIds.push_back(id);
+	for(int id:recvPrisms)
+		if(!std::binary_search(recvIds.begin(),recvIds.end(),id))
+			ghostIds.push_back(id);
+	for(int id:recvHexs)
+		if(!std::binary_search(recvIds.begin(),recvIds.end(),id))
+			ghostIds.push_back(id);
+
+	if(!std::is_sorted(recvIds.begin(),recvIds.end()))
+		abort();
+	// sort ghost ids and remove duplicates
+	std::sort(ghostIds.begin(),ghostIds.end());
+	ghostIds.erase(unique(ghostIds.begin(),ghostIds.end()),ghostIds.end());
+}
+
+inline void Parfait::ParallelMeshReDistributor::shuffleGhostNodes(){
+	for(int proc:range(nproc)){
+		vector<int> neededGhosts;
+		vector<int> sendGhostIds;
+		if(Rank() == proc)
+			neededGhosts = ghostIds;
+
+		// proc tells everyone what ghost nodes it needs
+		Broadcast(neededGhosts,proc);
+
+		// make a list of node ids that you have for proc
+		for(int i:range(neededGhosts))
+			if(neededGhosts[i] >= nodeMap[Rank()] && neededGhosts[i] < nodeMap[Rank()+1])
+				sendGhostIds.push_back(neededGhosts[i]);
+
+		// pack those nodes into a vector
+		vector<double> sendGhosts;
+		sendGhosts.reserve(3*sendGhostIds.size());
+		for(int id:sendGhostIds){
+			int index = id - nodeMap[Rank()];
+			sendGhosts.push_back(ugrid.nodes[3*index+0]);
+			sendGhosts.push_back(ugrid.nodes[3*index+1]);
+			sendGhosts.push_back(ugrid.nodes[3*index+2]);
+		}
+		vector<int> tmpMap;
+		Gatherv(sendGhostIds,recvGhostIds,tmpMap,proc);
+		Gatherv(sendGhosts,recvGhosts,tmpMap,proc);
+	}
 }
 
 #endif

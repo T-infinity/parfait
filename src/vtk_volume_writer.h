@@ -17,6 +17,10 @@
 #include <vtkCellData.h>
 #include <vtkPointData.h>
 #include <stdio.h>
+#include <vtkXMLUnstructuredGridWriter.h>
+#include <vtkXMLPUnstructuredGridWriter.h>
+#include "message_passer.h"
+
 class VtkVolumeWriter{
     public:
         template<typename MeshType>
