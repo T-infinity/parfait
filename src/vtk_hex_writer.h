@@ -23,4 +23,5 @@ namespace Parfait{
     };
 }
 
+#include "vtk_hex_writer.hpp"
 #endif

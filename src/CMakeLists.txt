@@ -10,7 +10,7 @@ set(parfait_SRC
     "motion_matrix.hpp"
     "byteswap.hpp"
     "cart_block.hpp"
-    "parallel_mesh_reader_naive.cpp"
+    "parallel_mesh_reader_naive.hpp"
     "cart_mesh.hpp"
     "cell_to_cell.h"
     "checkpoint.h"
@@ -40,7 +40,7 @@ set(parfait_SRC
     "message_passer_sends.hpp"
     "message_passer_status.h"
     "message_passer_wait.hpp"
-    "ugrid_reader.cpp"
+    "ugrid_reader.hpp"
     "node_to_cell.h"
     "node_to_node.h"
     "parmetis_prepper.h"
@@ -74,11 +74,11 @@ set(parfait_SRC
     "mesh_mover.h"
     "mesh_slice.h"
     "imported_ugrid.hpp"
-    "ugrid_writer.cpp"
+    "ugrid_writer.hpp"
     "kd_tree.cpp"                           
-    "vtk_extent_writer.cpp"
+    "vtk_extent_writer.hpp"
     "mapbc_reader.hpp"
-    "vtk_hex_writer.cpp"
+    "vtk_hex_writer.hpp"
     "vtk_volume_writer.cpp")
 
 set(parfait_parallel_SRC

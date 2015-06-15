@@ -73,4 +73,7 @@ namespace Parfait {
         double *nodes;
     };
 }
+
+#include "ugrid_writer.hpp"
+
 #endif

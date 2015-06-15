@@ -79,4 +79,7 @@ namespace Parfait {
                                               int begin, int end, bool swapBytes);
     }
 }
+
+#include "ugrid_reader.hpp"
+
 #endif

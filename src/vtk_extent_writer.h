@@ -26,4 +26,5 @@ namespace Parfait {
     };
 }
 
+#include "vtk_extent_writer.hpp"
 #endif

@@ -1,40 +1,38 @@
-#include "vtk_extent_writer.h"
-
 #include "point.h"
 
 #include <assert.h>
 
-using namespace Parfait;
+namespace Parfait {
+  inline void writePoints(FILE *f, std::vector<Extent<double>> &boxes);
+  inline void writeConnectivity(FILE *f, std::vector<Extent<double>> &boxes);
+  inline void writeOffsets(FILE *f, std::vector<Extent<double>> &boxes);
+  inline void writeTypes(FILE *f, std::vector<Extent<double>> &boxes);
+}
 
-void writePoints(FILE *f, std::vector<Extent<double>> &boxes);
-void writeConnectivity(FILE *f, std::vector<Extent<double>> &boxes);
-void writeOffsets(FILE *f, std::vector<Extent<double>> &boxes);
-void writeTypes(FILE *f, std::vector<Extent<double>> &boxes);
-
-VtkExtentWriter::VtkExtentWriter(std::string filename_i): filename(filename_i)
+inline Parfait::VtkExtentWriter::VtkExtentWriter(std::string filename_i): filename(filename_i)
 {
     filename += ".vtu";
 }
 
-void VtkExtentWriter::addExtent(const Extent<double> &b)
+inline void Parfait::VtkExtentWriter::addExtent(const Extent<double> &b)
 {
     boxes.push_back(b);
     tags.push_back(0);
 }
 
-void VtkExtentWriter::addExtent(const Extent<double> &b, int tag)
+inline void Parfait::VtkExtentWriter::addExtent(const Extent<double> &b, int tag)
 {
 
     boxes.push_back(b);
     tags.push_back(tag);
 }
 
-void VtkExtentWriter::writeFile()
+inline void Parfait::VtkExtentWriter::writeFile()
 {
-    VtkExtentWriter::writeExtents(filename, boxes, tags);
+    Parfait::VtkExtentWriter::writeExtents(filename, boxes, tags);
 }
 
-void VtkExtentWriter::writeExtents(std::string filename, std::vector<Extent<double>> &boxes, std::vector<int> &tags)
+inline void Parfait::VtkExtentWriter::writeExtents(std::string filename, std::vector<Extent<double>> &boxes, std::vector<int> &tags)
 {
     FILE *f = fopen(filename.c_str(),"w");
 
@@ -52,14 +50,14 @@ void VtkExtentWriter::writeExtents(std::string filename, std::vector<Extent<doub
     fclose(f);
 }
 
-void VtkExtentWriter::writeTags(FILE *f, std::vector<int> &tags)
+inline void Parfait::VtkExtentWriter::writeTags(FILE *f, std::vector<int> &tags)
 {
     uint32_t tags_length = sizeof(int)*tags.size();
     fwrite(&tags_length, sizeof(int), 1, f);
     fwrite(&tags[0], sizeof(int), tags.size(), f);
 }
 
-void writePoints(FILE *f, std::vector<Extent<double>> &boxes)
+inline void Parfait::writePoints(FILE *f, std::vector<Extent<double>> &boxes)
 {
     uint32_t points_length = 192*boxes.size();
     fwrite(&points_length, sizeof(int), 1, f);
@@ -88,7 +86,7 @@ void writePoints(FILE *f, std::vector<Extent<double>> &boxes)
     }
 }
 
-void writeConnectivity(FILE *f, std::vector<Extent<double>> &boxes)
+inline void Parfait::writeConnectivity(FILE *f, std::vector<Extent<double>> &boxes)
 {
     uint32_t connectivity_length = 8*sizeof(int64_t)*boxes.size();
     fwrite(&connectivity_length, sizeof(int), 1, f);
@@ -106,7 +104,7 @@ void writeConnectivity(FILE *f, std::vector<Extent<double>> &boxes)
 
 }
 
-void writeOffsets(FILE *f, std::vector<Extent<double>> &boxes)
+inline void Parfait::writeOffsets(FILE *f, std::vector<Extent<double>> &boxes)
 {
     uint32_t offset_length = sizeof(int64_t)*boxes.size();
     fwrite(&offset_length, sizeof(int), 1, f);
@@ -119,7 +117,7 @@ void writeOffsets(FILE *f, std::vector<Extent<double>> &boxes)
     }
 }
 
-void writeTypes(FILE *f, std::vector<Extent<double>> &boxes)
+inline void Parfait::writeTypes(FILE *f, std::vector<Extent<double>> &boxes)
 {
     uint32_t types_length = sizeof(int64_t)*boxes.size();
     fwrite(&types_length, sizeof(int), 1, f);
@@ -130,7 +128,7 @@ void writeTypes(FILE *f, std::vector<Extent<double>> &boxes)
     }
 }
 
-void VtkExtentWriter::writeHeader(FILE *f, int numExtentes)
+inline void Parfait::VtkExtentWriter::writeHeader(FILE *f, int numExtentes)
 {
     int point_offset = numExtentes*4 + 4;
     int connectivity_offset = point_offset + 3*8*numExtentes*sizeof(double) + 4;

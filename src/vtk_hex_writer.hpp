@@ -1,47 +1,46 @@
-#include "vtk_hex_writer.h"
 #include <assert.h>
 
-using namespace Parfait;
+namespace HexHelpers {
+  void writeHeader(FILE *f, int numBoxes);
+  void writeTags(FILE *f, std::vector<int> &tags);
+  void writePoints(FILE *f, std::vector<Hex> &boxes);
+  void writeConnectivity(FILE *f, std::vector<Hex> &boxes);
+  void writeOffsets(FILE *f, std::vector<Hex> &boxes);
+  void writeTypes(FILE *f, std::vector<Hex> &boxes);
+}
 
-void writeHeader(FILE *f, int numBoxes);
-void writeTags(FILE *f, std::vector<int> &tags);
-void writePoints(FILE *f, std::vector<Hex> &boxes);
-void writeConnectivity(FILE *f, std::vector<Hex> &boxes);
-void writeOffsets(FILE *f, std::vector<Hex> &boxes);
-void writeTypes(FILE *f, std::vector<Hex> &boxes);
-
-VtkHexWriter::VtkHexWriter(std::string filename_i)
+inline Parfait::VtkHexWriter::VtkHexWriter(std::string filename_i)
         : filename(filename_i) {
     filename += ".vtu";
 }
 
-void VtkHexWriter::addHex(Hex b) {
+inline void Parfait::VtkHexWriter::addHex(Hex b) {
     boxes.push_back(b);
     tags.push_back(0);
 }
 
-void VtkHexWriter::addHex(Hex b, int tag) {
+inline void Parfait::VtkHexWriter::addHex(Hex b, int tag) {
 
     boxes.push_back(b);
     tags.push_back(tag);
 }
 
-void VtkHexWriter::writeFile() {
-    VtkHexWriter::writeBoxes(filename, boxes, tags);
+inline void Parfait::VtkHexWriter::writeFile() {
+    Parfait::VtkHexWriter::writeBoxes(filename, boxes, tags);
 }
 
-void VtkHexWriter::writeBoxes(std::string filename,
+inline void Parfait::VtkHexWriter::writeBoxes(std::string filename,
                               std::vector<Hex> &boxes,
                               std::vector<int> &tags) {
     FILE *f = fopen(filename.c_str(),"w");
 
-    writeHeader(f, boxes.size());
+    HexHelpers::writeHeader(f, boxes.size());
 
-    writeTags(f, tags);
-    writePoints(f, boxes);
-    writeConnectivity(f, boxes);
-    writeOffsets(f, boxes);
-    writeTypes(f, boxes);
+    HexHelpers::writeTags(f, tags);
+    HexHelpers::writePoints(f, boxes);
+    HexHelpers::writeConnectivity(f, boxes);
+    HexHelpers::writeOffsets(f, boxes);
+    HexHelpers::writeTypes(f, boxes);
 
     fprintf(f,"\n</AppendedData>\n");
     fprintf(f,"\n</VTKFile>\n");
@@ -49,13 +48,13 @@ void VtkHexWriter::writeBoxes(std::string filename,
     fclose(f);
 }
 
-void writeTags(FILE *f, std::vector<int> &tags) {
+inline void HexHelpers::writeTags(FILE *f, std::vector<int> &tags) {
     uint32_t tags_length = sizeof(int)*tags.size();
     fwrite(&tags_length, sizeof(int), 1, f);
     fwrite(&tags[0], sizeof(int), tags.size(), f);
 }
 
-void writePoints(FILE *f, std::vector<Hex> &boxes) {
+inline void HexHelpers::writePoints(FILE *f, std::vector<Hex> &boxes) {
     //Print the points
     uint32_t points_length = 192*boxes.size();
     fwrite(&points_length, sizeof(int), 1, f);
@@ -68,7 +67,7 @@ void writePoints(FILE *f, std::vector<Hex> &boxes) {
     }
 }
 
-void writeConnectivity(FILE *f, std::vector<Hex> &boxes) {
+inline void HexHelpers::writeConnectivity(FILE *f, std::vector<Hex> &boxes) {
     uint32_t connectivity_length = 8*sizeof(int64_t)*boxes.size();
     fwrite(&connectivity_length, sizeof(int), 1, f);
 
@@ -82,7 +81,7 @@ void writeConnectivity(FILE *f, std::vector<Hex> &boxes) {
     }
 }
 
-void writeOffsets(FILE *f, std::vector<Hex> &boxes) {
+inline void HexHelpers::writeOffsets(FILE *f, std::vector<Hex> &boxes) {
     uint32_t offset_length = sizeof(int64_t)*boxes.size();
     fwrite(&offset_length, sizeof(int), 1, f);
 
@@ -93,7 +92,7 @@ void writeOffsets(FILE *f, std::vector<Hex> &boxes) {
     }
 }
 
-void writeTypes(FILE *f, std::vector<Hex> &boxes) {
+inline void HexHelpers::writeTypes(FILE *f, std::vector<Hex> &boxes) {
     uint32_t types_length = sizeof(int64_t)*boxes.size();
     fwrite(&types_length, sizeof(int), 1, f);
     int64_t type = 12;
@@ -102,7 +101,7 @@ void writeTypes(FILE *f, std::vector<Hex> &boxes) {
     }
 }
 
-void writeHeader(FILE *f, int numBoxes) {
+inline void HexHelpers::writeHeader(FILE *f, int numBoxes) {
     int point_offset = numBoxes*4 + 4;
     int connectivity_offset = point_offset + 3*8*numBoxes*sizeof(double) + 4;
     int offset_offset = connectivity_offset + 8*8*numBoxes + 4;

@@ -1,4 +1,3 @@
-#include "ugrid_writer.h"
 #include "byteswap.h"
 #include "message_passer.h"
 #include <stdexcept>
@@ -7,7 +6,7 @@
 using std::vector;
 using namespace Parfait;
 
-void UgridWriter::writeImportedUgrid(ImportedUgrid &ugrid, std::string filename, bool swapBytes)
+inline void UgridWriter::writeImportedUgrid(ImportedUgrid &ugrid, std::string filename, bool swapBytes)
 {
 	using namespace MessagePasser;
 	int numberOfNodes      = ParallelSum(ugrid.numberOfNodes(),0);
@@ -154,7 +153,7 @@ void UgridWriter::writeImportedUgrid(ImportedUgrid &ugrid, std::string filename,
 		Send(ugrid.hexs,0);
 }
 
-void UgridWriter::writeHeader(std::string filename,int nnodes,
+inline void UgridWriter::writeHeader(std::string filename,int nnodes,
         int ntri,int nquad,
         int ntet,int npyr,int nprism,int nhex,bool swapBytes)
 {
@@ -185,7 +184,7 @@ void UgridWriter::writeHeader(std::string filename,int nnodes,
     fclose(f);
 }
 
-void UgridWriter::writeNodes(std::string filename,int nnodes,double *nodes,bool swapBytes)
+inline void UgridWriter::writeNodes(std::string filename,int nnodes,double *nodes,bool swapBytes)
 {
 	FILE *f = fopen(filename.c_str(),"ab");
 	assert(f != NULL);
@@ -196,60 +195,60 @@ void UgridWriter::writeNodes(std::string filename,int nnodes,double *nodes,bool 
 	fclose(f);
 }
 
-void UgridWriter::writeTriangles(std::string filename,int ntriangles,int *triangles,bool swapBytes)
+inline void UgridWriter::writeTriangles(std::string filename,int ntriangles,int *triangles,bool swapBytes)
 {
 	vector<int> tris(3*ntriangles,0);
 	for(int i=0;i<3*ntriangles;i++) tris[i] = triangles[i]+1;
 	writeIntegerField(filename,3*ntriangles,tris.data(),swapBytes);
 }
 
-void UgridWriter::writeQuads(std::string filename,int nquads,int *quads,bool swapBytes)
+inline void UgridWriter::writeQuads(std::string filename,int nquads,int *quads,bool swapBytes)
 {
 	vector<int> newQuads(4*nquads,0);
 	for(int i=0;i<4*nquads;i++) newQuads[i] = quads[i]+1;
 	writeIntegerField(filename,4*nquads,newQuads.data(),swapBytes);
 }
 
-void UgridWriter::writeTets(std::string filename,int ntets,int *tets,bool swapBytes)
+inline void UgridWriter::writeTets(std::string filename,int ntets,int *tets,bool swapBytes)
 {
 	vector<int> newTets(4*ntets,0);
 	for(int i=0;i<4*ntets;i++) newTets[i] = tets[i]+1;
 	writeIntegerField(filename,4*ntets,newTets.data(),swapBytes);
 }
 
-void UgridWriter::writePyramids(std::string filename,int npyramids,int *pyramids,bool swapBytes)
+inline void UgridWriter::writePyramids(std::string filename,int npyramids,int *pyramids,bool swapBytes)
 {
 	vector<int> newPyramids(5*npyramids,0);
 	for(int i=0;i<5*npyramids;i++) newPyramids[i] = pyramids[i]+1;
 	writeIntegerField(filename,5*npyramids,newPyramids.data(),swapBytes);
 }
 
-void UgridWriter::writePrisms(std::string filename,int nprisms,int *prisms,bool swapBytes)
+inline void UgridWriter::writePrisms(std::string filename,int nprisms,int *prisms,bool swapBytes)
 {
 	vector<int> newPrisms(6*nprisms,0);
 	for(int i=0;i<6*nprisms;i++) newPrisms[i] = prisms[i]+1;
 	writeIntegerField(filename,6*nprisms,newPrisms.data(),swapBytes);
 }
 
-void UgridWriter::writeHexs(std::string filename,int nhexs,int *hexs,bool swapBytes)
+inline void UgridWriter::writeHexs(std::string filename,int nhexs,int *hexs,bool swapBytes)
 {
 	vector<int> newHexs(8*nhexs,0);
 	for(int i=0;i<8*nhexs;i++) newHexs[i] = hexs[i]+1;
 	writeIntegerField(filename,8*nhexs,newHexs.data(),swapBytes);
 }
 
-void UgridWriter::writeTriangleBoundaryTags(std::string filename,int ntriangles,int *triangleTags,bool swapBytes)
+inline void UgridWriter::writeTriangleBoundaryTags(std::string filename,int ntriangles,int *triangleTags,bool swapBytes)
 {
 	writeIntegerField(filename,ntriangles,triangleTags,swapBytes);
 }
 
-void UgridWriter::writeQuadBoundaryTags(std::string filename,int nquads,int *quadTags,bool swapBytes)
+inline void UgridWriter::writeQuadBoundaryTags(std::string filename,int nquads,int *quadTags,bool swapBytes)
 {
 	writeIntegerField(filename,nquads,quadTags,swapBytes);
 }
 
 
-void UgridWriter::writeIntegerField(std::string filename,int n,int *fieldData,bool swapBytes)
+inline void UgridWriter::writeIntegerField(std::string filename,int n,int *fieldData,bool swapBytes)
 {
 	FILE *f = fopen(filename.c_str(),"ab");
 	assert(f != NULL);
@@ -260,54 +259,54 @@ void UgridWriter::writeIntegerField(std::string filename,int n,int *fieldData,bo
 	fclose(f);
 }
 
-void UgridWriterFactory::setName(std::string fileNameBase) {
+inline void UgridWriterFactory::setName(std::string fileNameBase) {
     fileName = fileNameBase + ".ugrid";
 }
 
-void UgridWriterFactory::setNodes(double *nodes_in, int numberOfNodes_in) {
+inline void UgridWriterFactory::setNodes(double *nodes_in, int numberOfNodes_in) {
     nodes = nodes_in;
     numberOfNodes = numberOfNodes_in;
 }
 
-void UgridWriterFactory::setTets(int *tets_in, int numberOfTets_in) {
+inline void UgridWriterFactory::setTets(int *tets_in, int numberOfTets_in) {
     tets = tets_in;
     numberOfTets = numberOfTets_in;
 }
 
-void UgridWriterFactory::setHexes(int *hexes_in, int numberOfHexes_in) {
+inline void UgridWriterFactory::setHexes(int *hexes_in, int numberOfHexes_in) {
     hexes = hexes_in;
     numberOfHexes = numberOfHexes_in;
 }
 
-void UgridWriterFactory::setPyramids(int *pyramids_in, int numberOfPyramids_in) {
+inline void UgridWriterFactory::setPyramids(int *pyramids_in, int numberOfPyramids_in) {
     pyramids = pyramids_in;
     numberOfPyramids = numberOfPyramids_in;
 }
 
-void UgridWriterFactory::setPrisms(int *prisms_in, int numberOfPrisms_in) {
+inline void UgridWriterFactory::setPrisms(int *prisms_in, int numberOfPrisms_in) {
     prisms = prisms_in;
     numberOfPrisms = numberOfPrisms_in;
 }
 
-void UgridWriterFactory::setTriangles(int *triangles_in, int numberOfTriangles_in) {
+inline void UgridWriterFactory::setTriangles(int *triangles_in, int numberOfTriangles_in) {
     triangles = triangles_in;
     numberOfTriangles = numberOfTriangles_in;
 }
 
-void UgridWriterFactory::setQuads(int *quads_in, int numberOfQuads_in) {
+inline void UgridWriterFactory::setQuads(int *quads_in, int numberOfQuads_in) {
     quads = quads_in;
     numberOfQuads = numberOfQuads_in;
 }
 
-void UgridWriterFactory::setTriangleTags(int *triangleTags_in) {
+inline void UgridWriterFactory::setTriangleTags(int *triangleTags_in) {
     triangleTags = triangleTags_in;
 }
 
-void UgridWriterFactory::setQuadTags(int *quadTags_in) {
+inline void UgridWriterFactory::setQuadTags(int *quadTags_in) {
     quadTags = quadTags_in;
 }
 
-void UgridWriterFactory::writeFile() {
+inline void UgridWriterFactory::writeFile() {
 
     UgridWriter::writeHeader(fileName,
             numberOfNodes,

@@ -1,4 +1,3 @@
-#include "parallel_mesh_reader_naive.h"
 #include "range_loop.h"
 #include <stdio.h>
 #include <vector>
@@ -6,7 +5,7 @@ using namespace Parfait;
 using namespace UgridReader;
 using namespace MessagePasser;
 
-ParallelMeshReaderNaive::ParallelMeshReaderNaive(std::vector<std::string> gridFiles_in,
+inline ParallelMeshReaderNaive::ParallelMeshReaderNaive(std::vector<std::string> gridFiles_in,
 																								 std::vector<bool> &isBigEndian_in)
 	:isBigEndian(isBigEndian_in)
 {
@@ -64,22 +63,21 @@ ParallelMeshReaderNaive::ParallelMeshReaderNaive(std::vector<std::string> gridFi
 	distributeUgrid();
 }
 
-ParallelMeshReaderNaive::~ParallelMeshReaderNaive()
+inline ParallelMeshReaderNaive::~ParallelMeshReaderNaive()
 {
 }
 
-std::vector<int> ParallelMeshReaderNaive::getGridNodeMap()
+inline std::vector<int> ParallelMeshReaderNaive::getGridNodeMap()
 {
 	return gridNodeMap;
 }
 
-std::vector<int> ParallelMeshReaderNaive::getProcNodeMap()
+inline std::vector<int> ParallelMeshReaderNaive::getProcNodeMap()
 {
 	return procCellMap;
 }
 
-std::vector<int> ParallelMeshReaderNaive::getProcCellMap()
-{
+inline std::vector<int> ParallelMeshReaderNaive::getProcCellMap(){
 	std::vector<int> procCellMap;
 	int ncells = myTets.size()/4 + myPyramids.size()/5 + myPrisms.size()/6 + myHexs.size()/8;
 	AllGather(ncells,procCellMap);
@@ -89,7 +87,7 @@ std::vector<int> ParallelMeshReaderNaive::getProcCellMap()
 	return procCellMap;
 }
 
-void ParallelMeshReaderNaive::distributeUgrid()
+inline void ParallelMeshReaderNaive::distributeUgrid()
 {
 	if(0 == Rank())
 		buildDistributionMaps();
@@ -115,8 +113,7 @@ void ParallelMeshReaderNaive::distributeUgrid()
 		printf("Done Distributing ...\n");
 }
 
-void ParallelMeshReaderNaive::buildDistributionMaps()
-{
+inline void ParallelMeshReaderNaive::buildDistributionMaps() {
 	// count up the total number of nodes/elements in all component grids
 	int totalNodes=0,totalTriangles=0,totalQuads=0,totalTets=0,
 		totalPyramids=0,totalPrisms=0,totalHexs=0;
@@ -187,8 +184,7 @@ void ParallelMeshReaderNaive::buildDistributionMaps()
 	}
 }
 
-ImportedUgrid ParallelMeshReaderNaive::distributeGridsEvenly()
-{
+inline ImportedUgrid ParallelMeshReaderNaive::distributeGridsEvenly(){
 	ImportedUgrid ugrid(myNodes,myTriangles,myQuads,myTets,
 			myPyramids,myPrisms,myHexs,myTriangleTags,myQuadTags,
 			myTriangleTags,myQuadTags);

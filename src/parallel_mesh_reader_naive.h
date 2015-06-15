@@ -73,4 +73,6 @@ namespace Parfait {
     };
 }
 
+#include "parallel_mesh_reader_naive.hpp"
+
 #endif
