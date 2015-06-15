@@ -3,10 +3,10 @@
 namespace HexHelpers {
   void writeHeader(FILE *f, int numBoxes);
   void writeTags(FILE *f, std::vector<int> &tags);
-  void writePoints(FILE *f, std::vector<Hex> &boxes);
-  void writeConnectivity(FILE *f, std::vector<Hex> &boxes);
-  void writeOffsets(FILE *f, std::vector<Hex> &boxes);
-  void writeTypes(FILE *f, std::vector<Hex> &boxes);
+  void writePoints(FILE *f, std::vector<Parfait::Hex> &boxes);
+  void writeConnectivity(FILE *f, std::vector<Parfait::Hex> &boxes);
+  void writeOffsets(FILE *f, std::vector<Parfait::Hex> &boxes);
+  void writeTypes(FILE *f, std::vector<Parfait::Hex> &boxes);
 }
 
 inline Parfait::VtkHexWriter::VtkHexWriter(std::string filename_i)
@@ -30,7 +30,7 @@ inline void Parfait::VtkHexWriter::writeFile() {
 }
 
 inline void Parfait::VtkHexWriter::writeBoxes(std::string filename,
-                              std::vector<Hex> &boxes,
+                              std::vector<Parfait::Hex> &boxes,
                               std::vector<int> &tags) {
     FILE *f = fopen(filename.c_str(),"w");
 
@@ -54,7 +54,7 @@ inline void HexHelpers::writeTags(FILE *f, std::vector<int> &tags) {
     fwrite(&tags[0], sizeof(int), tags.size(), f);
 }
 
-inline void HexHelpers::writePoints(FILE *f, std::vector<Hex> &boxes) {
+inline void HexHelpers::writePoints(FILE *f, std::vector<Parfait::Hex> &boxes) {
     //Print the points
     uint32_t points_length = 192*boxes.size();
     fwrite(&points_length, sizeof(int), 1, f);
@@ -67,7 +67,7 @@ inline void HexHelpers::writePoints(FILE *f, std::vector<Hex> &boxes) {
     }
 }
 
-inline void HexHelpers::writeConnectivity(FILE *f, std::vector<Hex> &boxes) {
+inline void HexHelpers::writeConnectivity(FILE *f, std::vector<Parfait::Hex> &boxes) {
     uint32_t connectivity_length = 8*sizeof(int64_t)*boxes.size();
     fwrite(&connectivity_length, sizeof(int), 1, f);
 
@@ -81,7 +81,7 @@ inline void HexHelpers::writeConnectivity(FILE *f, std::vector<Hex> &boxes) {
     }
 }
 
-inline void HexHelpers::writeOffsets(FILE *f, std::vector<Hex> &boxes) {
+inline void HexHelpers::writeOffsets(FILE *f, std::vector<Parfait::Hex> &boxes) {
     uint32_t offset_length = sizeof(int64_t)*boxes.size();
     fwrite(&offset_length, sizeof(int), 1, f);
 
@@ -92,7 +92,7 @@ inline void HexHelpers::writeOffsets(FILE *f, std::vector<Hex> &boxes) {
     }
 }
 
-inline void HexHelpers::writeTypes(FILE *f, std::vector<Hex> &boxes) {
+inline void HexHelpers::writeTypes(FILE *f, std::vector<Parfait::Hex> &boxes) {
     uint32_t types_length = sizeof(int64_t)*boxes.size();
     fwrite(&types_length, sizeof(int), 1, f);
     int64_t type = 12;
