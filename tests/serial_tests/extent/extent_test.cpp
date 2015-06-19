@@ -90,6 +90,18 @@ TEST(Extent, Length)
     DOUBLES_EQUAL(1, e.hi[2], tol);
 }
 
+TEST(Extent,resize){
+    Extent<double> e{{0,0,0},{1,1,1}};
+    e.resize(2,4,8);
+
+    DOUBLES_EQUAL(-.5,e.lo[0],tol);
+    DOUBLES_EQUAL(-1.5,e.lo[1],tol);
+    DOUBLES_EQUAL(-3.5,e.lo[2],tol);
+    DOUBLES_EQUAL(1.5,e.hi[0],tol);
+    DOUBLES_EQUAL(2.5,e.hi[1],tol);
+    DOUBLES_EQUAL(4.5,e.hi[2],tol);
+}
+
 TEST(Extent,makeIsotropic){
     Extent<double> e{{0,0,0},{2,1,1}};
     e.makeIsotropic();
