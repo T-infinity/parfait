@@ -1,5 +1,5 @@
 set(SRC
-    "timing.cpp"
+    "timing.hpp"
     "parfait_checkpoint.cpp"
     )
 

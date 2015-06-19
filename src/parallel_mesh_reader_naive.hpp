@@ -44,7 +44,7 @@ inline Parfait::ParallelMeshReaderNaive::ParallelMeshReaderNaive(std::vector<std
     gridHexMap[i] += gridHexMap[i - 1];
   }
   if (MessagePasser::Rank() == 0) {
-    printf("Composite domain has:\n");
+    printf("Composite rootDomain has:\n");
     printf("--nnodes        %i\n", gridNodeMap.back());
     printf("--triangles     %i\n", gridTriangleMap.back());
     printf("--quads         %i\n", gridQuadMap.back());

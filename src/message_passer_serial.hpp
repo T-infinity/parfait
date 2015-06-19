@@ -18,8 +18,8 @@ namespace MessagePasser
 	inline void Recv(int &value,int source){}
 
 	inline void Recv(double &value){}
-	void Recv(float &value){}
-	void Recv(int &value){}
+	inline void Recv(float &value){}
+	inline void Recv(int &value){}
 
 	// send a vector (receiver knows length)
 	template<typename T>

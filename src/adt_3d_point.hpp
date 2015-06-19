@@ -8,7 +8,7 @@ inline void Parfait::Adt3DPoint::store(int Id, const Parfait::Point<double> &poi
     auto storePoint = unitTransformer.ToUnitSpace(point);
     for(int i = 0; i < 3; i++){
         if(storePoint[i] < 0 or storePoint[i] > 1.0)
-            throw std::logic_error("Cannot store points in ADT which are outside the ADT domain.");
+            throw std::logic_error("Cannot store points in ADT which are outside the ADT rootDomain.");
     }
     adt.store(Id,storePoint.data());
 }

@@ -127,8 +127,8 @@ TEST(Adt, CornerCaseStoreMinus10){
 TEST(Adt, copyable){
     Adt adt(ADT_3D_POINT);
 
-    double domain[6] = {0,0,0,0,0,0};
-    adt.store(-10, domain);
+    double rootDomain[6] = {0,0,0,0,0,0};
+    adt.store(-10, rootDomain);
 
     Adt adt2 = adt;
     double extent[6] = {0,0,0,1,1,1};
