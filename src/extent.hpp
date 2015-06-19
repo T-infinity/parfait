@@ -86,7 +86,7 @@ namespace Parfait {
 
   template <typename T>
   void Extent<T>::resize(double scaleX, double scaleY, double scaleZ) {
-    double dx = 0.5 * scaleZ * getLength_X();
+    double dx = 0.5 * scaleX * getLength_X();
     double dy = 0.5 * scaleY * getLength_Y();
     double dz = 0.5 * scaleZ * getLength_Z();
     Point<T> centroid = center();
@@ -97,6 +97,16 @@ namespace Parfait {
     hi[0] = centroid[0] + dx;
     hi[1] = centroid[1] + dy;
     hi[2] = centroid[2] + dz;
+  }
+
+  template<typename T>
+  void Extent<T>::makeIsotropic() {
+    T x = getLength_X();
+    T y = getLength_Y();
+    T z = getLength_Z();
+    T largest = std::max(x,y);
+    largest = std::max(largest,z);
+    resize(largest/x,largest/y,largest/z);
   }
 
   template <typename T>

@@ -7,6 +7,7 @@ using namespace Parfait;
 TEST_GROUP(Extent){
 
 };
+double tol = 1.0e-14;
 
 TEST(Extent, Constructor){
 
@@ -37,7 +38,6 @@ TEST(Extent, PointerConstructors){
     double d_hi[3] = {1.1,1.1,1.1};
 
     Extent<double> d_extent(d_lo, d_hi);
-    double tol = 1.0e-14;
     DOUBLES_EQUAL(0.1, d_extent.lo[0], tol);
     DOUBLES_EQUAL(0.1, d_extent.lo[1], tol);
     DOUBLES_EQUAL(0.1, d_extent.lo[2], tol);
@@ -81,7 +81,6 @@ TEST(Extent, containsExtent){
 TEST(Extent, Length)
 {
     Extent<double> e({0,0,0}, {1,1,1});
-    double tol = 1.0e-14;
     DOUBLES_EQUAL(0, e.lo[0], tol);
     DOUBLES_EQUAL(0, e.lo[1], tol);
     DOUBLES_EQUAL(0, e.lo[2], tol);
@@ -89,5 +88,16 @@ TEST(Extent, Length)
     DOUBLES_EQUAL(1, e.hi[0], tol);
     DOUBLES_EQUAL(1, e.hi[1], tol);
     DOUBLES_EQUAL(1, e.hi[2], tol);
+}
+
+TEST(Extent,makeIsotropic){
+    Extent<double> e{{0,0,0},{2,1,1}};
+    e.makeIsotropic();
+    DOUBLES_EQUAL(0, e.lo[0],tol);
+    DOUBLES_EQUAL(-.5, e.lo[1],tol);
+    DOUBLES_EQUAL(-.5, e.lo[2],tol);
+    DOUBLES_EQUAL(2, e.hi[0],tol);
+    DOUBLES_EQUAL(1.5, e.hi[1],tol);
+    DOUBLES_EQUAL(1.5, e.hi[2],tol);
 }
 

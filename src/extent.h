@@ -26,6 +26,8 @@ namespace Parfait {
     void resize(double scale);
     void resize(double scaleX, double scaleY, double scaleZ);
 
+    void makeIsotropic();
+
     void Print() const;
 
     static Extent extentAroundPoint(const Point<T> &p, T tol);
