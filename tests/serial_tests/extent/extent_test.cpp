@@ -103,7 +103,7 @@ TEST(Extent,resize){
 }
 
 TEST(Extent,makeIsotropic){
-    Extent<double> e{{0,0,0},{2,1,1}};
+    Extent<double> e{{0,0,0},{2,1,0}};
     e.makeIsotropic();
     DOUBLES_EQUAL(0, e.lo[0],tol);
     DOUBLES_EQUAL(-.5, e.lo[1],tol);

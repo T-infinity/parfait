@@ -106,7 +106,10 @@ namespace Parfait {
     T z = getLength_Z();
     T largest = std::max(x,y);
     largest = std::max(largest,z);
-    resize(largest/x,largest/y,largest/z);
+    largest /= 2;
+    auto c = center();
+    lo = c - Point<T>{largest, largest, largest};
+    hi = c + Point<T>{largest, largest, largest};
   }
 
   template <typename T>
