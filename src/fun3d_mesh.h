@@ -13,7 +13,6 @@
 // It specifically provides an interface for native Fun3D data
 // ------------------------------------------------------------
 
-using std::vector;
 namespace Parfait { ;
 
     class Fun3DMesh {
@@ -26,15 +25,15 @@ namespace Parfait { ;
         int numberOfNodesInCell(int id) const;
         int numberOfFacesInCell(int id) const;
         int numberOfNodesInCellFace(int cellId, int faceId) const;
-        vector<int> getNodesInCellFace(int cellId, int faceId) const;
-        vector<int> getVtkOrderedNodesInCell(int cellId) const;
+        std::vector<int> getNodesInCellFace(int cellId, int faceId) const;
+        std::vector<int> getVtkOrderedNodesInCell(int cellId) const;
         void getNodesInCell(int cellId, int cell[]) const;
-        vector<int> getNodesInCell(int cellId) const;
+        std::vector<int> getNodesInCell(int cellId) const;
 
         // Any Generic Surface mesh must implement the following
         int numberOfBoundaryFaces() const;
         int numberOfNodesInBoundaryFace(int boundaryFaceId) const;
-        vector<int> getNodesInBoundaryFace(int boundaryFaceId) const;
+        std::vector<int> getNodesInBoundaryFace(int boundaryFaceId) const;
         void getNodesInBoundaryFace(int boundaryFaceId, int *face) const;
 
 

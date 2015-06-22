@@ -2,8 +2,6 @@
 #define PARMETIS_PREPPER_H
 #include <vector>
 
-using std::vector;
-
 template<class MeshType>
 class ParMetisPrepper
 {
@@ -11,12 +9,12 @@ class ParMetisPrepper
 		ParMetisPrepper(MeshType& mesh_in)  : mesh(mesh_in){}
 		void buildNodeToNodeConnectivity();
 		void buildCellToCellConnectivity();
-		vector<int> getPartVector();
+		std::vector<int> getPartVector();
 	private:
 		ParMetisPrepper();
 		MeshType& mesh;
-		vector<int> procNodeMap;
-		vector<vector<int> > connectivity;
+		std::vector<int> procNodeMap;
+		std::vector<std::vector<int> > connectivity;
 
 };
 

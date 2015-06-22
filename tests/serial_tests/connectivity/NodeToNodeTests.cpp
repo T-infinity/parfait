@@ -12,8 +12,8 @@ TEST(NodeToNodeTests,Exists)
     printf("%s\n",SIX_CELL_TEST_GRID);
 	ImportedUgrid ugrid = ImportedUgridFactory::readUgrid(SIX_CELL_TEST_GRID);
 
-	vector<int> nodeList = buildUniqueNodeList(ugrid);
-	vector<vector<int> > n2n = buildNodeToNode(ugrid,nodeList);
+	auto nodeList = buildUniqueNodeList(ugrid);
+	auto n2n = buildNodeToNode(ugrid,nodeList);
 
 	for(int i:range(nodeList))
 		LONGS_EQUAL(i,nodeList[i]);

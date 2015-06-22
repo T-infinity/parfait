@@ -1,6 +1,5 @@
 #include "message_passer.h"
 #include "range_loop.h"
-using std::vector;
 using namespace MessagePasser;
 namespace Parfait {
     template<typename Mesh>
@@ -12,7 +11,7 @@ namespace Parfait {
     }
 
     template<class Mesh>
-    void VtkSurfaceWriter<Mesh>::addScalarField(bool isNodeData, string fieldName, int *data) {
+    void VtkSurfaceWriter<Mesh>::addScalarField(bool isNodeData, std::string fieldName, int *data) {
         int n = isNodeData ? mesh.numberOfNodes() : mesh.numberOfBoundaryFaces();
         if (Rank() == 0) {
             //printf("Adding integer field of length %i\n",n);
@@ -21,21 +20,21 @@ namespace Parfait {
     }
 
     template<class Mesh>
-    void VtkSurfaceWriter<Mesh>::addScalarField(bool isNodeData, string fieldName, float *data) {
+    void VtkSurfaceWriter<Mesh>::addScalarField(bool isNodeData, std::string fieldName, float *data) {
         int n = isNodeData ? mesh.numberOfNodes() : mesh.numberOfBoundaryFaces();
         floatFields.push_back(
                 VtkField<float>(isNodeData, fieldName, 1, n, data, boundaryNodeIdMap));
     }
 
     template<class Mesh>
-    void VtkSurfaceWriter<Mesh>::addScalarField(bool isNodeData, string fieldName, double *data) {
+    void VtkSurfaceWriter<Mesh>::addScalarField(bool isNodeData, std::string fieldName, double *data) {
         int n = isNodeData ? mesh.numberOfNodes() : mesh.numberOfBoundaryFaces();
         doubleFields.push_back(
                 VtkField<double>(isNodeData, fieldName, 1, n, data, boundaryNodeIdMap));
     }
 
     template<class Mesh>
-    void VtkSurfaceWriter<Mesh>::addVectorField(bool isNodeData, string fieldName, int blockSize,
+    void VtkSurfaceWriter<Mesh>::addVectorField(bool isNodeData, std::string fieldName, int blockSize,
                                                 int *data) {
         int n = isNodeData ? mesh.numberOfNodes() : mesh.numberOfBoundaryFaces();
         intFields.push_back(
@@ -43,7 +42,7 @@ namespace Parfait {
     }
 
     template<class Mesh>
-    void VtkSurfaceWriter<Mesh>::addVectorField(bool isNodeData, string fieldName, int blockSize,
+    void VtkSurfaceWriter<Mesh>::addVectorField(bool isNodeData, std::string fieldName, int blockSize,
                                                 float *data) {
         int n = isNodeData ? mesh.numberOfNodes() : mesh.numberOfBoundaryFaces();
         floatFields.push_back(
@@ -51,7 +50,7 @@ namespace Parfait {
     }
 
     template<class Mesh>
-    void VtkSurfaceWriter<Mesh>::addVectorField(bool isNodeData, string fieldName, int blockSize,
+    void VtkSurfaceWriter<Mesh>::addVectorField(bool isNodeData, std::string fieldName, int blockSize,
                                                 double *data) {
         int n = isNodeData ? mesh.numberOfNodes() : mesh.numberOfBoundaryFaces();
         doubleFields.push_back(
@@ -83,7 +82,7 @@ namespace Parfait {
     template<typename Mesh>
     void VtkSurfaceWriter<Mesh>::setUpLocalLists() {
         int nfaces = mesh.numberOfBoundaryFaces();
-        vector<bool> isBoundNode(mesh.numberOfNodes(), false);
+        std::vector<bool> isBoundNode(mesh.numberOfNodes(), false);
         // loop over boundary faces and set their nodes to true
         for (int i:range(nfaces)) {
             auto face = mesh.getNodesInBoundaryFace(i);

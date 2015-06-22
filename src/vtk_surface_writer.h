@@ -5,30 +5,29 @@
 #include <assert.h>
 #include "vtk_field.h"
 
-using std::vector;
-using std::string;
+
 namespace Parfait {
     template<typename Mesh>
     class VtkSurfaceWriter {
     public:
-        VtkSurfaceWriter(Mesh &mesh, string name);
+        VtkSurfaceWriter(Mesh &mesh, std::string name);
         void writeAscii();
 
-        void addScalarField(bool isNodeData, string fieldName, int *data);
-        void addScalarField(bool isNodeData, string fieldName, float *data);
-        void addScalarField(bool isNodeData, string fieldName, double *data);
-        void addVectorField(bool isNodeData, string fieldName, int blockSize, int *data);
-        void addVectorField(bool isNodeData, string fieldName, int blockSize, float *data);
-        void addVectorField(bool isNodeData, string fieldName, int blockSize, double *data);
+        void addScalarField(bool isNodeData, std::string fieldName, int *data);
+        void addScalarField(bool isNodeData, std::string fieldName, float *data);
+        void addScalarField(bool isNodeData, std::string fieldName, double *data);
+        void addVectorField(bool isNodeData, std::string fieldName, int blockSize, int *data);
+        void addVectorField(bool isNodeData, std::string fieldName, int blockSize, float *data);
+        void addVectorField(bool isNodeData, std::string fieldName, int blockSize, double *data);
 
     private:
         std::string filename;
         Mesh &mesh;
         int numberOfSurfaceNodes;
-        vector<int> boundaryNodeIdMap;
-        vector<VtkField<int> > intFields;
-        vector<VtkField<float> > floatFields;
-        vector<VtkField<double> > doubleFields;
+        std::vector<int> boundaryNodeIdMap;
+        std::vector<VtkField<int> > intFields;
+        std::vector<VtkField<float> > floatFields;
+        std::vector<VtkField<double> > doubleFields;
 
         void setUpLocalLists();
         void writeHeader();

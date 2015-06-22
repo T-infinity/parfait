@@ -10,41 +10,39 @@
 #include "extent.h"
 #include "mesh_slice.h"
 
-using std::string;
-using std::vector;
 namespace Parfait {
     template<class MeshType>
     class VtkSliceWriter {
     public:
-        VtkSliceWriter(MeshType &mesh, const Extent<double> &domain, string vtkFilename);
+        VtkSliceWriter(MeshType &mesh, const Extent<double> &domain, std::string vtkFilename);
         void writeAscii();
-        void addScalarField(bool isNodeData, string fieldName, int *data);
-        void addScalarField(bool isNodeData, string fieldName, float *data);
-        void addScalarField(bool isNodeData, string fieldName, double *data);
-        void addVectorField(bool isNodeData, string fieldName, int blockSize,
+        void addScalarField(bool isNodeData, std::string fieldName, int *data);
+        void addScalarField(bool isNodeData, std::string fieldName, float *data);
+        void addScalarField(bool isNodeData, std::string fieldName, double *data);
+        void addVectorField(bool isNodeData, std::string fieldName, int blockSize,
                             int *data);
-        void addVectorField(bool isNodeData, string fieldName, int blockSize,
+        void addVectorField(bool isNodeData, std::string fieldName, int blockSize,
                             float *data);
-        void addVectorField(bool isNodeData, string fieldName, int blockSize,
+        void addVectorField(bool isNodeData, std::string fieldName, int blockSize,
                             double *data);
 
     private:
         MeshSlice<MeshType> slice;
         Extent<double> domain;
-        vector<vector<int>> intFields;
-        vector<vector<float>> floatFields;
-        vector<vector<double>> doubleFields;
+        std::vector<std::vector<int>> intFields;
+        std::vector<std::vector<float>> floatFields;
+        std::vector<std::vector<double>> doubleFields;
 
         std::string filename;
         VtkWriter<MeshSlice<MeshType>> writer;
-        void addNodeData_int(int *data, string fieldName, int blocksize);
-        void addCellData_int(int *data, string fieldName, int blocksize);
+        void addNodeData_int(int *data, std::string fieldName, int blocksize);
+        void addCellData_int(int *data, std::string fieldName, int blocksize);
 
-        void addNodeData_float(float *data, string fieldName, int blocksize);
-        void addCellData_float(float *data, string fieldName, int blocksize);
+        void addNodeData_float(float *data, std::string fieldName, int blocksize);
+        void addCellData_float(float *data, std::string fieldName, int blocksize);
 
-        void addNodeData_double(double *data, string fieldName, int blocksize);
-        void addCellData_double(double *data, string fieldName, int blocksize);
+        void addNodeData_double(double *data, std::string fieldName, int blocksize);
+        void addCellData_double(double *data, std::string fieldName, int blocksize);
     };
 }
 

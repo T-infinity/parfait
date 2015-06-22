@@ -15,9 +15,6 @@
 
 #include <string>
 
-using std::vector;
-using std::string;
-
 namespace Parfait {
     template<typename T>
     bool facesMatch(T faceOne, T faceTwo) {
@@ -84,7 +81,7 @@ std::vector<std::vector<int>> buildNodeToCell(MeshType &mesh_i){
     std::vector<std::vector<int>> buildCellToCell_NoAdt(T &meshInterface) {
         Mesh<T> mesh(meshInterface);
 
-        vector<vector<int> > c2c;
+        std::vector<std::vector<int> > c2c;
         c2c.resize(mesh.numberOfCells());
         printf("Building node2cell....\n");
         fflush(stdout);
@@ -122,12 +119,12 @@ std::vector<std::vector<int>> buildNodeToCell(MeshType &mesh_i){
     }
 
     template<typename T>
-    vector<vector<int> > buildCellToCell(T &meshInterface) {
+    std::vector<std::vector<int> > buildCellToCell(T &meshInterface) {
         Mesh<T> mesh(meshInterface);
         printf("Parfait-buildCellToCell: putting cells in ADT for searching\n");
         Adt3DExtent adt = AdtBuilder::putCellsInAdt(meshInterface);
 
-        vector<vector<int> > c2c;
+        std::vector<std::vector<int> > c2c;
         c2c.resize(mesh.numberOfCells());
 
         printf("Parfait-buildCellToCell: populating c2c connectivity\n");
@@ -149,7 +146,7 @@ std::vector<std::vector<int>> buildNodeToCell(MeshType &mesh_i){
         return c2c;
     }
 
-    inline void plotConnectivityBandwidth(string filename, const vector<vector<int>> &e2e) {
+    inline void plotConnectivityBandwidth(std::string filename, const std::vector<std::vector<int>> &e2e) {
         FILE *fp = fopen(filename.c_str(), "w");
 
         for (int entity1 = 0; entity1 < e2e.size(); entity1++) {

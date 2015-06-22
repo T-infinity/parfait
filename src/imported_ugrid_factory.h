@@ -13,7 +13,6 @@
 #include <string>
 #include <stdexcept>
 
-using std::vector;
 namespace Parfait {
     class ImportedUgridFactory {
     public:
@@ -67,19 +66,19 @@ namespace Parfait {
     }
 
     inline ImportedUgrid ImportedUgridFactory::readUgrid(std::string filename, bool isBigEndian) {
-        vector<double> nodes;
-        vector<int> cellMap;
-        vector<int> faceMap;
-        vector<int> triangles;
-        vector<int> quads;
-        vector<int> tets;
-        vector<int> pyramids;
-        vector<int> prisms;
-        vector<int> hexs;
-        vector<int> triangleTags;
-        vector<int> quadTags;
-        vector<int> triangleBoundaryConditions;
-        vector<int> quadBoundaryConditions;
+        std::vector<double> nodes;
+        std::vector<int> cellMap;
+        std::vector<int> faceMap;
+        std::vector<int> triangles;
+        std::vector<int> quads;
+        std::vector<int> tets;
+        std::vector<int> pyramids;
+        std::vector<int> prisms;
+        std::vector<int> hexs;
+        std::vector<int> triangleTags;
+        std::vector<int> quadTags;
+        std::vector<int> triangleBoundaryConditions;
+        std::vector<int> quadBoundaryConditions;
 
         using namespace UgridReader;
         nodes = readNodes(filename, isBigEndian);
@@ -116,20 +115,20 @@ inline ImportedUgrid ImportedUgridFactory::readUgrid(std::vector<std::string> &f
 
     inline ImportedUgrid ImportedUgridFactory::readUgridAscii(std::string filename) {
 
-        vector<double> nodes;
-        vector<int> cellMap;
-        vector<int> faceMap;
-        vector<int> triangles;
-        vector<int> quads;
-        vector<int> tets;
-        vector<int> pyramids;
-        vector<int> prisms;
-        vector<int> hexs;
+        std::vector<double> nodes;
+        std::vector<int> cellMap;
+        std::vector<int> faceMap;
+        std::vector<int> triangles;
+        std::vector<int> quads;
+        std::vector<int> tets;
+        std::vector<int> pyramids;
+        std::vector<int> prisms;
+        std::vector<int> hexs;
 
-        vector<int> triangleTags;
-        vector<int> quadTags;
-        vector<int> triangleBoundaryConditions;
-        vector<int> quadBoundaryConditions;
+        std::vector<int> triangleTags;
+        std::vector<int> quadTags;
+        std::vector<int> triangleBoundaryConditions;
+        std::vector<int> quadBoundaryConditions;
 
         FILE *fp = fopen(filename.c_str(), "r");
         if (fp == NULL) {
