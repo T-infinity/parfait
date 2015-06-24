@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 2.6)
 project(parfait)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(mpi_installed false)
-set(parmetis_installed false)
-set(vtk_installed false)
+set(mpi_installed true)
+set(parmetis_installed true)
+set(vtk_installed true)
 
 if(mpi_installed AND parmetis_installed)
     add_definitions(

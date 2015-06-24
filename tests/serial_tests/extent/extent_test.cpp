@@ -107,9 +107,9 @@ TEST(Extent,makeIsotropic){
     e.makeIsotropic();
     DOUBLES_EQUAL(0, e.lo[0],tol);
     DOUBLES_EQUAL(-.5, e.lo[1],tol);
-    DOUBLES_EQUAL(-.5, e.lo[2],tol);
+    DOUBLES_EQUAL(-1., e.lo[2],tol);
     DOUBLES_EQUAL(2, e.hi[0],tol);
     DOUBLES_EQUAL(1.5, e.hi[1],tol);
-    DOUBLES_EQUAL(1.5, e.hi[2],tol);
+    DOUBLES_EQUAL(1., e.hi[2],tol);
 }
 
