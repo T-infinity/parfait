@@ -1,6 +1,6 @@
 #include "parfait_checkpoint.h"
 
-void checkpoint(std::string s){
+inline void checkpoint(std::string s){
     using namespace MessagePasser;
     Barrier();
     if(0 == Rank()){
@@ -13,4 +13,4 @@ void checkpoint(std::string s){
     }
 }
 
-void checkpoint(){checkpoint("");}
+inline void checkpoint(){checkpoint("");}

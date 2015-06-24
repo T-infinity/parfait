@@ -1,6 +1,6 @@
 #ifndef MESH_ANALYZER_H
 #define MESH_ANALYZER_H
-#include "generic_mesh.h"
+#include <generic_mesh.h>
 #include "generic_surface_mesh.h"
 #include <vector>
 
@@ -11,8 +11,8 @@ class MeshAnalyzer{
         void printStats();
         void throwIfBadIndexFound();
     private:
-        Mesh<MeshType> mesh;
-        SurfaceMesh<MeshType> surface;
+        Parfait::Mesh<MeshType> mesh;
+        Parfait::SurfaceMesh<MeshType> surface;
 };
 
 template<typename MeshType>
