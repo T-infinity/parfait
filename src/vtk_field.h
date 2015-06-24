@@ -11,7 +11,6 @@
 #define FLOAT32_FIELD 302
 #define FLOAT64_FIELD 303
 
-using std::vector;
 
 namespace Parfait {
     template<typename T>

@@ -3,7 +3,7 @@ namespace Parfait {
     template<class MeshType>
     VtkSliceWriter<MeshType>::VtkSliceWriter(MeshType &mesh,
                                              const Extent<double> &domain_in,
-                                             string vtkFilename)
+                                             std::string vtkFilename)
             : slice(mesh, domain_in), domain(domain_in), filename(vtkFilename),
               writer(slice, filename) { }
 
@@ -13,7 +13,7 @@ namespace Parfait {
     }
 
     template<class MeshType>
-    void VtkSliceWriter<MeshType>::addScalarField(bool isNodeData, string fieldName,
+    void VtkSliceWriter<MeshType>::addScalarField(bool isNodeData, std::string fieldName,
                                                   int *data) {
 
         if (isNodeData) {
@@ -24,7 +24,7 @@ namespace Parfait {
     }
 
     template<class MeshType>
-    void VtkSliceWriter<MeshType>::addScalarField(bool isNodeData, string fieldName,
+    void VtkSliceWriter<MeshType>::addScalarField(bool isNodeData, std::string fieldName,
                                                   float *data) {
 
         if (isNodeData) {
@@ -35,7 +35,7 @@ namespace Parfait {
     }
 
     template<class MeshType>
-    void VtkSliceWriter<MeshType>::addScalarField(bool isNodeData, string fieldName,
+    void VtkSliceWriter<MeshType>::addScalarField(bool isNodeData, std::string fieldName,
                                                   double *data) {
 
         if (isNodeData) {
@@ -46,7 +46,7 @@ namespace Parfait {
     }
 
     template<class MeshType>
-    void VtkSliceWriter<MeshType>::addNodeData_int(int *data, string fieldName,
+    void VtkSliceWriter<MeshType>::addNodeData_int(int *data, std::string fieldName,
                                                    int blockSize) {
 
         intFields.push_back(std::vector<int>(slice.numberOfNodes()));
@@ -62,7 +62,7 @@ namespace Parfait {
     }
 
     template<class MeshType>
-    void VtkSliceWriter<MeshType>::addCellData_int(int *data, string fieldName,
+    void VtkSliceWriter<MeshType>::addCellData_int(int *data, std::string fieldName,
                                                    int blockSize) {
 
         intFields.push_back(std::vector<int>(slice.numberOfCells()));
@@ -83,7 +83,7 @@ namespace Parfait {
     }
 
     template<class MeshType>
-    void VtkSliceWriter<MeshType>::addNodeData_double(double *data, string fieldName,
+    void VtkSliceWriter<MeshType>::addNodeData_double(double *data, std::string fieldName,
                                                       int blockSize) {
 
         doubleFields.push_back(std::vector<double>(slice.numberOfNodes()));
@@ -99,7 +99,7 @@ namespace Parfait {
     }
 
     template<class MeshType>
-    void VtkSliceWriter<MeshType>::addNodeData_float(float *data, string fieldName,
+    void VtkSliceWriter<MeshType>::addNodeData_float(float *data, std::string fieldName,
                                                      int blockSize) {
 
         floatFields.push_back(std::vector<float>(slice.numberOfNodes()));
@@ -116,7 +116,7 @@ namespace Parfait {
 
     template<class MeshType>
     void VtkSliceWriter<MeshType>::addCellData_double(double *data,
-                                                      string fieldName,
+                                                      std::string fieldName,
                                                       int blockSize) {
 
         doubleFields.push_back(std::vector<double>(slice.numberOfCells()));
@@ -137,7 +137,7 @@ namespace Parfait {
 
     template<class MeshType>
     void VtkSliceWriter<MeshType>::addCellData_float(float *data,
-                                                     string fieldName,
+                                                     std::string fieldName,
                                                      int blockSize) {
 
         floatFields.push_back(std::vector<float>(slice.numberOfCells()));

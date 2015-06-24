@@ -3,7 +3,6 @@
 #include <stdexcept>
 #include <vector>
 
-using std::vector;
 using namespace Parfait;
 
 inline void UgridWriter::writeImportedUgrid(ImportedUgrid &ugrid, std::string filename, bool swapBytes)
@@ -28,7 +27,7 @@ inline void UgridWriter::writeImportedUgrid(ImportedUgrid &ugrid, std::string fi
 	if(Rank() == 0)
 	{
     	writeNodes(filename, ugrid.nodes.size()/3, ugrid.nodes.data(), swapBytes);
-		vector<double> recvNodes;
+		std::vector<double> recvNodes;
 		for(int proc=1;proc<NumberOfProcesses();proc++)
 		{
 			Recv(recvNodes,proc);
@@ -42,7 +41,7 @@ inline void UgridWriter::writeImportedUgrid(ImportedUgrid &ugrid, std::string fi
 	if(Rank() == 0)
 	{
     	writeTriangles(filename, ugrid.triangles.size() / 3, ugrid.triangles.data(), swapBytes);
-		vector<int> recvTriangles;
+		std::vector<int> recvTriangles;
 		for(int proc=1;proc<NumberOfProcesses();proc++)
 		{
 			Recv(recvTriangles,proc);
@@ -56,7 +55,7 @@ inline void UgridWriter::writeImportedUgrid(ImportedUgrid &ugrid, std::string fi
 	if(Rank() == 0)
 	{
     	writeQuads(filename, ugrid.quads.size() / 4, ugrid.quads.data(), swapBytes);
-		vector<int> recvQuads;
+		std::vector<int> recvQuads;
 		for(int proc=1;proc<NumberOfProcesses();proc++)
 		{
 			Recv(recvQuads,proc);
@@ -71,7 +70,7 @@ inline void UgridWriter::writeImportedUgrid(ImportedUgrid &ugrid, std::string fi
 	{
     	writeTriangleBoundaryTags(filename, ugrid.triangles.size() / 3, 
 							ugrid.triangleTags.data(), swapBytes);
-		vector<int> recvTriangleTags;
+		std::vector<int> recvTriangleTags;
 		for(int proc=1;proc<NumberOfProcesses();proc++)
 		{
 			Recv(recvTriangleTags,proc);
@@ -86,7 +85,7 @@ inline void UgridWriter::writeImportedUgrid(ImportedUgrid &ugrid, std::string fi
 	if(Rank() == 0)
 	{
     	writeQuadBoundaryTags(filename, ugrid.quads.size() / 4, ugrid.quadTags.data(), swapBytes);
-		vector<int> recvQuadTags;
+		std::vector<int> recvQuadTags;
 		for(int proc=1;proc<NumberOfProcesses();proc++)
 		{
 			Recv(recvQuadTags,proc);
@@ -100,7 +99,7 @@ inline void UgridWriter::writeImportedUgrid(ImportedUgrid &ugrid, std::string fi
 	if(Rank() == 0)
 	{
    	 	writeTets(filename, ugrid.tets.size() / 4, ugrid.tets.data(), swapBytes);
-		vector<int> recvTets;
+		std::vector<int> recvTets;
 		for(int proc=1;proc<NumberOfProcesses();proc++)
 		{
 			Recv(recvTets,proc);
@@ -114,7 +113,7 @@ inline void UgridWriter::writeImportedUgrid(ImportedUgrid &ugrid, std::string fi
 	if(Rank() == 0)
 	{
     	writePyramids(filename, ugrid.pyramids.size() / 5, ugrid.pyramids.data(), swapBytes);
-		vector<int> recvPyramids;
+		std::vector<int> recvPyramids;
 		for(int proc=1;proc<NumberOfProcesses();proc++)
 		{
 			Recv(recvPyramids,proc);
@@ -128,7 +127,7 @@ inline void UgridWriter::writeImportedUgrid(ImportedUgrid &ugrid, std::string fi
 	if(Rank() == 0)
 	{
     	writePrisms(filename, ugrid.prisms.size() / 6, ugrid.prisms.data(), swapBytes);
-		vector<int> recvPrisms;
+		std::vector<int> recvPrisms;
 		for(int proc=1;proc<NumberOfProcesses();proc++)
 		{
 			Recv(recvPrisms,proc);
@@ -142,7 +141,7 @@ inline void UgridWriter::writeImportedUgrid(ImportedUgrid &ugrid, std::string fi
 	if(Rank() == 0)
 	{
     	writeHexs(filename, ugrid.hexs.size() / 8, ugrid.hexs.data(), swapBytes);
-		vector<int> recvHexs;
+		std::vector<int> recvHexs;
 		for(int proc=1;proc<NumberOfProcesses();proc++)
 		{
 			Recv(recvHexs,proc);
@@ -197,42 +196,42 @@ inline void UgridWriter::writeNodes(std::string filename,int nnodes,double *node
 
 inline void UgridWriter::writeTriangles(std::string filename,int ntriangles,int *triangles,bool swapBytes)
 {
-	vector<int> tris(3*ntriangles,0);
+	std::vector<int> tris(3*ntriangles,0);
 	for(int i=0;i<3*ntriangles;i++) tris[i] = triangles[i]+1;
 	writeIntegerField(filename,3*ntriangles,tris.data(),swapBytes);
 }
 
 inline void UgridWriter::writeQuads(std::string filename,int nquads,int *quads,bool swapBytes)
 {
-	vector<int> newQuads(4*nquads,0);
+	std::vector<int> newQuads(4*nquads,0);
 	for(int i=0;i<4*nquads;i++) newQuads[i] = quads[i]+1;
 	writeIntegerField(filename,4*nquads,newQuads.data(),swapBytes);
 }
 
 inline void UgridWriter::writeTets(std::string filename,int ntets,int *tets,bool swapBytes)
 {
-	vector<int> newTets(4*ntets,0);
+	std::vector<int> newTets(4*ntets,0);
 	for(int i=0;i<4*ntets;i++) newTets[i] = tets[i]+1;
 	writeIntegerField(filename,4*ntets,newTets.data(),swapBytes);
 }
 
 inline void UgridWriter::writePyramids(std::string filename,int npyramids,int *pyramids,bool swapBytes)
 {
-	vector<int> newPyramids(5*npyramids,0);
+	std::vector<int> newPyramids(5*npyramids,0);
 	for(int i=0;i<5*npyramids;i++) newPyramids[i] = pyramids[i]+1;
 	writeIntegerField(filename,5*npyramids,newPyramids.data(),swapBytes);
 }
 
 inline void UgridWriter::writePrisms(std::string filename,int nprisms,int *prisms,bool swapBytes)
 {
-	vector<int> newPrisms(6*nprisms,0);
+	std::vector<int> newPrisms(6*nprisms,0);
 	for(int i=0;i<6*nprisms;i++) newPrisms[i] = prisms[i]+1;
 	writeIntegerField(filename,6*nprisms,newPrisms.data(),swapBytes);
 }
 
 inline void UgridWriter::writeHexs(std::string filename,int nhexs,int *hexs,bool swapBytes)
 {
-	vector<int> newHexs(8*nhexs,0);
+	std::vector<int> newHexs(8*nhexs,0);
 	for(int i=0;i<8*nhexs;i++) newHexs[i] = hexs[i]+1;
 	writeIntegerField(filename,8*nhexs,newHexs.data(),swapBytes);
 }

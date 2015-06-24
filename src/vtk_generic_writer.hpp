@@ -8,39 +8,39 @@ namespace Parfait {
     }
 
     template<class MeshType>
-    void VtkWriter<MeshType>::addScalarField(bool isNodeData, string fieldName, int *data) {
+    void VtkWriter<MeshType>::addScalarField(bool isNodeData, std::string fieldName, int *data) {
         int n = isNodeData ? mesh.numberOfNodes() : mesh.numberOfCells();
         intFields.push_back(VtkField<int>(isNodeData, fieldName, 1, n, data));
     }
 
     template<class MeshType>
-    void VtkWriter<MeshType>::addScalarField(bool isNodeData, string fieldName, float *data) {
+    void VtkWriter<MeshType>::addScalarField(bool isNodeData, std::string fieldName, float *data) {
         int n = isNodeData ? mesh.numberOfNodes() : mesh.numberOfCells();
         floatFields.push_back(VtkField<float>(isNodeData, fieldName, 1, n, data));
     }
 
     template<class MeshType>
-    void VtkWriter<MeshType>::addScalarField(bool isNodeData, string fieldName, double *data) {
+    void VtkWriter<MeshType>::addScalarField(bool isNodeData, std::string fieldName, double *data) {
         int n = isNodeData ? mesh.numberOfNodes() : mesh.numberOfCells();
         doubleFields.push_back(VtkField<double>(isNodeData, fieldName, 1, n, data));
     }
 
     template<class MeshType>
-    void VtkWriter<MeshType>::addVectorField(bool isNodeData, string fieldName, int blockSize,
+    void VtkWriter<MeshType>::addVectorField(bool isNodeData, std::string fieldName, int blockSize,
                                              int *data) {
         int n = isNodeData ? mesh.numberOfNodes() : mesh.numberOfCells();
         intFields.push_back(VtkField<int>(isNodeData, fieldName, blockSize, n, data));
     }
 
     template<class MeshType>
-    void VtkWriter<MeshType>::addVectorField(bool isNodeData, string fieldName, int blockSize,
+    void VtkWriter<MeshType>::addVectorField(bool isNodeData, std::string fieldName, int blockSize,
                                              float *data) {
         int n = isNodeData ? mesh.numberOfNodes() : mesh.numberOfCells();
         floatFields.push_back(VtkField<float>(isNodeData, fieldName, blockSize, n, data));
     }
 
     template<class MeshType>
-    void VtkWriter<MeshType>::addVectorField(bool isNodeData, string fieldName, int blockSize,
+    void VtkWriter<MeshType>::addVectorField(bool isNodeData, std::string fieldName, int blockSize,
                                              double *data) {
         int n = isNodeData ? mesh.numberOfNodes() : mesh.numberOfCells();
         doubleFields.push_back(VtkField<double>(isNodeData, fieldName, blockSize, n, data));

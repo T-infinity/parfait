@@ -42,7 +42,7 @@ namespace Parfait {
         }
 
         std::tuple<int, int> getCellIdAndFaceIdOfNeighbor(Cell<MeshType> &cell,
-                                                          vector<int> &neighborMaybe,
+                                                          std::vector<int> &neighborMaybe,
                                                           CellFace<MeshType> &face) {
             for (int candidateId : neighborMaybe) {
                 if (candidateId == cell.Id()) continue;
@@ -60,8 +60,8 @@ namespace Parfait {
             return std::tuple<int, int>{-1, -1};
         }
 
-        std::vector<int> getCandidateNeighbors(vector<int> &cellNodes) {
-            vector<int> neighborMaybe;
+        std::vector<int> getCandidateNeighbors(std::vector<int> &cellNodes) {
+            std::vector<int> neighborMaybe;
             for (int cellNode : cellNodes) {
                 for (int candidate : nodeToCell[cellNode])
                     insertUnique(neighborMaybe, candidate);

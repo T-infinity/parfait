@@ -125,9 +125,9 @@ inline int Parfait::Fun3DMesh::numberOfNodesInBoundaryFace(int id) const
 	assert(false);
 }
 
-inline vector<int> Parfait::Fun3DMesh::getNodesInBoundaryFace(int faceId) const
+inline std::vector<int> Parfait::Fun3DMesh::getNodesInBoundaryFace(int faceId) const
 {
-	vector<int> nodes(3,0);
+	std::vector<int> nodes(3,0);
     if(faceId < faceMap[0])
     {
         nodes[0] = triangles[3*faceId+0];
@@ -218,11 +218,11 @@ inline int Parfait::Fun3DMesh::numberOfNodesInCellFace(int cellId,int faceId) co
 	assert(false);
 }
 
-inline vector<int> Parfait::Fun3DMesh::getNodesInCellFace(int cellId,int faceId) const
+inline std::vector<int> Parfait::Fun3DMesh::getNodesInCellFace(int cellId,int faceId) const
 {
 	assert(cellId >= 0);
 	assert(cellId < cellMap[3]);
-	vector<int> face(3,0);
+	std::vector<int> face(3,0);
 	if(cellId < cellMap[0])
 	{
 		int cell[4];
@@ -409,15 +409,15 @@ inline void Parfait::Fun3DMesh::getNodesInCell(int cellId,int cell[]) const
 		cell[i] = cell_list[nvertices*id+i];
 }
 
-inline vector<int> Parfait::Fun3DMesh::getNodesInCell(int cellId) const
+inline std::vector<int> Parfait::Fun3DMesh::getNodesInCell(int cellId) const
 {
 	int nvertices = numberOfNodesInCell(cellId);
-	vector<int> cell(nvertices,0);
+	std::vector<int> cell(nvertices,0);
 	getNodesInCell(cellId,cell.data());
 	return cell;
 }
 
-inline vector<int> Parfait::Fun3DMesh::getVtkOrderedNodesInCell(int cellId) const
+inline std::vector<int> Parfait::Fun3DMesh::getVtkOrderedNodesInCell(int cellId) const
 {
     return getNodesInCell(cellId); // actually fix ordering later
 }

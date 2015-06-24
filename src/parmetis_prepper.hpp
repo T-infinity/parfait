@@ -4,7 +4,6 @@
 #include "parmetis_wrapper.h"
 #include "range_loop.h"
 
-using std::vector;
 using namespace MessagePasser;
 
 template<class MeshType>

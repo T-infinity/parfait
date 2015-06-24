@@ -8,26 +8,24 @@
 #include "message_passer.h"
 #include "generic_mesh.h"
 
-using std::vector;
-using std::string;
 namespace Parfait {
     template<class MeshType>
     class VtkWriter {
     public:
-        VtkWriter(MeshType &meshInterface, string vtkFilename);
+        VtkWriter(MeshType &meshInterface, std::string vtkFilename);
         void writeAscii();
         void writeFile();
-        void addScalarField(bool isNodeData, string fieldName, int *data);
-        void addScalarField(bool isNodeData, string fieldName, float *data);
-        void addScalarField(bool isNodeData, string fieldName, double *data);
-        void addVectorField(bool isNodeData, string fieldName, int blockSize, int *data);
-        void addVectorField(bool isNodeData, string fieldName, int blockSize, float *data);
-        void addVectorField(bool isNodeData, string fieldName, int blockSize, double *data);
+        void addScalarField(bool isNodeData, std::string fieldName, int *data);
+        void addScalarField(bool isNodeData, std::string fieldName, float *data);
+        void addScalarField(bool isNodeData, std::string fieldName, double *data);
+        void addVectorField(bool isNodeData, std::string fieldName, int blockSize, int *data);
+        void addVectorField(bool isNodeData, std::string fieldName, int blockSize, float *data);
+        void addVectorField(bool isNodeData, std::string fieldName, int blockSize, double *data);
     private:
         Mesh<MeshType> mesh;
-        vector<VtkField<int> > intFields;
-        vector<VtkField<float> > floatFields;
-        vector<VtkField<double> > doubleFields;
+        std::vector<VtkField<int> > intFields;
+        std::vector<VtkField<float> > floatFields;
+        std::vector<VtkField<double> > doubleFields;
         int global_nnodes;
         int global_ncells;
         std::string filename;
