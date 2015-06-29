@@ -18,6 +18,7 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         AllTests.cpp  
         message_passer_tests.cpp
         parallel_sum_tests.cpp
+        AllGathervTests.cpp
        )
 
 add_executable(ParfaitParallelTests ${PARFAIT_PARALLEL_TESTS_SRC})

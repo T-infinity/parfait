@@ -5,6 +5,7 @@
 template<class MeshType>
 class ParMetisPrepper
 {
+	template<class T> using vector = std::vector<T>;
 	public:
 		ParMetisPrepper(MeshType& mesh_in)  : mesh(mesh_in){}
 		void buildNodeToNodeConnectivity();

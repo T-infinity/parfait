@@ -398,7 +398,7 @@ inline std::vector<int> Parfait::ParallelMeshReaderNaive::getTriangles(int begin
   return triangleBuffer;
 }
 
-inline vector<int> Parfait::ParallelMeshReaderNaive::getTriangleTags(int begin,int end)
+inline std::vector<int> Parfait::ParallelMeshReaderNaive::getTriangleTags(int begin,int end)
 {
   using namespace UgridReader;
   std::vector<int> triangleTagBuffer(end-begin,0);
@@ -486,7 +486,7 @@ inline std::vector<int> Parfait::ParallelMeshReaderNaive::getQuads(int begin,int
   return quadBuffer;
 }
 
-inline vector<int> Parfait::ParallelMeshReaderNaive::getQuadTags(int begin,int end)
+inline std::vector<int> Parfait::ParallelMeshReaderNaive::getQuadTags(int begin,int end)
 {
   using namespace UgridReader;
   std::vector<int> quadTagBuffer(end-begin,0);

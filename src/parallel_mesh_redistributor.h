@@ -11,6 +11,7 @@
 
 namespace Parfait {
 	class ParallelMeshReDistributor {
+	template<class T> using vector = std::vector<T>;
 	public:
 		ParallelMeshReDistributor(Parfait::ImportedUgrid &ugrid, std::vector<int> &gridNodeMap, std::vector<int> &part);
 		void shuffleNodes();

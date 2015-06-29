@@ -95,6 +95,12 @@ namespace MessagePasser
 	template<typename T>
 	void AllGatherv(const std::vector<T> &send_vec,std::vector<T> &recv_vec);
 
+
+	// Same as above, but output is stored in vector of vectors (one vector per proc)
+	template <typename T>
+	void AllGatherv(const std::vector<T>& send_vec,
+																 std::vector<std::vector<T>>& vec_of_vec_output);
+
 	// Gather vectors of a given size to the root
 	template<typename T>
 	void Gather(const std::vector<T> &send_vec,int send_count,std::vector<T> &recv_vec,int rootId);

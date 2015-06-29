@@ -4,8 +4,6 @@
 #include "parmetis_wrapper.h"
 #include "range_loop.h"
 
-using namespace MessagePasser;
-
 template<class MeshType>
 void ParMetisPrepper<MeshType>::buildNodeToNodeConnectivity()
 {
@@ -95,7 +93,7 @@ void ParMetisPrepper<MeshType>::buildNodeToNodeConnectivity()
 }
 
 template<class MeshType>
-vector<int> ParMetisPrepper<MeshType>::getPartVector()
+std::vector<int> ParMetisPrepper<MeshType>::getPartVector()
 {
 	vector<int> part(mesh.numberOfNodes(),0);
 	// build ia map
