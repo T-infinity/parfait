@@ -32,15 +32,12 @@ TEST(Gatherv,TestWithIntegers){
   for(int i=0;i<num;i++)
     send_vec.push_back(Rank()+i);
   Gatherv(send_vec,recv_vec,map,root);
-  if(Rank() == root)
-  {
+  if(Rank() == root) {
     LONGS_EQUAL(NumberOfProcesses()+1,(int)map.size());
     LONGS_EQUAL(map.back(),(int)recv_vec.size());
-    for(int i=0;i<NumberOfProcesses();i++)
-    {
+    for(int i=0;i<NumberOfProcesses();i++) {
       int counter = 0;
-      for(int j=map[i];j<map[i+1];j++)
-      {
+      for(int j=map[i];j<map[i+1];j++) {
         LONGS_EQUAL(i+counter,recv_vec[j]);
         ++counter;
       }
@@ -80,15 +77,12 @@ TEST(Gatherv,TestWithFloats){
   for(int i=0;i<num;i++)
     send_vec.push_back(junk+(float)(Rank()+i));
   Gatherv(send_vec,recv_vec,map,root);
-  if(Rank() == root)
-  {
+  if(Rank() == root) {
     LONGS_EQUAL(NumberOfProcesses()+1,(int)map.size());
     LONGS_EQUAL(map.back(),(int)recv_vec.size());
-    for(int i=0;i<NumberOfProcesses();i++)
-    {
+    for(int i=0;i<NumberOfProcesses();i++) {
       int counter = 0;
-      for(int j=map[i];j<map[i+1];j++)
-      {
+      for(int j=map[i];j<map[i+1];j++) {
         DOUBLES_EQUAL(junk+(float)(i+counter),recv_vec[j],MPI_FLOAT_TOL);
         ++counter;
       }
@@ -111,15 +105,12 @@ TEST(Gatherv,TestWithDoubles){
   for(int i=0;i<num;i++)
     send_vec.push_back(junk+(double)(Rank()+i));
   Gatherv(send_vec,recv_vec,map,root);
-  if(Rank() == root)
-  {
+  if(Rank() == root) {
     LONGS_EQUAL(NumberOfProcesses()+1,(int)map.size());
     LONGS_EQUAL(map.back(),(int)recv_vec.size());
-    for(int i=0;i<NumberOfProcesses();i++)
-    {
+    for(int i=0;i<NumberOfProcesses();i++) {
       int counter = 0;
-      for(int j=map[i];j<map[i+1];j++)
-      {
+      for(int j=map[i];j<map[i+1];j++) {
         DOUBLES_EQUAL(junk+(double)(i+counter),recv_vec[j],MPI_DOUBLE_TOL);
         ++counter;
       }
@@ -133,10 +124,36 @@ TEST(Gatherv,TestWhenAllVectorsAreEmpty){
   std::vector<int> recv_vec;
   std::vector<int> map;
   Gatherv(send_vec,recv_vec,map,root);
-  if(Rank() == root)
-  {
+  if(Rank() == root) {
     LONGS_EQUAL(NumberOfProcesses()+1,(int)map.size());
     LONGS_EQUAL(0,(int)recv_vec.size());
     LONGS_EQUAL(0,map.back());
+  }
+}
+
+TEST(Gatherv,TestGatheringAsVectorOfVectors){
+  int root = 0;
+  std::vector<double> send_vec;
+  std::vector<std::vector<double>> recv_vec;
+  double junk = 1.7e-13;
+  std::vector<int> map;
+  int num = 0;
+// even and odd procs have size 2 & 3 vectors respectively
+  if(Rank() % 2 == 0)
+    num = 2;
+  else
+    num = 3;
+  for(int i=0;i<num;i++)
+    send_vec.push_back(junk+(double)(Rank()+i));
+  Gatherv(send_vec,recv_vec,root);
+  if(Rank() == root) {
+    LONGS_EQUAL(NumberOfProcesses(),(int)recv_vec.size());
+    for(int i=0;i<NumberOfProcesses();i++) {
+      int counter = 0;
+      for(int j=0;j<recv_vec[i].size();j++) {
+       // DOUBLES_EQUAL(junk+(double)(i+counter),recv_vec[i][j],MPI_DOUBLE_TOL);
+        ++counter;
+      }
+    }
   }
 }
