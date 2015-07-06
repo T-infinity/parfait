@@ -55,11 +55,11 @@ template<typename T>
 void MessagePasser::Gatherv(const std::vector<T>& send_vec,
 														std::vector<std::vector<T>>& result,int root_id){
 	std::vector<int> map;
-	std::vector<T> recv(NumberOfProcesses());
+	std::vector<T> recv;
 	result.assign(NumberOfProcesses(),std::vector<T>());
 	Gatherv(send_vec,recv,map,root_id);
   if(Rank() == root_id) {
-    for (int i = 0; i < NumberOfProcesses() - 1; i++) {
+    for (int i = 0; i < NumberOfProcesses(); i++) {
       for(int j=map[i];j<map[i+1];j++)
       	result[i].push_back(recv[j]);
     }

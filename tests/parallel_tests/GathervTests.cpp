@@ -134,7 +134,7 @@ TEST(Gatherv,TestWhenAllVectorsAreEmpty){
 TEST(Gatherv,TestGatheringAsVectorOfVectors){
   int root = 0;
   std::vector<double> send_vec;
-  std::vector<std::vector<double>> recv_vec;
+  std::vector<std::vector<double>> result;
   double junk = 1.7e-13;
   std::vector<int> map;
   int num = 0;
@@ -145,13 +145,14 @@ TEST(Gatherv,TestGatheringAsVectorOfVectors){
     num = 3;
   for(int i=0;i<num;i++)
     send_vec.push_back(junk+(double)(Rank()+i));
-  Gatherv(send_vec,recv_vec,root);
+  Gatherv(send_vec, result,root);
   if(Rank() == root) {
-    LONGS_EQUAL(NumberOfProcesses(),(int)recv_vec.size());
+    LONGS_EQUAL(NumberOfProcesses(),(int) result.size());
     for(int i=0;i<NumberOfProcesses();i++) {
       int counter = 0;
-      for(int j=0;j<recv_vec[i].size();j++) {
-       // DOUBLES_EQUAL(junk+(double)(i+counter),recv_vec[i][j],MPI_DOUBLE_TOL);
+      LONGS_EQUAL(i%2==0?2:3,result[i].size());
+      for(int j=0;j< result[i].size();j++) {
+        DOUBLES_EQUAL(junk+(double)(i+counter),result[i][j],MPI_DOUBLE_TOL);
         ++counter;
       }
     }

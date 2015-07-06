@@ -118,6 +118,10 @@ namespace MessagePasser
 	void Gatherv(const std::vector<T> &send_vec,std::vector<T> &recv_vec,
 			int rootId);
 
+	//same as above, but result is vector of vectors
+	template<typename T>
+	void Gatherv(const std::vector<T>& send_vec,
+															std::vector<std::vector<T>>& result,int root_id);
 	// broadcast a value
 	template<typename T>
 	void Broadcast(T &value,int rootId);
