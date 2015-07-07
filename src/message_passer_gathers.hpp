@@ -56,7 +56,8 @@ void MessagePasser::Gatherv(const std::vector<T>& send_vec,
 														std::vector<std::vector<T>>& result,int root_id){
 	std::vector<int> map;
 	std::vector<T> recv;
-	result.assign(NumberOfProcesses(),std::vector<T>());
+	if(Rank() == root_id)
+		result.assign(NumberOfProcesses(),std::vector<T>());
 	Gatherv(send_vec,recv,map,root_id);
   if(Rank() == root_id) {
     for (int i = 0; i < NumberOfProcesses(); i++) {
