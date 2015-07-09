@@ -36,4 +36,5 @@ set(PARFAIT_SERIAL_TESTS_SRC
 
 
 add_executable(ParfaitSerialTests ${PARFAIT_SERIAL_TESTS_SRC})
-target_link_libraries(ParfaitSerialTests parfait CppUTest)
+target_link_libraries(ParfaitSerialTests CppUTest
+        )

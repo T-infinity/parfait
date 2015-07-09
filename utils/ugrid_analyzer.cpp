@@ -12,9 +12,9 @@ int main(int argc,char* argv[]){
     else
         printf("Reading: %s as little endian\n",input.gridName().c_str());
 
-    auto ugrid = ImportedUgridFactory::readUgrid(input.gridName());
+    auto ugrid = Parfait::ImportedUgridFactory::readUgrid(input.gridName());
 
-    MeshAnalyzer<ImportedUgrid> analyzer(ugrid);
+    MeshAnalyzer<Parfait::ImportedUgrid> analyzer(ugrid);
     analyzer.printStats();
     analyzer.throwIfBadIndexFound();
     

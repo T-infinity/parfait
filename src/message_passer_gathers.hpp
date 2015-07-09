@@ -52,6 +52,22 @@ void MessagePasser::Gatherv(const std::vector<T> &send_vec,std::vector<T> &recv_
 }
 
 template<typename T>
+void MessagePasser::Gatherv(const std::vector<T>& send_vec,
+														std::vector<std::vector<T>>& result,int root_id){
+	std::vector<int> map;
+	std::vector<T> recv;
+	if(Rank() == root_id)
+		result.assign(NumberOfProcesses(),std::vector<T>());
+	Gatherv(send_vec,recv,map,root_id);
+  if(Rank() == root_id) {
+    for (int i = 0; i < NumberOfProcesses(); i++) {
+      for(int j=map[i];j<map[i+1];j++)
+      	result[i].push_back(recv[j]);
+    }
+  }
+}
+
+template<typename T>
 void MessagePasser::Gatherv(const std::vector<T> &send_vec,std::vector<T> &recv_vec,
 		int rootId){
     std::vector<int> m;
@@ -62,6 +78,21 @@ template<typename T>
 void MessagePasser::AllGatherv(const std::vector<T> &send_vec,std::vector<T> &recv_vec){
 	std::vector<int> m;
 	AllGatherv(send_vec,recv_vec,m);
+}
+
+template <typename T>
+void MessagePasser::AllGatherv(const std::vector<T>& send_vec,
+																std::vector<std::vector<T>>& vec_of_vec_output){
+	std::vector<int> m;
+	std::vector<T> recv_vec;
+	AllGatherv(send_vec,recv_vec,m);
+	for(int i=0;i<m.size()-1;i++){
+		int n = m[i+1] - m[i];
+		vec_of_vec_output.push_back(std::vector<T>(n,0));
+		for(int j=0;j<n;j++){
+			vec_of_vec_output[i][j] = recv_vec[m[i]+j];
+		}
+	}
 }
 
 

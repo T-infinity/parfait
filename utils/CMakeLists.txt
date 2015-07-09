@@ -1,6 +1,5 @@
-set(SRC
-    "timing.hpp"
-    "parfait_checkpoint.cpp"
-    )
+add_executable(UgridSurfaceViewer ugrid_surface_viewer.cpp)
 
-add_library(parfait_utils STATIC ${SRC})
+add_executable(UgridViewer ugrid_viewer.cpp)
+
+add_executable(UgridAnalyzer ugrid_analyzer.cpp)

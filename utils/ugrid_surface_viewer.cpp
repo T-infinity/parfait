@@ -4,7 +4,7 @@
 #include "input.h"
 #include <string>
 #include <iostream>
-
+using namespace Parfait;
 int main(int argc,char* argv[]){
     Input input(argc,argv);
    
