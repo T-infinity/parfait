@@ -6,7 +6,7 @@
 #include <exception>
 namespace Parfait {
   inline void STL::rescale(double scale) {
-
+    #pragma omp parallel for
       for (unsigned int i = 0; i < facets.size(); i++) {
           for (unsigned int j = 0; j < 3; j++) { facets[i][0][j] /= scale; }
           for (unsigned int j = 0; j < 3; j++) { facets[i][1][j] /= scale; }

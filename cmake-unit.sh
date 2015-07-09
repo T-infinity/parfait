@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
-cd test
+cd tests
 mkdir -p build
 cd build
 cmake ../../
 make -j
-./parfait_test
+
+cd tests/serial_tests
+./ParfaitSerialTests
 
