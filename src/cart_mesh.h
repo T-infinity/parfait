@@ -37,6 +37,7 @@ namespace Parfait {
 
         void getNode(int nodeId, double node[3]) const;
         void getNode(int i, int j, int k, double node[3]) const;
+        Point<double> getNode(int nodeId) const;
         int getNodeId(int i, int j, int k) const;
         void getLogicalDimensions(int &nX, int &nY, int &nZ) const;
         void getSpacings(double &hx, double &hy, double &hz) const;
@@ -49,6 +50,8 @@ namespace Parfait {
         int numberOfCellsOnSide(int faceId) const;
         int whatSideIsCellFaceOn(int cellId, int faceId) const;
     };
+
+
 }
 
 #include "cart_mesh.hpp"

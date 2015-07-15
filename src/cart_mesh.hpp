@@ -31,6 +31,11 @@ inline void Parfait::CartMesh::getNode(int i,int j,int k,double node[3]) const
     int nodeId = block.convert_ijk_ToNodeId(i,j,k);
 	block.getNode(nodeId,node);
 }
+inline Parfait::Point<double> Parfait::CartMesh::getNode(int nodeId) const {
+    Parfait::Point<double> p;
+    getNode(nodeId, p.data());
+    return p;
+}
 
 inline int Parfait::CartMesh::getNodeId(int i,int j,int k) const
 {
