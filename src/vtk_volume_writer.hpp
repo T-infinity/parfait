@@ -21,60 +21,69 @@ void VtkVolumeWriter::setPoints(MeshType& mesh){
 
 template<typename MeshType>
 void VtkVolumeWriter::setCells(MeshType& mesh){
-    vtkSmartPointer<vtkTetra> tet = 
-        vtkSmartPointer<vtkTetra>::New();
-    vtkSmartPointer<vtkPyramid> pyramid = 
-        vtkSmartPointer<vtkPyramid>::New();
-    vtkSmartPointer<vtkWedge> prism = 
-        vtkSmartPointer<vtkWedge>::New();
-    vtkSmartPointer<vtkHexahedron> hex = 
-        vtkSmartPointer<vtkHexahedron>::New();
-    
-    vtkSmartPointer<vtkCellArray> tets = 
-        vtkSmartPointer<vtkCellArray>::New();
-    vtkSmartPointer<vtkCellArray> pyramids = 
-        vtkSmartPointer<vtkCellArray>::New();
-    vtkSmartPointer<vtkCellArray> prisms = 
-        vtkSmartPointer<vtkCellArray>::New();
-    vtkSmartPointer<vtkCellArray> hexs = 
-        vtkSmartPointer<vtkCellArray>::New();
 
-    for(int i=0;i<mesh.numberOfCells();i++){
-        auto cell_nodes = mesh.getVtkOrderedNodesInCell(i);
-        int n = cell_nodes.size();
-        if(4 == n){
-            for(int j=0;j<n;j++)
-                tet->GetPointIds()->SetId(j,cell_nodes[j]);
-            tets->InsertNextCell(tet);
-        }
+  vtkSmartPointer<vtkCellArray> cells =
+      vtkSmartPointer<vtkCellArray>::New();
+  std::vector<int> cell_types;
+
+
+  for(int i=0;i<mesh.numberOfCells();i++){
+    auto cell_nodes = mesh.getVtkOrderedNodesInCell(i);
+    int n = cell_nodes.size();
+    if(4 == n){
+      vtkSmartPointer<vtkTetra> cell =
+          vtkSmartPointer<vtkTetra>::New();
+      for(int j=0;j<n;j++)
+        cell->GetPointIds()->SetId(j,cell_nodes[j]);
+      cells->InsertNextCell(cell);
+      cell_types.push_back(VTK_TETRA);
+    }
+    if(5 == n){
+      vtkSmartPointer<vtkPyramid> cell =
+          vtkSmartPointer<vtkPyramid>::New();
+      for(int j=0;j<n;j++)
+        cell->GetPointIds()->SetId(j,cell_nodes[j]);
+      cells->InsertNextCell(cell);
+      cell_types.push_back(VTK_PYRAMID);
+    }
+    if(6 == n){
+      vtkSmartPointer<vtkWedge> cell =
+          vtkSmartPointer<vtkWedge>::New();
+      for(int j=0;j<n;j++)
+        cell->GetPointIds()->SetId(j,cell_nodes[j]);
+      cells->InsertNextCell(cell);
+      cell_types.push_back(VTK_WEDGE);
+    }
+#if 0
         if(5 == n){
             for(int j=0;j<n;j++)
                 pyramid->GetPointIds()->SetId(j,cell_nodes[j]);
-            pyramids->InsertNextCell(tet);
+            pyramids->InsertNextCell(pyramid);
         }
         if(6 == n){
             for(int j=0;j<n;j++)
                 prism->GetPointIds()->SetId(j,cell_nodes[j]);
-            prisms->InsertNextCell(tet);
+            prisms->InsertNextCell(prism);
         }
         if(8 == n){
             for(int j=0;j<n;j++)
                 hex->GetPointIds()->SetId(j,cell_nodes[j]);
-            hexs->InsertNextCell(tet);
+            hexs->InsertNextCell(hex);
         }
-    }
-    vtk_grid->SetCells(VTK_TETRA,tets);
+        #endif
+  }
+  vtk_grid->SetCells(cell_types.data(),cells);
 }
 
 template<typename T>
 void VtkVolumeWriter::addNodeData(std::string name,
-        T* data,int number_of_components){
-    auto stuff = createVtkArrayPointer(data);
-    stuff->SetNumberOfComponents(number_of_components);
-    stuff->SetName(name.c_str());
-    for(int i=0;i<vtk_grid->GetNumberOfPoints();i++)
-        stuff->InsertNextValue(data[i]);
-    vtk_grid->GetPointData()->AddArray(stuff);
+                                  T* data,int number_of_components){
+  auto stuff = createVtkArrayPointer(data);
+  stuff->SetNumberOfComponents(number_of_components);
+  stuff->SetName(name.c_str());
+  for(int i=0;i<vtk_grid->GetNumberOfPoints();i++)
+    stuff->InsertNextValue(data[i]);
+  vtk_grid->GetPointData()->AddArray(stuff);
 }
 
 template<typename T>

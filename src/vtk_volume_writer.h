@@ -2,6 +2,7 @@
 #define VTK_VOLUME_WRITER_H
 
 #ifdef PARFAIT_WITH_VTK
+
 #include <string>
 #include <vector>
 #include <vtkSmartPointer.h>

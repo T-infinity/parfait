@@ -255,6 +255,40 @@ inline std::vector<int> Parfait::Fun3DMesh::getNodesInCellFace(int cellId,int fa
 	else if(cellId < cellMap[1])
 	{
 		int cell[5];
+    getNodesInCell(cellId,cell);
+		if(faceId == 0)
+		{
+			face.push_back(0);
+			face[0] = cell[1];
+			face[1] = cell[4];
+			face[2] = cell[3];
+			face[3] = cell[0];
+		}
+		else if(faceId == 1)
+		{
+			face[0] = cell[3];
+			face[1] = cell[2];
+			face[2] = cell[0];
+		}
+		else if(faceId == 2)
+		{
+			face[0] = cell[4];
+			face[1] = cell[2];
+			face[2] = cell[3];
+		}
+		else if(faceId == 3)
+		{
+			face[0] = cell[1];
+			face[1] = cell[2];
+			face[2] = cell[4];
+		}
+		else if(faceId == 4)
+		{
+			face[0] = cell[0];
+			face[1] = cell[2];
+			face[2] = cell[1];
+		}
+		#if 0
 		getNodesInCell(cellId,cell);
 		if(faceId == 0)
 		{
@@ -288,6 +322,7 @@ inline std::vector<int> Parfait::Fun3DMesh::getNodesInCellFace(int cellId,int fa
 			face[1] = cell[2];
 			face[2] = cell[0];
 		}
+		#endif
 	}
 	else if(cellId < cellMap[2])
 	{
@@ -419,6 +454,15 @@ inline std::vector<int> Parfait::Fun3DMesh::getNodesInCell(int cellId) const
 
 inline std::vector<int> Parfait::Fun3DMesh::getVtkOrderedNodesInCell(int cellId) const
 {
-    return getNodesInCell(cellId); // actually fix ordering later
+  auto cell = getNodesInCell(cellId);
+  auto fixed = cell;
+  if(5 == cell.size()){
+    fixed[0] = cell[0];
+    fixed[1] = cell[3];
+    fixed[2] = cell[4];
+    fixed[3] = cell[1];
+    fixed[4] = cell[2];
+  }
+  return fixed; // actually fix ordering later
 }
 

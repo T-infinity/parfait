@@ -402,7 +402,9 @@ inline std::vector<int> Parfait::ImportedUgrid::getNodesInCell(int cellId) const
 }
 
 inline std::vector<int> Parfait::ImportedUgrid::getVtkOrderedNodesInCell(int cellId) const{
-    return getNodesInCell(cellId); // update correct ordering later...
+		auto cell = getNodesInCell(cellId);
+		auto fixed = cell;
+    return fixed;
 }
 
 inline void Parfait::ImportedUgrid::getNodesInCell(int cellId,int *cell) const
