@@ -1,5 +1,5 @@
-#include "cart_block.h"
-#include "point.h"
+#include "CartBlock.h"
+#include "Point.h"
 #include <cmath>
 #include "CppUTest/CommandLineTestRunner.h"
 using namespace Parfait;

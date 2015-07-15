@@ -1,5 +1,5 @@
 #include <string>
-#include "imported_ugrid_factory.h"
+#include "ImportedUgridFactory.h"
 #include "CppUTest/CommandLineTestRunner.h"
 
 using std::vector;

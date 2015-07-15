@@ -1,9 +1,7 @@
-#include <vtk_generic_writer.h>
 #include <ExplodedMesh.h>
 #include "input.h"
-#include <string>
-#include <iostream>
-#include <imported_ugrid_factory.h>
+#include <ImportedUgridFactory.h>
+#include <VtkGenericWriter.h>
 
 using namespace Parfait;
 int main(int argc,char* argv[]){

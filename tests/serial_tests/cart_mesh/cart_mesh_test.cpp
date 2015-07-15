@@ -1,5 +1,5 @@
-#include "cart_mesh.h"
-#include "vector_tools.h"
+#include "CartMesh.h"
+#include "VectorTools.h"
 
 #include <CppUTest/CommandLineTestRunner.h>
 using namespace Parfait;

@@ -2,7 +2,7 @@
 // Created by Cameron T Druyor Jr on 6/29/15.
 //
 #include <vector>
-#include <message_passer.h>
+#include <MessagePasser.h>
 
 #include "CppUTest/CommandLineTestRunner.h"
 

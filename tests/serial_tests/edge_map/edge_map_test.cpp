@@ -1,5 +1,5 @@
-#include "edge_map.h"
-#include "cart_mesh.h"
+#include "EdgeMap.h"
+#include "CartMesh.h"
 
 #include <CppUTest/CommandLineTestRunner.h>
 

@@ -2,7 +2,7 @@
 #include <iostream>
 
 #ifndef ADT_3D_POINT_H
-#include "adt_3d_point.h"
+#include "Adt3dPoint.h"
 #endif
 
 #include "CppUTest/CommandLineTestRunner.h"

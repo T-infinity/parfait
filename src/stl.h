@@ -4,11 +4,10 @@
 #include <string>
 #include <vector>
 #include <stdint.h>
-#include "point.h"
-#include "facet.h"
-#include "extent.h"
-#include "extent_builder.h"
-#include "adt_3d_extent.h"
+#include "Point.h"
+#include "Facet.h"
+#include "ExtentBuilder.h"
+#include "Adt3dExtent.h"
 
 namespace Parfait {
     class STL {

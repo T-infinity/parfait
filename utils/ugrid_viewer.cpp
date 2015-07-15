@@ -1,5 +1,5 @@
-#include "vtk_generic_writer.h"
-#include "imported_ugrid_factory.h"
+#include "VtkGenericWriter.h"
+#include "ImportedUgridFactory.h"
 #include "input.h"
 #include <string>
 #include <iostream>

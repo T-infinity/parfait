@@ -1,6 +1,6 @@
-#include "cart_mesh.h"
+#include "CartMesh.h"
 #include "VtkExplodedViewWriter.h"
-#include "vtk_generic_writer.h"
+#include "VtkGenericWriter.h"
 #include "ExplodedMesh.h"
 #include "CppUTest/CommandLineTestRunner.h"
 

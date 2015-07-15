@@ -1,4 +1,4 @@
-#include "vtk_field.h"
+#include "VtkField.h"
 #include <vector>
 #include "CppUTest/CommandLineTestRunner.h"
 

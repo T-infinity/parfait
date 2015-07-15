@@ -1,4 +1,4 @@
-#include "facet.h"
+#include "Facet.h"
 #include <CppUTest/CommandLineTestRunner.h>
 
 using namespace Parfait;

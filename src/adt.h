@@ -1,12 +1,12 @@
 #ifndef ADT_H
 #define ADT_H
 
-#include "adt_elem.h"
+#include "AdtElem.h"
 #include <vector>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "unit_transformer.h"
+#include "UnitTransformer.h"
 #include <memory>
 #include <mutex>
 

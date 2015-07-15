@@ -1,5 +1,5 @@
-#include <cart_mesh.h>
-#include "build_neighbors.h"
+#include "CartMesh.h"
+#include "BuildNeighbors.h"
 #include "CppUTest/CommandLineTestRunner.h"
 
 using namespace Parfait;

@@ -1,5 +1,5 @@
 #ifndef ADT_H
-#include "adt.h"
+#include "Adt.h"
 #endif
 
 #include "CppUTest/CommandLineTestRunner.h"

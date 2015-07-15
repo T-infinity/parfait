@@ -1,6 +1,6 @@
-#include "vtk_surface_writer.h"
-#include "imported_ugrid_factory.h"
-#include "mapbc_reader.h"
+#include "VtkSurfaceWriter.h"
+#include "ImportedUgridFactory.h"
+#include "MapbcReader.h"
 #include "input.h"
 #include <string>
 #include <iostream>

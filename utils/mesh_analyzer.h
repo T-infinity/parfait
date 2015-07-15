@@ -1,7 +1,7 @@
 #ifndef MESH_ANALYZER_H
 #define MESH_ANALYZER_H
-#include <generic_mesh.h>
-#include "generic_surface_mesh.h"
+#include <GenericMesh.h>
+#include <GenericSurfaceMesh.h>
 #include <vector>
 
 template<typename MeshType>

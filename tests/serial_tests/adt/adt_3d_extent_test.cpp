@@ -1,5 +1,5 @@
 #ifndef ADT_3D_EXTENT_H
-#include "adt_3d_extent.h"
+#include "Adt3dExtent.h"
 #endif
 
 #include "CppUTest/CommandLineTestRunner.h"
