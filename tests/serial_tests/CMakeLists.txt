@@ -32,6 +32,7 @@ set(PARFAIT_SERIAL_TESTS_SRC
         ugrid_factory/ugrid_factory_tests.cpp
         vectors/LegacyArrayTests.cpp
         vectors/vector_tools_tests.cpp
+        VtkExplodedViewWriter/VtkExplodedViewWriter_test.cpp
        )
 
 
