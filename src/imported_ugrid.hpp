@@ -43,6 +43,14 @@ inline void Parfait::ImportedUgrid::getNode(int nodeId,double node[3]) const
 	node[2] = nodes[3*nodeId+2];
 }
 
+inline Parfait::Point<double> Parfait::ImportedUgrid::getNode(int nodeId) const {
+    Point<double> p;
+    p[0] = nodes[3*nodeId+0];
+    p[1] = nodes[3*nodeId+1];
+    p[2] = nodes[3*nodeId+2];
+    return p;
+}
+
 inline void Parfait::ImportedUgrid::setNode(int nodeId,double node[3])
 {
 	nodes[3*nodeId+0] = node[0];

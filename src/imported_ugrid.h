@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include "mapbc_reader.h"
+#include "point.h"
 
 //-------------------------------------------------------------
 // This serves as an example of a mesh format that meets the
@@ -16,6 +17,7 @@ namespace Parfait {
         // Any Generic mesh must implement the following
         // functions (no inheritance required)
         void getNode(int nodeId, double node[3]) const;
+        Point<double> getNode(int nodeId) const;
         int numberOfNodes() const;
         int numberOfCells() const;
         int numberOfNodesInCell(int id) const;
@@ -68,6 +70,8 @@ namespace Parfait {
         int ncells;
         int nfaces;
     };
+
+
 }
 
 #include "imported_ugrid.hpp"
