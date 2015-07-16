@@ -28,7 +28,7 @@ namespace Parfait {
         void store(int Id, const Point<double> &point);
         std::vector<int> retrieve(const Extent<double> &domain) const;
 
-        bool isPointInAdt(const Point<double> &p, int &Id, double tol = 1.0e-18) const {
+        bool isPointInAdt(const Point<double> &p, int &Id, double tol = 1.0e-8) const {
             auto box = Extent<double>::extentAroundPoint(p, tol);
             auto inside = this->retrieve(box);
 
