@@ -1,5 +1,5 @@
 #include "node_to_node.h"
-#include "cell_to_cell.h"
+#include "CellToCell.h"
 #include "message_passer.h"
 #include "parmetis_wrapper.h"
 #include "range_loop.h"

@@ -1,6 +1,7 @@
 #include "ImportedUgridFactory.h"
 #include "mesh_analyzer.h"
 #include "input.h"
+#include "UgridMeshAnalyzer.h"
 #include <string>
 #include <iostream>
 
@@ -14,10 +15,10 @@ int main(int argc,char* argv[]){
 
     auto ugrid = Parfait::ImportedUgridFactory::readUgrid(input.gridName());
 
-    MeshAnalyzer<Parfait::ImportedUgrid> analyzer(ugrid);
+    UgridMeshAnalyzer analyzer(ugrid);
     analyzer.printStats();
+    analyzer.printNegativeVolumeStatistics();
     analyzer.throwIfBadIndexFound();
-    
     return 0;
 }
 

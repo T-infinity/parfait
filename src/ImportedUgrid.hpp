@@ -376,6 +376,17 @@ inline std::vector<int> Parfait::ImportedUgrid::getNodesInCellFace(int cellId,in
     throw std::domain_error("ERROR: Cell "+std::to_string(cellId)+" is not in the cellMap.");
 }
 
+inline int Parfait::ImportedUgrid::getCellType(int cellId) const {
+	int nvertices = numberOfNodesInCell(cellId);
+	switch (nvertices){
+		case 4: return TET;
+		case 5: return PYRAMID;
+		case 6: return PRISM;
+		case 8: return HEX;
+		default: throw std::logic_error("Cell not found");
+	}
+}
+
 inline std::vector<int> Parfait::ImportedUgrid::getNodesInCell(int cellId) const
 {
 	int nvertices = numberOfNodesInCell(cellId);

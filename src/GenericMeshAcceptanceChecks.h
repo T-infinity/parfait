@@ -1,8 +1,8 @@
 #ifndef GENERIC_MESH_ACCEPTANCE_CHECKS_H
 #define GENERIC_MESH_ACCEPTANCE_CHECKS_H
 
-#include "generic_mesh.h"
-#include "generic_mesh_tools.h"
+#include "GenericMesh.h"
+#include "GenericMeshTools.h"
 
 namespace GenericMeshAcceptanceChecks
 {

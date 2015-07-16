@@ -46,6 +46,9 @@ namespace Parfait {
         int getBoundaryTag(int boundaryFaceId) const;
         int getBoundaryCondition(int BoundaryFaceId) const;
 
+        enum {TET = 0, PYRAMID = 1, PRISM = 2, HEX = 3};
+        int getCellType(int cellId) const;
+
         ImportedUgrid(std::vector<double> nodes, std::vector<int> triangles,
                       std::vector<int> quads, std::vector<int> tets, std::vector<int> pyramids,
                       std::vector<int> prisms, std::vector<int> hexs,
@@ -70,7 +73,6 @@ namespace Parfait {
         int ncells;
         int nfaces;
     };
-
 
 }
 
