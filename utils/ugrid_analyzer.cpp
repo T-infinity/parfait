@@ -17,8 +17,8 @@ int main(int argc,char* argv[]){
 
     UgridMeshAnalyzer analyzer(ugrid);
     analyzer.printStats();
-    analyzer.printNegativeVolumeStatistics();
     analyzer.throwIfBadIndexFound();
+    analyzer.printNegativeVolumeStatistics();
     return 0;
 }
 

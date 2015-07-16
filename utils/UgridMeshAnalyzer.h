@@ -12,6 +12,7 @@ public:
     void printNegativeVolumeStatistics();
 private:
     Parfait::ImportedUgrid &ugrid;
+    std::vector<int> countNegativeVolumesByCellType();
 };
 
 #endif //PARFAIT_UGRIDANALYZER_H
