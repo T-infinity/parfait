@@ -1,4 +1,4 @@
-#include "vector_tools.h"
+#include "VectorTools.h"
 #include <vector>
 #include "CppUTest/CommandLineTestRunner.h"
 

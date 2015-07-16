@@ -2,8 +2,8 @@
 #define PARFAIT_EXPLODEDMESH_HPP
 
 #include <map>
-#include "vector_tools.h"
-#include "generic_mesh_tools.h"
+#include "VectorTools.h"
+#include "GenericMeshTools.h"
 
 namespace Parfait{
   template <class Mesh>

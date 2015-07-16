@@ -1,11 +1,11 @@
 
-#include "mesh_slice.h"
-#include "extent.h"
-#include "cart_mesh.h"
-#include "generic_mesh.h"
-#include "vtk_slice_writer.h"
-#include "vtk_generic_writer.h"
-#include "generic_mesh_tools.h"
+#include "MeshSlice.h"
+#include "Extent.h"
+#include "CartMesh.h"
+#include "GenericMesh.h"
+#include "VtkSliceWriter.h"
+#include "VtkGenericWriter.h"
+#include "GenericMeshTools.h"
 
 #include "CppUTest/CommandLineTestRunner.h"
 using namespace Parfait;

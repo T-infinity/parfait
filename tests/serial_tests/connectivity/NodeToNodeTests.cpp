@@ -1,6 +1,6 @@
-#include "node_to_node.h"
-#include "imported_ugrid_factory.h"
-#include "range_loop.h"
+#include "NodeToNode.h"
+#include "ImportedUgridFactory.h"
+#include "RangeLoop.h"
 #include "CppUTest/CommandLineTestRunner.h"
 using namespace Parfait;
 

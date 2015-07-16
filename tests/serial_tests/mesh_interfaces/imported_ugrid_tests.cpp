@@ -1,8 +1,8 @@
-#include "imported_ugrid.h"
-#include "range_loop.h"
+#include "ImportedUgrid.h"
+#include "RangeLoop.h"
 #include <vector>
-#include "generic_mesh.h"
-#include "generic_surface_mesh.h"
+#include "GenericMesh.h"
+#include "GenericSurfaceMesh.h"
 #include "CppUTest/CommandLineTestRunner.h"
 
 using std::vector;

@@ -1,5 +1,5 @@
 #ifndef __EXTENT_H
-#include "extent.h"
+#include "Extent.h"
 #endif
 #include <CppUTest/CommandLineTestRunner.h>
 

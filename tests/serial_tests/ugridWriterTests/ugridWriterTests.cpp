@@ -1,5 +1,8 @@
-#include "parfait.h"
 #include <vector>
+#include <UgridReader.h>
+#include <RangeLoop.h>
+#include <UgridWriter.h>
+#include <ImportedUgridFactory.h>
 #include "CppUTest/CommandLineTestRunner.h"
 
 using std::vector;

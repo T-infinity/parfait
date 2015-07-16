@@ -1,4 +1,4 @@
-#include "point.h"
+#include "Point.h"
 #include <CppUTest/CommandLineTestRunner.h>
 using namespace Parfait;
 

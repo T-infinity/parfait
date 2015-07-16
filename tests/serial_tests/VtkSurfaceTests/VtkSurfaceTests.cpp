@@ -1,6 +1,6 @@
-#include "vtk_surface_writer.h"
-#include "imported_ugrid.h"
-#include "message_passer.h"
+#include "VtkSurfaceWriter.h"
+#include "ImportedUgrid.h"
+#include "MessagePasser.h"
 #include <vector>
 #include <string>
 #include "CppUTest/CommandLineTestRunner.h"

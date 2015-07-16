@@ -1,10 +1,10 @@
-#include "vtk_generic_writer.h"
+#include "VtkGenericWriter.h"
 #include "vtk_extent_writer.h"
-#include "imported_ugrid.h"
-#include "message_passer.h"
+#include "ImportedUgrid.h"
+#include "MessagePasser.h"
 #include <vector>
 #include <string>
-#include "extent.h"
+#include "Extent.h"
 #include "CppUTest/CommandLineTestRunner.h"
 
 using std::vector;

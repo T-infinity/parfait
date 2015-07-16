@@ -1,6 +1,6 @@
-#include "generic_mesh.h"
-#include "cart_mesh.h"
-#include "generic_mesh_tools.h"
+#include "GenericMesh.h"
+#include "CartMesh.h"
+#include "GenericMeshTools.h"
 #include "CppUTest/CommandLineTestRunner.h"
 using namespace Parfait;
 

@@ -3,7 +3,7 @@
 //
 
 #include <vector>
-#include <message_passer.h>
+#include <MessagePasser.h>
 #include "mpi_compare_tols.h"
 
 #include "CppUTest/CommandLineTestRunner.h"

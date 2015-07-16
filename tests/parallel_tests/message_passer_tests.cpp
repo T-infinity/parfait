@@ -1,4 +1,4 @@
-#include "message_passer.h"
+#include "MessagePasser.h"
 #include "mpi_compare_tols.h"
 #include <mpi.h>
 #include <vector>

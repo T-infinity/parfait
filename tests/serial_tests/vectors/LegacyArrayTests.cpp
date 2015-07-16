@@ -1,5 +1,5 @@
-#include "legacy_array.h"
-#include "range_loop.h"
+#include "LegacyArray.h"
+#include "RangeLoop.h"
 #include "CppUTest/CommandLineTestRunner.h"
 
 TEST_GROUP(LegacyArrayTests)

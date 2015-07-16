@@ -1,4 +1,4 @@
-#include "fun3d_mesh.h"
+#include "Fun3dMesh.h"
 #include <vector>
 #include "CppUTest/CommandLineTestRunner.h"
 using namespace Parfait;
