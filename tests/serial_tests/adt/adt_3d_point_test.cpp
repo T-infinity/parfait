@@ -10,6 +10,7 @@
 using namespace Parfait;
 
 TEST_GROUP(Adt3DPoint) {} ;
+
 TEST(Adt3DPoint, StoreNoPoint){
 
     Adt3DPoint adt({{0,0,0}, {1,1,1}});
@@ -72,7 +73,8 @@ TEST(Adt3DPoint, StorePointOutsideDomain)
 {
     Adt3DPoint adt(Extent<double>(Point<double>(-2,-2,-2), Point<double>(2,2,2)));
     Point<double> point(5,5,5);
-   //CHECK_THROWS(std::logic_error,adt.store(10, point));
+
+    //CHECK_THROWS(std::exception, adt.store(10, point));
 }
 
 
