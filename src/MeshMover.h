@@ -1,7 +1,6 @@
 #ifndef MESH_MOVER_H
 #define MESH_MOVER_H
-#include "motion_matrix.h"
-
+#include <MotionMatrix.h>
 // Requirements:  Mesh must implement the following
 //
 // mesh.numberOfNodes();

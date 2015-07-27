@@ -3,11 +3,8 @@
 
 #ifdef PARFAIT_WITH_MPI
 
-#include "imported_ugrid.h"
-#include "message_passer.h"
-#include "fun3d_mesh.h"
-#include "mapbc_reader.h"
 #include <vector>
+#include <MessagePasser.h>
 
 namespace Parfait {
 	class ParallelMeshReDistributor {
@@ -50,7 +47,7 @@ namespace Parfait {
 		int calcImesh(int localId);
 	};
 }
-#include "parallel_mesh_redistributor.hpp"
+#include "ParallelMeshRedistributor.hpp"
 
 #endif
 #endif

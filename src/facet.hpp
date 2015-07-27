@@ -3,25 +3,26 @@
 #include <math.h>
 #include <stdexcept>
 
+namespace LocalMacroCrap {
+  inline double squaredMagnitude(const Parfait::Point<double> &a) {
+      return a.pos[0] * a.pos[0] + a.pos[1] * a.pos[1] + a.pos[2] * a.pos[2];
+  }
 
-inline double squaredMagnitude(const Parfait::Point<double> &a){
-    return a.pos[0]*a.pos[0] + a.pos[1]*a.pos[1] + a.pos[2]*a.pos[2];
-}
+  inline void CROSS(double *dest, const double *v1, const double *v2) {
+      dest[0] = v1[1] * v2[2] - v1[2] * v2[1];
+      dest[1] = v1[2] * v2[0] - v1[0] * v2[2];
+      dest[2] = v1[0] * v2[1] - v1[1] * v2[0];
+  }
 
-inline void CROSS(double *dest, const double *v1, const double *v2) {
-    dest[0] = v1[1]*v2[2]-v1[2]*v2[1];
-    dest[1] = v1[2]*v2[0]-v1[0]*v2[2];
-    dest[2] = v1[0]*v2[1]-v1[1]*v2[0];
-}
+  inline double DOT(const double *v1, const double *v2) {
+      return (v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2]);
+  }
 
-inline double DOT(const double *v1, const double *v2) {
-    return (v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2]);
-}
-
-inline void  SUB(double *dest, const double *v1, const double *v2) {
-    dest[0] = v1[0]-v2[0];
-    dest[1] = v1[1]-v2[1];
-    dest[2] = v1[2]-v2[2];
+  inline void SUB(double *dest, const double *v1, const double *v2) {
+      dest[0] = v1[0] - v2[0];
+      dest[1] = v1[1] - v2[1];
+      dest[2] = v1[2] - v2[2];
+  }
 }
 
 inline Parfait::Facet::Facet(const Point<double> &p1, const Point<double> &p2, const Point<double> &p3) {
@@ -89,34 +90,34 @@ inline bool Parfait::Facet::DoesRayIntersect(const double orig[3],
         *confident = true;
     }
 
-    SUB(edge1,&points[1][0],&points[0][0]);
-    SUB(edge2,&points[2][0],&points[0][0]);
+    LocalMacroCrap::SUB(edge1,&points[1][0],&points[0][0]);
+    LocalMacroCrap::SUB(edge2,&points[2][0],&points[0][0]);
 
     /* begin calculating the determinant -also used to calculate U parameter. */
-    CROSS(pvec,dir,edge2);
+    LocalMacroCrap::CROSS(pvec,dir,edge2);
 
     /* if determinant is near zero, ray lies in plane of triangle. */
-    det = DOT(edge1, pvec);
+    det = LocalMacroCrap::DOT(edge1, pvec);
 
     if(fabs(det) < 1.0e-15){
         return false;
     }
 
     inv_det = 1.0/det;
-    SUB(tvec, orig, &points[0][0]);
+    LocalMacroCrap::SUB(tvec, orig, &points[0][0]);
 
-    u = DOT(tvec, pvec) *inv_det;
+    u = LocalMacroCrap::DOT(tvec, pvec) *inv_det;
     if(u < 0.0 || u > 1.0){
         return false;
     }
 
-    CROSS(qvec, tvec, edge1);
-    v = DOT(dir, qvec) *inv_det;
+    LocalMacroCrap::CROSS(qvec, tvec, edge1);
+    v = LocalMacroCrap::DOT(dir, qvec) *inv_det;
     if(v < 0.0 || u+v > 1.0){
         return false;
     }
 
-    t = DOT(edge2, qvec)* inv_det;
+    t = LocalMacroCrap::DOT(edge2, qvec)* inv_det;
     if(t < 0.0){
         return false;
     }
@@ -219,9 +220,9 @@ inline Parfait::Point<double> Parfait::Facet::GetClosestPoint(Point<double> safe
     const Point<double> edge0 =  points[1] - points[0];
     const Point<double> edge1 =  points[2] - points[0];
 
-    double a00 = squaredMagnitude(edge0);
+    double a00 = LocalMacroCrap::squaredMagnitude(edge0);
     double a01 = Point<double>::dot(edge0, edge1);
-    double a11 = squaredMagnitude(edge1);
+    double a11 = LocalMacroCrap::squaredMagnitude(edge1);
     double b0  = Point<double>::dot(diff, edge0);
     double b1  = Point<double>::dot(diff, edge1);
     double det = fabs(a00*a11 - a01*a01);

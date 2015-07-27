@@ -4,9 +4,7 @@
 #include <vector>
 #include <string>
 #include <stdlib.h>
-#include "ugrid_reader.h"
-#include "message_passer.h"
-#include "imported_ugrid.h"
+#include <MessagePasser.h>
 
 namespace Parfait {
   class ParallelMeshReaderNaive {
@@ -73,6 +71,6 @@ namespace Parfait {
   };
 }
 
-#include "parallel_mesh_reader_naive.hpp"
+#include "ParallelMeshReaderNaive.hpp"
 
 #endif

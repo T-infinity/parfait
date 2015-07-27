@@ -19,6 +19,6 @@ class ParMetisPrepper
 
 };
 
-#include "parmetis_prepper.hpp"
+#include "ParmetisPrepper.hpp"
 
 #endif

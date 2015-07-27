@@ -1,6 +1,8 @@
-#include "range_loop.h"
 #include <stdio.h>
 #include <vector>
+#include <RangeLoop.h>
+#include <ImportedUgrid.h>
+#include <UgridReader.h>
 
 inline Parfait::ParallelMeshReaderNaive::ParallelMeshReaderNaive(std::vector<std::string> gridFiles_in,
                                                         std::vector<bool> &isBigEndian_in)
@@ -178,126 +180,126 @@ inline Parfait::ImportedUgrid Parfait::ParallelMeshReaderNaive::distributeGridsE
 
 inline void Parfait::ParallelMeshReaderNaive::distributeNodes()
 {
-  if(Rank() == 0)
+  if(MessagePasser::Rank() == 0)
   {
-    int nproc = NumberOfProcesses();
+    int nproc = MessagePasser::NumberOfProcesses();
     myNodes = getNodes(0,procNodeMap[1]);
     for(int proc=1;proc<nproc;proc++)
     {
       vector<double> nodeBuffer = getNodes(procNodeMap[proc],procNodeMap[proc+1]);
-      Send(nodeBuffer,proc);
+      MessagePasser::Send(nodeBuffer,proc);
     }
   }
   else
-    Recv(myNodes,0);
+    MessagePasser::Recv(myNodes,0);
 }
 
 inline void Parfait::ParallelMeshReaderNaive::distributeTriangles()
 {
-  if(Rank() == 0)
+  if(MessagePasser::Rank() == 0)
   {
-    int nproc = NumberOfProcesses();
+    int nproc = MessagePasser::NumberOfProcesses();
     myTriangles = getTriangles(0,procTriangleMap[1]);
     myTriangleTags = getTriangleTags(0,procTriangleMap[1]);
     for(int proc=1;proc<nproc;proc++)
     {
       vector<int> triangleBuffer = getTriangles(procTriangleMap[proc],procTriangleMap[proc+1]);
       vector<int> triangleTagBuffer = getTriangleTags(procTriangleMap[proc],procTriangleMap[proc+1]);
-      Send(triangleBuffer,proc);
-      Send(triangleTagBuffer,proc);
+      MessagePasser::Send(triangleBuffer,proc);
+      MessagePasser::Send(triangleTagBuffer,proc);
     }
   }
   else
   {
-    Recv(myTriangles,0);
-    Recv(myTriangleTags,0);
+    MessagePasser::Recv(myTriangles,0);
+    MessagePasser::Recv(myTriangleTags,0);
   }
 }
 
 inline void Parfait::ParallelMeshReaderNaive::distributeQuads()
 {
-  if(Rank() == 0)
+  if(MessagePasser::Rank() == 0)
   {
-    int nproc = NumberOfProcesses();
+    int nproc = MessagePasser::NumberOfProcesses();
     myQuads = getQuads(0,procQuadMap[1]);
     myQuadTags = getQuadTags(0,procQuadMap[1]);
     for(int proc=1;proc<nproc;proc++)
     {
       vector<int> quadBuffer = getQuads(procQuadMap[proc],procQuadMap[proc+1]);
       vector<int> quadTagBuffer = getQuadTags(procQuadMap[proc],procQuadMap[proc+1]);
-      Send(quadBuffer,proc);
-      Send(quadTagBuffer,proc);
+      MessagePasser::Send(quadBuffer,proc);
+      MessagePasser::Send(quadTagBuffer,proc);
     }
   }
   else
   {
-    Recv(myQuads,0);
-    Recv(myQuadTags,0);
+    MessagePasser::Recv(myQuads,0);
+    MessagePasser::Recv(myQuadTags,0);
   }
 }
 
 inline void Parfait::ParallelMeshReaderNaive::distributeTets()
 {
-  if(Rank() == 0)
+  if(MessagePasser::Rank() == 0)
   {
-    int nproc = NumberOfProcesses();
+    int nproc = MessagePasser::NumberOfProcesses();
     myTets = getTets(0,procTetMap[1]);
     for(int proc=1;proc<nproc;proc++)
     {
       std::vector<int> tetBuffer = getTets(procTetMap[proc],procTetMap[proc+1]);
-      Send(tetBuffer,proc);
+      MessagePasser::Send(tetBuffer,proc);
     }
   }
   else
-    Recv(myTets,0);
+    MessagePasser::Recv(myTets,0);
 }
 
 inline void Parfait::ParallelMeshReaderNaive::distributePyramids()
 {
-  if(Rank() == 0)
+  if(MessagePasser::Rank() == 0)
   {
-    int nproc = NumberOfProcesses();
+    int nproc = MessagePasser::NumberOfProcesses();
     myPyramids = getPyramids(0,procPyramidMap[1]);
     for(int proc=1;proc<nproc;proc++)
     {
       std::vector<int> pyramidBuffer = getPyramids(procPyramidMap[proc],procPyramidMap[proc+1]);
-      Send(pyramidBuffer,proc);
+      MessagePasser::Send(pyramidBuffer,proc);
     }
   }
   else
-    Recv(myPyramids,0);
+    MessagePasser::Recv(myPyramids,0);
 }
 
 inline void Parfait::ParallelMeshReaderNaive::distributePrisms()
 {
-  if(Rank() == 0)
+  if(MessagePasser::Rank() == 0)
   {
-    int nproc = NumberOfProcesses();
+    int nproc = MessagePasser::NumberOfProcesses();
     myPrisms = getPrisms(0,procPrismMap[1]);
     for(int proc=1;proc<nproc;proc++)
     {
       std::vector<int> prismBuffer = getPrisms(procPrismMap[proc],procPrismMap[proc+1]);
-      Send(prismBuffer,proc);
+      MessagePasser::Send(prismBuffer,proc);
     }
   }
   else
-    Recv(myPrisms,0);
+    MessagePasser::Recv(myPrisms,0);
 }
 
 inline void Parfait::ParallelMeshReaderNaive::distributeHexs()
 {
-  if(Rank() == 0)
+  if(MessagePasser::Rank() == 0)
   {
-    int nproc = NumberOfProcesses();
+    int nproc = MessagePasser::NumberOfProcesses();
     myHexs = getHexs(0,procHexMap[1]);
     for(int proc=1;proc<nproc;proc++)
     {
       std::vector<int> hexBuffer = getHexs(procHexMap[proc],procHexMap[proc+1]);
-      Send(hexBuffer,proc);
+      MessagePasser::Send(hexBuffer,proc);
     }
   }
   else
-    Recv(myHexs,0);
+    MessagePasser::Recv(myHexs,0);
 }
 
 inline std::vector<double> Parfait::ParallelMeshReaderNaive::getNodes(int begin,int end)

@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <vtkXMLUnstructuredGridWriter.h>
 #include <vtkXMLPUnstructuredGridWriter.h>
-#include "message_passer.h"
+#include <MessagePasser.h>
 
 class VtkVolumeWriter{
     public:
@@ -57,7 +57,7 @@ class VtkVolumeWriter{
 };
 
 
-#include "vtk_volume_writer.hpp"
+#include "VtkVolumeWriter.hpp"
 
 #endif // PARFAIT_WITH_VTK
 #endif

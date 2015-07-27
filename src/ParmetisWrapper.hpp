@@ -4,7 +4,7 @@
 
 #ifdef PARFAIT_WITH_PARMETIS
 
-#include "message_passer.h"
+#include <MessagePasser.h>
 
 inline void PartitionMesh(int rank,int nproc,
 		int *proc_node_map,

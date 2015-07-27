@@ -37,5 +37,5 @@ void PartitionMesh(int rank,int nproc,
 		int *ja,
 		int *part_vec);
 
-#include "parmetis_wrapper.hpp"
+#include "ParmetisWrapper.hpp"
 #endif
