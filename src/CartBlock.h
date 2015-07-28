@@ -1,7 +1,7 @@
 #ifndef CART_BLOCK_H
 #define CART_BLOCK_H
 
-#include "extent.h"
+#include "Extent.h"
 #include <vector>
 #include <assert.h>
 #include <stdio.h>

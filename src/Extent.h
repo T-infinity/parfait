@@ -2,7 +2,7 @@
 #define EXTENT_H
 
 #ifndef POINT_H
-#include "point.h"
+#include "Point.h"
 #endif
 
 namespace Parfait {
@@ -35,6 +35,6 @@ namespace Parfait {
   };
 }
 
-#include <extent.hpp>
+#include <Extent.hpp>
 
 #endif

@@ -5,7 +5,7 @@
 #include <string>
 
 #ifndef EXTENT_H
-#include "extent.h"
+#include "Extent.h"
 #endif
 
 namespace Parfait {

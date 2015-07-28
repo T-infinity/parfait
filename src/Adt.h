@@ -35,6 +35,6 @@ namespace Parfait {
         Adt_elem<ndim> *&getChildPointer(Adt_elem<ndim> *elem, Adt<ndim>::ChildType &whichChild);
     };
 }
-#include "adt.hpp"
+#include "Adt.hpp"
 
 #endif

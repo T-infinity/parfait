@@ -2,11 +2,11 @@
 #define UNIT_TRANSFORMER_H
 
 #ifndef POINT_H
-#include "point.h"
+#include "Point.h"
 #endif
 
 #ifndef EXTENT_H
-#include "extent.h"
+#include "Extent.h"
 #endif
 
 namespace Parfait {

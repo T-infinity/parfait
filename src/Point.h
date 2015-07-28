@@ -51,6 +51,6 @@ namespace Parfait {
   };
 }
 
-#include "point.hpp"
+#include "Point.hpp"
 
 #endif

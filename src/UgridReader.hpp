@@ -1,4 +1,4 @@
-#include "byteswap.h"
+#include "ByteSwap.h"
 #include <stdexcept>
 
 inline void Parfait::UgridReader::readHeader(std::string filename,int &nnodes,

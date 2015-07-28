@@ -1,7 +1,7 @@
 #include <assert.h>
 #include <math.h>
-#include "point.h"
-#include "extent.h"
+#include "Point.h"
+#include "Extent.h"
 #include <stdexcept>
 #include <exception>
 namespace Parfait {

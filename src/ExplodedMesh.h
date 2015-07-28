@@ -1,6 +1,6 @@
 #ifndef PARFAIT_EXPLODEDMESH_H
 #define PARFAIT_EXPLODEDMESH_H
-#include "point.h"
+#include "Point.h"
 
 namespace Parfait {
   class ExplodedMesh {

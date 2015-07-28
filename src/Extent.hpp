@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <iostream>
-#include "extent.h"
 
 namespace Parfait {
   template <typename T>
