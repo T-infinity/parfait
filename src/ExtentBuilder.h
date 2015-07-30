@@ -1,7 +1,7 @@
 #ifndef EXTENT_BUILDER_H
 #define EXTENT_BUILDER_H
 
-#include "extent.h"
+#include "Extent.h"
 namespace Parfait {
     namespace ExtentBuilder {
         // Build an extent box around an entire mesh, or any

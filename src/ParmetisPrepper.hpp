@@ -1,12 +1,13 @@
-#include "node_to_node.h"
-#include "CellToCell.h"
-#include "message_passer.h"
-#include "parmetis_wrapper.h"
-#include "range_loop.h"
+#include <MessagePasser.h>
+#include <VectorTools.h>
+#include <ParmetisWrapper.h>
+#include <NodeToNode.h>
 
 template<class MeshType>
 void ParMetisPrepper<MeshType>::buildNodeToNodeConnectivity()
 {
+	using namespace Parfait;
+	using namespace MessagePasser;
 	int nproc = NumberOfProcesses();
 	vector<int> nodeIds = buildUniqueNodeList(mesh);
 	vector<vector<int> > nodeToNode = buildNodeToNode(mesh,nodeIds); 
@@ -14,7 +15,7 @@ void ParMetisPrepper<MeshType>::buildNodeToNodeConnectivity()
 	int nnodes = mesh.numberOfNodes();
 	// build a map of which nodes are on each proc
 	procNodeMap.resize(nproc);
-	AllGather(mesh.numberOfNodes(),procNodeMap);
+	MessagePasser::AllGather(mesh.numberOfNodes(),procNodeMap);
 	procNodeMap.insert(procNodeMap.begin(),0);
 	for(int i=1;i<=nproc;i++)
 		procNodeMap[i] += procNodeMap[i-1];
@@ -106,7 +107,7 @@ std::vector<int> ParMetisPrepper<MeshType>::getPartVector()
 	for(auto row:connectivity)
 		for(int nbr:row)
 			ja.push_back(nbr);
-	PartitionMesh(Rank(),NumberOfProcesses(),procNodeMap.data(),
+	PartitionMesh(MessagePasser::Rank(),MessagePasser::NumberOfProcesses(),procNodeMap.data(),
 			ia.data(),ja.data(),part.data());
 	return part;
 }

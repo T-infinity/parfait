@@ -7,7 +7,7 @@ namespace Parfait {
     size_t private_fwrite(void *ptr, size_t size, size_t nmemb, FILE *stream);
 }
 
-#include "byteswap.hpp"
+#include "ByteSwap.hpp"
 
 #endif
 

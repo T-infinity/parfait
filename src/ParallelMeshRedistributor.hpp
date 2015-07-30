@@ -1,5 +1,5 @@
-#include "range_loop.h"
 #include <algorithm>
+#include <RangeLoop.h>
 
 #ifdef PARFAIT_WITH_MPI
 
@@ -433,6 +433,7 @@ inline void Parfait::ParallelMeshReDistributor::identifyGhostNodes()
 }
 
 inline void Parfait::ParallelMeshReDistributor::shuffleGhostNodes(){
+	using namespace MessagePasser;
 	for(int proc:range(nproc)){
 		vector<int> neededGhosts;
 		vector<int> sendGhostIds;

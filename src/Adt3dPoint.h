@@ -2,7 +2,7 @@
 #define ADT_3D_POINT_H
 
 #ifndef ADT_H
-#include "adt.h"
+#include "Adt.h"
 #endif
 
 #ifndef POINT_H
