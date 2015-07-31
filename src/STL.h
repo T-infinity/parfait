@@ -10,6 +10,7 @@
 #include "Adt3dExtent.h"
 
 namespace Parfait {
+  namespace STL {
     class STL {
         typedef Parfait::Extent<double> Extent;
         typedef Parfait::Point<double> Point;
@@ -43,7 +44,6 @@ namespace Parfait {
         Point getClosestPointWithSeed(const Point &point, double &dist) const;
         std::vector<Facet> getFacetsInsideExtent(const Extent &e) const;
 
-
         Extent findDomain() const { return stl.findDomain(); }
 
     private:
@@ -51,6 +51,7 @@ namespace Parfait {
         Parfait::Adt3DExtent adt;
         Point LoopClosest(const Point &point, double &dist) const;
     };
+  }
 }
 
 #include "STL.hpp"
