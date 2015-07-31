@@ -29,6 +29,7 @@ set(PARFAIT_SERIAL_TESTS_SRC
         Geometry/stl_test.cpp
         Geometry/facet_test.cpp
         Geometry/STLReader_test.cpp
+        LinearPartitioner/LinearPartitioner_test.cpp
         high_level_mesh_searching/AdtBuilderTests.cpp
         mesh_interfaces/fun3d_mesh_tests.cpp
         mesh_interfaces/imported_ugrid_tests.cpp
