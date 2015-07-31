@@ -27,9 +27,12 @@ namespace Parfait {
         void loadBinaryFile(std::string fileName);
         void writeAsciiFile(std::string fileName, std::string solidName = "solidName") const;
         void translateCenterToOrigin();
+        void translateCenterToOrigin(const Extent &d);
         void scaleToUnitLength();
+        void scaleToUnitLength(const Extent &d);
         void rescale(double scale);
         double getLongestCartesianLength();
+        double getLongestCartesianLength(const Extent &d);
         Extent findDomain() const;
     };
 
@@ -51,6 +54,8 @@ namespace Parfait {
         Parfait::Adt3DExtent adt;
         Point LoopClosest(const Point &point, double &dist) const;
     };
+
+
   }
 }
 

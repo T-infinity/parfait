@@ -17,18 +17,20 @@ namespace Parfait {
     }
 
     inline void STL::scaleToUnitLength() {
+        auto d = findDomain();
+        scaleToUnitLength(d);
+    }
 
+    inline void STL::scaleToUnitLength(const Extent &d) {
         translateCenterToOrigin();
-        double length = getLongestCartesianLength();
+        double length = getLongestCartesianLength(d);
         rescale(length);
     }
 
-    inline double STL::getLongestCartesianLength() {
-        Extent domain = findDomain();
-
-        double dx = domain.hi[0] - domain.lo[0];
-        double dy = domain.hi[1] - domain.lo[1];
-        double dz = domain.hi[2] - domain.lo[2];
+    inline double STL::getLongestCartesianLength(const Extent &d){
+        double dx = d.hi[0] - d.lo[0];
+        double dy = d.hi[1] - d.lo[1];
+        double dz = d.hi[2] - d.lo[2];
         double max = -20e20;
         max = (max > dx) ? (max) : (dx);
         max = (max > dy) ? (max) : (dy);
@@ -36,53 +38,29 @@ namespace Parfait {
         return max;
     }
 
+    inline double STL::getLongestCartesianLength() {
+        Extent domain = findDomain();
+        return getLongestCartesianLength(domain);
+    }
+
+    inline void STL::translateCenterToOrigin(const Extent &d) {
+        double x_mid = 0.5 * (d.lo[0] + d.hi[0]);
+        double y_mid = 0.5 * (d.lo[1] + d.hi[1]);
+        double z_mid = 0.5 * (d.lo[2] + d.hi[2]);
+
+        for(auto &f : facets){
+            for(int i = 0; i < 3; i++){
+                f[i][0] -= x_mid;
+                f[i][1] -= y_mid;
+                f[i][2] -= z_mid;
+            }
+        }
+    }
+
     inline void STL::translateCenterToOrigin() {
 
-        double x_min = 20e20;
-        double x_max = -20e20;
-        double y_min = 20e20;
-        double y_max = -20e20;
-        double z_min = 20e20;
-        double z_max = -20e20;
-        for (unsigned int i = 0; i < facets.size(); i++) {
-            if (x_min > facets[i][0][0]) { x_min = facets[i][0][0]; }
-            if (y_min > facets[i][0][1]) { y_min = facets[i][0][1]; }
-            if (z_min > facets[i][0][2]) { z_min = facets[i][0][2]; }
-            if (x_min > facets[i][1][0]) { x_min = facets[i][1][0]; }
-            if (y_min > facets[i][1][1]) { y_min = facets[i][1][1]; }
-            if (z_min > facets[i][1][2]) { z_min = facets[i][1][2]; }
-            if (x_min > facets[i][2][0]) { x_min = facets[i][2][0]; }
-            if (y_min > facets[i][2][1]) { y_min = facets[i][2][1]; }
-            if (z_min > facets[i][2][2]) { z_min = facets[i][2][2]; }
-
-            if (x_max < facets[i][0][0]) { x_max = facets[i][0][0]; }
-            if (y_max < facets[i][0][1]) { y_max = facets[i][0][1]; }
-            if (z_max < facets[i][0][2]) { z_max = facets[i][0][2]; }
-            if (x_max < facets[i][1][0]) { x_max = facets[i][1][0]; }
-            if (y_max < facets[i][1][1]) { y_max = facets[i][1][1]; }
-            if (z_max < facets[i][1][2]) { z_max = facets[i][1][2]; }
-            if (x_max < facets[i][2][0]) { x_max = facets[i][2][0]; }
-            if (y_max < facets[i][2][1]) { y_max = facets[i][2][1]; }
-            if (z_max < facets[i][2][2]) { z_max = facets[i][2][2]; }
-        }
-
-        double x_mid = 0.5 * (x_max + x_min);
-        double y_mid = 0.5 * (y_max + y_min);
-        double z_mid = 0.5 * (z_max + z_min);
-
-        for (unsigned int i = 0; i < facets.size(); i++) {
-            facets[i][0][0] -= x_mid;
-            facets[i][1][0] -= x_mid;
-            facets[i][2][0] -= x_mid;
-
-            facets[i][0][1] -= y_mid;
-            facets[i][1][1] -= y_mid;
-            facets[i][2][1] -= y_mid;
-
-            facets[i][0][2] -= z_mid;
-            facets[i][1][2] -= z_mid;
-            facets[i][2][2] -= z_mid;
-        }
+        auto d = findDomain();
+        return translateCenterToOrigin(d);
     }
 
     inline void STL::loadBinaryFile(std::string fileName) {

@@ -28,3 +28,9 @@ TEST(STLTests, ClosestBugFixCheck){
     auto closest = searchSTL.getClosestPoint(p);
     CHECK(closest.approxEqual({-.5,.5,.5}));
 }
+
+TEST(STLTests, findDomain){
+    auto domain = stl.findDomain();
+    DOUBLES_EQUAL(-0.5, domain.lo[0], 1.0e-14);
+    DOUBLES_EQUAL( 0.5, domain.hi[0], 1.0e-14);
+}
