@@ -1,6 +1,9 @@
 #ifndef PARFAIT_STLREADER_HPP
 #define PARFAIT_STLREADER_HPP
 
+#include <stdexcept>
+#include <Facet.h>
+
 using namespace Parfait::STL;
 
 inline Reader::Reader(std::string fileName_in) : fileName(fileName_in){

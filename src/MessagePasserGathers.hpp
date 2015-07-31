@@ -1,24 +1,18 @@
 
-// Gather values to a vector on the root
 template<typename T>
-void MessagePasser::Gather(T value,std::vector<T> &vec,int rootId)
-{
-	vec.assign(NumberOfProcesses(),0);
-	MPI_Gather(&value,1,Type(value),&vec[0],1,Type(value),rootId,MPI_COMM_WORLD);
+void MessagePasser::Gather(T value,std::vector<T> &vec,int rootId) {
+	vec.resize(NumberOfProcesses());
+	MPI_Gather(&value,sizeof(T),MPI_CHAR,vec.data(),sizeof(T),MPI_CHAR,rootId,MPI_COMM_WORLD);
 }
 
-// Gather values to a vector on every proc
 template<typename T>
-void MessagePasser::AllGather(T value,std::vector<T> &vec)
-{
+void MessagePasser::AllGather(T value,std::vector<T> &vec) {
 	vec.assign(NumberOfProcesses(),0);
 	MPI_Allgather(&value,1,Type(value),&vec[0],1,Type(value),MPI_COMM_WORLD);
 }
 
-// Gather vectors of a given size to the root
 template<typename T>
-void MessagePasser::Gather(const std::vector<T> &send_vec,int send_count,std::vector<T> &recv_vec,int rootId)
-{
+void MessagePasser::Gather(const std::vector<T> &send_vec,int send_count,std::vector<T> &recv_vec,int rootId) {
 	if(Rank() == rootId)
 	{
 		recv_vec.clear();
@@ -28,7 +22,6 @@ void MessagePasser::Gather(const std::vector<T> &send_vec,int send_count,std::ve
 			Type(T()),rootId,MPI_COMM_WORLD);
 }
 
-// Gatherv vectors of different lengths to the root
 template<typename T>
 void MessagePasser::Gatherv(const std::vector<T> &send_vec,std::vector<T> &recv_vec,
 		std::vector<int> &map,int rootId)

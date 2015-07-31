@@ -12,15 +12,21 @@ include_directories(
     "${MPI_INCLUDE_PATH}"
     )
 
+    file(GLOB_RECURSE HEADERS
+        "src/*.h"
+        "src/*.hpp"
+        )
+
 set(PARFAIT_PARALLEL_TESTS_SRC
-        AllTests.cpp  
+        AllTests.cpp
+        extent_parallel_test.cpp
         message_passer_tests.cpp
         parallel_sum_tests.cpp
         GathervTests.cpp
         AllGathervTests.cpp
        )
 
-add_executable(ParfaitParallelTests ${PARFAIT_PARALLEL_TESTS_SRC})
+add_executable(ParfaitParallelTests ${PARFAIT_PARALLEL_TESTS_SRC} ${HEADERS})
 target_link_libraries(ParfaitParallelTests
             CppUTest
             ${MPI_LIBRARIES}

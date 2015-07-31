@@ -1,9 +1,7 @@
 
-	// broadcast a value
 	template<typename T>
-	void Broadcast(T &value,int rootId)
-	{
-		MPI_Bcast(&value,1,Type(value),rootId,MPI_COMM_WORLD);
+	void Broadcast(T &value,int rootId) {
+		MPI_Bcast(&value,sizeof(T),MPI_CHAR,rootId,MPI_COMM_WORLD);
 	}
 
 	// broadcast a vector of KNOWN size

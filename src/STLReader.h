@@ -3,6 +3,7 @@
 #include <string>
 
 namespace Parfait{
+  class Facet;
   namespace STL{
     class Reader{
       public:
