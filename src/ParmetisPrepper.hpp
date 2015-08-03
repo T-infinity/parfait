@@ -8,13 +8,19 @@ template<class MeshType>
 ParMetisPrepper<MeshType>::ParMetisPrepper(MeshType& m)
 :mesh(m)
 {
-	node_ids = buildUniqueNodeList(mesh);
+	node_ids = Parfait::buildUniqueNodeList(mesh);
 
-	for(auto id:node_ids)
-		if(id < 0)
-			throw std::logic_error("negative node id");
+	int negative_count = 0;
+	for(int i=0;i<node_ids.size();i++) {
+		if (node_ids[i] < 0) {
+			negative_count++;
+		}
+	}
+	printf("Rank %i: negative count %i of %i\n",MessagePasser::Rank(),negative_count,node_ids.size());
+	MessagePasser::Barrier();
+	return;
 
-	node_to_node = buildNodeToNode(mesh,node_ids);
+	node_to_node = Parfait::buildNodeToNode(mesh,node_ids);
 
 	for(auto& nbr_list:node_to_node){
 		for(auto nbr:nbr_list)

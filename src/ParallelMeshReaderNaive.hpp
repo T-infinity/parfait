@@ -317,11 +317,6 @@ inline void Parfait::ParallelMeshReaderNaive::distributeHexs()
 inline std::vector<double> Parfait::ParallelMeshReaderNaive::getNodes(int begin,int end)
 {
   using namespace UgridReader;
-  //printf("Grid node map ");
-  //for(int count:gridNodeMap)
-  //	printf("%i ",count);
-  //printf("\n");
-  //printf("Reading nodes %i - %i\n",begin,end);
   std::vector<double> nodeBuffer(3*(end-begin),0.0);
   int firstGrid  = getFirstGrid(gridNodeMap,begin);
   int lastGrid   = getLastGrid(gridNodeMap,end);
@@ -331,14 +326,10 @@ inline std::vector<double> Parfait::ParallelMeshReaderNaive::getNodes(int begin,
   std::vector<double> tmp;
   if(firstGrid == lastGrid)
   {
-    //printf("--From grid %i: reading %i to %i\n",firstGrid,beginIndex,endIndex);
-    // read nodes from the first grid (start at beginIndex and read to endIndex)
     tmp = readNodes(gridFiles[firstGrid],beginIndex,endIndex,isBigEndian[firstGrid]);
   }
   else
   {
-    //printf("--From grid %i: reading %i to %i\n",firstGrid,beginIndex,gridNodeMap[firstGrid+1]);
-    // read nodes from the first grid (start at beginIndex and read to the end of the file)
     tmp = readNodes(gridFiles[firstGrid],beginIndex,
                     gridNodeMap[firstGrid+1]-gridNodeMap[firstGrid],isBigEndian[firstGrid]);
   }
@@ -359,7 +350,6 @@ inline std::vector<double> Parfait::ParallelMeshReaderNaive::getNodes(int begin,
   if(lastGrid > firstGrid)
   {
     tmp.clear();
-    //printf("--From grid %i: reading nodes 0 - %i\n",lastGrid,endIndex);
     tmp = readNodes(gridFiles[lastGrid],0,endIndex,isBigEndian[lastGrid]);
     for(double node : tmp)
       nodeBuffer[positionInBuffer++] = node;
@@ -634,7 +624,7 @@ inline std::vector<int> Parfait::ParallelMeshReaderNaive::getPyramids(int begin,
 inline std::vector<int> Parfait::ParallelMeshReaderNaive::getPrisms(int begin,int end)
 {
   using namespace UgridReader;
-  std::vector<int> prismBuffer(6*(end-begin),0.0);
+  std::vector<int> prismBuffer(6*(end-begin),0);
   int firstGrid  = getFirstGrid(gridPrismMap,begin);
   int lastGrid   = getLastGrid(gridPrismMap,end);
   int beginIndex = getBeginIndex(gridPrismMap,begin);
@@ -646,12 +636,21 @@ inline std::vector<int> Parfait::ParallelMeshReaderNaive::getPrisms(int begin,in
   {
     // read prisms from the first grid (start at beginIndex and read to endIndex)
     tmp = readPrisms(gridFiles[firstGrid],beginIndex,endIndex,isBigEndian[firstGrid]);
+    for(auto prism:tmp) {
+      if (prism < 0) {
+        printf("reading from grid[%i] %s prisms %i through %i\n",firstGrid,gridFiles[firstGrid].c_str(),beginIndex,endIndex);
+        throw std::logic_error("Prisms are fucked 1");
+      }
+    }
   }
   else
   {
     // read prisms from the first grid (start at beginIndex and read to the end of the file)
     tmp = readPrisms(gridFiles[firstGrid],beginIndex,gridPrismMap[firstGrid+1]
                                                      -gridPrismMap[firstGrid],isBigEndian[firstGrid]);
+    for(auto prism:tmp)
+      if(prism<0)
+        throw std::logic_error("Prisms are fucked 2");
   }
   for(int prism : tmp)
     prismBuffer[positionInBuffer++] = prism + gridNodeMap[firstGrid];
@@ -661,6 +660,9 @@ inline std::vector<int> Parfait::ParallelMeshReaderNaive::getPrisms(int begin,in
   for(int i=firstGrid+1;i<lastGrid;i++)
   {
     tmp = readPrisms(gridFiles[i],isBigEndian[i]);
+    for(auto prism:tmp)
+      if(prism<0)
+        throw std::logic_error("Prisms are fucked 3");
     for(int prism : tmp)
       prismBuffer[positionInBuffer++] = prism + gridNodeMap[i];
     tmp.clear();
@@ -670,9 +672,15 @@ inline std::vector<int> Parfait::ParallelMeshReaderNaive::getPrisms(int begin,in
   if(lastGrid > firstGrid)
   {
     tmp = readPrisms(gridFiles[lastGrid],0,endIndex,isBigEndian[lastGrid]);
+    for(auto prism:tmp)
+      if(prism<0)
+        throw std::logic_error("Prisms are fucked 4");
     for(int prism : tmp)
       prismBuffer[positionInBuffer++] = prism + gridNodeMap[lastGrid];
   }
+  for(auto prism:prismBuffer)
+      if(prism<0)
+        throw std::logic_error("Prisms are fucked 5");
   return prismBuffer;
 }
 

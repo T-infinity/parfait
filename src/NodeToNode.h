@@ -7,6 +7,7 @@
 #include "GenericMesh.h"
 #include "MessagePasser.h"
 #include <assert.h>
+#include <stdexcept>
 
 // There are two functions here:
 // 1. buildUniqueNodeList()
@@ -40,44 +41,52 @@
 //       process.  Comminication will have to be done after the fact in
 //       order to resolve the complete n2n connectivity.
 namespace Parfait {
-    template<typename T>
-    void putAllNodesIntoList(Mesh<T> &mesh, std::vector<int> &nodeIds);
+    template<typename MeshType>
+    std::vector<int> putAllNodesIntoList(MeshType &mesh);
 
     template<typename T>
     std::vector<int> buildUniqueNodeList(T &meshInterface) {
         if(MessagePasser::Rank() == 0)
             printf("Building unique node list:\n");
         Mesh<T> mesh(meshInterface);
-        int sizeEstimate = 6 * mesh.numberOfCells();
-        std::vector<int> nodeIds;
-        nodeIds.reserve(sizeEstimate);
         if(MessagePasser::Rank() == 0)
             printf("Putting candidate nodes into list:\n");
-        putAllNodesIntoList(mesh, nodeIds);
+        auto node_ids = putAllNodesIntoList(mesh);
+        for(auto id:node_ids)
+            if(id < 0)
+                throw std::logic_error("Negative node id....");
 
         if(MessagePasser::Rank() == 0)
             printf("sorting:\n");
-        sort(nodeIds.begin(), nodeIds.end());
-        // remove duplicates
+        sort(node_ids.begin(), node_ids.end());
+
         if(MessagePasser::Rank() == 0)
             printf("removing duplicates:\n");
-        nodeIds.erase(unique(nodeIds.begin(), nodeIds.end()), nodeIds.end());
+        node_ids.erase(unique(node_ids.begin(), node_ids.end()), node_ids.end());
         if(MessagePasser::Rank() == 0)
             printf("Done removing duplicates:\n");
-        return nodeIds;
+        printf("Rank %i: node_ids.size() %i\n",MessagePasser::Rank(), node_ids.size());
+        return node_ids;
     }
 
-    template<typename T>
-    void putAllNodesIntoList(Mesh<T> &mesh, std::vector<int> &nodeIds) {
-// put all nodes from all cells into list
-        for (auto cell : mesh.cells()) {
-            int nnodes = cell.numberOfNodes();
-            std::vector<int> tmp = cell.getNodes();
-            for (int i = 0; i < nnodes; i++)
-                nodeIds.push_back(tmp[i]);
-            for (int i = 0; i < nnodes; i++)
-                nodeIds.push_back(tmp[i]);
+    template<typename MeshType>
+    std::vector<int> putAllNodesIntoList(MeshType &mesh) {
+        std::vector<int> node_ids;
+        for (int i=0;i<mesh.numberOfCells();i++) {
+            std::vector<int> tmp = mesh.getNodesInCell(i);
+            for (int id:tmp) {
+                if(id < 0){
+                    printf("Cell size %i: (",tmp.size());
+                    for(auto xx:tmp){
+                        printf("%i ",xx);
+                    }
+                    printf(")\n");
+                    throw std::logic_error("Cell had negative ids");
+                }
+                node_ids.push_back(id);
+            }
         }
+        return node_ids;
     }
 
     template<typename T>
@@ -95,9 +104,6 @@ namespace Parfait {
 
         std::vector<std::vector<int> > n2n;
         n2n.resize((int) nodeIds.size());
-        // populate n2n connectivity
-        int percentDone = 0;
-        int count = 0;
         if(MessagePasser::Rank() == 0)
             printf("Building local n2n connectivity:\n");
         for (int cell_id=0;cell_id<mesh.numberOfCells();cell_id++) {

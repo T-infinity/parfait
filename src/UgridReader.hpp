@@ -303,7 +303,7 @@ inline std::vector<int> Parfait::UgridReader::readPyramids(std::string filename,
     byteOffset += 4*nquad*sizeof(int);
     byteOffset += (ntri+nquad)*sizeof(int);
     byteOffset += 4*ntet*sizeof(int);
-    byteOffset += 4*begin*sizeof(int);
+    byteOffset += 5*begin*sizeof(int);
     fseek(f,byteOffset,SEEK_SET);
 	if(swapBytes)
     	private_fread(&pyrs[0],sizeof(int),5*nrequested,f);
@@ -329,6 +329,7 @@ inline std::vector<int> Parfait::UgridReader::readPrisms(std::string filename,in
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     // get header info and allocate space for triangles
     readHeader(filename,nnodes,ntri,nquad,ntet,npyr,nprism,nhex,swapBytes);
+printf("Grid %s has %i prisms\n",filename.c_str(),nprism);
     int nrequested = end - begin;
     std::vector<int> prisms(6*nrequested,0);
 
@@ -350,7 +351,7 @@ inline std::vector<int> Parfait::UgridReader::readPrisms(std::string filename,in
     	fread(&prisms[0],sizeof(int),6*nrequested,f);
     fclose(f);
 
-    for(int& vertex : prisms)
+    for(int& vertex : prisms) // decrement to C indexing
         vertex--;
 
     return prisms;
