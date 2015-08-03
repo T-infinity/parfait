@@ -636,21 +636,12 @@ inline std::vector<int> Parfait::ParallelMeshReaderNaive::getPrisms(int begin,in
   {
     // read prisms from the first grid (start at beginIndex and read to endIndex)
     tmp = readPrisms(gridFiles[firstGrid],beginIndex,endIndex,isBigEndian[firstGrid]);
-    for(auto prism:tmp) {
-      if (prism < 0) {
-        printf("reading from grid[%i] %s prisms %i through %i\n",firstGrid,gridFiles[firstGrid].c_str(),beginIndex,endIndex);
-        throw std::logic_error("Prisms are fucked 1");
-      }
-    }
   }
   else
   {
     // read prisms from the first grid (start at beginIndex and read to the end of the file)
     tmp = readPrisms(gridFiles[firstGrid],beginIndex,gridPrismMap[firstGrid+1]
                                                      -gridPrismMap[firstGrid],isBigEndian[firstGrid]);
-    for(auto prism:tmp)
-      if(prism<0)
-        throw std::logic_error("Prisms are fucked 2");
   }
   for(int prism : tmp)
     prismBuffer[positionInBuffer++] = prism + gridNodeMap[firstGrid];
@@ -660,9 +651,6 @@ inline std::vector<int> Parfait::ParallelMeshReaderNaive::getPrisms(int begin,in
   for(int i=firstGrid+1;i<lastGrid;i++)
   {
     tmp = readPrisms(gridFiles[i],isBigEndian[i]);
-    for(auto prism:tmp)
-      if(prism<0)
-        throw std::logic_error("Prisms are fucked 3");
     for(int prism : tmp)
       prismBuffer[positionInBuffer++] = prism + gridNodeMap[i];
     tmp.clear();
@@ -672,15 +660,9 @@ inline std::vector<int> Parfait::ParallelMeshReaderNaive::getPrisms(int begin,in
   if(lastGrid > firstGrid)
   {
     tmp = readPrisms(gridFiles[lastGrid],0,endIndex,isBigEndian[lastGrid]);
-    for(auto prism:tmp)
-      if(prism<0)
-        throw std::logic_error("Prisms are fucked 4");
     for(int prism : tmp)
       prismBuffer[positionInBuffer++] = prism + gridNodeMap[lastGrid];
   }
-  for(auto prism:prismBuffer)
-      if(prism<0)
-        throw std::logic_error("Prisms are fucked 5");
   return prismBuffer;
 }
 

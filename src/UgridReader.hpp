@@ -193,7 +193,7 @@ inline std::vector<int> Parfait::UgridReader::readTriangles(std::string filename
     if(f == NULL){
         throw std::domain_error("Could not open .ugrid file: "+filename);
     }
-    int byteOffset = 7*sizeof(int) + 3*nnodes*sizeof(double);
+    unsigned long int byteOffset = 7*sizeof(int) + 3*nnodes*sizeof(double);
     byteOffset += 3*begin*sizeof(int);
     fseek(f,byteOffset,SEEK_SET);
 	if(swapBytes)
@@ -226,7 +226,7 @@ inline std::vector<int> Parfait::UgridReader::readQuads(std::string filename,int
     if(f == NULL){
         throw std::domain_error("Could not open .ugrid file: "+filename);
     }
-    int byteOffset = 7*sizeof(int) + 3*nnodes*sizeof(double);
+    unsigned long int byteOffset = 7*sizeof(int) + 3*nnodes*sizeof(double);
     byteOffset += 3*ntri*sizeof(int);
     byteOffset += 4*begin*sizeof(int);
     fseek(f,byteOffset,SEEK_SET);
@@ -261,7 +261,7 @@ inline std::vector<int> Parfait::UgridReader::readTets(std::string filename,int 
     if(f == NULL){
         throw std::domain_error("Could not open .ugrid file: "+filename);
     }
-    int byteOffset = 7*sizeof(int) + 3*nnodes*sizeof(double);
+    unsigned long int byteOffset = 7*sizeof(int) + 3*nnodes*sizeof(double);
     byteOffset += 3*ntri*sizeof(int);
     byteOffset += 4*nquad*sizeof(int);
     byteOffset += (ntri+nquad)*sizeof(int);
@@ -298,7 +298,7 @@ inline std::vector<int> Parfait::UgridReader::readPyramids(std::string filename,
     if(f == NULL){
         throw std::domain_error("Could not open .ugrid file: "+filename);
     }
-    int byteOffset = 7*sizeof(int) + 3*nnodes*sizeof(double);
+    unsigned long int byteOffset = 7*sizeof(int) + 3*nnodes*sizeof(double);
     byteOffset += 3*ntri*sizeof(int);
     byteOffset += 4*nquad*sizeof(int);
     byteOffset += (ntri+nquad)*sizeof(int);
@@ -329,7 +329,6 @@ inline std::vector<int> Parfait::UgridReader::readPrisms(std::string filename,in
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     // get header info and allocate space for triangles
     readHeader(filename,nnodes,ntri,nquad,ntet,npyr,nprism,nhex,swapBytes);
-printf("Grid %s has %i prisms\n",filename.c_str(),nprism);
     int nrequested = end - begin;
     std::vector<int> prisms(6*nrequested,0);
 
@@ -337,7 +336,7 @@ printf("Grid %s has %i prisms\n",filename.c_str(),nprism);
     if(f == NULL){
         throw std::domain_error("Could not open .ugrid file: "+filename);
     }
-    int byteOffset = 7*sizeof(int) + 3*nnodes*sizeof(double);
+    unsigned long int byteOffset = 7*sizeof(int) + 3*nnodes*sizeof(double);
     byteOffset += 3*ntri*sizeof(int);
     byteOffset += 4*nquad*sizeof(int);
     byteOffset += (ntri+nquad)*sizeof(int);
@@ -353,7 +352,12 @@ printf("Grid %s has %i prisms\n",filename.c_str(),nprism);
 
     for(int& vertex : prisms) // decrement to C indexing
         vertex--;
-
+    for(auto id:prisms) {
+        if (id < 0) {
+            printf("begin %i end %i",begin,end);
+            throw std::logic_error("read negative from disk");
+        }
+    }
     return prisms;
 }
 
@@ -376,7 +380,7 @@ inline std::vector<int> Parfait::UgridReader::readHexs(std::string filename,int 
     if(f == NULL){
         throw std::domain_error("Could not open .ugrid file: "+filename);
     }
-    int byteOffset = 7*sizeof(int) + 3*nnodes*sizeof(double);
+    unsigned long int byteOffset = 7*sizeof(int) + 3*nnodes*sizeof(double);
     byteOffset += 3*ntri*sizeof(int);
     byteOffset += 4*nquad*sizeof(int);
     byteOffset += (ntri+nquad)*sizeof(int);
@@ -437,7 +441,7 @@ inline std::vector<int> Parfait::UgridReader::readBoundaryTags(std::string filen
     if(f == NULL){
         throw std::domain_error("Could not open .ugrid file: "+filename);
     }
-    int byteOffset = 7*sizeof(int) + 3*nnodes*sizeof(double);
+    unsigned long int byteOffset = 7*sizeof(int) + 3*nnodes*sizeof(double);
     byteOffset += 3*ntri*sizeof(int);
     byteOffset += 4*nquad*sizeof(int);
     byteOffset += begin*sizeof(int);
