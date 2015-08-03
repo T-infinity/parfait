@@ -9,7 +9,20 @@ ParMetisPrepper<MeshType>::ParMetisPrepper(MeshType& m)
 :mesh(m)
 {
 	node_ids = buildUniqueNodeList(mesh);
+
+	for(auto id:node_ids)
+		if(id < 0)
+			throw std::logic_error("negative node id");
+
 	node_to_node = buildNodeToNode(mesh,node_ids);
+
+	for(auto& nbr_list:node_to_node){
+		for(auto nbr:nbr_list)
+			if(nbr<0)
+				throw std::logic_error("negative nbr");
+	}
+
+
 	printf("--Rank %i done building local n2n\n",MessagePasser::Rank());
 	connectivity.resize(mesh.numberOfNodes());
 }
@@ -32,7 +45,7 @@ template<class MeshType>
 std::vector<int> ParMetisPrepper<MeshType>::gatherNodeToNodeFromOtherProcs(int proc) {
 	if(MessagePasser::Rank() == proc)
 		printf("Rank %i, gathering node to node connectivity from other procs\n",MessagePasser::Rank());
-	auto sendNodeToNode = packUpSendNodeToNodeForProc(node_ids, node_to_node, proc);
+	auto sendNodeToNode = packUpSendNodeToNodeForProc(proc);
 	vector<int> globalNodeToNode;
 	MessagePasser::Gatherv(sendNodeToNode,globalNodeToNode,proc);
 	return globalNodeToNode;
@@ -40,7 +53,7 @@ std::vector<int> ParMetisPrepper<MeshType>::gatherNodeToNodeFromOtherProcs(int p
 
 template<class MeshType>
 std::vector<int> ParMetisPrepper<MeshType>::gatherValenceCountsFromOtherProcs(int proc) {
-	auto sendValence = prepareSendValenceForProc(node_ids, node_to_node, proc);
+	auto sendValence = prepareSendValenceForProc(proc);
 	vector<int> valenceFromOtherProcs;
 	MessagePasser::Gatherv(sendValence,valenceFromOtherProcs,proc);
 	return valenceFromOtherProcs;
@@ -48,7 +61,7 @@ std::vector<int> ParMetisPrepper<MeshType>::gatherValenceCountsFromOtherProcs(in
 
 template<class MeshType>
 std::vector<int> ParMetisPrepper<MeshType>::gatherNodeIdsFromOtherProcs(int proc) {
-	auto send_ids = prepareSendIdsForProc(node_ids, proc);
+	auto send_ids = prepareSendIdsForProc(proc);
 	vector<int> ids_from_other_procs;
 	MessagePasser::Gatherv(send_ids, ids_from_other_procs,proc);
 	return ids_from_other_procs;
