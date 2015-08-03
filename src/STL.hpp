@@ -22,7 +22,7 @@ namespace Parfait {
     }
 
     inline void STL::scaleToUnitLength(const Extent &d) {
-        translateCenterToOrigin();
+        translateCenterToOrigin(d);
         double length = getLongestCartesianLength(d);
         rescale(length);
     }
