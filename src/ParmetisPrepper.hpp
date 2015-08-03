@@ -9,25 +9,10 @@ ParMetisPrepper<MeshType>::ParMetisPrepper(MeshType& m)
 :mesh(m)
 {
 	node_ids = Parfait::buildUniqueNodeList(mesh);
-
-	int negative_count = 0;
-	for(int i=0;i<node_ids.size();i++) {
-		if (node_ids[i] < 0) {
-			negative_count++;
-		}
-	}
-	printf("Rank %i: negative count %i of %i\n",MessagePasser::Rank(),negative_count,node_ids.size());
-	MessagePasser::Barrier();
-	return;
+	node_to_node.resize(node_ids.size());
+	buildProcNodeMap();
 
 	node_to_node = Parfait::buildNodeToNode(mesh,node_ids);
-
-	for(auto& nbr_list:node_to_node){
-		for(auto nbr:nbr_list)
-			if(nbr<0)
-				throw std::logic_error("negative nbr");
-	}
-
 
 	printf("--Rank %i done building local n2n\n",MessagePasser::Rank());
 	connectivity.resize(mesh.numberOfNodes());
@@ -35,7 +20,6 @@ ParMetisPrepper<MeshType>::ParMetisPrepper(MeshType& m)
 
 template<class MeshType>
 void ParMetisPrepper<MeshType>::buildNodeToNodeConnectivity() {
-	buildProcNodeMap();
 
 	for(int proc=0;proc<MessagePasser::NumberOfProcesses();proc++) {
 

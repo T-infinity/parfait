@@ -52,9 +52,6 @@ namespace Parfait {
         if(MessagePasser::Rank() == 0)
             printf("Putting candidate nodes into list:\n");
         auto node_ids = putAllNodesIntoList(mesh);
-        for(auto id:node_ids)
-            if(id < 0)
-                throw std::logic_error("Negative node id....");
 
         if(MessagePasser::Rank() == 0)
             printf("sorting:\n");
@@ -65,7 +62,6 @@ namespace Parfait {
         node_ids.erase(unique(node_ids.begin(), node_ids.end()), node_ids.end());
         if(MessagePasser::Rank() == 0)
             printf("Done removing duplicates:\n");
-        printf("Rank %i: node_ids.size() %i\n",MessagePasser::Rank(), node_ids.size());
         return node_ids;
     }
 
@@ -75,14 +71,6 @@ namespace Parfait {
         for (int i=0;i<mesh.numberOfCells();i++) {
             std::vector<int> tmp = mesh.getNodesInCell(i);
             for (int id:tmp) {
-                if(id < 0){
-                    printf("Cell size %i: (",tmp.size());
-                    for(auto xx:tmp){
-                        printf("%i ",xx);
-                    }
-                    printf(")\n");
-                    throw std::logic_error("Cell had negative ids");
-                }
                 node_ids.push_back(id);
             }
         }
