@@ -88,13 +88,25 @@ inline void Parfait::ParallelMeshReaderNaive::distributeUgrid() {
   MessagePasser::Broadcast(procHexMap, 0);
 
   if (MessagePasser::Rank() == 0)
-    printf("Distributing ...\n");
+    printf("Distributing ...\n--nodes\n");
   distributeNodes();
+  if (MessagePasser::Rank() == 0)
+    printf("--triangles\n");
   distributeTriangles();
+  if (MessagePasser::Rank() == 0)
+    printf("--quads\n");
   distributeQuads();
+  if (MessagePasser::Rank() == 0)
+    printf("--tets\n");
   distributeTets();
+  if (MessagePasser::Rank() == 0)
+    printf("--pyramids\n");
   distributePyramids();
+  if (MessagePasser::Rank() == 0)
+    printf("--prisms\n");
   distributePrisms();
+  if (MessagePasser::Rank() == 0)
+    printf("--hexs\n");
   distributeHexs();
 
   if (MessagePasser::Rank() == 0)

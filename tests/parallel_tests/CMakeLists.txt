@@ -6,6 +6,7 @@ set(CATCH_DIR "/ump/fldmd/home/cdruyorj/cdruyor_local/catch/include")
 add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/tests/grids/6cell.ugrid")
 
 add_definitions(-DPARFAIT_WITH_MPI)
+add_definitions(-DPARFAIT_WITH_PARMETIS)
 find_package(MPI REQUIRED)
 
 include_directories(
@@ -22,7 +23,7 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         AllGathervTests.cpp
        )
 
-add_executable(ParfaitParallelTests ${PARFAIT_PARALLEL_TESTS_SRC})
+add_executable(ParfaitParallelTests ${PARFAIT_PARALLEL_TESTS_SRC} ParmetisPrepperTests.cpp)
 target_link_libraries(ParfaitParallelTests
             CppUTest
             ${MPI_LIBRARIES}

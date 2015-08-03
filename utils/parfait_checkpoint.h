@@ -7,4 +7,5 @@
 void checkpoint(std::string s);
 void checkpoint();
 
+#include "parfait_checkpoint.hpp"
 #endif

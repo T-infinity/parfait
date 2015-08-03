@@ -8,8 +8,6 @@
 #include "MessagePasser.h"
 #include <assert.h>
 
-using MessagePasser::Rank;
-
 // There are two functions here:
 // 1. buildUniqueNodeList()
 //      -- takes any mesh
@@ -47,15 +45,25 @@ namespace Parfait {
 
     template<typename T>
     std::vector<int> buildUniqueNodeList(T &meshInterface) {
+        if(MessagePasser::Rank() == 0)
+            printf("Building unique node list:\n");
         Mesh<T> mesh(meshInterface);
         int sizeEstimate = 6 * mesh.numberOfCells();
         std::vector<int> nodeIds;
         nodeIds.reserve(sizeEstimate);
+        if(MessagePasser::Rank() == 0)
+            printf("Putting candidate nodes into list:\n");
         putAllNodesIntoList(mesh, nodeIds);
 
+        if(MessagePasser::Rank() == 0)
+            printf("sorting:\n");
         sort(nodeIds.begin(), nodeIds.end());
         // remove duplicates
+        if(MessagePasser::Rank() == 0)
+            printf("removing duplicates:\n");
         nodeIds.erase(unique(nodeIds.begin(), nodeIds.end()), nodeIds.end());
+        if(MessagePasser::Rank() == 0)
+            printf("Done removing duplicates:\n");
         return nodeIds;
     }
 
@@ -90,13 +98,16 @@ namespace Parfait {
         // populate n2n connectivity
         int percentDone = 0;
         int count = 0;
-        for (auto cell:mesh.cells()) {
-            for (auto face:cell) {
-                int nvert = face.numberOfNodes();
-                auto tmp = face.getNodes();
+        if(MessagePasser::Rank() == 0)
+            printf("Building local n2n connectivity:\n");
+        for (int cell_id=0;cell_id<mesh.numberOfCells();cell_id++) {
+            for (int face_id=0;face_id<mesh.numberOfFacesInCell(cell_id);face_id++) {
+                int nvert = mesh.numberOfNodesInCellFace(cell_id,face_id);
+                auto face = meshInterface.getNodesInCellFace(cell_id,face_id);
+
                 for (int i = 0; i < nvert; i++) {
-                    int left = tmp[i];
-                    int right = tmp[(i + 1) % nvert];
+                    int left = face[i];
+                    int right = face[(i + 1) % nvert];
                     int position = (int) (std::lower_bound(nodeIds.begin(), nodeIds.end(), left)
                                           - nodeIds.begin());
                     assert(nodeIds[position] == left);
@@ -104,7 +115,8 @@ namespace Parfait {
                 }
             }
         }
-
+        if(MessagePasser::Rank() == 0)
+            printf("done with local conn\n");
         return n2n;
     }
 }

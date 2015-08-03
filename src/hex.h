@@ -1,8 +1,8 @@
 #ifndef __HEX_H
 #define __HEX_H
 
-#include "point.h"
-#include "extent.h"
+#include "Point.h"
+#include "Extent.h"
 
 namespace Parfait {
     class Hex {
