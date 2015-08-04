@@ -1,7 +1,7 @@
 #include "CppUTest/CommandLineTestRunner.h"
 #include "parallel_mesh_importer.h"
 #include "imported_ugrid.h"
-#include "vtk_generic_writer.h"
+#include "VtkGenericWriter.h"
 #include "parmetis_prepper.h"
 #include <vector>
 #include <string>

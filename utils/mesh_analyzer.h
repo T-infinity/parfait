@@ -1,6 +1,7 @@
 #ifndef MESH_ANALYZER_H
 #define MESH_ANALYZER_H
 #include <GenericMesh.h>
+#include <GenericMeshTools.h>
 #include <GenericSurfaceMesh.h>
 #include <vector>
 
@@ -10,7 +11,8 @@ class MeshAnalyzer{
         MeshAnalyzer(MeshType &m):mesh(m),surface(m){}
         void printStats();
         void throwIfBadIndexFound();
-    private:
+    void throwIfNegativeVolumeFound();
+private:
         Parfait::Mesh<MeshType> mesh;
         Parfait::SurfaceMesh<MeshType> surface;
 };
@@ -31,8 +33,14 @@ void MeshAnalyzer<MeshType>::throwIfBadIndexFound(){
             }
         }
     }
-
 }
-
+template<typename MeshType>
+void MeshAnalyzer<MeshType>::throwIfNegativeVolumeFound() {
+    for(auto cell : mesh.cells()){
+        double v = Parfait::GenericMeshTools::computeCellVolume(mesh, cell);
+        if(v < 0)
+            throw std::logic_error("Found negative volume cell.");
+    }
+}
 
 #endif

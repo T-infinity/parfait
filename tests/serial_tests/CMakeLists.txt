@@ -4,6 +4,11 @@ cmake_minimum_required(VERSION 2.8)
 PROJECT(ParfaitSerialTests)
 add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/tests/grids/6cell.ugrid")
 
+file(GLOB_RECURSE HEADERS
+    "src/*.h"
+    "src/*.hpp"
+)
+
 set(PARFAIT_SERIAL_TESTS_SRC
         AllTests.cpp  
         vtk_slice_writer_tests.cpp
@@ -23,6 +28,8 @@ set(PARFAIT_SERIAL_TESTS_SRC
         generic_mesh_tools/GenericMeshToolsTests.cpp
         Geometry/stl_test.cpp
         Geometry/facet_test.cpp
+        Geometry/STLReader_test.cpp
+        LinearPartitioner/LinearPartitioner_test.cpp
         high_level_mesh_searching/AdtBuilderTests.cpp
         mesh_interfaces/fun3d_mesh_tests.cpp
         mesh_interfaces/imported_ugrid_tests.cpp
@@ -36,6 +43,6 @@ set(PARFAIT_SERIAL_TESTS_SRC
        )
 
 
-add_executable(ParfaitSerialTests ${PARFAIT_SERIAL_TESTS_SRC})
+add_executable(ParfaitSerialTests ${PARFAIT_SERIAL_TESTS_SRC} ${HEADERS})
 target_link_libraries(ParfaitSerialTests CppUTest
         )

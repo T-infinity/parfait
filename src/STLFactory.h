@@ -6,12 +6,12 @@
 namespace Parfait {
 
     namespace STLFactory {
-        STL getUnitCube();
-        STL getLShapedSurface();
+        STL::STL getUnitCube();
+        STL::STL getLShapedSurface();
     };
 
-    inline STL STLFactory::getLShapedSurface() {
-        STL stl;
+    inline STL::STL STLFactory::getLShapedSurface() {
+        STL::STL stl;
         std::vector <Point<double>> points(6);
         points[0] = {0, 0, 0};
         points[1] = {1, 0, 0};
@@ -27,8 +27,8 @@ namespace Parfait {
         return stl;
     }
 
-    inline STL STLFactory::getUnitCube() {
-        STL cube;
+    inline STL::STL STLFactory::getUnitCube() {
+        STL::STL cube;
 
         Facet bottom1;
         bottom1[0] = {0, 0, 0};

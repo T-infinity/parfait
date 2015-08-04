@@ -2,28 +2,31 @@
 cmake_minimum_required(VERSION 2.8)
 
 PROJECT(ParfaitParallelTests)
-set(CATCH_DIR "/ump/fldmd/home/cdruyorj/cdruyor_local/catch/include")
 add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/tests/grids/6cell.ugrid")
 
 add_definitions(-DPARFAIT_WITH_MPI)
-add_definitions(-DPARFAIT_WITH_PARMETIS)
 find_package(MPI REQUIRED)
 
 include_directories(
-    "${CATCH_DIR}"
     "${CMAKE_SOURCE_DIR}/src"
     "${MPI_INCLUDE_PATH}"
     )
 
+    file(GLOB_RECURSE HEADERS
+        "src/*.h"
+        "src/*.hpp"
+        )
+
 set(PARFAIT_PARALLEL_TESTS_SRC
-        AllTests.cpp  
+        AllTests.cpp
+        extent_parallel_test.cpp
         message_passer_tests.cpp
         parallel_sum_tests.cpp
         GathervTests.cpp
         AllGathervTests.cpp
        )
 
-add_executable(ParfaitParallelTests ${PARFAIT_PARALLEL_TESTS_SRC} ParmetisPrepperTests.cpp)
+add_executable(ParfaitParallelTests ${PARFAIT_PARALLEL_TESTS_SRC} ${HEADERS})
 target_link_libraries(ParfaitParallelTests
             CppUTest
             ${MPI_LIBRARIES}

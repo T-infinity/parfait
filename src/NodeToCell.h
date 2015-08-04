@@ -1,8 +1,9 @@
 #ifndef NODE_TO_CELL_H
 #define NODE_TO_CELL_H
 
-#include<vector>
+#include <vector>
 #include "VectorTools.h"
+#include <GenericMesh.h>
 
 namespace Parfait {
     template<class MeshType>

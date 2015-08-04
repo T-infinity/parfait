@@ -4,6 +4,20 @@
 #include "Extent.h"
 namespace Parfait {
     namespace ExtentBuilder {
+
+      template <typename T>
+      Extent<T> getBoundingBox(std::vector<Extent<T>> &boxes){
+          Extent<T> out{{(T)20e20,  (T)20e20,  (T)20e20},
+                        {(T)-20e20, (T)-20e20, (T)-20e20}};
+          for (const auto &ext : boxes) {
+              for (int i = 0; i < 3; i++) {
+                  out.lo[i] = std::min(ext.lo[i], out.lo[i]);
+                  out.hi[i] = std::max(ext.hi[i], out.hi[i]);
+              }
+          }
+          return out;
+      }
+
         // Build an extent box around an entire mesh, or any
         // object that has points in it.
         //
