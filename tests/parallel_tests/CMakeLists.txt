@@ -19,7 +19,7 @@ include_directories(
 
 set(PARFAIT_PARALLEL_TESTS_SRC
         AllTests.cpp
-        extent_parallel_test.cpp
+        ParallelExtent_test.cpp
         message_passer_tests.cpp
         parallel_sum_tests.cpp
         GathervTests.cpp
