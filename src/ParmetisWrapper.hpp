@@ -14,17 +14,17 @@ struct ParMetisInfo{
     idx_t options[3] = {0,0,0};
     idx_t edgecut;
     MPI_Comm comm = MPI_COMM_WORLD;
-}setup;
+};
 
-std::vector<idx_t> getVertexDistributionAcrossProcs(int nproc, const int *proc_node_map);
+inline std::vector<idx_t> getVertexDistributionAcrossProcs(int nproc, const int *proc_node_map);
 
-std::vector<idx_t> getAdjacencyMap(const int *ia, int nnodes);
+inline std::vector<idx_t> getAdjacencyMap(const int *ia, int nnodes);
 
-std::vector<idx_t> getAdjacency(const int *ia, const int *ja, int nnodes);
+inline std::vector<idx_t> getAdjacency(const int *ia, const int *ja, int nnodes);
 
-int getMyNumberOfNodes(int rank, const int *proc_node_map);
+inline int getMyNumberOfNodes(int rank, const int *proc_node_map);
 
-std::vector<real_t> getTpWeights(idx_t nparts);
+inline std::vector<real_t> getTpWeights(idx_t nparts);
 
 inline void PartitionMesh(int rank,int nproc,
 		int *proc_node_map,
@@ -33,7 +33,7 @@ inline void PartitionMesh(int rank,int nproc,
 		int *part_vec)
 {
     int nnodes = getMyNumberOfNodes(rank, proc_node_map);
-
+    ParMetisInfo parMetisInfo;
     if(0 == rank)
         printf("Sanitizing input to parmetis\n");
     for(int i=0;i<ia[nnodes];i++)
@@ -48,7 +48,7 @@ inline void PartitionMesh(int rank,int nproc,
     auto xadj = getAdjacencyMap(ia, nnodes);
     auto adjncy = getAdjacency(ia, ja, nnodes);
     auto tpwgts = getTpWeights(number_of_partitions);
-    std::vector<real_t> ubvec(setup.ncon,1.05);
+    std::vector<real_t> ubvec(parMetisInfo.ncon,1.05);
 	std::vector<idx_t> part(nnodes,0);
 
 
@@ -56,18 +56,18 @@ inline void PartitionMesh(int rank,int nproc,
 	auto metis = ParMETIS_V3_PartKway(vtxdist.data(),
                                       xadj.data(),
                                       adjncy.data(),
-                                      setup.vertex_weights,
-                                      setup.edge_weights,
-                                      &setup.weight_flag,
-				                      &setup.numflag,
-                                      &setup.ncon,
+                                      parMetisInfo.vertex_weights,
+                                      parMetisInfo.edge_weights,
+                                      &parMetisInfo.weight_flag,
+				                      &parMetisInfo.numflag,
+                                      &parMetisInfo.ncon,
                                       &number_of_partitions,
                                       tpwgts.data(),
                                       ubvec.data(),
-                                      setup.options,
-                                      &setup.edgecut,
+                                      parMetisInfo.options,
+                                      &parMetisInfo.edgecut,
                                       part.data(),
-                                      &setup.comm);
+                                      &parMetisInfo.comm);
 
     if(metis == METIS_OK && rank == 0)
 		printf("METIS Ok!\n");
@@ -76,16 +76,17 @@ inline void PartitionMesh(int rank,int nproc,
 }
 
 std::vector<real_t> getTpWeights(idx_t nparts) {
-    std::vector<real_t> tpwgts(setup.ncon*nparts);
+    ParMetisInfo parMetisInfo;cd 
+    std::vector<real_t> tpwgts(parMetisInfo.ncon*nparts);
     real_t w = 1.0/(real_t)nparts;
-    for(int i=0;i<setup.ncon*nparts;i++)
+    for(int i=0;i< parMetisInfo.ncon*nparts;i++)
 		tpwgts[i] = w;
     return tpwgts;
 }
 
 int getMyNumberOfNodes(int rank, const int *proc_node_map) { return proc_node_map[rank+1]-proc_node_map[rank]; }
 
-std::vector<idx_t> getAdjacency(const int *ia, const int *ja, int nnodes) {
+inline std::vector<idx_t> getAdjacency(const int *ia, const int *ja, int nnodes) {
     int ia_size = nnodes + 1;
     std::vector<idx_t> adjncy(ia[ia_size-1]);
     for(int i=0;i<ia[ia_size-1];i++)
@@ -93,7 +94,7 @@ std::vector<idx_t> getAdjacency(const int *ia, const int *ja, int nnodes) {
     return adjncy;
 }
 
-std::vector<idx_t> getAdjacencyMap(const int *ia, int nnodes) {
+inline std::vector<idx_t> getAdjacencyMap(const int *ia, int nnodes) {
     int ia_size = nnodes + 1;
     std::vector<idx_t> xadj(ia_size);
     for(int i=0;i<ia_size;i++)
@@ -101,7 +102,7 @@ std::vector<idx_t> getAdjacencyMap(const int *ia, int nnodes) {
     return xadj;
 }
 
-std::vector<idx_t> getVertexDistributionAcrossProcs(int nproc, const int *proc_node_map) {
+inline std::vector<idx_t> getVertexDistributionAcrossProcs(int nproc, const int *proc_node_map) {
     std::vector<idx_t> vtxdist(nproc+1);
     for(int i=0;i<=nproc;i++)
 		vtxdist[i] = proc_node_map[i];
