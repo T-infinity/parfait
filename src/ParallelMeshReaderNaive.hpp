@@ -88,13 +88,25 @@ inline void Parfait::ParallelMeshReaderNaive::distributeUgrid() {
   MessagePasser::Broadcast(procHexMap, 0);
 
   if (MessagePasser::Rank() == 0)
-    printf("Distributing ...\n");
+    printf("Distributing ...\n--nodes\n");
   distributeNodes();
+  if (MessagePasser::Rank() == 0)
+    printf("--triangles\n");
   distributeTriangles();
+  if (MessagePasser::Rank() == 0)
+    printf("--quads\n");
   distributeQuads();
+  if (MessagePasser::Rank() == 0)
+    printf("--tets\n");
   distributeTets();
+  if (MessagePasser::Rank() == 0)
+    printf("--pyramids\n");
   distributePyramids();
+  if (MessagePasser::Rank() == 0)
+    printf("--prisms\n");
   distributePrisms();
+  if (MessagePasser::Rank() == 0)
+    printf("--hexs\n");
   distributeHexs();
 
   if (MessagePasser::Rank() == 0)
@@ -305,11 +317,6 @@ inline void Parfait::ParallelMeshReaderNaive::distributeHexs()
 inline std::vector<double> Parfait::ParallelMeshReaderNaive::getNodes(int begin,int end)
 {
   using namespace UgridReader;
-  //printf("Grid node map ");
-  //for(int count:gridNodeMap)
-  //	printf("%i ",count);
-  //printf("\n");
-  //printf("Reading nodes %i - %i\n",begin,end);
   std::vector<double> nodeBuffer(3*(end-begin),0.0);
   int firstGrid  = getFirstGrid(gridNodeMap,begin);
   int lastGrid   = getLastGrid(gridNodeMap,end);
@@ -319,14 +326,10 @@ inline std::vector<double> Parfait::ParallelMeshReaderNaive::getNodes(int begin,
   std::vector<double> tmp;
   if(firstGrid == lastGrid)
   {
-    //printf("--From grid %i: reading %i to %i\n",firstGrid,beginIndex,endIndex);
-    // read nodes from the first grid (start at beginIndex and read to endIndex)
     tmp = readNodes(gridFiles[firstGrid],beginIndex,endIndex,isBigEndian[firstGrid]);
   }
   else
   {
-    //printf("--From grid %i: reading %i to %i\n",firstGrid,beginIndex,gridNodeMap[firstGrid+1]);
-    // read nodes from the first grid (start at beginIndex and read to the end of the file)
     tmp = readNodes(gridFiles[firstGrid],beginIndex,
                     gridNodeMap[firstGrid+1]-gridNodeMap[firstGrid],isBigEndian[firstGrid]);
   }
@@ -347,7 +350,6 @@ inline std::vector<double> Parfait::ParallelMeshReaderNaive::getNodes(int begin,
   if(lastGrid > firstGrid)
   {
     tmp.clear();
-    //printf("--From grid %i: reading nodes 0 - %i\n",lastGrid,endIndex);
     tmp = readNodes(gridFiles[lastGrid],0,endIndex,isBigEndian[lastGrid]);
     for(double node : tmp)
       nodeBuffer[positionInBuffer++] = node;
@@ -622,7 +624,7 @@ inline std::vector<int> Parfait::ParallelMeshReaderNaive::getPyramids(int begin,
 inline std::vector<int> Parfait::ParallelMeshReaderNaive::getPrisms(int begin,int end)
 {
   using namespace UgridReader;
-  std::vector<int> prismBuffer(6*(end-begin),0.0);
+  std::vector<int> prismBuffer(6*(end-begin),0);
   int firstGrid  = getFirstGrid(gridPrismMap,begin);
   int lastGrid   = getLastGrid(gridPrismMap,end);
   int beginIndex = getBeginIndex(gridPrismMap,begin);

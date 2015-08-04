@@ -3,105 +3,134 @@
 #include <ParmetisWrapper.h>
 #include <NodeToNode.h>
 
+
 template<class MeshType>
-void ParMetisPrepper<MeshType>::buildNodeToNodeConnectivity()
+ParMetisPrepper<MeshType>::ParMetisPrepper(MeshType& m)
+:mesh(m)
 {
-	using namespace Parfait;
-	using namespace MessagePasser;
-	int nproc = NumberOfProcesses();
-	vector<int> nodeIds = buildUniqueNodeList(mesh);
-	vector<vector<int> > nodeToNode = buildNodeToNode(mesh,nodeIds); 
+	node_ids = Parfait::buildUniqueNodeList(mesh);
+	node_to_node.resize(node_ids.size());
+	buildProcNodeMap();
+
+	node_to_node = Parfait::buildNodeToNode(mesh,node_ids);
+
+	printf("--Rank %i done building local n2n\n",MessagePasser::Rank());
 	connectivity.resize(mesh.numberOfNodes());
-	int nnodes = mesh.numberOfNodes();
-	// build a map of which nodes are on each proc
-	procNodeMap.resize(nproc);
-	MessagePasser::AllGather(mesh.numberOfNodes(),procNodeMap);
-	procNodeMap.insert(procNodeMap.begin(),0);
-	for(int i=1;i<=nproc;i++)
-		procNodeMap[i] += procNodeMap[i-1];
-    printf("Rank %i: map size %i\n",Rank(),procNodeMap.size());
-    fflush(stdout);
-	// combine local nodeToNode maps to get a full map
-	vector<int> sendIds;
-	vector<int> sendValence;
-	vector<int> sendNodeToNode;
-	for(int proc=0;proc<nproc;proc++)
-	{
-		if(Rank() == 0)
-			printf("Sending partial n2n to proc %i\n",proc);
-		// count how many nodes you have for proc
-		sendIds.clear();
-		for(auto id:nodeIds)
-			if(id >= procNodeMap[proc] && id < procNodeMap[proc+1])
-				sendIds.push_back(id);
-		// tell proc
-		vector<int> idsFromOtherProcs;
-		vector<int> procMap;
-		if(Rank() == 0)
-			printf("Gathering ids from all procs....\n");
-		Gatherv(sendIds,idsFromOtherProcs,procMap,proc);	
-		// build map
-		sendValence.clear();
-		int index=0;
-		if(Rank() == 0)
-			printf("building valence map...\n");
-		for(auto id:nodeIds)
-		{
-			if(id >= procNodeMap[proc] && id < procNodeMap[proc+1])
-				sendValence.push_back(nodeToNode[index].size());
-			index++;
-		}
-		// get maps on proc
-		vector<int> valenceFromOtherProcs;
-		if(Rank() == 0)
-			printf("Gathering valence maps\n");
-		Gatherv(sendValence,valenceFromOtherProcs,procMap,proc);
-		// pack up nodeToNode for proc
-		index = 0;
-		sendNodeToNode.clear();
-		if(Rank() == 0)
-			printf("Packing up n2n\n");
-		for(auto id:nodeIds)
-		{
-			if(id >= procNodeMap[proc] && id < procNodeMap[proc+1])
-				for(auto nbr:nodeToNode[index])
-					sendNodeToNode.push_back(nbr);
-			index++;
-		}	
-		// get on proc
-		vector<int> mapOfGlobalNodeToNode;
-		vector<int> globalNodeToNode;
-		if(Rank() == 0){
-			printf("Gathering n2n\n");
-        }
-		Gatherv(sendNodeToNode,globalNodeToNode,mapOfGlobalNodeToNode,proc);
-		if(Rank() == proc)
-		{
-			index = 0;
+}
+
+template<class MeshType>
+void ParMetisPrepper<MeshType>::buildNodeToNodeConnectivity() {
+
+	for(int proc=0;proc<MessagePasser::NumberOfProcesses();proc++) {
+
+		auto ids_from_other_procs = gatherNodeIdsFromOtherProcs(proc);
+    	auto valenceFromOtherProcs = gatherValenceCountsFromOtherProcs(proc);
+		auto globalNodeToNode = gatherNodeToNodeFromOtherProcs(proc);
+
+		combineConnectivitiesOnProc(proc, ids_from_other_procs, valenceFromOtherProcs, globalNodeToNode);
+	}
+}
+
+template<class MeshType>
+std::vector<int> ParMetisPrepper<MeshType>::gatherNodeToNodeFromOtherProcs(int proc) {
+	if(MessagePasser::Rank() == proc)
+		printf("Rank %i, gathering node to node connectivity from other procs\n",MessagePasser::Rank());
+	auto sendNodeToNode = packUpSendNodeToNodeForProc(proc);
+	vector<int> globalNodeToNode;
+	MessagePasser::Gatherv(sendNodeToNode,globalNodeToNode,proc);
+	return globalNodeToNode;
+}
+
+template<class MeshType>
+std::vector<int> ParMetisPrepper<MeshType>::gatherValenceCountsFromOtherProcs(int proc) {
+	auto sendValence = prepareSendValenceForProc(proc);
+	vector<int> valenceFromOtherProcs;
+	MessagePasser::Gatherv(sendValence,valenceFromOtherProcs,proc);
+	return valenceFromOtherProcs;
+}
+
+template<class MeshType>
+std::vector<int> ParMetisPrepper<MeshType>::gatherNodeIdsFromOtherProcs(int proc) {
+	auto send_ids = prepareSendIdsForProc(proc);
+	vector<int> ids_from_other_procs;
+	MessagePasser::Gatherv(send_ids, ids_from_other_procs,proc);
+	return ids_from_other_procs;
+}
+
+template<class MeshType>
+void ParMetisPrepper<MeshType>::combineConnectivitiesOnProc(int proc, const vector<int> &ids_from_other_procs,
+                                                      const vector<int> &valenceFromOtherProcs,
+                                                      const vector<int> &globalNodeToNode) {
+	if(MessagePasser::Rank() == proc) {
+			printf("Rank %i, combining n2n from other procs\n",MessagePasser::Rank());
+			int index = 0;
 			int position = 0;
-			for(int id:idsFromOtherProcs)
-			{
+			for(int id:ids_from_other_procs) {
 				int valence = valenceFromOtherProcs[index];
-				for(int k=0;k<valence;k++)
-				{
+				for(int k=0;k<valence;k++) {
 					int nbr = globalNodeToNode[position++];
-					insertUnique(connectivity[id-procNodeMap[proc]],nbr);
+					insertUnique(connectivity[id- this->procNodeMap[proc]],nbr);
 				}
 				index++;
 			}
-		}
 	}
+}
+
+template<class MeshType>
+std::vector<int> ParMetisPrepper<MeshType>::packUpSendNodeToNodeForProc(int proc) {
+	int index = 0;
+	vector<int> sendNodeToNode;
+	for(auto id:node_ids) {
+		if(id >= procNodeMap[proc] && id < this->procNodeMap[proc+1])
+			for(auto nbr:node_to_node[index])
+				sendNodeToNode.push_back(nbr);
+		index++;
+	}
+	return sendNodeToNode;
+}
+
+template<class MeshType>
+std::vector<int> ParMetisPrepper<MeshType>::prepareSendValenceForProc(int proc) {
+	vector<int> sendValence;
+	int index=0;
+	if(MessagePasser::Rank() == 0)
+			printf("building valence map...\n");
+	for(auto id:node_ids)
+		{
+			if(id >= procNodeMap[proc] && id < this->procNodeMap[proc+1])
+				sendValence.push_back(node_to_node[index].size());
+			index++;
+		}
+	return sendValence;
+}
+
+template<class MeshType>
+std::vector<int> ParMetisPrepper<MeshType>::prepareSendIdsForProc(int proc) {
+	vector<int> sendIds;
+	for(auto id:node_ids)
+			if(id >= procNodeMap[proc] && id < this->procNodeMap[proc+1])
+				sendIds.push_back(id);
+	return sendIds;
+}
+
+template<class MeshType>
+void ParMetisPrepper<MeshType>::buildProcNodeMap() {
+	procNodeMap.resize(MessagePasser::NumberOfProcesses());
+	if(MessagePasser::Rank() == 0)
+		printf("Allgather to build procNodeMap:\n");
+	MessagePasser::AllGather(this->mesh.numberOfNodes(), this->procNodeMap);
+	this->procNodeMap.insert(this->procNodeMap.begin(),0);
+	for(int i=1;i<procNodeMap.size();i++)
+		this->procNodeMap[i] += this->procNodeMap[i-1];
 }
 
 template<class MeshType>
 std::vector<int> ParMetisPrepper<MeshType>::getPartVector()
 {
 	vector<int> part(mesh.numberOfNodes(),0);
-	// build ia map
 	vector<int> ia(connectivity.size()+1,0);
 	for(int i=0;i<connectivity.size();i++)
 		ia[i+1] = ia[i] + connectivity[i].size();
-	// build ja map
 	vector<int> ja;
 	ja.reserve(ia.back());
 	for(auto row:connectivity)

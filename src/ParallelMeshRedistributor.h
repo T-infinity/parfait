@@ -5,6 +5,8 @@
 
 #include <vector>
 #include <MessagePasser.h>
+#include <ImportedUgrid.h>
+#include <Fun3dMesh.h>
 
 namespace Parfait {
 	class ParallelMeshReDistributor {
