@@ -68,6 +68,12 @@ inline void Parfait::Fun3DMesh::getNode(int nodeId,double node[3]) const
 	node[2] = z[nodeId];
 }
 
+inline Parfait::Point<double> Parfait::Fun3DMesh::getNode(int nodeId) const {
+    Point<double> p;
+    getNode(nodeId,p.data());
+    return p;
+}
+
 inline void Parfait::Fun3DMesh::setNode(int nodeId,double node[3])
 {
 	x[nodeId] = node[0];
