@@ -93,3 +93,24 @@ TEST(ExtentBuilderTests,createExtentForMeshCell){
 	DOUBLES_EQUAL(2.0,e.hi[1],tol);
 	DOUBLES_EQUAL(2.0,e.hi[2],tol);
 }
+
+TEST(ExtentBuilderTests,createExtentForBoundaryFaceInMesh){
+
+	class MockFaceMesh{
+	public:
+		std::vector<int> getNodesInBoundaryFace(int i){
+			return {0,1,7};
+		}
+		Parfait::Point<double> getNode(int i){
+			return Parfait::Point<double>(i,i,i);
+		}
+	}mockFaceMesh;
+
+	Extent<double> e = ExtentBuilder::buildExtentForBoundaryFaceInMesh(mockFaceMesh,0);
+	DOUBLES_EQUAL(0.0,e.lo[0],tol);
+	DOUBLES_EQUAL(0.0,e.lo[1],tol);
+	DOUBLES_EQUAL(0.0,e.lo[2],tol);
+	DOUBLES_EQUAL(7.0,e.hi[0],tol);
+	DOUBLES_EQUAL(7.0,e.hi[1],tol);
+	DOUBLES_EQUAL(7.0,e.hi[2],tol);
+}
