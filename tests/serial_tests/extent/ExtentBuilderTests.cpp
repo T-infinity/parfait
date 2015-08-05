@@ -1,5 +1,6 @@
 #include "ExtentBuilder.h"
 #include <vector>
+#include <CartMesh.h>
 #include "CppUTest/CommandLineTestRunner.h"
 
 using std::vector;
@@ -80,3 +81,15 @@ TEST(ExtentBuilderTests,addPointToExtent)
 	DOUBLES_EQUAL(1.0,e.hi[1],tol);
 	DOUBLES_EQUAL(1.0,e.hi[2],tol);
 };
+
+
+TEST(ExtentBuilderTests,createExtentForMeshCell){
+	Parfait::CartMesh one_cell_cart_mesh({0,0,0},{2,2,2},1,1,1);
+	Extent<double> e = ExtentBuilder::buildExtentForCellInMesh(one_cell_cart_mesh,0);
+	DOUBLES_EQUAL(0.0,e.lo[0],tol);
+	DOUBLES_EQUAL(0.0,e.lo[1],tol);
+	DOUBLES_EQUAL(0.0,e.lo[2],tol);
+	DOUBLES_EQUAL(2.0,e.hi[0],tol);
+	DOUBLES_EQUAL(2.0,e.hi[1],tol);
+	DOUBLES_EQUAL(2.0,e.hi[2],tol);
+}

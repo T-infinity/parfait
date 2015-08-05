@@ -39,6 +39,16 @@ namespace Parfait {
                 addPointToExtent(e, obj.getNode(i));
             return e;
         }
+
+        template<typename MeshType>
+        Extent<double> buildExtentForCellInMesh(MeshType& mesh,int cell_id){
+            Extent<double> e{{1e20,1e20,1e20},{-1e20,-1e20,-1e20}};
+            for(int node_id:mesh.getNodesInCell(cell_id)){
+                auto xyz = mesh.getNode(node_id);
+                addPointToExtent(e,Point<double>(xyz[0],xyz[1],xyz[2]));
+            }
+            return e;
+        }
     }
 }
 
