@@ -16,6 +16,10 @@ TEST_GROUP(ExtentBuilderTests)
 				coords[1] = nodes[3*id+1];
 				coords[2] = nodes[3*id+2];
 			}
+			Point<double> getNode(int id) const{
+				Point<double> p{nodes[3*id],nodes[3*id+1],nodes[3*id+2]};
+				return p;
+			}
 			vector<double> nodes;
 	};
 
@@ -44,6 +48,18 @@ TEST(ExtentBuilderTests,Exists)
 	DOUBLES_EQUAL(1.0,extent.hi[0],tol);
 	DOUBLES_EQUAL(1.0,extent.hi[1],tol);
 	DOUBLES_EQUAL(1.0,extent.hi[2],tol);
+}
+
+TEST(ExtentBuilderTests,expandExtentWithAnother){
+	Extent<int> e1{{0,0,0},{1,1,1}};
+	Extent<int> e2{{1,-1,2},{0,1,3}};
+	ExtentBuilder::expandExtentWithAnother(e1,e2);
+	LONGS_EQUAL(0,e1.lo[0]);
+	LONGS_EQUAL(-1,e1.lo[1]);
+	LONGS_EQUAL(0,e1.lo[2]);
+	LONGS_EQUAL(1,e1.hi[0]);
+	LONGS_EQUAL(1,e1.hi[1]);
+	LONGS_EQUAL(3,e1.hi[2]);
 }
 
 TEST(ExtentBuilderTests,addPointToExtent)

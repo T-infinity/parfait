@@ -24,6 +24,11 @@ namespace Parfait {
         mesh.getNode(nodeIds[i], p);
     }
 
+    template<typename MeshType>
+    auto Cell<MeshType>::getNode(int i) const{
+        return mesh.getNode(i);
+    }
+
     template<class MeshType>
     Cell<MeshType>::Iterator::Iterator(Cell<MeshType> &cell_in, int index_in)
             : cell(cell_in),

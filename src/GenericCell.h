@@ -12,6 +12,7 @@ namespace Parfait {
         int numberOfFaces() const;
         std::vector<int> getNodes() const;
         void getNode(int i, double *p) const;
+        auto getNode(int i) const;
 
         int Id() const { return cellId; }
 

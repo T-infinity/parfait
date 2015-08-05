@@ -213,6 +213,12 @@ inline void Parfait::Facet::getNode(int i, double p[3]) const {
     }
 }
 
+inline Parfait::Point<double> Parfait::Facet::getNode(int i) const {
+    Point<double> p;
+    getNode(i,p.data());
+    return p;
+}
+
 inline Parfait::Point<double> Parfait::Facet::GetClosestPoint(Point<double> safe, double &dist) const{
 
     Point<double> point = safe;

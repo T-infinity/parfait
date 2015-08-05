@@ -5,82 +5,39 @@
 namespace Parfait {
     namespace ExtentBuilder {
 
-      template <typename T>
-      Extent<T> getBoundingBox(std::vector<Extent<T>> &boxes){
-          Extent<T> out{{(T)20e20,  (T)20e20,  (T)20e20},
-                        {(T)-20e20, (T)-20e20, (T)-20e20}};
-          for (const auto &ext : boxes) {
-              for (int i = 0; i < 3; i++) {
-                  out.lo[i] = std::min(ext.lo[i], out.lo[i]);
-                  out.hi[i] = std::max(ext.hi[i], out.hi[i]);
-              }
-          }
-          return out;
-      }
-
-        // Build an extent box around an entire mesh, or any
-        // object that has points in it.
-        //
-        // In other words, you can pass any object that has
-        // the following 2 member functions:
-        //
-        // 1. int numberOfNodes();
-        // 2. void getNode(int,double[3]);
         template<typename T>
-        Extent<double> build(const T &objectWithPointsInIt);
-
-        // build an extent around a point like object
-        // must be able to access object with [] operators
-        // to get x, y, and z coords.
-        template<typename P>
-        Extent<double> build(const P &p, double distance);
-
-
-        template<typename P>
-        void addPointToExtent(Extent<double> &e, const P &p);
-
-
-        //------------Implementation---------------------
-        template<typename T>
-        Extent<double> build(const T &objectWithPointsInIt) {
-            double p[3];
-            objectWithPointsInIt.getNode(0, p);
-            Point<double> min(p), max(p);
-            int n = objectWithPointsInIt.numberOfNodes();
-            for (int i = 1; i < n; i++) {
-                objectWithPointsInIt.getNode(i, p);
-                for (int j = 0; j < 3; j++) {
-                    if (p[j] < min[j])
-                        min[j] = p[j];
-                    else if (p[j] > max[j])
-                        max[j] = p[j];
-                }
+        void expandExtentWithAnother(Extent<T>& e1,const Extent<T>& e2){
+            for(int i=0;i<3;i++){
+                e1.lo[i] = std::min(e1.lo[i],e2.lo[i]);
+                e1.hi[i] = std::max(e1.hi[i],e2.hi[i]);
             }
-            return Extent<double>(min, max);
         }
 
-        template<typename P>
-        Extent<double> build(const P &p, double dist) {
-            Point<double> min(p), max(p);
-            min[0] -= dist;
-            min[1] -= dist;
-            min[2] -= dist;
-
-            max[0] += dist;
-            max[1] += dist;
-            max[2] += dist;
-            return {min, max};
+        template <typename T>
+        Extent<T> getBoundingBox(std::vector<Extent<T>> &boxes){
+            if(boxes.empty()) return Extent<T>();
+            Extent<T> out{boxes.front()};
+            for (const auto &ext : boxes)
+                expandExtentWithAnother(out,ext);
+            return out;
         }
 
-        template<typename P>
-        void addPointToExtent(Extent<double> &e, const P &p) {
-            e.lo[0] = std::min(e.lo[0], p[0]);
-            e.lo[1] = std::min(e.lo[1], p[1]);
-            e.lo[2] = std::min(e.lo[2], p[2]);
+        template<typename T>
+        void addPointToExtent(Extent<T>& e, const Point<T>& p) {
+            for(int i=0;i<3;i++) {
+                e.lo[i] = std::min(e.lo[i], p[i]);
+                e.hi[i] = std::max(e.hi[i], p[i]);
+            }
+        }
 
-            e.hi[0] = std::max(e.hi[0], p[0]);
-            e.hi[1] = std::max(e.hi[1], p[1]);
-            e.hi[2] = std::max(e.hi[2], p[2]);
+        template<typename ObjectWithPoints>
+        auto build(ObjectWithPoints& obj){
+            auto p = obj.getNode(0);
+            auto x = p[0]; auto y = p[1]; auto z = p[2];
+            Extent<decltype(x)> e{{x,y,z},{x,y,z}};
+            for(int i=1;i< obj.numberOfNodes();i++)
+                addPointToExtent(e, obj.getNode(i));
+            return e;
         }
     }
 }

@@ -36,6 +36,7 @@ namespace Parfait {
         int numberOfNodes() const { return 3; }
 
         void getNode(int i, double p[3]) const;
+        Point<double> getNode(int i) const;
 
         double GetXMin();
         double GetYMin();

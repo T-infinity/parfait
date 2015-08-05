@@ -24,6 +24,11 @@ TEST_GROUP(AdtBuilderTests) {
             p[1] = nodes[3 * nodeId + 1];
             p[2] = nodes[3 * nodeId + 2];
         }
+        Point<double> getNode(int nodeId) const {
+            Point<double> p;
+            getNode(nodeId,p.data());
+            return p;
+        }
         vector<double> nodes;
     };
 

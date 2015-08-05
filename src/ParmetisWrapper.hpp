@@ -76,7 +76,7 @@ inline void PartitionMesh(int rank,int nproc,
 }
 
 std::vector<real_t> getTpWeights(idx_t nparts) {
-    ParMetisInfo parMetisInfo;cd 
+    ParMetisInfo parMetisInfo;
     std::vector<real_t> tpwgts(parMetisInfo.ncon*nparts);
     real_t w = 1.0/(real_t)nparts;
     for(int i=0;i< parMetisInfo.ncon*nparts;i++)

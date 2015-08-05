@@ -15,6 +15,7 @@ namespace Parfait {
         int numberOfCells() const { return mesh.numberOfCells(); }
 
         void getNode(int nodeId, double node[3]) const { mesh.getNode(nodeId, node); }
+        auto getNode(int nodeId) const {return mesh.getNode(nodeId);}
 
         Cell<MeshType> cell(int cellId) const { return Cell<MeshType>(mesh, cellId); }
 
