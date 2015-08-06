@@ -14,7 +14,7 @@ namespace Parfait {
         }
 
         template <typename T>
-        Extent<T> getBoundingBox(std::vector<Extent<T>> &boxes){
+        Extent<T> getBoundingBox(const std::vector<Extent<T>> &boxes){
             if(boxes.empty()) return Extent<T>();
             Extent<T> out{boxes.front()};
             for (const auto &ext : boxes)
@@ -31,7 +31,7 @@ namespace Parfait {
         }
 
         template<typename ObjectWithPoints>
-        auto build(ObjectWithPoints& obj){
+        auto build(const ObjectWithPoints& obj){
             auto p = obj.getNode(0);
             auto x = p[0]; auto y = p[1]; auto z = p[2];
             Extent<decltype(x)> e{{x,y,z},{x,y,z}};
@@ -41,7 +41,7 @@ namespace Parfait {
         }
 
         template<typename MeshType>
-        Extent<double> buildExtentForCellInMesh(MeshType& mesh,int cell_id){
+        Extent<double> buildExtentForCellInMesh(const MeshType& mesh,int cell_id){
             Extent<double> e{{1e20,1e20,1e20},{-1e20,-1e20,-1e20}};
             for(int node_id:mesh.getNodesInCell(cell_id)){
                 auto xyz = mesh.getNode(node_id);
@@ -51,7 +51,7 @@ namespace Parfait {
         }
 
         template<typename MeshType>
-        Extent<double> buildExtentForBoundaryFaceInMesh(MeshType& mesh,int face_id){
+        Extent<double> buildExtentForBoundaryFaceInMesh(const MeshType& mesh,int face_id){
             Extent<double> e{{1e20,1e20,1e20},{-1e20,-1e20,-1e20}};
             for(int node_id:mesh.getNodesInBoundaryFace(face_id)){
                 auto xyz = mesh.getNode(node_id);

@@ -98,10 +98,10 @@ TEST(ExtentBuilderTests,createExtentForBoundaryFaceInMesh){
 
 	class MockFaceMesh{
 	public:
-		std::vector<int> getNodesInBoundaryFace(int i){
+		std::vector<int> getNodesInBoundaryFace(int i) const{
 			return {0,1,7};
 		}
-		Parfait::Point<double> getNode(int i){
+		Parfait::Point<double> getNode(int i) const {
 			return Parfait::Point<double>(i,i,i);
 		}
 	}mockFaceMesh;
