@@ -22,14 +22,6 @@ TEST(Extent, Constructor){
     CHECK_EQUAL(v.hi[1], 1);
     CHECK_EQUAL(v.hi[2], 1);
 
-    Extent<double> w;
-    CHECK_EQUAL(w.lo[0], 0);
-    CHECK_EQUAL(w.lo[1], 0);
-    CHECK_EQUAL(w.lo[2], 0);
-
-    CHECK_EQUAL(w.hi[0], 0);
-    CHECK_EQUAL(w.hi[1], 0);
-    CHECK_EQUAL(w.hi[2], 0);
 }
 
 TEST(Extent, PointerConstructors){

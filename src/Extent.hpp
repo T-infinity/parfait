@@ -4,8 +4,6 @@
 namespace Parfait {
   template <typename T>
   Extent<T>::Extent() {
-    lo = Point<T>(0, 0, 0);
-    hi = Point<T>(0, 0, 0);
   }
 
   template <typename T>

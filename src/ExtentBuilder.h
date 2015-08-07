@@ -2,8 +2,17 @@
 #define EXTENT_BUILDER_H
 
 #include "Extent.h"
+#include <limits>
+
 namespace Parfait {
     namespace ExtentBuilder {
+
+        template<typename T>
+        Extent<T> createEmptyBuildableExtent(const Extent<T>&& e){
+            T lo = std::numeric_limits<T>::lowest();
+            T hi = std::numeric_limits<T>::max();
+            return Extent<T> {{hi,hi,hi},{lo,lo,lo}};
+        }
 
         template<typename T>
         void expandExtentWithAnother(Extent<T>& e1,const Extent<T>& e2){
@@ -42,7 +51,7 @@ namespace Parfait {
 
         template<typename MeshType>
         Extent<double> buildExtentForCellInMesh(const MeshType& mesh,int cell_id){
-            Extent<double> e{{1e20,1e20,1e20},{-1e20,-1e20,-1e20}};
+            auto e = createEmptyBuildableExtent(Extent<double>());
             for(int node_id:mesh.getNodesInCell(cell_id)){
                 auto xyz = mesh.getNode(node_id);
                 addPointToExtent(e,Point<double>(xyz[0],xyz[1],xyz[2]));
