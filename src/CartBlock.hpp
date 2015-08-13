@@ -90,14 +90,13 @@ inline std::vector<int> Parfait::CartBlock::getCellIdsInExtent(const Extent<doub
   mesh_lo = lo;
   mesh_hi = hi;
   // return nothing if the box does not overlap
-  cell_ids.clear();
   if(!contains(b))
     return cell_ids;
   // allow the box to be bigger than the mesh in any dimension
   for(int i=0;i<3;i++)
   {
-    search_lo[i] = search_lo[i] < mesh_lo[i]? mesh_lo[i] :search_lo[i];
-    search_hi[i] = search_hi[i] > mesh_hi[i]? mesh_hi[i] :search_hi[i];
+    search_lo[i] = std::max(search_lo[i],mesh_lo[i]);
+    search_hi[i] = std::min(search_hi[i],mesh_hi[i]);
   }
   hx = search_lo[0] - mesh_lo[0];
   hy = search_lo[1] - mesh_lo[1];

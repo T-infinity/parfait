@@ -48,6 +48,11 @@ namespace Parfait { ;
         int numberOfNonGhostNodes() { return nnodes0; }
 
         void setNode(int nodeId, double node[3]);
+
+        Fun3DMesh(){
+            throw std::domain_error(std::string("The default constructor for Fun3DMesh only exists")+
+            " for the purpose of interfacing with Fortran (The external Yoga interface catches this exception.");
+        }
         Fun3DMesh(int nnodes0, int nnodes01, double *x, double *y, double *z,
                   int *globalNodeIds,
                   int *imesh,
