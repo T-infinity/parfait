@@ -23,10 +23,10 @@ namespace Parfait {
     };
     inline Range getRangeForWorker(long id, long numWorkItems, long numWorkers) {
         throwIfIdInvalid(id, numWorkers);
-        int left_overs = numWorkItems % numWorkers;
-        int work_per_worker = numWorkItems / numWorkers;
-        int start = computeStartGivenLeftOvers(id, work_per_worker, left_overs);
-        int end = computeStartGivenLeftOvers(id + 1, work_per_worker, left_overs);
+        long left_overs = numWorkItems % numWorkers;
+        long work_per_worker = numWorkItems / numWorkers;
+        long start = computeStartGivenLeftOvers(id, work_per_worker, left_overs);
+        long end = computeStartGivenLeftOvers(id + 1, work_per_worker, left_overs);
         return {start, end};
     }
 
