@@ -18,3 +18,7 @@ TEST(PreProcessorTests,Exists)
     Parfait::PreProcessor pre_processor("sample.xml");
 
 }
+
+TEST(PreProcessorTests,ThrowsIfCantOpenFile){
+    CHECK_THROWS(std::domain_error,PreProcessor("non_existant.xml"));
+}

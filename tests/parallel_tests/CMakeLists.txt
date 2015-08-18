@@ -24,10 +24,13 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         parallel_sum_tests.cpp
         GathervTests.cpp
         AllGathervTests.cpp
+        PreProcessor/PreProcessorTests.cpp
        )
 
 add_executable(ParfaitParallelTests ${PARFAIT_PARALLEL_TESTS_SRC} ${HEADERS})
+include_directories(../../tinyxml/src)
 target_link_libraries(ParfaitParallelTests
             CppUTest
             ${MPI_LIBRARIES}
+            tinyxml
             )

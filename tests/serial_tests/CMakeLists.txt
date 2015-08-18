@@ -42,7 +42,7 @@ set(PARFAIT_SERIAL_TESTS_SRC
         VtkExplodedViewWriter/VtkExplodedViewWriter_test.cpp
        )
 
-
-add_executable(ParfaitSerialTests ${PARFAIT_SERIAL_TESTS_SRC} ${HEADERS} PreProcessor/PreProcessorTests.cpp)
+add_executable(ParfaitSerialTests ${PARFAIT_SERIAL_TESTS_SRC} ${HEADERS})
+include_directories(../../tinyxml/src)
 target_link_libraries(ParfaitSerialTests CppUTest
-        )
+        tinyxml)
