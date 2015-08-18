@@ -43,6 +43,6 @@ set(PARFAIT_SERIAL_TESTS_SRC
        )
 
 
-add_executable(ParfaitSerialTests ${PARFAIT_SERIAL_TESTS_SRC} ${HEADERS})
+add_executable(ParfaitSerialTests ${PARFAIT_SERIAL_TESTS_SRC} ${HEADERS} PreProcessor/PreProcessorTests.cpp)
 target_link_libraries(ParfaitSerialTests CppUTest
         )
