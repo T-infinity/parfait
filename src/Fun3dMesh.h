@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include "GenericMesh.h"
+#include "Point.h"
 #include <vector>
 
 //-------------------------------------------------------------
@@ -20,6 +21,7 @@ namespace Parfait { ;
         // Any Generic mesh must implement the following
         // functions (no inheritance required)
         void getNode(int nodeId, double node[3]) const;
+        Point<double> getNode(int nodeId) const;
         int numberOfNodes() const;
         int numberOfCells() const;
         int numberOfNodesInCell(int id) const;

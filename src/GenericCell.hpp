@@ -26,7 +26,8 @@ namespace Parfait {
 
     template<typename MeshType>
     auto Cell<MeshType>::getNode(int i) const{
-        return mesh.getNode(i);
+        auto node_ids = getNodes();
+        return mesh.getNode(node_ids[i]);
     }
 
     template<class MeshType>
