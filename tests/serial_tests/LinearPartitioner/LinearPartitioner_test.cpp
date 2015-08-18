@@ -26,6 +26,9 @@ TEST(LinearPartitionerTests, Exists){
     LONGS_EQUAL(range.start, 91);
     LONGS_EQUAL(range.end, 101);
 
+    range = LinearPartitioner::getRangeForWorker(9, 624, 10);
+    CHECK(range.end - range.start > 55);
+
     CHECK_THROWS(std::logic_error, LinearPartitioner::getRangeForWorker(10, 101, 10));
     CHECK_THROWS(std::logic_error, LinearPartitioner::getRangeForWorker(-1, 101, 10));
 }

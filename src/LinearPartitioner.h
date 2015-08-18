@@ -5,15 +5,16 @@
 namespace Parfait {
   namespace LinearPartitioner {
     struct Range {
-        Range(int start_in, int end_in)
+        Range() = default;
+        Range(long start_in, long end_in)
                 : start(start_in), end(end_in) { }
-        int start;
-        int end;
+        long start;
+        long end;
     };
 
-    Range getRangeForWorker(int id, int numWorkItems, int numWorkers);
-    Range getRangeForCurrentProc(int numWorkItems);
-    Range getRangeForProc(int procId, int numWorkItems);
+    Range getRangeForWorker(long id, long numWorkItems, long numWorkers);
+    Range getRangeForCurrentProc(long numWorkItems);
+    Range getRangeForProc(long procId, long numWorkItems);
   }
 }
 
