@@ -4,8 +4,12 @@
 #include <vector>
 #include <ConfigurationReader.h>
 #include <MotionMatrix.h>
+#include <iostream>
+#include <stdio.h>
+#include <ctype.h>
 #include <MapbcReader.h>
 #include <MessagePasser.h>
+#include "Point.h"
 #include "tinyxml.h"
 
 namespace Parfait {
@@ -18,6 +22,7 @@ namespace Parfait {
 		Parfait::MotionMatrix getMotionMatrix(int gridId);
 		int getBoundaryCondition(int gridId, int tag);
 		Parfait::MapbcReader getMapbcObject(int gridId);
+		void print();
 	private:
 		int ngrids;
 		std::string filename;
@@ -28,7 +33,18 @@ namespace Parfait {
 		void load();
 		void readMapbcFiles();
 		void loadComponents(TiXmlHandle globalHandle);
+		bool figureOutEndianness(std::string s);
+
+		const Parfait::Point<double> getXYZ(TiXmlElement *element) const;
+		void throwIfBadElement(TiXmlElement* element);
+		void throwIfConfigurationIsInsane();
+		bool getEndiannessForComponent(const TiXmlElement *ComponentElement);
+
+		void getRotationForComponent(const TiXmlHandle &ComponentHandle);
 	};
+
+
+
 }
 #include "ConfigurationReader.hpp"
 
