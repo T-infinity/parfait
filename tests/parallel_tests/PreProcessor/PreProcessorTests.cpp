@@ -16,7 +16,7 @@ TEST_GROUP(PreProcessorTests)
 TEST(PreProcessorTests,Exists)
 {
     Parfait::PreProcessor pre_processor("sample.xml");
-
+    auto mesh = pre_processor.createFun3DMesh();
 }
 
 TEST(PreProcessorTests,ThrowsIfCantOpenFile){
