@@ -32,6 +32,7 @@ namespace Parfait{
 
 	inline Parfait::Fun3DMesh PreProcessor::createFun3DMesh(){
 		Parfait::ParallelMeshReaderNaive naiveReader(gridNames,isBigEndian);
+
 		auto ugrid = naiveReader.distributeGridsEvenly();
 		auto part = calculateNewPartitioning(ugrid);
 		auto gridNodeMap = naiveReader.getGridNodeMap();

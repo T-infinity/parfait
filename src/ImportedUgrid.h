@@ -68,6 +68,7 @@ namespace Parfait {
         std::vector<int> quadTags;
         std::vector<int> triangleBoundaryConditions;
         std::vector<int> quadBoundaryConditions;
+        std::vector<int> associated_component_id;
     protected:
         int nnodes;
         int ncells;
