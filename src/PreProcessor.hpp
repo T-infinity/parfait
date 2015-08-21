@@ -1,5 +1,5 @@
 #include <ParmetisPrepper.h>
-#include <ParallelMeshReaderNaive.h>
+#include <ParallelMeshReader.h>
 #include <ParallelMeshRedistributor.h>
 #include "ComponentPlacer.h"
 
@@ -31,7 +31,7 @@ namespace Parfait{
 	}
 
 	inline Parfait::Fun3DMesh PreProcessor::createFun3DMesh(){
-		Parfait::ParallelMeshReaderNaive naiveReader(gridNames,isBigEndian);
+		Parfait::ParallelMeshReader naiveReader(gridNames,isBigEndian);
 
 		auto ugrid = naiveReader.distributeGridsEvenly();
 		auto part = calculateNewPartitioning(ugrid);

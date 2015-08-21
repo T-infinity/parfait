@@ -1,9 +1,6 @@
-//
-// Created by cdruyorj on 8/18/15.
-//
 #include <string>
 #include "PreProcessor.h"
-#include "ParallelMeshReader.h"
+#include <ParallelMeshReader.h>
 
 #include "CppUTest/CommandLineTestRunner.h"
 
@@ -14,6 +11,6 @@ TEST_GROUP(ParallelMeshReaderTests)
 
 TEST(ParallelMeshReaderTests,Exists)
 {
-    auto mesh = Parfait::ParallelMeshReader::read("sample.xml");
+    auto mesh = Parfait::ParallelMeshReader::readDistributedGrid("sample.xml");
 }
 

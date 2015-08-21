@@ -8,6 +8,14 @@ namespace Parfait {
 
 	inline int ConfigurationReader::numberOfGrids() { return ngrids; }
 
+    inline std::vector<std::string> ConfigurationReader::getGridFilenames() {
+        return gridFilenames;
+    }
+
+    inline std::vector<bool> ConfigurationReader::getGridEndianness() {
+        return bigEndian;
+    }
+
 	inline bool ConfigurationReader::isBigEndian(int gridId) { return bigEndian[gridId]; }
 
 	inline std::string ConfigurationReader::getFilename(int gridId) { return gridFilenames[gridId]; }
