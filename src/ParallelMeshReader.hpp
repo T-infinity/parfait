@@ -23,8 +23,12 @@ inline void ParallelMeshReader::distributeAllNodes() {
 }
 
 inline long ParallelMeshReader::getTotalNumberOfNodes() {
+    int n = 0;
     for(int gridId = 0; configurationReader.numberOfGrids(); gridId++){
-        UgridReader ugridReader(configurationReader.getFilename(gridId));
+        int nnodes;
+        int x;
+         UgridReader::readHeader(configurationReader.getFilename(gridId),nnodes, x, x, x, x, x, x);
+
     }
 }
 
