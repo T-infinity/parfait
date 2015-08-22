@@ -10,6 +10,12 @@ ImportedUgrid ParallelMeshReader::readDistributedGrid(std::string configurationF
   return reader.distributeGridsEvenly();
 }
 
+ImportedUgrid ParallelMeshReader::readDistributedGrid(std::vector<std::string> gridFiles, std::vector<bool> isBigEndian){
+  ParallelMeshReader reader(gridFiles, isBigEndian);
+  return reader.distributeGridsEvenly();
+}
+
+
 inline Parfait::ParallelMeshReader::ParallelMeshReader(std::vector<std::string> gridFiles_in,
                                                         std::vector<bool> isBigEndian_in)
     : isBigEndian(isBigEndian_in) {

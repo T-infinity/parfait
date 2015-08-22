@@ -13,6 +13,7 @@ namespace Parfait {
     template<class T> using vector = std::vector<T>;
   public:
     static ImportedUgrid readDistributedGrid(std::string configurationFileName);
+    static ImportedUgrid readDistributedGrid(std::vector<std::string> gridFiles, std::vector<bool> isBigEndian);
     ParallelMeshReader(std::vector<std::string> gridFiles, std::vector<bool> isBigEndian);
     ImportedUgrid distributeGridsEvenly();
     std::vector<int> getGridNodeMap();

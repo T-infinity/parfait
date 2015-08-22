@@ -11,6 +11,6 @@ TEST_GROUP(ParallelMeshReaderTests)
 
 TEST(ParallelMeshReaderTests,Exists)
 {
-    auto mesh = Parfait::ParallelMeshReader::readDistributedGrid("sample.xml");
+    auto mesh = Parfait::ParallelMeshReader::readDistributedGrid({"../../../run/6cell.lb8.ugrid"}, {false});
 }
 

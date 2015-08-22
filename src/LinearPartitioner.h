@@ -12,6 +12,7 @@ namespace Parfait {
         long end;
     };
 
+    long getWorkerOfWorkItem(long itemId, long numWorkItems, long numWorkers);
     Range getRangeForWorker(long id, long numWorkItems, long numWorkers);
     Range getRangeForCurrentProc(long numWorkItems);
     Range getRangeForProc(long procId, long numWorkItems);

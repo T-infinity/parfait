@@ -4,7 +4,28 @@
 using namespace Parfait;
 TEST_GROUP(LinearPartitionerTests){};
 
-TEST(LinearPartitionerTests, Exists){
+TEST(LinearPartitionerTests, GetWorkerOfWorkItem){
+    auto id = LinearPartitioner::getWorkerOfWorkItem(0, 10, 1);
+    LONGS_EQUAL(id, 0);
+
+    id = LinearPartitioner::getWorkerOfWorkItem(0, 10, 2);
+    LONGS_EQUAL(id, 0);
+    id = LinearPartitioner::getWorkerOfWorkItem(5, 10, 2);
+    LONGS_EQUAL(id, 1);
+    id = LinearPartitioner::getWorkerOfWorkItem(6, 10, 2);
+    LONGS_EQUAL(id, 1);
+
+    id = LinearPartitioner::getWorkerOfWorkItem(3, 10, 3);
+    LONGS_EQUAL(id, 0);
+    id = LinearPartitioner::getWorkerOfWorkItem(4, 10, 3);
+    LONGS_EQUAL(id, 1);
+    id = LinearPartitioner::getWorkerOfWorkItem(5, 10, 3);
+    LONGS_EQUAL(id, 1);
+    id = LinearPartitioner::getWorkerOfWorkItem(6, 10, 3);
+    LONGS_EQUAL(id, 1);
+}
+
+TEST(LinearPartitionerTests, getRangeOfWorker){
     auto range = LinearPartitioner::getRangeForWorker(0, 1, 1);
 
     LONGS_EQUAL(range.start, 0);
