@@ -18,7 +18,10 @@ namespace Parfait {
     ImportedUgrid distributeGridsEvenly();
     std::vector<int> getGridNodeMap();
     std::vector<int> getProcNodeMap();
-  private:
+    long totalNumberOfNodes() const;
+    int numberOfGrids() const;
+
+  public:
     std::vector<bool> isBigEndian;
     std::vector<std::string> gridFiles;
     std::vector<int> procNodeMap;
@@ -45,6 +48,7 @@ namespace Parfait {
     void buildDistributionMaps();
     void distributeNodes();
     void distributeTriangles();
+    void rootDistributeTriangles();
     void distributeUgrid();
     std::vector<double> getNodes(int begin, int end);
     std::vector<int> getTriangles(int begin, int end);

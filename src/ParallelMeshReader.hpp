@@ -3,18 +3,18 @@
 #include <RangeLoop.h>
 #include <ImportedUgrid.h>
 #include <UgridReader.h>
+#include <LinearPartitioner.h>
 
-ImportedUgrid ParallelMeshReader::readDistributedGrid(std::string configurationFileName) {
+ImportedUgrid Parfait::ParallelMeshReader::readDistributedGrid(std::string configurationFileName) {
   ConfigurationReader configurationReader(configurationFileName);
   ParallelMeshReader reader(configurationReader.getGridFilenames(), configurationReader.getGridEndianness());
   return reader.distributeGridsEvenly();
 }
 
-ImportedUgrid ParallelMeshReader::readDistributedGrid(std::vector<std::string> gridFiles, std::vector<bool> isBigEndian){
+ImportedUgrid Parfait::ParallelMeshReader::readDistributedGrid(std::vector<std::string> gridFiles, std::vector<bool> isBigEndian){
   ParallelMeshReader reader(gridFiles, isBigEndian);
   return reader.distributeGridsEvenly();
 }
-
 
 inline Parfait::ParallelMeshReader::ParallelMeshReader(std::vector<std::string> gridFiles_in,
                                                         std::vector<bool> isBigEndian_in)
@@ -67,7 +67,6 @@ inline Parfait::ParallelMeshReader::ParallelMeshReader(std::vector<std::string> 
     printf("--prisms        %i\n", gridPrismMap.back());
     printf("--hexs          %i\n", gridHexMap.back());
   }
-  distributeUgrid();
 }
 
 inline std::vector<int> Parfait::ParallelMeshReader::getGridNodeMap() {
@@ -115,6 +114,7 @@ inline void Parfait::ParallelMeshReader::buildDistributionMaps() {
 }
 
 inline Parfait::ImportedUgrid Parfait::ParallelMeshReader::distributeGridsEvenly() {
+  distributeUgrid();
   ImportedUgrid ugrid(myNodes, myTriangles, myQuads, myTets,
                       myPyramids, myPrisms, myHexs, myTriangleTags, myQuadTags,
                       myTriangleTags, myQuadTags);
@@ -138,30 +138,32 @@ inline void Parfait::ParallelMeshReader::distributeNodes()
     MessagePasser::Recv(myNodes,0);
 }
 
+inline void Parfait::ParallelMeshReader::rootDistributeTriangles() {
+  int end = gridTriangleMap.back();
+  for (int grid = 0; grid < gridTriangleMap.size() - 1; grid++) {
+    for (int i = gridTriangleMap[grid]; i < gridTriangleMap[grid + 1]; i++) {
+      auto t = getTriangles(i, i + 1);
+      for (int &id:t)
+        id = convertComponentNodeIdToGlobal(id, grid);
+      std::set<int> target_procs;
+      for (int id:t)
+        target_procs.insert(getOwningProcOfNode(id));
+      for (int target:target_procs) {
+        if(0 == target)
+          saveTriangle(t);
+        else
+          MessagePasser::Send(t, target);
+      }
+    }
+  }
+  std::vector<int> done_triangle_signal = {1};
+  for(int i=1;i<MessagePasser::NumberOfProcesses();i++)
+    MessagePasser::Send(done_triangle_signal,i);
+}
 
-void ParallelMeshReader::distributeTriangles() {
+inline void Parfait::ParallelMeshReader::distributeTriangles() {
     if(MessagePasser::Rank() == 0) {
-        int end = gridTriangleMap.back();
-        for (int grid = 0; grid < gridTriangleMap.size() - 1; grid++) {
-            for (int i = gridTriangleMap[grid]; i < gridTriangleMap[grid + 1]; i++) {
-                auto t = getTriangles(i, i + 1);
-                for (int &id:t)
-                    id += convertComponentNodeIdToGlobal(id, grid);
-                std::set<int> target_procs;
-                for (int id:t)
-                    target_procs.insert(getOwningProcOfNode(id));
-                for (int target:target_procs) {
-                    fprintf(stderr,"target = %i\n",target);
-                    if(0 == target)
-                        saveTriangle(t);
-                    else
-                        MessagePasser::Send(t, target);
-                }
-            }
-        }
-        std::vector<int> done_triangle_signal = {1};
-        for(int i=1;i<MessagePasser::NumberOfProcesses();i++)
-            MessagePasser::Send(done_triangle_signal,i);
+      rootDistributeTriangles();
     }
     else {
         bool done = false;
@@ -180,23 +182,9 @@ void ParallelMeshReader::saveTriangle(const std::vector<int>& triangle){
 }
 
 
-int ParallelMeshReader::getOwningProcOfNode(int id) {
-    int nnodes = gridNodeMap.back();
-    int nproc = MessagePasser::NumberOfProcesses();
-    int nper_proc = nnodes/nproc;
-    int nprocs_with_extra = (nnodes%nproc);
-    int node_break_point = (nper_proc+1)*nprocs_with_extra;
-    if(id < node_break_point){
-        nper_proc++;
-        return id / nper_proc;
-    }
-    else{
-        id -= node_break_point;
-        return id / nper_proc + nprocs_with_extra;
-    }
-
-
-    return 0;
+int Parfait::ParallelMeshReader::getOwningProcOfNode(int id) {
+  auto nnodes = gridNodeMap.back();
+  return LinearPartitioner::getWorkerOfWorkItem(id, nnodes, MessagePasser::NumberOfProcesses());
 }
 
 int ParallelMeshReader::convertComponentNodeIdToGlobal(int id,int grid) const {
@@ -639,3 +627,12 @@ inline int Parfait::ParallelMeshReader::getEndIndex(std::vector<int> &gridMap,in
       return end-gridMap[i];
   assert(false);
 }
+
+inline long Parfait::ParallelMeshReader::totalNumberOfNodes() const{
+  return gridNodeMap.back();
+}
+
+inline int Parfait::ParallelMeshReader::numberOfGrids() const{
+  return gridFiles.size();
+}
+
