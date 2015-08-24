@@ -14,13 +14,14 @@ include_directories(
 
     file(GLOB_RECURSE HEADERS
         "src/*.h"
-        "src/*.hpp"
+        #"src/*.hpp"
         )
 
 set(CMAKE_EXE_LINKER_FLAGS -L/ump/fldmd/home/cdruyorj/cdruyor_local/parmetis_openmpi/lib)
 set(PARFAIT_PARALLEL_TESTS_SRC
         AllTests.cpp
         ParallelExtent_test.cpp
+        ParallelImportedUgrid_test.cpp
         message_passer_tests.cpp
         parallel_sum_tests.cpp
         GathervTests.cpp

@@ -18,6 +18,9 @@ TEST(ParallelMeshReaderTests,Exists) {
         LONGS_EQUAL(0, mesh.pyramids.size() / 5);
         LONGS_EQUAL(6, mesh.prisms.size() / 6);
         LONGS_EQUAL(0, mesh.hexs.size() / 6);
+        for(int i = 0; i < 14; i++){
+            LONGS_EQUAL(i, mesh.getGlobalNodeId(i));
+        }
     }
 }
 

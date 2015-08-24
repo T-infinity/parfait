@@ -54,3 +54,20 @@ TEST(LinearPartitionerTests, getRangeOfWorker){
     CHECK_THROWS(std::logic_error, LinearPartitioner::getRangeForWorker(-1, 101, 10));
 }
 
+TEST(LinearPartitionerTests, getLocalId){
+    auto ownerIdPair = LinearPartitioner::getOwnerLocalIdPairOfGlobalItem(0, 1, 1);
+    LONGS_EQUAL(0, ownerIdPair.owner);
+    LONGS_EQUAL(0, ownerIdPair.id);
+
+    ownerIdPair = LinearPartitioner::getOwnerLocalIdPairOfGlobalItem(1, 10, 10);
+    LONGS_EQUAL(1, ownerIdPair.owner);
+    LONGS_EQUAL(0, ownerIdPair.id);
+
+    auto localId = LinearPartitioner::getLocalIdOfItemOnWorker(0, 0, 10, 10);
+    LONGS_EQUAL(0, localId);
+    localId = LinearPartitioner::getLocalIdOfItemOnWorker(0, 1, 10, 10);
+    LONGS_EQUAL(-1, localId);
+    localId = LinearPartitioner::getLocalIdOfItemOnWorker(1, 0, 10, 10);
+    LONGS_EQUAL(1, localId);
+}
+
