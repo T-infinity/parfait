@@ -12,6 +12,7 @@ TEST(ParallelMeshReaderTests,Exists) {
     auto mesh = Parfait::ParallelMeshReader::readDistributedGrid({"../../../run/6cell.lb8.ugrid"}, {false});
     if(MessagePasser::NumberOfProcesses() == 1){
         LONGS_EQUAL(12, mesh.triangles.size() / 3);
+        LONGS_EQUAL(12, mesh.triangleTags.size());
         LONGS_EQUAL(6, mesh.quads.size() / 4);
         LONGS_EQUAL(0, mesh.tets.size() / 4);
         LONGS_EQUAL(0, mesh.pyramids.size() / 5);

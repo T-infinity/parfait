@@ -144,6 +144,32 @@ inline void Parfait::ParallelMeshReader::distributeNodes()
     MessagePasser::Recv(myNodes,0);
 }
 
+template <typename CellGetter, typename TagGetter, typename CellSaver>
+void Parfait::ParallelMeshReader::rootDistributeSurfaceCells(std::vector<int> &gridCellMap, CellGetter cellGetter, TagGetter tagGetter, CellSaver cellSaver){
+  for (int grid = 0; grid < gridCellMap.size() - 1; grid++) {
+    for (int i = gridCellMap[grid]; i < gridCellMap[grid + 1]; i++) {
+      auto t = cellGetter(i, i + 1);
+      auto tags = tagGetter(i, i+1);
+      assert(tags.size() == 1);
+      for (int &id:t)
+        id = convertComponentNodeIdToGlobal(id, grid);
+      std::set<int> target_procs;
+      for (int id:t)
+        target_procs.insert(getOwningProcOfNode(id));
+      t.push_back(tags[0]);
+      for (int target:target_procs) {
+        if(MessagePasser::Rank() == target)
+          cellSaver(t);
+        else
+          MessagePasser::Send(t, target);
+      }
+    }
+  }
+  std::vector<int> done_signal = {1};
+  for(int i=1;i<MessagePasser::NumberOfProcesses();i++)
+    MessagePasser::Send(done_signal,i);
+}
+
 template <typename CellGetter, typename CellSaver>
 void Parfait::ParallelMeshReader::rootDistributeCells(std::vector<int> &gridCellMap, CellGetter cellGetter, CellSaver cellSaver){
   for (int grid = 0; grid < gridCellMap.size() - 1; grid++) {
@@ -185,17 +211,19 @@ void Parfait::ParallelMeshReader::nonRootRecvCells(std::vector<int> &cells, Cell
 
 inline void Parfait::ParallelMeshReader::distributeTriangles() {
   if(MessagePasser::Rank() == 0)
-    rootDistributeCells(gridTriangleMap,
-                        std::bind(&Parfait::ParallelMeshReader::getTriangles, this, std::placeholders::_1, std::placeholders::_2),
-                        std::bind(&Parfait::ParallelMeshReader::saveTriangle, this, std::placeholders::_1));
+    rootDistributeSurfaceCells(gridTriangleMap,
+                               std::bind(&Parfait::ParallelMeshReader::getTriangles, this, std::placeholders::_1, std::placeholders::_2),
+                               std::bind(&Parfait::ParallelMeshReader::getTriangleTags, this, std::placeholders::_1, std::placeholders::_2),
+                               std::bind(&Parfait::ParallelMeshReader::saveTriangle, this, std::placeholders::_1));
   else
     nonRootRecvCells(myTriangles, std::bind(&Parfait::ParallelMeshReader::saveTriangle, this, std::placeholders::_1));
 }
 
 inline void Parfait::ParallelMeshReader::distributeQuads() {
   if(MessagePasser::Rank() == 0)
-    rootDistributeCells(gridQuadMap,
+    rootDistributeSurfaceCells(gridQuadMap,
                         std::bind(&Parfait::ParallelMeshReader::getQuads, this, std::placeholders::_1, std::placeholders::_2),
+                        std::bind(&Parfait::ParallelMeshReader::getQuadTags, this, std::placeholders::_1, std::placeholders::_2),
                         std::bind(&Parfait::ParallelMeshReader::saveQuad, this, std::placeholders::_1));
   else
     nonRootRecvCells(myQuads, std::bind(&Parfait::ParallelMeshReader::saveQuad, this, std::placeholders::_1));
@@ -237,12 +265,20 @@ inline void Parfait::ParallelMeshReader::distributeHexs() {
     nonRootRecvCells(myHexs, std::bind(&Parfait::ParallelMeshReader::saveHex, this, std::placeholders::_1));
 }
 
-void ParallelMeshReader::saveTriangle(const std::vector<int>& triangle){
+void ParallelMeshReader::saveTriangle(std::vector<int> triangle){
+  if(triangle.size() != 4)
+    throw std::logic_error("Trying to save a triangle with unexpected length.");
+  myTriangleTags.push_back(triangle.back());
+  triangle.pop_back();
   for(auto id:triangle)
     myTriangles.push_back(id);
 }
 
-void ParallelMeshReader::saveQuad(const std::vector<int>& quad){
+void ParallelMeshReader::saveQuad(std::vector<int> quad){
+  if(quad.size() != 5)
+    throw std::logic_error("Trying to save a quad with unexpected length.");
+  myQuadTags.push_back(quad.back());
+  quad.pop_back();
   for(auto id:quad)
     myQuads.push_back(id);
 }
