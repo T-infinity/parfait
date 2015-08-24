@@ -6,13 +6,13 @@
 #include <UgridReader.h>
 #include <LinearPartitioner.h>
 
-inline ImportedUgrid Parfait::ParallelMeshReader::readDistributedGrid(std::string configurationFileName) {
+inline ParallelImportedUgrid Parfait::ParallelMeshReader::readDistributedGrid(std::string configurationFileName) {
     ConfigurationReader configurationReader(configurationFileName);
     ParallelMeshReader reader(configurationReader.getGridFilenames(), configurationReader.getGridEndianness());
     return reader.distributeGridsEvenly();
 }
 
-inline ImportedUgrid Parfait::ParallelMeshReader::readDistributedGrid(std::vector<std::string> gridFiles, std::vector<bool> isBigEndian){
+inline ParallelImportedUgrid Parfait::ParallelMeshReader::readDistributedGrid(std::vector<std::string> gridFiles, std::vector<bool> isBigEndian){
     ParallelMeshReader reader(gridFiles, isBigEndian);
     return reader.distributeGridsEvenly();
 }
@@ -119,9 +119,14 @@ inline void Parfait::ParallelMeshReader::buildDistributionMaps() {
     }
 }
 
-inline Parfait::ImportedUgrid Parfait::ParallelMeshReader::distributeGridsEvenly() {
+inline Parfait::ParallelImportedUgrid Parfait::ParallelMeshReader::distributeGridsEvenly() {
     distributeUgrid();
-    ImportedUgrid ugrid(myNodes, myTriangles, myQuads, myTets,
+    std::vector<long> globalNodeIds(myNodes.size() / 3);
+    auto range = LinearPartitioner::getRangeForWorker(MessagePasser::Rank(), gridNodeMap.back(), MessagePasser::NumberOfProcesses());
+    for(int i = 0; i < globalNodeIds.size(); i++){
+        globalNodeIds[i] = i + range.start;
+    }
+    ParallelImportedUgrid ugrid(gridNodeMap.back(), globalNodeIds, myNodes, myTriangles, myQuads, myTets,
                         myPyramids, myPrisms, myHexs, myTriangleTags, myQuadTags,
                         myTriangleTags, myQuadTags);
     return ugrid;

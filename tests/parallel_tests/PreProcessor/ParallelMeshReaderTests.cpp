@@ -9,16 +9,19 @@ using std::string;
 TEST_GROUP(ParallelMeshReaderTests) { };
 
 TEST(ParallelMeshReaderTests,Exists) {
-//    auto mesh = Parfait::ParallelMeshReader::readDistributedGrid({"../../../run/6cell.lb8.ugrid"}, {false});
-//    if(MessagePasser::NumberOfProcesses() == 1){
-//        LONGS_EQUAL(12, mesh.triangles.size() / 3);
-//        LONGS_EQUAL(12, mesh.triangleTags.size());
-//        LONGS_EQUAL(6, mesh.quads.size() / 4);
-//        LONGS_EQUAL(0, mesh.tets.size() / 4);
-//        LONGS_EQUAL(0, mesh.pyramids.size() / 5);
-//        LONGS_EQUAL(6, mesh.prisms.size() / 6);
-//        LONGS_EQUAL(0, mesh.hexs.size() / 6);
-//    }
+    auto mesh = Parfait::ParallelMeshReader::readDistributedGrid({"../../../run/6cell.lb8.ugrid"}, {false});
+    if(MessagePasser::NumberOfProcesses() == 1){
+        LONGS_EQUAL(12, mesh.triangles.size() / 3);
+        LONGS_EQUAL(12, mesh.triangleTags.size());
+        LONGS_EQUAL(6, mesh.quads.size() / 4);
+        LONGS_EQUAL(0, mesh.tets.size() / 4);
+        LONGS_EQUAL(0, mesh.pyramids.size() / 5);
+        LONGS_EQUAL(6, mesh.prisms.size() / 6);
+        LONGS_EQUAL(0, mesh.hexs.size() / 6);
+        for(int i = 0; i < 14; i++){
+            LONGS_EQUAL(i, mesh.getGlobalNodeId(i));
+        }
+    }
 }
 
 TEST(ParallelMeshReaderTests, Maps){

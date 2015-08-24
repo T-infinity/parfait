@@ -21,6 +21,7 @@ set(CMAKE_EXE_LINKER_FLAGS -L/ump/fldmd/home/cdruyorj/cdruyor_local/parmetis_ope
 set(PARFAIT_PARALLEL_TESTS_SRC
         AllTests.cpp
         ParallelExtent_test.cpp
+        ParallelImportedUgrid_test.cpp
         message_passer_tests.cpp
         parallel_sum_tests.cpp
         GathervTests.cpp

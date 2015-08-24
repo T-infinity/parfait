@@ -6,16 +6,16 @@
 #include <set>
 #include <stdlib.h>
 #include <MessagePasser.h>
-#include <ImportedUgrid.h>
+#include <ParallelImportedUgrid.h>
 
 namespace Parfait {
   class ParallelMeshReader {
       template<class T> using vector = std::vector<T>;
   public:
-      static ImportedUgrid readDistributedGrid(std::string configurationFileName);
-      static ImportedUgrid readDistributedGrid(std::vector<std::string> gridFiles, std::vector<bool> isBigEndian);
+      static ParallelImportedUgrid readDistributedGrid(std::string configurationFileName);
+      static ParallelImportedUgrid readDistributedGrid(std::vector<std::string> gridFiles, std::vector<bool> isBigEndian);
       ParallelMeshReader(std::vector<std::string> gridFiles, std::vector<bool> isBigEndian);
-      ImportedUgrid distributeGridsEvenly();
+      ParallelImportedUgrid distributeGridsEvenly();
       std::vector<int> getGridNodeMap();
       std::vector<int> getProcNodeMap();
       long totalNumberOfNodes() const;
