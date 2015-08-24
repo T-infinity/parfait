@@ -26,6 +26,7 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         GathervTests.cpp
         AllGathervTests.cpp
         PreProcessor/ParallelMeshReaderTests.cpp
+        PreProcessor/CellMessager_test.cpp
        )
 
 add_executable(ParfaitParallelTests ${PARFAIT_PARALLEL_TESTS_SRC} ${HEADERS})
