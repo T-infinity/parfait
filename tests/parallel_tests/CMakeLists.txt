@@ -14,7 +14,7 @@ include_directories(
 
     file(GLOB_RECURSE HEADERS
         "src/*.h"
-        "src/*.hpp"
+        #"src/*.hpp"
         )
 
 set(CMAKE_EXE_LINKER_FLAGS -L/ump/fldmd/home/cdruyorj/cdruyor_local/parmetis_openmpi/lib)

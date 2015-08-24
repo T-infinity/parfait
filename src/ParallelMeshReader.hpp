@@ -6,13 +6,13 @@
 #include <UgridReader.h>
 #include <LinearPartitioner.h>
 
-ImportedUgrid Parfait::ParallelMeshReader::readDistributedGrid(std::string configurationFileName) {
+inline ImportedUgrid Parfait::ParallelMeshReader::readDistributedGrid(std::string configurationFileName) {
   ConfigurationReader configurationReader(configurationFileName);
   ParallelMeshReader reader(configurationReader.getGridFilenames(), configurationReader.getGridEndianness());
   return reader.distributeGridsEvenly();
 }
 
-ImportedUgrid Parfait::ParallelMeshReader::readDistributedGrid(std::vector<std::string> gridFiles, std::vector<bool> isBigEndian){
+inline ImportedUgrid Parfait::ParallelMeshReader::readDistributedGrid(std::vector<std::string> gridFiles, std::vector<bool> isBigEndian){
   ParallelMeshReader reader(gridFiles, isBigEndian);
   return reader.distributeGridsEvenly();
 }
