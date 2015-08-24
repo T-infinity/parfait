@@ -13,7 +13,7 @@ namespace Parfait{
 	inline std::vector<int> PreProcessor::calculateNewPartitioning(Parfait::ImportedUgrid &ugrid){
 		if(MessagePasser::Rank() == 0)
 			printf("Create ParmetisPrepper:\n");
-		ParMetisPrepper<Parfait::ImportedUgrid> prepper(ugrid);
+		Partitioner <Parfait::ImportedUgrid> prepper(ugrid);
 
 		if(MessagePasser::Rank() == 0)
 			printf("Build node to node connectivity:\n");
