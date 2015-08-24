@@ -62,6 +62,7 @@ namespace Parfait {
       void distributePrisms();
       void distributeHexs();
       void distributeUgrid();
+      void mapNodesToLocalSpace();
       std::vector<double> getNodes(int begin, int end);
       std::vector<int> getTriangles(int begin, int end);
       std::vector<int> getTriangleTags(int begin, int end);
@@ -85,6 +86,9 @@ namespace Parfait {
       void savePyramid(const std::vector<int> &pyramid);
       void savePrism(const std::vector<int> &prism);
       void saveHex(const std::vector<int> &hex);
+
+      std::map<long, long> globalToLocalId;
+      std::map<long, long> localToGlobalId;
   };
 }
 

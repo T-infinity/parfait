@@ -21,6 +21,10 @@ TEST(ParallelMeshReaderTests,Exists) {
         for(int i = 0; i < 14; i++){
             LONGS_EQUAL(i, mesh.getGlobalNodeId(i));
         }
+        for(int i = 0; i < 14; i++){
+            LONGS_EQUAL(0, mesh.ownershipDegreeOfLocalNode(i));
+        }
+        LONGS_EQUAL(14, mesh.numberOfNodesOfDegreeOrUnder(0));
     }
 }
 
