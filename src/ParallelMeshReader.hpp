@@ -78,6 +78,50 @@ inline std::vector<int> Parfait::ParallelMeshReader::getProcNodeMap() {
     return procNodeMap;
 }
 
+inline void Parfait::ParallelMeshReader::mapNodesToLocalSpace() {
+    long localNodeId = 0;
+    for(long globalNodeId = procNodeMap[MessagePasser::Rank()]; globalNodeId < procNodeMap[MessagePasser::Rank()+1]; globalNodeId++){
+        globalToLocalId[globalNodeId] = localNodeId++;
+    }
+
+    for(auto &id : myTriangles){
+        if(globalToLocalId.count(id) == 0)
+            globalToLocalId[id] = localNodeId++;
+        id = globalToLocalId[id];
+    }
+    for(auto &id : myQuads){
+        if(globalToLocalId.count(id) == 0)
+            globalToLocalId[id] = localNodeId++;
+        id = globalToLocalId[id];
+    }
+    for(auto &id : myTets){
+        if(globalToLocalId.count(id) == 0)
+            globalToLocalId[id] = localNodeId++;
+        id = globalToLocalId[id];
+    }
+    for(auto &id : myPyramids){
+        if(globalToLocalId.count(id) == 0)
+            globalToLocalId[id] = localNodeId++;
+        id = globalToLocalId[id];
+    }
+    for(auto &id : myPrisms){
+        if(globalToLocalId.count(id) == 0)
+            globalToLocalId[id] = localNodeId++;
+        id = globalToLocalId[id];
+    }
+    for(auto &id : myHexs){
+        if(globalToLocalId.count(id) == 0)
+            globalToLocalId[id] = localNodeId++;
+        id = globalToLocalId[id];
+    }
+
+    for(auto &pair : globalToLocalId){
+        auto global = pair.first;
+        auto local = pair.second;
+        localToGlobalId[local] = global;
+    }
+}
+
 inline void Parfait::ParallelMeshReader::distributeUgrid() {
     if (0 == MessagePasser::Rank())
         buildDistributionMaps();
@@ -92,6 +136,7 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
     distributePyramids();
     distributePrisms();
     distributeHexs();
+    mapNodesToLocalSpace();
 
     if (MessagePasser::Rank() == 0)
         printf("Done Distributing ...\n");
@@ -121,12 +166,18 @@ inline void Parfait::ParallelMeshReader::buildDistributionMaps() {
 
 inline Parfait::ParallelImportedUgrid Parfait::ParallelMeshReader::distributeGridsEvenly() {
     distributeUgrid();
-    std::vector<long> globalNodeIds(myNodes.size() / 3);
-    auto range = LinearPartitioner::getRangeForWorker(MessagePasser::Rank(), gridNodeMap.back(), MessagePasser::NumberOfProcesses());
-    for(int i = 0; i < globalNodeIds.size(); i++){
-        globalNodeIds[i] = i + range.start;
+    std::vector<long> globalNodeIds;
+    for(long localId = 0; localId < localToGlobalId.size(); localId++){
+        globalNodeIds.push_back(localToGlobalId[localId]);
     }
-    ParallelImportedUgrid ugrid(gridNodeMap.back(), globalNodeIds, myNodes, myTriangles, myQuads, myTets,
+    std::vector<int> ownershipDegree(globalNodeIds.size());
+    for(int localId = 0; localId < localToGlobalId.size(); localId++){
+        if(localId < myNodes.size() / 3)
+            ownershipDegree[localId] = 0;
+        else
+            ownershipDegree[localId] = 1;
+    }
+    ParallelImportedUgrid ugrid(gridNodeMap.back(), globalNodeIds, ownershipDegree, myNodes, myTriangles, myQuads, myTets,
                         myPyramids, myPrisms, myHexs, myTriangleTags, myQuadTags,
                         myTriangleTags, myQuadTags);
     return ugrid;
