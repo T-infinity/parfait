@@ -50,7 +50,9 @@ namespace Parfait {
       template<typename CellGetter, typename CellSaver>
       void rootDistributeCells(std::vector<long> &gridCellMap, CellGetter cellGetter, CellSaver cellSaver);
       template<typename CellGetter, typename TagGetter, typename CellSaver>
-      void rootDistributeSurfaceCells(std::vector<long> &gridCellMap, CellGetter cellGetter, TagGetter tagGetter, CellSaver cellSaver);
+      void rootDistributeSurfaceCells(int cellLength, std::vector<long> &gridCellMap,
+                                                                   CellGetter cellGetter, TagGetter tagGetter,
+                                                                   CellSaver cellSaver);
       template<typename CellSaver>
       void nonRootRecvCells(std::vector<int> &cells, CellSaver cellSaver);
 
