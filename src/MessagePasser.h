@@ -18,6 +18,7 @@ namespace MessagePasser
 	// Overloaded functions to return correct MPI Datatype without dynamic type checking
 	inline MPI_Datatype Type(int    value) {return MPI_INT;}
 	inline MPI_Datatype Type(size_t value) {return MPI_INT;}
+    inline MPI_Datatype Type(long   value) {return MPI_LONG;}
 	inline MPI_Datatype Type(float  value) {return MPI_FLOAT;}
 	inline MPI_Datatype Type(double value) {return MPI_DOUBLE;}
 	inline void Barrier() {MPI_Barrier(MPI_COMM_WORLD);}
@@ -38,11 +39,13 @@ namespace MessagePasser
 	void Recv(double &value,int source);
 	void Recv(float &value,int source);
 	void Recv(int &value,int source);
+    void Recv(long &value,int source);
 
 	// recv a single value from any source
 	void Recv(double &value);
 	void Recv(float &value);
 	void Recv(int &value);
+    void Recv(long &value);
 
 	// send a vector (receiver knows length)
 	template<typename T>

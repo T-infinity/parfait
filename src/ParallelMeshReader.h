@@ -48,9 +48,9 @@ namespace Parfait {
       void distributeNodes();
 
       template<typename CellGetter, typename CellSaver>
-      void rootDistributeCells(std::vector<int> &gridCellMap, CellGetter cellGetter, CellSaver cellSaver);
+      void rootDistributeCells(std::vector<long> &gridCellMap, CellGetter cellGetter, CellSaver cellSaver);
       template<typename CellGetter, typename TagGetter, typename CellSaver>
-      void rootDistributeSurfaceCells(std::vector<int> &gridCellMap, CellGetter cellGetter, TagGetter tagGetter, CellSaver cellSaver);
+      void rootDistributeSurfaceCells(std::vector<long> &gridCellMap, CellGetter cellGetter, TagGetter tagGetter, CellSaver cellSaver);
       template<typename CellSaver>
       void nonRootRecvCells(std::vector<int> &cells, CellSaver cellSaver);
 
@@ -63,21 +63,21 @@ namespace Parfait {
       void distributeUgrid();
       void mapNodesToLocalSpace();
       std::vector<double> getNodes(int begin, int end);
-      std::vector<int> getTriangles(int begin, int end);
+      std::vector<long> getTriangles(int begin, int end);
       std::vector<int> getTriangleTags(int begin, int end);
-      std::vector<int> getQuads(int begin, int end);
+      std::vector<long> getQuads(int begin, int end);
       std::vector<int> getQuadTags(int begin, int end);
-      std::vector<int> getTets(int begin, int end);
-      std::vector<int> getPyramids(int begin, int end);
-      std::vector<int> getPrisms(int begin, int end);
-      std::vector<int> getHexs(int begin, int end);
-      int getFirstGrid(std::vector<int> &gridMap, int begin);
-      int getLastGrid(std::vector<int> &gridMap, int end);
-      int getBeginIndex(std::vector<int> &gridMap, int begin);
-      int getEndIndex(std::vector<int> &gridMap, int end);
+      std::vector<long> getTets(int begin, int end);
+      std::vector<long> getPyramids(int begin, int end);
+      std::vector<long> getPrisms(int begin, int end);
+      std::vector<long> getHexs(int begin, int end);
+      int getFirstGrid(std::vector<long> &gridMap, int begin);
+      int getLastGrid(std::vector<long> &gridMap, int end);
+      int getBeginIndex(std::vector<long> &gridMap, int begin);
+      int getEndIndex(std::vector<long> &gridMap, int end);
 
       long convertComponentNodeIdToGlobal(int id, int grid) const;
-      int getOwningProcOfNode(int id);
+      int getOwningProcOfNode(long id);
 
       void saveTriangle(std::vector<long> triangle);
       void saveQuad(std::vector<long> quad);

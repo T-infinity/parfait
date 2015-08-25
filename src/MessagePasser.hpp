@@ -56,6 +56,11 @@ inline void MessagePasser::Recv(int &value,int source){
     MPI_Recv(&value,1,Type(value),source,0,MPI_COMM_WORLD,&status);
 }
 
+inline void MessagePasser::Recv(long &value,int source){
+    MPI_Status status;
+    MPI_Recv(&value,1,Type(value),source,0,MPI_COMM_WORLD,&status);
+}
+
 // recv a single value from any source
 inline void MessagePasser::Recv(double &value){
     MPI_Status status;
@@ -68,6 +73,11 @@ inline void MessagePasser::Recv(float &value){
 }
 
 inline void MessagePasser::Recv(int &value){
+    MPI_Status status;
+    MPI_Recv(&value,1,Type(value),MPI_ANY_SOURCE,0,MPI_COMM_WORLD,&status);
+}
+
+inline void MessagePasser::Recv(long &value){
     MPI_Status status;
     MPI_Recv(&value,1,Type(value),MPI_ANY_SOURCE,0,MPI_COMM_WORLD,&status);
 }
