@@ -183,7 +183,7 @@ inline Parfait::ParallelImportedUgrid Parfait::ParallelMeshReader::distributeGri
         auto componentId = getOwningGridOfNode(globalId);
         nodeComponentIds[localId] = componentId;
     }
-    ParallelImportedUgrid ugrid(gridNodeMap.back(), globalNodeIds, ownershipDegree, myNodes, myTriangles, myQuads, myTets,
+    ParallelImportedUgrid ugrid(gridNodeMap.back(), globalNodeIds, ownershipDegree, nodeComponentIds, myNodes, myTriangles, myQuads, myTets,
                         myPyramids, myPrisms, myHexs, myTriangleTags, myQuadTags,
                         myTriangleTags, myQuadTags);
     return ugrid;

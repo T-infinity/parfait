@@ -8,6 +8,7 @@ namespace Parfait {
       ParallelImportedUgrid();
       ParallelImportedUgrid(long globalNodeCount, std::vector<long> globalNodeIds,
                             std::vector<int> localNodeOwnershipDegree,
+                            std::vector<int> localNodeComponentIds,
                             std::vector<double> nodes, std::vector<int> triangles,
                             std::vector<int> quads, std::vector<int> tets, std::vector<int> pyramids,
                             std::vector<int> prisms, std::vector<int> hexs,

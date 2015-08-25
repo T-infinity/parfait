@@ -8,6 +8,7 @@ namespace Parfait{
   inline ParallelImportedUgrid::ParallelImportedUgrid(long globalNodeCount_in,
                                                       std::vector<long> globalNodeIds_in,
                                                       std::vector<int> localNodeOwnershipDegree_in,
+                                                      std::vector<int> localNodeComponentIds_in,
                                                       std::vector<double> nodes, std::vector<int> triangles,
                                                       std::vector<int> quads, std::vector<int> tets, std::vector<int> pyramids,
                                                       std::vector<int> prisms, std::vector<int> hexs,
@@ -19,7 +20,8 @@ namespace Parfait{
                         quadBoundaryConditions),
           globalNodeCount(globalNodeCount_in),
           globalNodeIds(globalNodeIds_in),
-          localNodeOwnershipDegree(localNodeOwnershipDegree_in)
+          localNodeOwnershipDegree(localNodeOwnershipDegree_in),
+          localNodeComponentIds(localNodeComponentIds_in)
   {
 
       for(auto &degree : localNodeOwnershipDegree) {
