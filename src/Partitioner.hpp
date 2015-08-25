@@ -5,15 +5,27 @@
 
 
 template<class MeshType>
-Partitioner<MeshType>::Partitioner(MeshType& m)
+Parfait::Partitioner<MeshType>::Partitioner(MeshType& m)
 :mesh(m)
 {
-	NodeToNodeBuilder builder(mesh);
+    NodeToNodeBuilder<MeshType> builder(mesh);
 	connectivity = builder.buildNodeToNodeConnectivity();
 }
 
+
 template<class MeshType>
-std::vector<int> Partitioner<MeshType>::generatePartVector()
+void Parfait::Partitioner<MeshType>::buildProcNodeMap() {
+	procNodeMap.resize(MessagePasser::NumberOfProcesses());
+	if(MessagePasser::Rank() == 0)
+		printf("Allgather to build procNodeMap:\n");
+	MessagePasser::AllGather(this->mesh.numberOfNodes(), this->procNodeMap);
+	this->procNodeMap.insert(this->procNodeMap.begin(),0);
+	for(int i=1;i<procNodeMap.size();i++)
+		this->procNodeMap[i] += this->procNodeMap[i-1];
+}
+
+template<class MeshType>
+std::vector<int> Parfait::Partitioner<MeshType>::generatePartVector()
 {
 	vector<int> part(mesh.numberOfNodes(),0);
 	vector<int> ia(connectivity.size()+1,0);

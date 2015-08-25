@@ -11,14 +11,8 @@ namespace Parfait{
 	}
 
 	inline std::vector<int> PreProcessor::calculateNewPartitioning(Parfait::ImportedUgrid &ugrid){
-		if(MessagePasser::Rank() == 0)
-			printf("Create ParmetisPrepper:\n");
-		Partitioner <Parfait::ImportedUgrid> prepper(ugrid);
-
-		if(MessagePasser::Rank() == 0)
-			printf("Build node to node connectivity:\n");
-		prepper.buildNodeToNodeConnectivity();
-		return prepper.getPartVector();
+		Partitioner <Parfait::ImportedUgrid> partitioner(ugrid);
+		return partitioner.generatePartVector();
 	}
 
 	inline void PreProcessor::setUpGridInfo(std::string xml_input_filename){

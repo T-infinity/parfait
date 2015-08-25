@@ -2,8 +2,8 @@
 #define NODE_TO_NODE_H
 
 #include <vector>
-#include <set>
-#include <algorithm>
+//#include <set>
+//#include <algorithm>
 
 namespace Parfait {
     template<typename MeshType>
@@ -11,13 +11,13 @@ namespace Parfait {
     public:
         NodeToNodeBuilder(MeshType& m)
                 : mesh(m),
-                node_to_node(mesh.numberOfNodes(),std::set<int>())
+                node_to_node(mesh.numberOfNodes(),std::vector<int>())
         {};
 
         std::vector<std::vector<int>> buildNodeToNodeConnectivity();
     private:
         MeshType& mesh;
-        std::vector<std::set<int>> node_to_node;
+        std::vector<std::vector<int>> node_to_node;
 
         void processFace(int cell_id,int face_id);
         std::vector<std::vector<int>> returnSetsAsVectors();

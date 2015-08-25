@@ -14,8 +14,11 @@ namespace Parfait {
         vector<vector<int> > connectivity;
     private:
         MeshType &mesh;
+        vector<int> procNodeMap;
+
+        void buildProcNodeMap();
     };
 
-#include "Partitioner.hpp"
 }
+#include "Partitioner.hpp"
 #endif

@@ -1,3 +1,5 @@
+#include "VectorTools.h"
+
 template<typename MeshType>
 std::vector <std::vector<int>> Parfait::NodeToNodeBuilder<MeshType>::buildNodeToNodeConnectivity() {
     for (int cell_id = 0; cell_id < mesh.numberOfCells(); cell_id++)
@@ -14,8 +16,10 @@ void Parfait::NodeToNodeBuilder<MeshType>::processFace(int cell_id,int face_id){
         int left = face[i];
         int right = face[(i + 1) % face.size()];
         // TODO: convert to local id's and save only if you own it
-        node_to_node[left].insert(right);
-        node_to_node[right].insert(left);
+        //node_to_node[left].insert(right);
+        insertUnique(node_to_node[left],right);
+        //node_to_node[right].insert(left);
+        insertUnique(node_to_node[right],left);
     }
 }
 
