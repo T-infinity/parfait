@@ -11,10 +11,11 @@ include_directories(
     "${CMAKE_SOURCE_DIR}/src"
     "${MPI_INCLUDE_PATH}"
     )
+include_directories(../../tinyxml/src)
 
     file(GLOB_RECURSE HEADERS
-        "src/*.h"
-        #"src/*.hpp"
+        "../../src/*.h"
+        "../../src/*.hpp"
         )
 
 set(CMAKE_EXE_LINKER_FLAGS -L/ump/fldmd/home/cdruyorj/cdruyor_local/parmetis_openmpi/lib)
@@ -26,11 +27,10 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         GathervTests.cpp
         AllGathervTests.cpp
         PreProcessor/ParallelMeshReaderTests.cpp
-        PreProcessor/CellMessager_test.cpp
+        PreProcessor/MessageBuilder_test.cpp
        )
 
 add_executable(ParfaitParallelTests ${PARFAIT_PARALLEL_TESTS_SRC} ${HEADERS})
-include_directories(../../tinyxml/src)
 target_link_libraries(ParfaitParallelTests
             CppUTest
             ${MPI_LIBRARIES}

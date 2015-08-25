@@ -5,8 +5,8 @@ PROJECT(ParfaitSerialTests)
 add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/tests/grids/6cell.ugrid")
 
 file(GLOB_RECURSE HEADERS
-    "src/*.h"
-    "src/*.hpp"
+    "../src/*.h"
+    "../src/*.hpp"
 )
 
 set(PARFAIT_SERIAL_TESTS_SRC
