@@ -32,7 +32,7 @@ namespace Parfait{
 		auto gridNodeMap = naiveReader.getGridNodeMap();
 		if(MessagePasser::Rank() == 0)
 			printf("Redistribute according to new partitioning:\n");
-		ParallelMeshReDistributor distributor(ugrid,gridNodeMap,part);
+		ParallelMeshReDistributor distributor(ugrid,part);
 		if(MessagePasser::Rank() == 0)
 			printf("Create Fun3DMesh\n");
 		auto fun_mesh = distributor.createFun3DMesh(mapbcVector);
