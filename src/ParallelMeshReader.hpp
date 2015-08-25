@@ -5,6 +5,7 @@
 #include <ImportedUgrid.h>
 #include <UgridReader.h>
 #include <LinearPartitioner.h>
+#include "MessageBuilder.h"
 
 inline ParallelImportedUgrid Parfait::ParallelMeshReader::readDistributedGrid(std::string configurationFileName) {
     ConfigurationReader configurationReader(configurationFileName);
@@ -210,7 +211,13 @@ template <typename CellGetter, typename TagGetter, typename CellSaver>
 void Parfait::ParallelMeshReader::rootDistributeSurfaceCells(int cellLength, std::vector<long> &gridCellMap,
                                                              CellGetter cellGetter, TagGetter tagGetter,
                                                              CellSaver cellSaver) {
-
+    MessageBuilder messageBuilder;
+    for(int proc = 0; proc < MessagePasser::NumberOfProcesses(); proc++){
+        auto range = LinearPartitioner::getRangeForWorker(proc, gridCellMap.back(), MessagePasser::NumberOfProcesses());
+        auto cells = cellGetter(range.start, range.end);
+        auto tags = tagGetter(range.start, range.end);
+        for(int cellId = 0; )
+    }
     for (int grid = 0; grid < gridCellMap.size() - 1; grid++) {
         for (auto i = gridCellMap[grid]; i < gridCellMap[grid + 1]; i++) {
             auto t = cellGetter(i, i + 1);
