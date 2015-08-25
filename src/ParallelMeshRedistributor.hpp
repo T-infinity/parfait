@@ -277,26 +277,7 @@ inline void Parfait::ParallelMeshReDistributor::shuffleHexs()
 	}
 }
 
-inline int Parfait::ParallelMeshReDistributor::localId(int globalId)
-{
-	auto position = std::lower_bound(recvIds.begin(),recvIds.end(),globalId);
-	if(position == recvIds.end() or *position != globalId)
-	{
-		position = std::lower_bound(recvGhostIds.begin(),recvGhostIds.end(),globalId);
-		if(position == recvGhostIds.end())
-		{
-			assert(false);
-			return -1;
-		}
-		return position-recvGhostIds.begin() + recvIds.size();
-	}
-	else
-	{
-		return position-recvIds.begin();
-	}
-}
-
-inline Parfait::Fun3DMesh Parfait::ParallelMeshReDistributor::createFun3DMesh(vector<MapbcReader> &mapbcVector)
+inline int Parfait::ParallelMeshReDistributor::createFun3DMesh(vector<MapbcReader> &mapbcVector)
 {
 	// allocate space for Fun3D arrays
 	int nnodes0 = recvNodes.size()/3;
@@ -347,7 +328,6 @@ inline Parfait::Fun3DMesh Parfait::ParallelMeshReDistributor::createFun3DMesh(ve
 		y[i] = recvNodes[3*i+1];
 		z[i] = recvNodes[3*i+2];
 		globalNodeIds[i] = recvIds[i];
-		imesh[i] = calcImesh(globalNodeIds[i]);
 	}
 	// copy ghost nodes
 	for(int i:range(recvGhostIds))
@@ -356,11 +336,10 @@ inline Parfait::Fun3DMesh Parfait::ParallelMeshReDistributor::createFun3DMesh(ve
 		y[i+nnodes0] = recvGhosts[3*i+1];
 		z[i+nnodes0] = recvGhosts[3*i+2];
 		globalNodeIds[i+nnodes0] = recvGhostIds[i];
-		imesh[i+nnodes0] = calcImesh(globalNodeIds[i+nnodes0]);
 	}
 	// copy cells
 	for(int i:range(recvTriangles))
-		triangles[i] = localId(recvTriangles[i]);
+		triangles[i] = recvTriangles[i];
 	for(int i:range(recvTriangleTags))
 		triangleTags[i] = recvTriangleTags[i];
 	for(int i:range(recvTriangleTags))
@@ -369,7 +348,7 @@ inline Parfait::Fun3DMesh Parfait::ParallelMeshReDistributor::createFun3DMesh(ve
 		triangleBcs[i] = mapbcVector[componentId].boundaryCondition(triangleTags[i]);
 	}
 	for(int i:range(recvQuads))
-		quads[i] = localId(recvQuads[i]);
+		quads[i] = recvQuads[i];
 	for(int i:range(recvQuadTags))
 		quadTags[i] = recvQuadTags[i];
 	for(int i:range(recvQuadTags))
@@ -379,13 +358,13 @@ inline Parfait::Fun3DMesh Parfait::ParallelMeshReDistributor::createFun3DMesh(ve
 	}
 
 	for(int i:range(recvTets))
-		tets[i] = localId(recvTets[i]);
+		tets[i] = recvTets[i];
 	for(int i:range(recvPyramids))
-		pyramids[i] = localId(recvPyramids[i]);
+		pyramids[i] = recvPyramids[i];
 	for(int i:range(recvPrisms))
-		prisms[i] = localId(recvPrisms[i]);
+		prisms[i] = recvPrisms[i];
 	for(int i:range(recvHexs))
-		hexs[i] = localId(recvHexs[i]);
+		hexs[i] = recvHexs[i];
 
 
 	Fun3DMesh funMesh(nnodes0,nnodes01,x,y,z,
@@ -396,18 +375,8 @@ inline Parfait::Fun3DMesh Parfait::ParallelMeshReDistributor::createFun3DMesh(ve
 			npyramids,pyramids,
 			nprisms,prisms,
 			nhexs,hexs);
-	return funMesh;
+	return 0;
 }
-
-inline int Parfait::ParallelMeshReDistributor::calcImesh(int globalId)
-{
-	for(int i=1;i<gridNodeMap.size();i++)
-		if(globalId < gridNodeMap[i])
-			return i-1;
-	printf("globalId: %i, max: %i\n",globalId,gridNodeMap.size());
-	assert(false);
-}
-
 
 inline void Parfait::ParallelMeshReDistributor::identifyGhostNodes()
 {

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 
 PROJECT(ParfaitParallelTests)
 
-add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/tests/grids/6cell.ugrid")
+add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/tests/grids/6cell.lb8.ugrid")
 
 add_definitions(-DPARFAIT_WITH_MPI -DPARFAIT_WITH_PARMETIS)
 find_package(MPI REQUIRED)

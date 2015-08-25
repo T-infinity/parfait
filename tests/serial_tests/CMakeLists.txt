@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 PROJECT(ParfaitSerialTests)
-add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/tests/grids/6cell.ugrid")
+add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/tests/grids/6cell.lb8.ugrid")
 
 file(GLOB_RECURSE HEADERS
     "src/*.h"

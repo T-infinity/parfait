@@ -24,9 +24,10 @@ namespace Parfait{
 		}
 	}
 
-	inline Parfait::Fun3DMesh PreProcessor::createFun3DMesh(){
+	inline int PreProcessor::createFun3DMesh(){
 		Parfait::ParallelMeshReader naiveReader(gridNames,isBigEndian);
 
+        #if 0
 		auto ugrid = naiveReader.distributeGridsEvenly();
 		auto part = calculateNewPartitioning(ugrid);
 		auto gridNodeMap = naiveReader.getGridNodeMap();
@@ -38,7 +39,10 @@ namespace Parfait{
 		auto fun_mesh = distributor.createFun3DMesh(mapbcVector);
 		if(MessagePasser::Rank() == 0)
 			printf("Translate and rotate components appropriately:\n");
-		placeComponents(fun_mesh,config);
+		//TODO: actually return a valid mesh, and place the components
+		//placeComponents(fun_mesh,config);
 		return fun_mesh;
+		#endif
+        return 0;
 	}
 }
