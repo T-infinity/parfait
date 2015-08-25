@@ -346,7 +346,6 @@ void ParallelMeshReader::saveTriangle(std::vector<long> triangle){
     if(triangle.size() != 3)
         throw std::logic_error("Trying to save a triangle with unexpected length.");
     myTriangleTags.push_back(tag);
-    triangle.pop_back();
     for(auto id:triangle)
         myTriangles.push_back(id);
 }
