@@ -48,7 +48,8 @@ namespace Parfait {
       void distributeNodes();
 
       template<typename CellGetter, typename CellSaver>
-      void rootDistributeCells(std::vector<long> &gridCellMap, CellGetter cellGetter, CellSaver cellSaver);
+      void rootDistributeCells(int cellLength, std::vector<long> &gridCellMap,
+                                                            CellGetter cellGetter, CellSaver cellSaver);
       template<typename CellGetter, typename TagGetter, typename CellSaver>
       void rootDistributeSurfaceCells(int cellLength, std::vector<long> &gridCellMap,
                                       CellGetter cellGetter, TagGetter tagGetter,

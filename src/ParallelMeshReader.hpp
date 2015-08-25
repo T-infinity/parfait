@@ -211,78 +211,62 @@ template <typename CellGetter, typename TagGetter, typename CellSaver>
 void Parfait::ParallelMeshReader::rootDistributeSurfaceCells(int cellLength, std::vector<long> &gridCellMap,
                                                              CellGetter cellGetter, TagGetter tagGetter,
                                                              CellSaver cellSaver) {
-//    MessageBuilder messageBuilder;
-//    for(int proc = 0; proc < MessagePasser::NumberOfProcesses(); proc++){
-//        auto range = LinearPartitioner::getRangeForWorker(proc, gridCellMap.back(), MessagePasser::NumberOfProcesses());
-//        auto cells = cellGetter(range.start, range.end);
-//        auto tags = tagGetter(range.start, range.end);
-//        for(int cellId = 0; cellId < range.end - range.start; cellId++){
-//            long globalCellId = cellId + range.start;
-//            int grid = getOwningGridOfEntity(gridCellMap, globalCellId);
-//            std::set<int> target_procs;
-//            std::vector<long> transmitCell;
-//            for(int i = 0; i < cellLength; i++){
-//                auto &id = cells[cellLength*cellId + i];
-//                id = convertComponentNodeIdToGlobal(id, grid);
-//                target_procs.insert(getOwningProcOfNode(id));
-//                transmitCell.push_back(id);
-//            }
-//            auto tag = tags[cellId];
-//            transmitCell.push_back(tag);
-//            for (int target:target_procs) {
-//                if (MessagePasser::Rank() == target)
-//                    cellSaver(transmitCell);
-//                else
-//                    messageBuilder.sendItems(transmitCell, target);
-//            }
-//        }
-//    }
-//    messageBuilder.finishSends();
-
-    for (int grid = 0; grid < gridCellMap.size() - 1; grid++) {
-        for (auto i = gridCellMap[grid]; i < gridCellMap[grid + 1]; i++) {
-            auto t = cellGetter(i, i + 1);
-            auto tags = tagGetter(i, i + 1);
-            assert(tags.size() == 1);
-            for (auto &id:t)
-                id = convertComponentNodeIdToGlobal(id, grid);
+    MessageBuilder<long> messageBuilder;
+    for(int proc = 0; proc < MessagePasser::NumberOfProcesses(); proc++){
+        auto range = LinearPartitioner::getRangeForWorker(proc, gridCellMap.back(), MessagePasser::NumberOfProcesses());
+        auto cells = cellGetter(range.start, range.end);
+        auto tags = tagGetter(range.start, range.end);
+        for(int cellId = 0; cellId < range.end - range.start; cellId++){
+            long globalCellId = cellId + range.start;
+            int grid = getOwningGridOfEntity(gridCellMap, globalCellId);
             std::set<int> target_procs;
-            for (const auto &id:t)
+            std::vector<long> transmitCell;
+            for(int i = 0; i < cellLength; i++){
+                auto &id = cells[cellLength*cellId + i];
+                id = convertComponentNodeIdToGlobal(id, grid);
                 target_procs.insert(getOwningProcOfNode(id));
-            t.push_back(tags[0]);
+                transmitCell.push_back(id);
+            }
+            auto tag = tags[cellId];
+            transmitCell.push_back(tag);
             for (int target:target_procs) {
                 if (MessagePasser::Rank() == target)
-                    cellSaver(t);
+                    cellSaver(transmitCell);
                 else
-                    MessagePasser::Send(t, target);
+                    messageBuilder.sendItems(transmitCell, target);
             }
         }
     }
-    std::vector<int> done_signal = {1};
-    for (int i = 1; i < MessagePasser::NumberOfProcesses(); i++)
-        MessagePasser::Send(done_signal, i);
+    messageBuilder.finishSends();
 }
 template <typename CellGetter, typename CellSaver>
-void Parfait::ParallelMeshReader::rootDistributeCells(std::vector<long> &gridCellMap, CellGetter cellGetter, CellSaver cellSaver){
-    for (int grid = 0; grid < gridCellMap.size() - 1; grid++) {
-        for (auto i = gridCellMap[grid]; i < gridCellMap[grid + 1]; i++) {
-            auto t = cellGetter(i, i + 1);
-            for (auto &id:t)
-                id = convertComponentNodeIdToGlobal(id, grid);
+void Parfait::ParallelMeshReader::rootDistributeCells(int cellLength, std::vector<long> &gridCellMap,
+                                                      CellGetter cellGetter, CellSaver cellSaver) {
+
+    MessageBuilder<long> messageBuilder;
+    for(int proc = 0; proc < MessagePasser::NumberOfProcesses(); proc++){
+        auto range = LinearPartitioner::getRangeForWorker(proc, gridCellMap.back(), MessagePasser::NumberOfProcesses());
+        auto cells = cellGetter(range.start, range.end);
+        for(int cellId = 0; cellId < range.end - range.start; cellId++){
+            long globalCellId = cellId + range.start;
+            int grid = getOwningGridOfEntity(gridCellMap, globalCellId);
             std::set<int> target_procs;
-            for (const auto& id:t)
+            std::vector<long> transmitCell;
+            for(int i = 0; i < cellLength; i++){
+                auto &id = cells[cellLength*cellId + i];
+                id = convertComponentNodeIdToGlobal(id, grid);
                 target_procs.insert(getOwningProcOfNode(id));
+                transmitCell.push_back(id);
+            }
             for (int target:target_procs) {
-                if(MessagePasser::Rank() == target)
-                    cellSaver(t);
+                if (MessagePasser::Rank() == target)
+                    cellSaver(transmitCell);
                 else
-                    MessagePasser::Send(t, target);
+                    messageBuilder.sendItems(transmitCell, target);
             }
         }
     }
-    std::vector<int> done_signal = {1};
-    for(int i=1;i<MessagePasser::NumberOfProcesses();i++)
-        MessagePasser::Send(done_signal,i);
+    messageBuilder.finishSends();
 }
 
 bool isDoneSignal(const std::vector<long> &signal){
@@ -291,24 +275,26 @@ bool isDoneSignal(const std::vector<long> &signal){
 
 template<typename CellSaver>
 void Parfait::ParallelMeshReader::nonRootRecvSurfaceCells(int cellLength, CellSaver cellSaver) {
-    bool done = false;
-    while (not done) {
+    MessageBuilder<long> builder;
+    auto cells = builder.recvItemsFrom(0);
+    for(int index = 0; index < cells.size(); index+=(cellLength+1)){
         std::vector<long> cell;
-        MessagePasser::Recv(cell, 0);
-        if (isDoneSignal(cell))
-            done = true;
+        for(int i = 0; i < cellLength+1; i++){
+            cell.push_back(cells[index + i]);
+        }
         cellSaver(cell);
     }
 }
 
 template<typename CellSaver>
 void Parfait::ParallelMeshReader::nonRootRecvCells(int cellLength, CellSaver cellSaver) {
-    bool done = false;
-    while (not done) {
+    MessageBuilder<long> builder;
+    auto cells = builder.recvItemsFrom(0);
+    for(int index = 0; index < cells.size(); index+=cellLength){
         std::vector<long> cell;
-        MessagePasser::Recv(cell, 0);
-        if (isDoneSignal(cell))
-            done = true;
+        for(int i = 0; i < cellLength; i++){
+            cell.push_back(cells[index + i]);
+        }
         cellSaver(cell);
     }
 }
@@ -339,8 +325,8 @@ inline void Parfait::ParallelMeshReader::distributeQuads() {
 
 inline void Parfait::ParallelMeshReader::distributeTets() {
     if(MessagePasser::Rank() == 0)
-        rootDistributeCells(gridTetMap,
-                            std::bind(&Parfait::ParallelMeshReader::getTets, this, std::placeholders::_1, std::placeholders::_2),
+        rootDistributeCells(4, gridTetMap, std::bind(&Parfait::ParallelMeshReader::getTets, this, std::placeholders::_1,
+                                                     std::placeholders::_2),
                             std::bind(&Parfait::ParallelMeshReader::saveTet, this, std::placeholders::_1));
     else
         nonRootRecvCells(4, std::bind(&Parfait::ParallelMeshReader::saveTet, this, std::placeholders::_1));
@@ -348,8 +334,9 @@ inline void Parfait::ParallelMeshReader::distributeTets() {
 
 inline void Parfait::ParallelMeshReader::distributePyramids() {
     if(MessagePasser::Rank() == 0)
-        rootDistributeCells(gridPyramidMap,
-                            std::bind(&Parfait::ParallelMeshReader::getPyramids, this, std::placeholders::_1, std::placeholders::_2),
+        rootDistributeCells(5, gridPyramidMap,
+                            std::bind(&Parfait::ParallelMeshReader::getPyramids, this, std::placeholders::_1,
+                                      std::placeholders::_2),
                             std::bind(&Parfait::ParallelMeshReader::savePyramid, this, std::placeholders::_1));
     else
         nonRootRecvCells(5, std::bind(&Parfait::ParallelMeshReader::savePyramid, this, std::placeholders::_1));
@@ -357,8 +344,9 @@ inline void Parfait::ParallelMeshReader::distributePyramids() {
 
 inline void Parfait::ParallelMeshReader::distributePrisms() {
     if(MessagePasser::Rank() == 0)
-        rootDistributeCells(gridPrismMap,
-                            std::bind(&Parfait::ParallelMeshReader::getPrisms, this, std::placeholders::_1, std::placeholders::_2),
+        rootDistributeCells(6, gridPrismMap,
+                            std::bind(&Parfait::ParallelMeshReader::getPrisms, this, std::placeholders::_1,
+                                      std::placeholders::_2),
                             std::bind(&Parfait::ParallelMeshReader::savePrism, this, std::placeholders::_1));
     else
         nonRootRecvCells(6, std::bind(&Parfait::ParallelMeshReader::savePrism, this, std::placeholders::_1));
@@ -366,8 +354,8 @@ inline void Parfait::ParallelMeshReader::distributePrisms() {
 
 inline void Parfait::ParallelMeshReader::distributeHexs() {
     if(MessagePasser::Rank() == 0)
-        rootDistributeCells(gridHexMap,
-                            std::bind(&Parfait::ParallelMeshReader::getHexs, this, std::placeholders::_1, std::placeholders::_2),
+        rootDistributeCells(8, gridHexMap, std::bind(&Parfait::ParallelMeshReader::getHexs, this, std::placeholders::_1,
+                                                     std::placeholders::_2),
                             std::bind(&Parfait::ParallelMeshReader::saveHex, this, std::placeholders::_1));
     else
         nonRootRecvCells(8, std::bind(&Parfait::ParallelMeshReader::saveHex, this, std::placeholders::_1));
