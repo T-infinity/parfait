@@ -78,6 +78,7 @@ namespace Parfait {
 
       long convertComponentNodeIdToGlobal(int id, int grid) const;
       int getOwningProcOfNode(long id);
+      int getOwningGridOfNode(long id);
 
       void saveTriangle(std::vector<long> triangle);
       void saveQuad(std::vector<long> quad);

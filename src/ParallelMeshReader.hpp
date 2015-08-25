@@ -177,6 +177,12 @@ inline Parfait::ParallelImportedUgrid Parfait::ParallelMeshReader::distributeGri
         else
             ownershipDegree[localId] = 1;
     }
+    std::vector<int> nodeComponentIds(localToGlobalId.size());
+    for(int localId = 0; localId < localToGlobalId.size(); localId){
+        auto globalId = globalNodeIds[localId];
+        auto componentId = getOwningGridOfNode(globalId);
+        nodeComponentIds[localId] = componentId;
+    }
     ParallelImportedUgrid ugrid(gridNodeMap.back(), globalNodeIds, ownershipDegree, myNodes, myTriangles, myQuads, myTets,
                         myPyramids, myPrisms, myHexs, myTriangleTags, myQuadTags,
                         myTriangleTags, myQuadTags);
@@ -361,6 +367,16 @@ void ParallelMeshReader::saveHex(const std::vector<long>& hex){
 int Parfait::ParallelMeshReader::getOwningProcOfNode(long id) {
     auto nnodes = gridNodeMap.back();
     return LinearPartitioner::getWorkerOfWorkItem(id, nnodes, MessagePasser::NumberOfProcesses());
+}
+
+int Parfait::ParallelMeshReader::getOwningGridOfNode(long globalId){
+    for(int gridId = 0; gridId < gridNodeMap.size() - 1; gridId++){
+        auto start = gridNodeMap[gridId];
+        auto end = gridNodeMap[gridId+1];
+        if(globalId >= start and globalId < end)
+            return gridId;
+    }
+    throw std::logic_error("Could not find component grid of node");
 }
 
 long ParallelMeshReader::convertComponentNodeIdToGlobal(int id,int grid) const {

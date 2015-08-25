@@ -32,10 +32,10 @@ namespace Parfait{
   inline long ParallelImportedUgrid::globalNumberOfNodes() const{
       return globalNodeCount;
   }
-  inline int ParallelImportedUgrid::ownershipDegreeOfLocalNode(long localId) const {
+  inline int ParallelImportedUgrid::ownershipDegreeOfLocalNode(int localId) const {
       return localNodeOwnershipDegree[localId];
   }
-  inline long ParallelImportedUgrid::getGlobalNodeId(long localId) const{
+  inline long ParallelImportedUgrid::getGlobalNodeId(int localId) const{
       return globalNodeIds[localId];
   }
   inline long ParallelImportedUgrid::numberOfNodesOfDegreeOrUnder(int degree) const{
@@ -47,6 +47,9 @@ namespace Parfait{
               count += numberOfNodesAtDegree.at(degree);
       }
       return count;
+  }
+  int ParallelImportedUgrid::getNodeComponentId(int localId) {
+      return localNodeComponentIds[localId];
   }
 }
 #endif 
