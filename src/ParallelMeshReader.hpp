@@ -341,7 +341,7 @@ void ParallelMeshReader::saveTriangle(std::vector<long> triangle){
 void ParallelMeshReader::saveQuad(std::vector<long> quad){
     auto tag = quad.back();
     quad.pop_back();
-    if(quad.size() != 5)
+    if(quad.size() != 4)
         throw std::logic_error("Trying to save a quad with unexpected length.");
     myQuadTags.push_back(tag);
     for(auto id:quad)

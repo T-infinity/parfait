@@ -48,7 +48,7 @@ namespace Parfait{
       }
       return count;
   }
-  int ParallelImportedUgrid::getNodeComponentId(int localId) {
+  inline int ParallelImportedUgrid::getNodeComponentId(int localId) {
       return localNodeComponentIds[localId];
   }
 }
