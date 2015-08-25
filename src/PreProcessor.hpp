@@ -1,4 +1,4 @@
-#include <ParmetisPrepper.h>
+#include <Partitioner.h>
 #include <ParallelMeshReader.h>
 #include <ParallelMeshRedistributor.h>
 #include "ComponentPlacer.h"

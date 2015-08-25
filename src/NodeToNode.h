@@ -23,6 +23,6 @@ namespace Parfait {
         std::vector<std::vector<int>> returnSetsAsVectors();
     };
 
-    #include "NodeToNode.hpp"
 }
+#include "NodeToNode.hpp"
 #endif
