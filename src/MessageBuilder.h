@@ -9,20 +9,20 @@ template <typename T>
 class MessageBuilder {
 public:
     MessageBuilder() = default;
-    void queueItems(const std::vector<T> &items, int destination);
-    void sendItems();
+    void sendItems(const std::vector<T> &items, int destination);
+    void finishSends();
     std::vector<T> recvItemsFrom(int source);
 private:
     std::map<int, std::vector<T>> itemsToSendToRank;
 };
 
 template <typename T>
-void MessageBuilder<T>::queueItems(const std::vector<T> &items, int destination){
+void MessageBuilder<T>::sendItems(const std::vector<T> &items, int destination){
     for(auto n : items)
         itemsToSendToRank[destination].push_back(n);
 }
 template <typename T>
-void MessageBuilder<T>::sendItems(){
+void MessageBuilder<T>::finishSends(){
     for(auto &i : itemsToSendToRank)
         MessagePasser::Send(i.second, i.first);
 }

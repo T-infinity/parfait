@@ -51,10 +51,12 @@ namespace Parfait {
       void rootDistributeCells(std::vector<long> &gridCellMap, CellGetter cellGetter, CellSaver cellSaver);
       template<typename CellGetter, typename TagGetter, typename CellSaver>
       void rootDistributeSurfaceCells(int cellLength, std::vector<long> &gridCellMap,
-                                                                   CellGetter cellGetter, TagGetter tagGetter,
-                                                                   CellSaver cellSaver);
+                                      CellGetter cellGetter, TagGetter tagGetter,
+                                      CellSaver cellSaver);
       template<typename CellSaver>
-      void nonRootRecvCells(std::vector<int> &cells, CellSaver cellSaver);
+      void nonRootRecvCells(int cellLength, CellSaver cellSaver);
+      template<typename CellSaver>
+      void nonRootRecvSurfaceCells(int cellLength, CellSaver cellSaver);
 
       void distributeTriangles();
       void distributeQuads();
@@ -81,6 +83,8 @@ namespace Parfait {
       long convertComponentNodeIdToGlobal(int id, int grid) const;
       int getOwningProcOfNode(long id);
       int getOwningGridOfNode(long id);
+      int getOwningGridOfEntity(std::vector<long> &gridCellMap, long globalId);
+
 
       void saveTriangle(std::vector<long> triangle);
       void saveQuad(std::vector<long> quad);
