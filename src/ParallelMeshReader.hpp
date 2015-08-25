@@ -70,11 +70,11 @@ inline Parfait::ParallelMeshReader::ParallelMeshReader(std::vector<std::string> 
     }
 }
 
-inline std::vector<int> Parfait::ParallelMeshReader::getGridNodeMap() {
+inline std::vector<long> Parfait::ParallelMeshReader::getGridNodeMap() {
     return gridNodeMap;
 }
 
-inline std::vector<int> Parfait::ParallelMeshReader::getProcNodeMap() {
+inline std::vector<long> Parfait::ParallelMeshReader::getProcNodeMap() {
     return procNodeMap;
 }
 
@@ -201,13 +201,13 @@ inline void Parfait::ParallelMeshReader::distributeNodes()
 }
 
 template <typename CellGetter, typename TagGetter, typename CellSaver>
-void Parfait::ParallelMeshReader::rootDistributeSurfaceCells(std::vector<int> &gridCellMap, CellGetter cellGetter, TagGetter tagGetter, CellSaver cellSaver){
+void Parfait::ParallelMeshReader::rootDistributeSurfaceCells(std::vector<long> &gridCellMap, CellGetter cellGetter, TagGetter tagGetter, CellSaver cellSaver){
     for (int grid = 0; grid < gridCellMap.size() - 1; grid++) {
-        for (int i = gridCellMap[grid]; i < gridCellMap[grid + 1]; i++) {
+        for (auto i = gridCellMap[grid]; i < gridCellMap[grid + 1]; i++) {
             auto t = cellGetter(i, i + 1);
             auto tags = tagGetter(i, i+1);
             assert(tags.size() == 1);
-            for (int &id:t)
+            for (auto &id:t)
                 id = convertComponentNodeIdToGlobal(id, grid);
             std::set<int> target_procs;
             for (int id:t)
@@ -227,7 +227,7 @@ void Parfait::ParallelMeshReader::rootDistributeSurfaceCells(std::vector<int> &g
 }
 
 template <typename CellGetter, typename CellSaver>
-void Parfait::ParallelMeshReader::rootDistributeCells(std::vector<int> &gridCellMap, CellGetter cellGetter, CellSaver cellSaver){
+void Parfait::ParallelMeshReader::rootDistributeCells(std::vector<long> &gridCellMap, CellGetter cellGetter, CellSaver cellSaver){
     for (int grid = 0; grid < gridCellMap.size() - 1; grid++) {
         for (int i = gridCellMap[grid]; i < gridCellMap[grid + 1]; i++) {
             auto t = cellGetter(i, i + 1);
@@ -249,15 +249,15 @@ void Parfait::ParallelMeshReader::rootDistributeCells(std::vector<int> &gridCell
         MessagePasser::Send(done_signal,i);
 }
 
-bool isDoneSignal(const std::vector<int> &signal){
+bool isDoneSignal(const std::vector<long> &signal){
     return 1 == signal.size();
 }
 
 template<typename CellSaver>
-void Parfait::ParallelMeshReader::nonRootRecvCells(std::vector<int> &cells, CellSaver cellSaver){
+void Parfait::ParallelMeshReader::nonRootRecvCells(std::vector<long> &cells, CellSaver cellSaver){
     bool done = false;
     while (not done) {
-        std::vector<int> cell;
+        std::vector<long> cell;
         MessagePasser::Recv(cell, 0);
         if (isDoneSignal(cell))
             done = true;

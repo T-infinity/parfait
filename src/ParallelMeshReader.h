@@ -16,24 +16,23 @@ namespace Parfait {
       static ParallelImportedUgrid readDistributedGrid(std::vector<std::string> gridFiles, std::vector<bool> isBigEndian);
       ParallelMeshReader(std::vector<std::string> gridFiles, std::vector<bool> isBigEndian);
       ParallelImportedUgrid distributeGridsEvenly();
-      std::vector<int> getGridNodeMap();
-      std::vector<int> getProcNodeMap();
+      std::vector<long> getGridNodeMap();
+      std::vector<long> getProcNodeMap();
       long totalNumberOfNodes() const;
       int numberOfGrids() const;
 
   public:
       std::vector<bool> isBigEndian;
       std::vector<std::string> gridFiles;
-      std::vector<int> procNodeMap;
+      std::vector<long> procNodeMap;
 
-      std::vector<int> gridNodeMap;
-      std::vector<int> gridCellMap;
-      std::vector<int> gridTriangleMap;
-      std::vector<int> gridQuadMap;
-      std::vector<int> gridTetMap;
-      std::vector<int> gridPyramidMap;
-      std::vector<int> gridPrismMap;
-      std::vector<int> gridHexMap;
+      std::vector<long> gridNodeMap;
+      std::vector<long> gridTriangleMap;
+      std::vector<long> gridQuadMap;
+      std::vector<long> gridTetMap;
+      std::vector<long> gridPyramidMap;
+      std::vector<long> gridPrismMap;
+      std::vector<long> gridHexMap;
 
       std::vector<double> myNodes;
       std::vector<int> myTriangles;
@@ -77,18 +76,18 @@ namespace Parfait {
       int getBeginIndex(std::vector<int> &gridMap, int begin);
       int getEndIndex(std::vector<int> &gridMap, int end);
 
-      int convertComponentNodeIdToGlobal(int id, int grid) const;
+      long convertComponentNodeIdToGlobal(int id, int grid) const;
       int getOwningProcOfNode(int id);
 
-      void saveTriangle(std::vector<int> triangle);
-      void saveQuad(std::vector<int> quad);
-      void saveTet(const std::vector<int> &tet);
-      void savePyramid(const std::vector<int> &pyramid);
-      void savePrism(const std::vector<int> &prism);
-      void saveHex(const std::vector<int> &hex);
+      void saveTriangle(std::vector<long> triangle);
+      void saveQuad(std::vector<long> quad);
+      void saveTet(const std::vector<long> &tet);
+      void savePyramid(const std::vector<long> &pyramid);
+      void savePrism(const std::vector<long> &prism);
+      void saveHex(const std::vector<long> &hex);
 
-      std::map<long, long> globalToLocalId;
-      std::map<long, long> localToGlobalId;
+      std::map<long, int> globalToLocalId;
+      std::map<int, long> localToGlobalId;
   };
 }
 

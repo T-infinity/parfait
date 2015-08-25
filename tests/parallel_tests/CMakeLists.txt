@@ -2,6 +2,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 PROJECT(ParfaitParallelTests)
+
 add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/tests/grids/6cell.ugrid")
 
 add_definitions(-DPARFAIT_WITH_MPI -DPARFAIT_WITH_PARMETIS)
@@ -13,8 +14,8 @@ include_directories(
     )
 
     file(GLOB_RECURSE HEADERS
-        "src/*.h"
-        #"src/*.hpp"
+        "../../src/*.h"
+        "../../src/*.hpp"
         )
 
 set(CMAKE_EXE_LINKER_FLAGS -L/ump/fldmd/home/cdruyorj/cdruyor_local/parmetis_openmpi/lib)
