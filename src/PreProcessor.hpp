@@ -1,4 +1,4 @@
-#include <ParmetisPrepper.h>
+#include <Partitioner.h>
 #include <ParallelMeshReader.h>
 #include <ParallelMeshRedistributor.h>
 #include "ComponentPlacer.h"
@@ -11,14 +11,8 @@ namespace Parfait{
 	}
 
 	inline std::vector<int> PreProcessor::calculateNewPartitioning(Parfait::ImportedUgrid &ugrid){
-		if(MessagePasser::Rank() == 0)
-			printf("Create ParmetisPrepper:\n");
-		ParMetisPrepper<Parfait::ImportedUgrid> prepper(ugrid);
-
-		if(MessagePasser::Rank() == 0)
-			printf("Build node to node connectivity:\n");
-		prepper.buildNodeToNodeConnectivity();
-		return prepper.getPartVector();
+		Partitioner <Parfait::ImportedUgrid> partitioner(ugrid);
+		return partitioner.generatePartVector();
 	}
 
 	inline void PreProcessor::setUpGridInfo(std::string xml_input_filename){
@@ -30,21 +24,25 @@ namespace Parfait{
 		}
 	}
 
-	inline Parfait::Fun3DMesh PreProcessor::createFun3DMesh(){
+	inline int PreProcessor::createFun3DMesh(){
 		Parfait::ParallelMeshReader naiveReader(gridNames,isBigEndian);
 
+        #if 0
 		auto ugrid = naiveReader.distributeGridsEvenly();
 		auto part = calculateNewPartitioning(ugrid);
 		auto gridNodeMap = naiveReader.getGridNodeMap();
 		if(MessagePasser::Rank() == 0)
 			printf("Redistribute according to new partitioning:\n");
-		ParallelMeshReDistributor distributor(ugrid,gridNodeMap,part);
+		ParallelMeshReDistributor distributor(ugrid,part);
 		if(MessagePasser::Rank() == 0)
 			printf("Create Fun3DMesh\n");
 		auto fun_mesh = distributor.createFun3DMesh(mapbcVector);
 		if(MessagePasser::Rank() == 0)
 			printf("Translate and rotate components appropriately:\n");
-		placeComponents(fun_mesh,config);
+		//TODO: actually return a valid mesh, and place the components
+		//placeComponents(fun_mesh,config);
 		return fun_mesh;
+		#endif
+        return 0;
 	}
 }

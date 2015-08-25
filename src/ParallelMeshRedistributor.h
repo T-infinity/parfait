@@ -12,7 +12,7 @@ namespace Parfait {
 	class ParallelMeshReDistributor {
 	template<class T> using vector = std::vector<T>;
 	public:
-		ParallelMeshReDistributor(Parfait::ImportedUgrid &ugrid, std::vector<int> &gridNodeMap, std::vector<int> &part);
+		ParallelMeshReDistributor(Parfait::ParallelImportedUgrid &ugrid, std::vector<int> &part);
 		void shuffleNodes();
 		void shuffleTriangles();
 		void shuffleQuads();
@@ -23,13 +23,12 @@ namespace Parfait {
 		void identifyGhostNodes();
 		void shuffleGhostNodes();
 
-		Parfait::Fun3DMesh createFun3DMesh(std::vector<Parfait::MapbcReader> &mapbcVector);
+		int createFun3DMesh(std::vector<Parfait::MapbcReader> &mapbcVector);
 	private:
 		int nproc;
 		Parfait::ImportedUgrid &ugrid;
 		std::vector<int> part;
 		std::vector<int> nodeMap;
-		std::vector<int> gridNodeMap;
 
 		std::vector<int> recvIds;
 		std::vector<int> ghostIds;
@@ -44,9 +43,6 @@ namespace Parfait {
 		std::vector<int> recvHexs;
 		std::vector<int> recvGhostIds;
 		std::vector<double> recvGhosts;
-
-		int localId(int globalId);
-		int calcImesh(int localId);
 	};
 }
 #include "ParallelMeshRedistributor.hpp"
