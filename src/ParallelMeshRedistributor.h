@@ -29,7 +29,6 @@ namespace Parfait {
 		Parfait::ImportedUgrid &ugrid;
 		std::vector<int> part;
 		std::vector<int> nodeMap;
-		std::vector<int> gridNodeMap;
 
 		std::vector<int> recvIds;
 		std::vector<int> ghostIds;
@@ -44,9 +43,6 @@ namespace Parfait {
 		std::vector<int> recvHexs;
 		std::vector<int> recvGhostIds;
 		std::vector<double> recvGhosts;
-
-		int localId(int globalId);
-		int calcImesh(int localId);
 	};
 }
 #include "ParallelMeshRedistributor.hpp"
