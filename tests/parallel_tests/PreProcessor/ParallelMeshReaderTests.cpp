@@ -10,7 +10,7 @@ TEST_GROUP(ParallelMeshReaderTests) { };
 
 TEST(ParallelMeshReaderTests,Exists) {
     auto mesh = Parfait::ParallelMeshReader::readDistributedGrid({"../../grids/6cell.lb8.ugrid"}, {false});
-#if 0
+#if 1
     if(MessagePasser::NumberOfProcesses() == 1){
         LONGS_EQUAL(12, mesh.triangles.size() / 3);
         LONGS_EQUAL(12, mesh.triangleTags.size());
@@ -31,8 +31,8 @@ TEST(ParallelMeshReaderTests,Exists) {
 }
 
 TEST(ParallelMeshReaderTests, Maps){
-    //auto reader = Parfait::ParallelMeshReader({"../../grids/6cell.lb8.ugrid"}, {false});
-    //LONGS_EQUAL(14, reader.totalNumberOfNodes());
-    //LONGS_EQUAL(1, reader.numberOfGrids());
+    auto reader = Parfait::ParallelMeshReader({"../../grids/6cell.lb8.ugrid"}, {false});
+    LONGS_EQUAL(14, reader.totalNumberOfNodes());
+    LONGS_EQUAL(1, reader.numberOfGrids());
 }
 
