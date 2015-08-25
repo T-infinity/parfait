@@ -10,7 +10,7 @@ namespace Parfait {
 	class PreProcessor {
 	public:
 		PreProcessor(std::string xml_input_filename);
-		Parfait::Fun3DMesh createFun3DMesh();
+		int createFun3DMesh();
 
 		int getNumberOfGrids() { return gridNames.size(); }
 

@@ -277,7 +277,7 @@ inline void Parfait::ParallelMeshReDistributor::shuffleHexs()
 	}
 }
 
-inline Parfait::Fun3DMesh Parfait::ParallelMeshReDistributor::createFun3DMesh(vector<MapbcReader> &mapbcVector)
+inline int Parfait::ParallelMeshReDistributor::createFun3DMesh(vector<MapbcReader> &mapbcVector)
 {
 	// allocate space for Fun3D arrays
 	int nnodes0 = recvNodes.size()/3;
@@ -375,7 +375,7 @@ inline Parfait::Fun3DMesh Parfait::ParallelMeshReDistributor::createFun3DMesh(ve
 			npyramids,pyramids,
 			nprisms,prisms,
 			nhexs,hexs);
-	return funMesh;
+	return 0;
 }
 
 inline void Parfait::ParallelMeshReDistributor::identifyGhostNodes()
