@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<global>
+	<tex>
+	</tex>
+	<component filename="wing.ugrid" endian="big"/>
+	<component filename="store.ugrid" endian="big"/>
+
+</global>
