@@ -9,9 +9,9 @@ class PersistentPreProcessorObject{
 public:
     PersistentPreProcessorObject(const char*filename)
             :preprocessor(filename),
-             mesh(preprocessor.createFun3DMesh()){}
+             mesh(preprocessor.createMesh()){}
     Parfait::PreProcessor preprocessor;
-    Parfait::Fun3DMesh mesh;
+    Parfait::ParallelImportedUgrid mesh;
 };
 
 int countCellsWithNodes(int m);
@@ -34,7 +34,6 @@ void parfait_create_grid_system(const char *filename) {
 
 void parfait_cleanup() {
     if(nullptr != stuff) {
-        stuff->mesh.freePointers();
         delete stuff;
     }
     stuff = nullptr;
@@ -42,12 +41,12 @@ void parfait_cleanup() {
 
 int parfait_preprocessor_number_of_local_nodes() {
     throwIfNotInitialized();
-    return stuff->mesh.numberOfNonGhostNodes();
+    return stuff->mesh.numberOfNodesOfDegreeOrUnder(0);
 }
 
 int parfait_preprocessor_number_of_ghost_nodes() {
     throwIfNotInitialized();
-    return stuff->mesh.numberOfNodes() - stuff->mesh.numberOfNonGhostNodes();
+    return stuff->mesh.numberOfNodesOfDegreeOrUnder(1) - stuff->mesh.numberOfNodesOfDegreeOrUnder(0);
 }
 
 int parfait_preprocessor_number_of_triangles() {
@@ -124,7 +123,7 @@ void parfait_preprocessor_fill_global_node_ids(int *ids) {
 void parfait_preprocessor_fill_associated_grid_ids(int *ids) {
     throwIfNotInitialized();
     for(int i=0;i<stuff->mesh.numberOfNodes();i++)
-        ids[i] = stuff->mesh.getImesh(i);
+        ids[i] = stuff->mesh.getNodeComponentId(i);
 }
 
 void parfait_preprocessor_fill_triangles(int *triangles) {

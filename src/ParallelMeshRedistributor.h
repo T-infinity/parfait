@@ -23,7 +23,7 @@ namespace Parfait {
 		void identifyGhostNodes();
 		void shuffleGhostNodes();
 
-		int createFun3DMesh(std::vector<Parfait::MapbcReader> &mapbcVector);
+		int createNewParallelUgrid(std::vector<Parfait::MapbcReader> &mapbcVector);
 	private:
 		int nproc;
 		Parfait::ImportedUgrid &ugrid;

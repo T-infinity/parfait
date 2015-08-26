@@ -24,9 +24,9 @@ namespace Parfait{
 		}
 	}
 
-	inline int PreProcessor::createFun3DMesh(){
+	inline ParallelImportedUgrid PreProcessor::createMesh(){
 		Parfait::ParallelMeshReader naiveReader(gridNames,isBigEndian);
-
+		auto ugrid = naiveReader.distributeGridsEvenly();
         #if 0
 		auto ugrid = naiveReader.distributeGridsEvenly();
 		auto part = calculateNewPartitioning(ugrid);
@@ -43,6 +43,6 @@ namespace Parfait{
 		//placeComponents(fun_mesh,config);
 		return fun_mesh;
 		#endif
-        return 0;
+        return ugrid;
 	}
 }

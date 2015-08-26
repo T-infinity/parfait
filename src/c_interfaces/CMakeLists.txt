@@ -21,12 +21,12 @@ set(PARFAIT_INTERFACE_SRCS
 include_directories(../../tinyxml/src)
 add_library(parfait ${PARFAIT_INTERFACE_SRCS})
 
-#add_executable(example_grid_import example_grid_import.c)
-#set_target_properties(example_grid_import PROPERTIES LINKER_LANGUAGE C)
-#target_link_libraries(example_grid_import
-#            parfait
-#            tinyxml
-#            ${MPI_LIBRARIES}
-#            parmetis
-#            metis
-#            )
+add_executable(example_grid_import example_grid_import.c)
+set_target_properties(example_grid_import PROPERTIES LINKER_LANGUAGE C)
+target_link_libraries(example_grid_import
+            parfait
+            tinyxml
+            ${MPI_LIBRARIES}
+            parmetis
+            metis
+            )

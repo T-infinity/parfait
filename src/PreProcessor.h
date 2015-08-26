@@ -2,6 +2,7 @@
 #define PREPROCESSOR_H
 #include <string>
 #include "ConfigurationReader.h"
+#include "ParallelImportedUgrid.h"
 #include <Fun3dMesh.h>
 #include <ImportedUgrid.h>
 #include <MessagePasser.h>
@@ -10,7 +11,7 @@ namespace Parfait {
 	class PreProcessor {
 	public:
 		PreProcessor(std::string xml_input_filename);
-		int createFun3DMesh();
+		ParallelImportedUgrid createMesh();
 
 		int getNumberOfGrids() { return gridNames.size(); }
 
