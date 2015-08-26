@@ -9,18 +9,16 @@ Parfait::Partitioner::Partitioner(ParallelImportedUgrid& m)
 {
     NodeToNodeBuilder<decltype(m)> builder(mesh);
 	connectivity = builder.buildNodeToNodeConnectivity();
-    buildProcNodeMap();
 }
 
 
-void Parfait::Partitioner::buildProcNodeMap() {
-	procNodeMap.resize(MessagePasser::NumberOfProcesses());
-	if(MessagePasser::Rank() == 0)
-		printf("Allgather to build procNodeMap:\n");
-	MessagePasser::AllGather((long)this->mesh.numberOfNodesOfDegreeOrUnder(0), this->procNodeMap);
-	this->procNodeMap.insert(this->procNodeMap.begin(),0);
+std::vector<long> Parfait::Partitioner::buildProcNodeMap() {
+	vector<long> procNodeMap(MessagePasser::NumberOfProcesses());
+	MessagePasser::AllGather((long)mesh.numberOfNodesOfDegreeOrUnder(0), procNodeMap);
+	procNodeMap.insert(procNodeMap.begin(),0);
 	for(int i=1;i<procNodeMap.size();i++)
-		this->procNodeMap[i] += this->procNodeMap[i-1];
+		procNodeMap[i] += procNodeMap[i-1];
+    return procNodeMap;
 }
 
 std::vector<int> Parfait::Partitioner::generatePartVector()
@@ -34,8 +32,7 @@ std::vector<int> Parfait::Partitioner::generatePartVector()
 	for(auto& row:connectivity)
 		for(auto nbr:row)
 			ja.push_back(nbr);
-    printf("procNodeMap %ld %ld\n",procNodeMap[0],procNodeMap[1]);
-    fflush(stdout);
+    auto procNodeMap = buildProcNodeMap();
 	PartitionMesh(MessagePasser::Rank(),MessagePasser::NumberOfProcesses(),procNodeMap.data(),
 			ia.data(),ja.data(),part.data());
 	return part;

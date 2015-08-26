@@ -13,9 +13,8 @@ namespace Parfait {
         vector<vector<long>> connectivity;
     private:
         ParallelImportedUgrid &mesh;
-        vector<long> procNodeMap;
 
-        void buildProcNodeMap();
+        vector<long> buildProcNodeMap();
     };
 
 }
