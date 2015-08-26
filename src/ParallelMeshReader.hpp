@@ -259,7 +259,7 @@ void Parfait::ParallelMeshReader::rootDistributeCells(int cellLength, std::vecto
                 transmitCell.push_back(id);
             }
             for (int target:target_procs) {
-                if (MessagePasser::Rank() == target)
+                if (MessagePasser::Rank() == target)/
                     cellSaver(transmitCell);
                 else
                     messageBuilder.sendItems(transmitCell, target);
