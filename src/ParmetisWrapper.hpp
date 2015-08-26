@@ -16,20 +16,20 @@ struct ParMetisInfo{
     MPI_Comm comm = MPI_COMM_WORLD;
 };
 
-inline std::vector<idx_t> getVertexDistributionAcrossProcs(int nproc, const int *proc_node_map);
+inline std::vector<idx_t> getVertexDistributionAcrossProcs(int nproc, const long *proc_node_map);
 
-inline std::vector<idx_t> getAdjacencyMap(const int *ia, int nnodes);
+inline std::vector<idx_t> getAdjacencyMap(const long *ia, int nnodes);
 
-inline std::vector<idx_t> getAdjacency(const int *ia, const int *ja, int nnodes);
+inline std::vector<idx_t> getAdjacency(const long *ia, const long *ja, int nnodes);
 
-inline int getMyNumberOfNodes(int rank, const int *proc_node_map);
+inline int getMyNumberOfNodes(int rank, const long *proc_node_map);
 
 inline std::vector<real_t> getTpWeights(idx_t nparts);
 
 inline void PartitionMesh(int rank,int nproc,
-		int *proc_node_map,
-		int *ia,
-		int *ja,
+		long *proc_node_map,
+		long *ia,
+		long *ja,
 		int *part_vec)
 {
     int nnodes = getMyNumberOfNodes(rank, proc_node_map);
@@ -84,9 +84,9 @@ std::vector<real_t> getTpWeights(idx_t nparts) {
     return tpwgts;
 }
 
-int getMyNumberOfNodes(int rank, const int *proc_node_map) { return proc_node_map[rank+1]-proc_node_map[rank]; }
+int getMyNumberOfNodes(int rank, const long *proc_node_map) { return proc_node_map[rank+1]-proc_node_map[rank]; }
 
-inline std::vector<idx_t> getAdjacency(const int *ia, const int *ja, int nnodes) {
+inline std::vector<idx_t> getAdjacency(const long *ia, const long *ja, int nnodes) {
     int ia_size = nnodes + 1;
     std::vector<idx_t> adjncy(ia[ia_size-1]);
     for(int i=0;i<ia[ia_size-1];i++)
@@ -94,7 +94,7 @@ inline std::vector<idx_t> getAdjacency(const int *ia, const int *ja, int nnodes)
     return adjncy;
 }
 
-inline std::vector<idx_t> getAdjacencyMap(const int *ia, int nnodes) {
+inline std::vector<idx_t> getAdjacencyMap(const long *ia, int nnodes) {
     int ia_size = nnodes + 1;
     std::vector<idx_t> xadj(ia_size);
     for(int i=0;i<ia_size;i++)
@@ -102,7 +102,7 @@ inline std::vector<idx_t> getAdjacencyMap(const int *ia, int nnodes) {
     return xadj;
 }
 
-inline std::vector<idx_t> getVertexDistributionAcrossProcs(int nproc, const int *proc_node_map) {
+inline std::vector<idx_t> getVertexDistributionAcrossProcs(int nproc, const long *proc_node_map) {
     std::vector<idx_t> vtxdist(nproc+1);
     for(int i=0;i<=nproc;i++)
 		vtxdist[i] = proc_node_map[i];

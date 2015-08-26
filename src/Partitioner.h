@@ -3,18 +3,17 @@
 #include <vector>
 
 namespace Parfait {
-    template<class MeshType>
     class Partitioner {
         template<class T> using vector = std::vector<T>;
     public:
         Partitioner() = delete;
-        Partitioner(MeshType &mesh_in);
+        Partitioner(ParallelImportedUgrid &mesh_in);
 
         vector<int> generatePartVector();
-        vector<vector<int> > connectivity;
+        vector<vector<long>> connectivity;
     private:
-        MeshType &mesh;
-        vector<int> procNodeMap;
+        ParallelImportedUgrid &mesh;
+        vector<long> procNodeMap;
 
         void buildProcNodeMap();
     };

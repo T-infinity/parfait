@@ -32,9 +32,9 @@
 //    ja = [1,2,3, 0,2,3, 0,1,3, 0,1,2]
 //
 void PartitionMesh(int rank,int nproc,
-		int *proc_node_map,
-		int *ia,
-		int *ja,
+		long *proc_node_map,
+		long *ia,
+		long *ja,
 		int *part_vec);
 
 #include "ParmetisWrapper.hpp"

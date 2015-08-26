@@ -11,16 +11,16 @@ namespace Parfait {
     public:
         NodeToNodeBuilder(MeshType& m)
                 : mesh(m),
-                node_to_node(mesh.numberOfNodes(),std::vector<int>())
+                node_to_node(mesh.numberOfNodesOfDegreeOrUnder(0),std::vector<long>())
         {};
 
-        std::vector<std::vector<int>> buildNodeToNodeConnectivity();
+        std::vector<std::vector<long>> buildNodeToNodeConnectivity();
     private:
         MeshType& mesh;
-        std::vector<std::vector<int>> node_to_node;
+        std::vector<std::vector<long>> node_to_node;
 
         void processFace(int cell_id,int face_id);
-        std::vector<std::vector<int>> returnSetsAsVectors();
+        std::vector<std::vector<long>> returnSetsAsVectors();
     };
 
 }

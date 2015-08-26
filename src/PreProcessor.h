@@ -27,7 +27,7 @@ namespace Parfait {
 		std::vector<Parfait::MotionMatrix> grid_initial_positions;
 
 		void setUpGridInfo(std::string xml_input_filename);
-		std::vector<int> calculateNewPartitioning(Parfait::ImportedUgrid &ugrid);
+		std::vector<int> calculateNewPartitioning(ParallelImportedUgrid &ugrid);
 	};
 }
 #include "PreProcessor.hpp"

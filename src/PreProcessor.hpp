@@ -10,10 +10,10 @@ namespace Parfait{
 		setUpGridInfo(xml_input_filename);
 	}
 
-	inline std::vector<int> PreProcessor::calculateNewPartitioning(Parfait::ImportedUgrid &ugrid){
-		Partitioner <Parfait::ImportedUgrid> partitioner(ugrid);
+	inline std::vector<int> PreProcessor::calculateNewPartitioning(Parfait::ParallelImportedUgrid &ugrid){
+		Partitioner partitioner(ugrid);
 		return partitioner.generatePartVector();
-	}
+    }
 
 	inline void PreProcessor::setUpGridInfo(std::string xml_input_filename){
 		for(int i:range(config.numberOfGrids())){
@@ -27,8 +27,9 @@ namespace Parfait{
 	inline ParallelImportedUgrid PreProcessor::createMesh(){
 		Parfait::ParallelMeshReader naiveReader(gridNames,isBigEndian);
 		auto ugrid = naiveReader.distributeGridsEvenly();
+		auto part = calculateNewPartitioning(ugrid);
         #if 0
-		auto ugrid = naiveReader.distributeGridsEvenly();
+
 		auto part = calculateNewPartitioning(ugrid);
 		auto gridNodeMap = naiveReader.getGridNodeMap();
 		if(MessagePasser::Rank() == 0)
