@@ -217,13 +217,10 @@ void Parfait::ParallelMeshReader::rootDistributeSurfaceCells(int cellLength, std
         auto cells = cellGetter(range.start, range.end);
         auto tags = tagGetter(range.start, range.end);
         for(int cellId = 0; cellId < range.end - range.start; cellId++){
-            long globalCellId = cellId + range.start;
-            int grid = getOwningGridOfEntity(gridCellMap, globalCellId);
             std::set<int> target_procs;
             std::vector<long> transmitCell;
             for(int i = 0; i < cellLength; i++){
                 auto &id = cells[cellLength*cellId + i];
-                id = convertComponentNodeIdToGlobal(id, grid);
                 target_procs.insert(getOwningProcOfNode(id));
                 transmitCell.push_back(id);
             }
@@ -248,18 +245,15 @@ void Parfait::ParallelMeshReader::rootDistributeCells(int cellLength, std::vecto
         auto range = LinearPartitioner::getRangeForWorker(proc, gridCellMap.back(), MessagePasser::NumberOfProcesses());
         auto cells = cellGetter(range.start, range.end);
         for(int cellId = 0; cellId < range.end - range.start; cellId++){
-            long globalCellId = cellId + range.start;
-            int grid = getOwningGridOfEntity(gridCellMap, globalCellId);
             std::set<int> target_procs;
             std::vector<long> transmitCell;
             for(int i = 0; i < cellLength; i++){
                 auto &id = cells[cellLength*cellId + i];
-                id = convertComponentNodeIdToGlobal(id, grid);
                 target_procs.insert(getOwningProcOfNode(id));
                 transmitCell.push_back(id);
             }
             for (int target:target_procs) {
-                if (MessagePasser::Rank() == target)/
+                if (MessagePasser::Rank() == target)
                     cellSaver(transmitCell);
                 else
                     messageBuilder.sendItems(transmitCell, target);
