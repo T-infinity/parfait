@@ -64,7 +64,7 @@ inline void Parfait::ParallelMeshReDistributor::shuffleTriangles()
 	for(int proc:range(nproc))
 	{
 		sendTriangleIds.clear();
-		vector<int> neededNodeIds;
+		vector<long> neededNodeIds;
 		if(MessagePasser::Rank() == proc)
 			neededNodeIds = recvIds;
 		MessagePasser::Broadcast(neededNodeIds,proc);
@@ -105,7 +105,7 @@ inline void Parfait::ParallelMeshReDistributor::shuffleQuads()
 	for(int proc:range(nproc))
 	{
 		sendQuadIds.clear();
-		vector<int> neededNodeIds;
+		vector<long> neededNodeIds;
 		if(MessagePasser::Rank() == proc)
 			neededNodeIds = recvIds;
 		MessagePasser::Broadcast(neededNodeIds,proc);
@@ -145,27 +145,26 @@ inline void Parfait::ParallelMeshReDistributor::shuffleTets()
 	sendTetIds.reserve(4*ugrid.tets.size());
 	for(int proc=0;proc<nproc;proc++) {
 		sendTetIds.clear();
-		vector<int> neededNodeIds;
+		vector<long> neededNodeIds;
 		if(MessagePasser::Rank() == proc)
 			neededNodeIds = recvIds;
 		MessagePasser::Broadcast(neededNodeIds,proc);
 		for(int i=0;i<ugrid.tets.size()/4;i++) {
 			for(int j=0;j<4;j++) {
-				//long globalId = ugrid.get
-				int globalId = ugrid.tets[4*i+j];
+				long globalId = ugrid.getGlobalNodeId(ugrid.tets[4*i+j]);
+				//int globalId = ugrid.tets[4*i+j];
 				if(binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalId)) {
 					sendTetIds.push_back(i);
 					break;
 				}
 			}
 		}
-		vector<int> sendTets;
+		vector<long> sendTets;
 		sendTets.reserve(4*sendTetIds.size());
 		for(int id:sendTetIds)
 			for(int j:range(4))
 				sendTets.push_back(ugrid.tets[4*id+j]);
-		vector<int> tmpMap;
-		MessagePasser::Gatherv(sendTets,recvTets,tmpMap,proc);
+		MessagePasser::Gatherv(sendTets,recvTets,proc);
 	}
 }
 
@@ -176,7 +175,7 @@ inline void Parfait::ParallelMeshReDistributor::shufflePyramids()
 	for(int proc:range(nproc))
 	{
 		sendPyramidIds.clear();
-		vector<int> neededNodeIds;
+		vector<long> neededNodeIds;
 		if(MessagePasser::Rank() == proc)
 			neededNodeIds = recvIds;
 		MessagePasser::Broadcast(neededNodeIds,proc);
@@ -194,13 +193,12 @@ inline void Parfait::ParallelMeshReDistributor::shufflePyramids()
 				}
 			}
 		}
-		vector<int> sendPyramids;
+		vector<long> sendPyramids;
 		sendPyramids.reserve(5*sendPyramidIds.size());
 		for(int id:sendPyramidIds)
 			for(int j:range(5))
 				sendPyramids.push_back(ugrid.pyramids[5*id+j]);
-		vector<int> tmpMap;
-		MessagePasser::Gatherv(sendPyramids,recvPyramids,tmpMap,proc);
+		MessagePasser::Gatherv(sendPyramids,recvPyramids,proc);
 	}
 }
 
@@ -211,7 +209,7 @@ inline void Parfait::ParallelMeshReDistributor::shufflePrisms()
 	for(int proc:range(nproc))
 	{
 		sendPrismIds.clear();
-		vector<int> neededNodeIds;
+		vector<long> neededNodeIds;
 		if(MessagePasser::Rank() == proc)
 			neededNodeIds = recvIds;
 		MessagePasser::Broadcast(neededNodeIds,proc);
@@ -229,24 +227,23 @@ inline void Parfait::ParallelMeshReDistributor::shufflePrisms()
 				}
 			}
 		}
-		vector<int> sendPrisms;
+		vector<long> sendPrisms;
 		sendPrisms.reserve(6*sendPrismIds.size());
 		for(int id:sendPrismIds)
 			for(int j:range(6))
 				sendPrisms.push_back(ugrid.prisms[6*id+j]);
-		vector<int> tmpMap;
-		MessagePasser::Gatherv(sendPrisms,recvPrisms,tmpMap,proc);
+		MessagePasser::Gatherv(sendPrisms,recvPrisms,proc);
 	}
 }
 
 inline void Parfait::ParallelMeshReDistributor::shuffleHexs()
 {
-	vector<int> sendHexIds;
+	vector<long> sendHexIds;
 	sendHexIds.reserve(8*ugrid.hexs.size());
 	for(int proc:range(nproc))
 	{
 		sendHexIds.clear();
-		vector<int> neededNodeIds;
+		vector<long> neededNodeIds;
 		if(MessagePasser::Rank() == proc)
 			neededNodeIds = recvIds;
 		MessagePasser::Broadcast(neededNodeIds,proc);
@@ -256,7 +253,7 @@ inline void Parfait::ParallelMeshReDistributor::shuffleHexs()
 			// check if proc owns any nodes in the hex
 			for(int j:range(8))
 			{
-				int globalId = ugrid.hexs[8*i+j];
+				long globalId = ugrid.hexs[8*i+j];
 				if(binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalId))
 				{
 					sendHexIds.push_back(i);
@@ -264,13 +261,12 @@ inline void Parfait::ParallelMeshReDistributor::shuffleHexs()
 				}
 			}
 		}
-		vector<int> sendHexs;
+		vector<long> sendHexs;
 		sendHexs.reserve(8*sendHexIds.size());
 		for(int id:sendHexIds)
 			for(int j:range(8))
 				sendHexs.push_back(ugrid.hexs[8*id+j]);
-		vector<int> tmpMap;
-		MessagePasser::Gatherv(sendHexs,recvHexs,tmpMap,proc);
+		MessagePasser::Gatherv(sendHexs,recvHexs,proc);
 	}
 }
 
