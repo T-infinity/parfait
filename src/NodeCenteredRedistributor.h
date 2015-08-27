@@ -13,6 +13,7 @@ namespace Parfait {
 	template<class T> using vector = std::vector<T>;
 	public:
 		ParallelMeshReDistributor(Parfait::ParallelImportedUgrid &ugrid, std::vector<int> &part);
+		//TODO: Maybe just scrap this and rewrite, otherwise, salvage...
 		void shuffleNodes();
 		void shuffleTriangles();
 		void shuffleQuads();
@@ -45,7 +46,7 @@ namespace Parfait {
 		std::vector<double> recvGhosts;
 	};
 }
-#include "ParallelMeshRedistributor.hpp"
+#include "NodeCenteredRedistributor.hpp"
 
 #endif
 #endif

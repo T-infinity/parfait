@@ -1,6 +1,6 @@
 #include <Partitioner.h>
 #include <ParallelMeshReader.h>
-#include <ParallelMeshRedistributor.h>
+#include "NodeCenteredRedistributor.h"
 #include "ComponentPlacer.h"
 
 namespace Parfait{
@@ -28,13 +28,11 @@ namespace Parfait{
 		Parfait::ParallelMeshReader naiveReader(gridNames,isBigEndian);
 		auto ugrid = naiveReader.distributeGridsEvenly();
 		auto part = calculateNewPartitioning(ugrid);
-        #if 0
-
-		auto part = calculateNewPartitioning(ugrid);
-		auto gridNodeMap = naiveReader.getGridNodeMap();
-		if(MessagePasser::Rank() == 0)
-			printf("Redistribute according to new partitioning:\n");
-		ParallelMeshReDistributor distributor(ugrid,part);
+        if(MessagePasser::Rank() == 0)
+            printf("Redistribute according to new partitioning:\n");
+        ParallelMeshReDistributor distributor(ugrid,part);
+        //return distributor.createNewParallelUgrid(mapbcVector);
+#if 0
 		if(MessagePasser::Rank() == 0)
 			printf("Create Fun3DMesh\n");
 		auto fun_mesh = distributor.createFun3DMesh(mapbcVector);
