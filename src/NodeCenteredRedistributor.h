@@ -5,7 +5,7 @@
 
 #include <vector>
 #include <MessagePasser.h>
-#include <ImportedUgrid.h>
+#include <ParallelImportedUgrid.h>
 #include <Fun3dMesh.h>
 
 namespace Parfait {
@@ -27,7 +27,7 @@ namespace Parfait {
 		int createNewParallelUgrid(std::vector<Parfait::MapbcReader> &mapbcVector);
 	private:
 		int nproc;
-		Parfait::ImportedUgrid &ugrid;
+		Parfait::ParallelImportedUgrid &ugrid;
 		std::vector<int> part;
 		std::vector<int> nodeMap;
 

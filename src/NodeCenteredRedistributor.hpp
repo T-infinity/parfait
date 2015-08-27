@@ -141,22 +141,17 @@ inline void Parfait::ParallelMeshReDistributor::shuffleTets()
 {
 	vector<int> sendTetIds;
 	sendTetIds.reserve(4*ugrid.tets.size());
-	for(int proc:range(nproc))
-	{
+	for(int proc=0;proc<nproc;proc++) {
 		sendTetIds.clear();
 		vector<int> neededNodeIds;
 		if(MessagePasser::Rank() == proc)
 			neededNodeIds = recvIds;
 		MessagePasser::Broadcast(neededNodeIds,proc);
-		// loop over tets
-		for(int i=0;i<ugrid.tets.size()/4;i++)
-		{
-			// check if proc owns any nodes in the tet
-			for(int j:range(4))
-			{
+		for(int i=0;i<ugrid.tets.size()/4;i++) {
+			for(int j=0;j<4;j++) {
+				//long globalId = ugrid.get
 				int globalId = ugrid.tets[4*i+j];
-				if(binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalId))
-				{
+				if(binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalId)) {
 					sendTetIds.push_back(i);
 					break;
 				}
