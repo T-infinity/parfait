@@ -5,7 +5,7 @@
 
 #include <vector>
 #include <MessagePasser.h>
-#include <ImportedUgrid.h>
+#include <ParallelImportedUgrid.h>
 #include <Fun3dMesh.h>
 
 namespace Parfait {
