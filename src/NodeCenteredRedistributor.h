@@ -39,10 +39,10 @@ namespace Parfait {
 		std::vector<int> recvTriangleTags;
 		std::vector<long> recvQuads;
 		std::vector<int> recvQuadTags;
-		std::vector<int> recvTets;
-		std::vector<int> recvPyramids;
-		std::vector<int> recvPrisms;
-		std::vector<int> recvHexs;
+		std::vector<long> recvTets;
+		std::vector<long> recvPyramids;
+		std::vector<long> recvPrisms;
+		std::vector<long> recvHexs;
 		std::vector<int> recvGhostIds;
 		std::vector<double> recvGhosts;
 	};
