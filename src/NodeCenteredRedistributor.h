@@ -35,7 +35,7 @@ namespace Parfait {
 		std::vector<int> ghostIds;
 		std::vector<int> componentIds;
 		std::vector<double> recvNodes;
-		std::vector<int> recvTriangles;
+		std::vector<long> recvTriangles;
 		std::vector<int> recvTriangleTags;
 		std::vector<long> recvQuads;
 		std::vector<int> recvQuadTags;

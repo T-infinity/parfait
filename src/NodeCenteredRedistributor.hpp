@@ -75,7 +75,7 @@ inline void Parfait::ParallelMeshReDistributor::shuffleTriangles()
 				}
 			}
 		}
-		vector<int> sendTriangles;
+		vector<long> sendTriangles;
 		vector<int> sendTriangleTags;
 		for(auto & id:sendTriangleIds) {
 			sendTriangleTags.push_back(ugrid.triangleTags[id]);
@@ -120,11 +120,11 @@ inline void Parfait::ParallelMeshReDistributor::shuffleQuads()
 
 inline void Parfait::ParallelMeshReDistributor::shuffleTets()
 {
-	vector<int> sendTetIds;
+	vector<long> sendTetIds;
 	sendTetIds.reserve(4*ugrid.tets.size());
 	for(int proc=0;proc<nproc;proc++) {
 		sendTetIds.clear();
-		vector<int> neededNodeIds;
+		vector<long> neededNodeIds;
 		if(MessagePasser::Rank() == proc)
 			neededNodeIds = recvIds;
 		MessagePasser::Broadcast(neededNodeIds,proc);
@@ -138,13 +138,12 @@ inline void Parfait::ParallelMeshReDistributor::shuffleTets()
 				}
 			}
 		}
-		vector<int> sendTets;
+		vector<long> sendTets;
 		sendTets.reserve(4*sendTetIds.size());
-		for(int id:sendTetIds)
+		for(auto id:sendTetIds)
 			for(int j:range(4))
 				sendTets.push_back(ugrid.tets[4*id+j]);
-		vector<int> tmpMap;
-		MessagePasser::Gatherv(sendTets,recvTets,tmpMap,proc);
+		MessagePasser::Gatherv(sendTets,recvTets,proc);
 	}
 }
 
@@ -155,7 +154,7 @@ inline void Parfait::ParallelMeshReDistributor::shufflePyramids()
 	for(int proc:range(nproc))
 	{
 		sendPyramidIds.clear();
-		vector<int> neededNodeIds;
+		vector<long> neededNodeIds;
 		if(MessagePasser::Rank() == proc)
 			neededNodeIds = recvIds;
 		MessagePasser::Broadcast(neededNodeIds,proc);
@@ -173,13 +172,12 @@ inline void Parfait::ParallelMeshReDistributor::shufflePyramids()
 				}
 			}
 		}
-		vector<int> sendPyramids;
+		vector<long> sendPyramids;
 		sendPyramids.reserve(5*sendPyramidIds.size());
 		for(int id:sendPyramidIds)
 			for(int j:range(5))
 				sendPyramids.push_back(ugrid.pyramids[5*id+j]);
-		vector<int> tmpMap;
-		MessagePasser::Gatherv(sendPyramids,recvPyramids,tmpMap,proc);
+		MessagePasser::Gatherv(sendPyramids,recvPyramids,proc);
 	}
 }
 
@@ -190,7 +188,7 @@ inline void Parfait::ParallelMeshReDistributor::shufflePrisms()
 	for(int proc:range(nproc))
 	{
 		sendPrismIds.clear();
-		vector<int> neededNodeIds;
+		vector<long> neededNodeIds;
 		if(MessagePasser::Rank() == proc)
 			neededNodeIds = recvIds;
 		MessagePasser::Broadcast(neededNodeIds,proc);
@@ -208,24 +206,23 @@ inline void Parfait::ParallelMeshReDistributor::shufflePrisms()
 				}
 			}
 		}
-		vector<int> sendPrisms;
+		vector<long> sendPrisms;
 		sendPrisms.reserve(6*sendPrismIds.size());
 		for(int id:sendPrismIds)
 			for(int j:range(6))
 				sendPrisms.push_back(ugrid.prisms[6*id+j]);
-		vector<int> tmpMap;
-		MessagePasser::Gatherv(sendPrisms,recvPrisms,tmpMap,proc);
+		MessagePasser::Gatherv(sendPrisms,recvPrisms,proc);
 	}
 }
 
 inline void Parfait::ParallelMeshReDistributor::shuffleHexs()
 {
-	vector<int> sendHexIds;
+	vector<long> sendHexIds;
 	sendHexIds.reserve(8*ugrid.hexs.size());
 	for(int proc:range(nproc))
 	{
 		sendHexIds.clear();
-		vector<int> neededNodeIds;
+		vector<long> neededNodeIds;
 		if(MessagePasser::Rank() == proc)
 			neededNodeIds = recvIds;
 		MessagePasser::Broadcast(neededNodeIds,proc);
@@ -243,14 +240,13 @@ inline void Parfait::ParallelMeshReDistributor::shuffleHexs()
 				}
 			}
 		}
-		vector<int> sendHexs;
+		vector<long> sendHexs;
 		sendHexs.reserve(8*sendHexIds.size());
-		for(int id:sendHexIds)
+		for(auto id:sendHexIds)
 			for(int j:range(8))
 				sendHexs.push_back(ugrid.hexs[8*id+j]);
-		vector<int> tmpMap;
-		MessagePasser::Gatherv(sendHexs,recvHexs,tmpMap,proc);
-	}
+		MessagePasser::Gatherv(sendHexs,recvHexs,proc);
+    }
 }
 
 inline int Parfait::ParallelMeshReDistributor::createNewParallelUgrid(vector<MapbcReader> &mapbcVector)
