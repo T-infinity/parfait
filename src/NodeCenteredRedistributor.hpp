@@ -59,35 +59,26 @@ inline void Parfait::ParallelMeshReDistributor::shuffleNodes()
 
 inline void Parfait::ParallelMeshReDistributor::shuffleTriangles()
 {
-	vector<int> sendTriangleIds;
-	sendTriangleIds.reserve(3*ugrid.triangles.size());
 	for(int proc:range(nproc))
 	{
-		sendTriangleIds.clear();
-		vector<int> neededNodeIds;
+        vector<long> sendTriangleIds;
+        vector<long> neededNodeIds;
 		if(MessagePasser::Rank() == proc)
 			neededNodeIds = recvIds;
 		MessagePasser::Broadcast(neededNodeIds,proc);
 		// loop over triangles
-		for(int i=0;i<ugrid.triangles.size()/3;i++)
-		{
-			// check if proc owns any nodes in the triangle
-			for(int j:range(3))
-			{
-				int globalId = ugrid.triangles[3*i+j];
-				if(binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalId))
-				{
-					sendTriangleIds.push_back(i);
+		for(int localCellId=0;localCellId<ugrid.triangles.size()/3;localCellId++) {
+			for(int j:range(3)) {
+                long globalId = ugrid.triangles[3*localCellId+j];
+				if(binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalId)) {
+                    sendTriangleIds.push_back(localCellId);
 					break;
 				}
 			}
 		}
 		vector<int> sendTriangles;
-		sendTriangles.reserve(3*sendTriangleIds.size());
 		vector<int> sendTriangleTags;
-		sendTriangleTags.reserve(sendTriangleIds.size());
-		for(int id:sendTriangleIds)
-		{
+		for(auto & id:sendTriangleIds) {
 			sendTriangleTags.push_back(ugrid.triangleTags[id]);
 			for(int j:range(3))
 				sendTriangles.push_back(ugrid.triangles[3*id+j]);
@@ -100,35 +91,24 @@ inline void Parfait::ParallelMeshReDistributor::shuffleTriangles()
 
 inline void Parfait::ParallelMeshReDistributor::shuffleQuads()
 {
-	vector<int> sendQuadIds;
-	sendQuadIds.reserve(4*ugrid.quads.size());
-	for(int proc:range(nproc))
-	{
-		sendQuadIds.clear();
-		vector<int> neededNodeIds;
+	for(int proc:range(nproc)) {
+        vector<int> sendQuadIds;
+        vector<long> neededNodeIds;
 		if(MessagePasser::Rank() == proc)
 			neededNodeIds = recvIds;
 		MessagePasser::Broadcast(neededNodeIds,proc);
-		// loop over quads
-		for(int i=0;i<ugrid.quads.size()/4;i++)
-		{
-			// check if proc owns any nodes in the quad
-			for(int j:range(4))
-			{
-				int globalId = ugrid.quads[4*i+j];
-				if(binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalId))
-				{
-					sendQuadIds.push_back(i);
+		for(int localCellId=0;localCellId<ugrid.quads.size()/4;localCellId++) {
+			for(int j:range(4)) {
+                int globalId = ugrid.quads[4*localCellId+j];
+				if(binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalId)) {
+                    sendQuadIds.push_back(localCellId);
 					break;
 				}
 			}
 		}
-		vector<int> sendQuads;
-		sendQuads.reserve(4*sendQuadIds.size());
+		vector<long> sendQuads;
 		vector<int> sendQuadTags;
-		sendQuadTags.reserve(sendQuadIds.size());
-		for(int id:sendQuadIds)
-		{
+		for(const auto & id:sendQuadIds) {
 			sendQuadTags.push_back(ugrid.quadTags[id]);
 			for(int j:range(4))
 				sendQuads.push_back(ugrid.quads[4*id+j]);
