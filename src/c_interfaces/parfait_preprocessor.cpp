@@ -1,7 +1,3 @@
-//
-// Created by cdruyorj on 8/20/15.
-//
-
 #include "parfait_preprocessor.h"
 #include "PreProcessor.h"
 

@@ -14,27 +14,31 @@ namespace Parfait {
 	public:
 		ParallelMeshReDistributor(Parfait::ParallelImportedUgrid &ugrid, std::vector<int> &part);
 		//TODO: Maybe just scrap this and rewrite, otherwise, salvage...
-		void shuffleNodes();
+		void shuffleNodeIds();
 		void shuffleTriangles();
 		void shuffleQuads();
 		void shuffleTets();
 		void shufflePyramids();
 		void shufflePrisms();
 		void shuffleHexs();
-		void identifyGhostNodes();
-		void shuffleGhostNodes();
 
-		int createNewParallelUgrid(std::vector<Parfait::MapbcReader> &mapbcVector);
+		void identifyGhostNodes();
+		void buildGlobalNodeIds();
+
+		void shuffleXYZ();
+
+
+		Parfait::ParallelImportedUgrid createNewParallelUgrid();
 	private:
 		int nproc;
 		Parfait::ParallelImportedUgrid &ugrid;
 		std::vector<int> part;
 		std::vector<int> nodeMap;
 
-		std::vector<long> recvIds;
-		std::vector<int> ghostIds;
+		std::vector<long> recvNodeIds;
+		std::vector<long> recvGhostNodeIds;
 		std::vector<int> componentIds;
-		std::vector<double> recvNodes;
+		std::vector<double> recvXYZ;
 		std::vector<long> recvTriangles;
 		std::vector<int> recvTriangleTags;
 		std::vector<long> recvQuads;
@@ -43,9 +47,11 @@ namespace Parfait {
 		std::vector<long> recvPyramids;
 		std::vector<long> recvPrisms;
 		std::vector<long> recvHexs;
-		std::vector<int> recvGhostIds;
-		std::vector<double> recvGhosts;
+
+		std::vector<long> globalNodeIds;
+		int getLocalNodeId(long globalNodeId);
 	};
+
 }
 #include "NodeCenteredRedistributor.hpp"
 

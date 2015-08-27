@@ -25,8 +25,8 @@ namespace Parfait{
 	}
 
 	inline ParallelImportedUgrid PreProcessor::createMesh(){
-		Parfait::ParallelMeshReader naiveReader(gridNames,isBigEndian);
-		auto ugrid = naiveReader.distributeGridsEvenly();
+		Parfait::ParallelMeshReader reader(gridNames,isBigEndian);
+		auto ugrid = reader.distributeGridsEvenly();
 		auto part = calculateNewPartitioning(ugrid);
         if(MessagePasser::Rank() == 0)
             printf("Redistribute according to new partitioning:\n");

@@ -21,7 +21,7 @@ namespace Parfait {
       long numberOfNodesOfDegreeOrUnder(int degree) const;
       int getNodeComponentId(int localId);
 
-  protected:
+  public:
       long globalNodeCount = 0;
       std::vector<long> globalNodeIds;
       std::vector<int> localNodeOwnershipDegree;
