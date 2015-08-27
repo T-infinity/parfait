@@ -136,8 +136,7 @@ inline void Parfait::ParallelMeshReDistributor::shuffleTets()
 		MessagePasser::Broadcast(neededNodeIds,proc);
 		for(int i=0;i<ugrid.tets.size()/4;i++) {
 			for(int j=0;j<4;j++) {
-				//long globalId = ugrid.get
-				int globalId = ugrid.tets[4*i+j];
+				long globalId = ugrid.getGlobalNodeId(ugrid.tets[4*i+j]);
 				if(binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalId)) {
 					sendTetIds.push_back(i);
 					break;
@@ -148,14 +147,14 @@ inline void Parfait::ParallelMeshReDistributor::shuffleTets()
 		sendTets.reserve(4*sendTetIds.size());
 		for(auto id:sendTetIds)
 			for(int j:range(4))
-				sendTets.push_back(ugrid.tets[4*id+j]);
+				sendTets.push_back(ugrid.getGlobalNodeId(ugrid.tets[4*id+j]));
 		MessagePasser::Gatherv(sendTets,recvTets,proc);
 	}
 }
 
 inline void Parfait::ParallelMeshReDistributor::shufflePyramids()
 {
-	vector<int> sendPyramidIds;
+	vector<long> sendPyramidIds;
 	sendPyramidIds.reserve(5*ugrid.pyramids.size());
 	for(int proc:range(nproc))
 	{
@@ -170,7 +169,7 @@ inline void Parfait::ParallelMeshReDistributor::shufflePyramids()
 			// check if proc owns any nodes in the pyramid
 			for(int j:range(5))
 			{
-				int globalId = ugrid.pyramids[5*i+j];
+                long globalId = ugrid.getGlobalNodeId(ugrid.pyramids[5*i+j]);
 				if(binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalId))
 				{
 					sendPyramidIds.push_back(i);
@@ -180,16 +179,16 @@ inline void Parfait::ParallelMeshReDistributor::shufflePyramids()
 		}
 		vector<long> sendPyramids;
 		sendPyramids.reserve(5*sendPyramidIds.size());
-		for(int id:sendPyramidIds)
+		for(auto id:sendPyramidIds)
 			for(int j:range(5))
-				sendPyramids.push_back(ugrid.pyramids[5*id+j]);
+				sendPyramids.push_back(ugrid.getGlobalNodeId(ugrid.pyramids[5*id+j]));
 		MessagePasser::Gatherv(sendPyramids,recvPyramids,proc);
 	}
 }
 
 inline void Parfait::ParallelMeshReDistributor::shufflePrisms()
 {
-	vector<int> sendPrismIds;
+	vector<long> sendPrismIds;
 	sendPrismIds.reserve(6*ugrid.prisms.size());
 	for(int proc:range(nproc))
 	{
@@ -204,7 +203,7 @@ inline void Parfait::ParallelMeshReDistributor::shufflePrisms()
 			// check if proc owns any nodes in the prism
 			for(int j:range(6))
 			{
-				int globalId = ugrid.prisms[6*i+j];
+                long globalId = ugrid.getGlobalNodeId(ugrid.prisms[6*i+j]);
 				if(binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalId))
 				{
 					sendPrismIds.push_back(i);
@@ -214,9 +213,9 @@ inline void Parfait::ParallelMeshReDistributor::shufflePrisms()
 		}
 		vector<long> sendPrisms;
 		sendPrisms.reserve(6*sendPrismIds.size());
-		for(int id:sendPrismIds)
+		for(auto id:sendPrismIds)
 			for(int j:range(6))
-				sendPrisms.push_back(ugrid.prisms[6*id+j]);
+				sendPrisms.push_back(ugrid.getGlobalNodeId(ugrid.prisms[6*id+j]));
 		MessagePasser::Gatherv(sendPrisms,recvPrisms,proc);
 	}
 }
@@ -238,7 +237,7 @@ inline void Parfait::ParallelMeshReDistributor::shuffleHexs()
 			// check if proc owns any nodes in the hex
 			for(int j:range(8))
 			{
-				int globalId = ugrid.hexs[8*i+j];
+                long globalId = ugrid.getGlobalNodeId(ugrid.hexs[8*i+j]);
 				if(binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalId))
 				{
 					sendHexIds.push_back(i);
@@ -250,7 +249,7 @@ inline void Parfait::ParallelMeshReDistributor::shuffleHexs()
 		sendHexs.reserve(8*sendHexIds.size());
 		for(auto id:sendHexIds)
 			for(int j:range(8))
-				sendHexs.push_back(ugrid.hexs[8*id+j]);
+				sendHexs.push_back(ugrid.getGlobalNodeId(ugrid.hexs[8*id+j]));
 		MessagePasser::Gatherv(sendHexs,recvHexs,proc);
     }
 }
