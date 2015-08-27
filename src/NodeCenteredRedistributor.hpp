@@ -59,8 +59,7 @@ inline void Parfait::ParallelMeshReDistributor::shuffleNodes()
 
 inline void Parfait::ParallelMeshReDistributor::shuffleTriangles()
 {
-	for(int proc:range(nproc))
-	{
+	for(int proc:range(nproc)) {
         vector<long> sendTriangleIds;
         vector<long> neededNodeIds;
 		if(MessagePasser::Rank() == proc)
