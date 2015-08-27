@@ -64,7 +64,7 @@ inline void ParallelMeshReDistributor::shuffleXYZ() {
         std::vector<long> just_recv_xyz_global_node_ids;
         MessagePasser::Gatherv(sendGlobalNodeId, just_recv_xyz_global_node_ids, proc);
         if(MessagePasser::Rank() == proc){
-            recvXYZ.resize(just_recv_xyz_global_node_ids.size());
+            recvXYZ.resize(3*just_recv_xyz_global_node_ids.size());
             for(int index = 0; index < just_recv_xyz_global_node_ids.size(); index++){
                 auto globalNodeId = just_recv_xyz_global_node_ids[index];
                 int localId = getLocalNodeId(globalNodeId);
