@@ -29,29 +29,31 @@ inline Parfait::ParallelMeshReDistributor::ParallelMeshReDistributor(ParallelImp
 
 inline void Parfait::ParallelMeshReDistributor::shuffleNodes()
 {
-	for(int proc:range(nproc))
-	{
+	for(int proc:range(nproc)) {
 		int count = 0;
 		for(int owner:part)
 			if(owner == proc)
 				count++;
-		vector<int> sendIds;
+		vector<long> sendIds;
+		vector<int> componentIds;
 		vector<double> sendNodes;
 		sendIds.reserve(count);
+		componentIds.reserve(count);
 		sendNodes.reserve(3*count);
-		for(int i=0;i<part.size();i++)
-		{
-			if(part[i] == proc)
-			{
-				sendIds.push_back(i+nodeMap[MessagePasser::Rank()]);
-				sendNodes.push_back(ugrid.nodes[3*i+0]);
-				sendNodes.push_back(ugrid.nodes[3*i+1]);
-				sendNodes.push_back(ugrid.nodes[3*i+2]);
+		for(int localNodeId=0;localNodeId<part.size();localNodeId++) {
+			if(part[localNodeId] == proc) {
+                auto globalNodeId = ugrid.getGlobalNodeId(localNodeId);
+				sendIds.push_back(globalNodeId);
+				sendNodes.push_back(ugrid.nodes[3*localNodeId+0]);
+				sendNodes.push_back(ugrid.nodes[3*localNodeId+1]);
+				sendNodes.push_back(ugrid.nodes[3*localNodeId+2]);
+                componentIds.push_back(ugrid.getNodeComponentId(localNodeId));
 			}
 		}
 		vector<int> tmpMap;
 		MessagePasser::Gatherv(sendIds,recvIds,tmpMap,proc);
 		MessagePasser::Gatherv(sendNodes,recvNodes,tmpMap,proc);
+        MessagePasser::Gatherv(componentIds,componentIds,proc);
 	}
 }
 

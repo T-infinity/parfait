@@ -27,12 +27,13 @@ namespace Parfait {
 		int createNewParallelUgrid(std::vector<Parfait::MapbcReader> &mapbcVector);
 	private:
 		int nproc;
-		Parfait::ImportedUgrid &ugrid;
+		Parfait::ParallelImportedUgrid &ugrid;
 		std::vector<int> part;
 		std::vector<int> nodeMap;
 
-		std::vector<int> recvIds;
+		std::vector<long> recvIds;
 		std::vector<int> ghostIds;
+		std::vector<int> componentIds;
 		std::vector<double> recvNodes;
 		std::vector<int> recvTriangles;
 		std::vector<int> recvTriangleTags;
