@@ -50,9 +50,8 @@ inline void Parfait::ParallelMeshReDistributor::shuffleNodes()
                 componentIds.push_back(ugrid.getNodeComponentId(localNodeId));
 			}
 		}
-		vector<int> tmpMap;
-		MessagePasser::Gatherv(sendIds,recvIds,tmpMap,proc);
-		MessagePasser::Gatherv(sendNodes,recvNodes,tmpMap,proc);
+		MessagePasser::Gatherv(sendIds,recvIds,proc);
+		MessagePasser::Gatherv(sendNodes,recvNodes,proc);
         MessagePasser::Gatherv(componentIds,componentIds,proc);
 	}
 }
@@ -68,7 +67,8 @@ inline void Parfait::ParallelMeshReDistributor::shuffleTriangles()
 		// loop over triangles
 		for(int localCellId=0;localCellId<ugrid.triangles.size()/3;localCellId++) {
 			for(int j:range(3)) {
-                long globalId = ugrid.triangles[3*localCellId+j];
+                int localNodeId = ugrid.triangles[3*localCellId+j];
+                auto globalId = ugrid.getGlobalNodeId(localNodeId);
 				if(binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalId)) {
                     sendTriangleIds.push_back(localCellId);
 					break;
@@ -77,10 +77,13 @@ inline void Parfait::ParallelMeshReDistributor::shuffleTriangles()
 		}
 		vector<long> sendTriangles;
 		vector<int> sendTriangleTags;
-		for(auto & id:sendTriangleIds) {
-			sendTriangleTags.push_back(ugrid.triangleTags[id]);
-			for(int j:range(3))
-				sendTriangles.push_back(ugrid.triangles[3*id+j]);
+		for(auto & localCellId:sendTriangleIds) {
+			sendTriangleTags.push_back(ugrid.triangleTags[localCellId]);
+			for(int j:range(3)) {
+                int localNodeId = ugrid.triangles[3*localCellId+j];
+                auto globalId = ugrid.getGlobalNodeId(localNodeId);
+                sendTriangles.push_back(globalId);
+            }
 		}
 		vector<int> tmpMap;
 		MessagePasser::Gatherv(sendTriangles,recvTriangles,tmpMap,proc);
@@ -91,15 +94,16 @@ inline void Parfait::ParallelMeshReDistributor::shuffleTriangles()
 inline void Parfait::ParallelMeshReDistributor::shuffleQuads()
 {
 	for(int proc:range(nproc)) {
-        vector<int> sendQuadIds;
+        vector<long> sendQuadIds;
         vector<long> neededNodeIds;
 		if(MessagePasser::Rank() == proc)
 			neededNodeIds = recvIds;
 		MessagePasser::Broadcast(neededNodeIds,proc);
 		for(int localCellId=0;localCellId<ugrid.quads.size()/4;localCellId++) {
 			for(int j:range(4)) {
-                int globalId = ugrid.quads[4*localCellId+j];
-				if(binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalId)) {
+                int localNodeId = ugrid.quads[4*localCellId+j];
+                auto globalNodeId = ugrid.getGlobalNodeId(localNodeId);
+				if(binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalNodeId)) {
                     sendQuadIds.push_back(localCellId);
 					break;
 				}
@@ -107,14 +111,16 @@ inline void Parfait::ParallelMeshReDistributor::shuffleQuads()
 		}
 		vector<long> sendQuads;
 		vector<int> sendQuadTags;
-		for(const auto & id:sendQuadIds) {
-			sendQuadTags.push_back(ugrid.quadTags[id]);
-			for(int j:range(4))
-				sendQuads.push_back(ugrid.quads[4*id+j]);
+		for(const auto & localCellId :sendQuadIds) {
+			sendQuadTags.push_back(ugrid.quadTags[localCellId]);
+			for(int j:range(4)) {
+                int localNodeId = ugrid.quads[4 * localCellId + j];
+                auto globalNodeId = ugrid.getGlobalNodeId(localNodeId);
+                sendQuads.push_back(globalNodeId);
+            }
 		}
-		vector<int> tmpMap;
-		MessagePasser::Gatherv(sendQuads,recvQuads,tmpMap,proc);
-		MessagePasser::Gatherv(sendQuadTags,recvQuadTags,tmpMap,proc);
+		MessagePasser::Gatherv(sendQuads,recvQuads,proc);
+		MessagePasser::Gatherv(sendQuadTags,recvQuadTags,proc);
 	}
 }
 
