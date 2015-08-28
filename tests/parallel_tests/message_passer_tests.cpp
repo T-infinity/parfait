@@ -810,6 +810,13 @@ TEST(MessagePasserTests,Exists)
 				LONGS_EQUAL(7,result[i]);
 		}
 	}
+
+	{
+		// test parallel sum
+		int rank = MessagePasser::Rank();
+		auto biggestRank = MessagePasser::ParallelSum(rank);
+		LONGS_EQUAL(MessagePasser::NumberOfProcesses()-1, biggestRank);
+	}
 	
 }
 

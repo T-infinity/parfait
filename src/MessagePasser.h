@@ -113,24 +113,26 @@ namespace MessagePasser
 	template<typename T>
 	T ParallelSum(T value,int rootId);
 
+    template <typename T>
+    T ParallelSum(const T& value);
+
 	template<typename T>
 	T ParallelMax(T value,int rootId);
-	
+
 	template<typename T>
 	std::vector<T> ParallelMax(const std::vector<T> &vec,int rootId);
 
 	template<typename T>
 	std::vector<T> ParallelMax(const std::vector<T> &vec,int rootId);
-	
 
-	// -------- Implementation files -------------------------------------
-	#include "MessagePasserSends.hpp"
-	#include "MessagePasserRecvs.hpp"
-    #include "MessagePasserWait.hpp"
-	#include "MessagePasserBroadcasts.hpp"
-	#include "MessagePasserScatters.hpp"
-	#include "MessagePasserReductions.hpp"
 }
+// -------- Implementation files -------------------------------------
+#include "MessagePasserSends.hpp"
+#include "MessagePasserRecvs.hpp"
+#include "MessagePasserWait.hpp"
+#include "MessagePasserBroadcasts.hpp"
+#include "MessagePasserScatters.hpp"
+#include "MessagePasserReductions.hpp"
 #include "MessagePasser.hpp"
 #include "MessagePasserGathers.hpp"
 
