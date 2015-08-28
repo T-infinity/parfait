@@ -31,7 +31,7 @@ namespace Parfait{
         if(MessagePasser::Rank() == 0)
             printf("Redistribute according to new partitioning:\n");
         ParallelMeshReDistributor distributor(ugrid,part);
-        //return distributor.createNewParallelUgrid(mapbcVector);
+        return distributor.createNewParallelUgrid();
 #if 0
 		if(MessagePasser::Rank() == 0)
 			printf("Create Fun3DMesh\n");

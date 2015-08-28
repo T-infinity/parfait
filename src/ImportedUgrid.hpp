@@ -10,9 +10,7 @@ inline Parfait::ImportedUgrid::ImportedUgrid(std::vector<double> nodes_in,
 																						 std::vector<int> prisms_in,
 																						 std::vector<int> hexs_in, 
 																						 std::vector<int> triangleTags_in, 
-																						 std::vector<int> quadTags_in,
-																						 std::vector<int> triangleBoundaryConditions_in,
-																						 std::vector<int> quadBoundaryConditions_in)
+																						 std::vector<int> quadTags_in)
 	: nodes(nodes_in),
 	triangles(triangles_in),
 	quads(quads_in),
@@ -21,9 +19,7 @@ inline Parfait::ImportedUgrid::ImportedUgrid(std::vector<double> nodes_in,
 	prisms(prisms_in),
 	hexs(hexs_in),
     triangleTags(triangleTags_in),
-    quadTags(quadTags_in),
-	triangleBoundaryConditions(triangleBoundaryConditions_in),
-	quadBoundaryConditions(quadBoundaryConditions_in)
+    quadTags(quadTags_in)
 {
 	nnodes = (int)nodes.size()/3;
 	cellMap.push_back((int)tets.size()/4);
@@ -472,17 +468,3 @@ inline int Parfait::ImportedUgrid::getBoundaryTag(int id) const
     assert(false);
 }
 
-inline int Parfait::ImportedUgrid::getBoundaryCondition(int faceId) const
-{
-    if(faceId < faceMap[0])
-    {
-        faceId -= 0;
-        return triangleBoundaryConditions[faceId];
-    }
-    if(faceId < faceMap[1])
-    {
-        faceId -= triangles.size()/3;
-        return quadBoundaryConditions[faceId];
-    }
-    assert(false);
-}

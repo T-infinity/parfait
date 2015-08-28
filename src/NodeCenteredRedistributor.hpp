@@ -25,14 +25,22 @@ inline Parfait::ParallelMeshReDistributor::ParallelMeshReDistributor(ParallelImp
 
     identifyGhostNodes();
     buildGlobalNodeIds();
-    shuffleXYZ();
+    shuffleNodeMetaData();
+
+
 }
 
+std::vector<int> ParallelMeshReDistributor::convertToLocalIds(std::map<long,int> global_to_local_map,const std::vector<long>& ids){
+    std::vector<int> local_ids;
+    for(auto id:ids)
+        local_ids.push_back(global_to_local_map[id]);
+    return local_ids;
+}
 
 int ParallelMeshReDistributor::getLocalNodeId(long globalNodeId) {
-    auto it = std::find(recvNodeIds.begin(), recvNodeIds.end(), globalNodeId);
+    auto it = std::lower_bound(recvNodeIds.begin(), recvNodeIds.end(), globalNodeId);
     if(it == recvNodeIds.end()){
-        it = std::find(recvGhostNodeIds.begin(),recvGhostNodeIds.end(),globalNodeId);
+        it = std::lower_bound(recvGhostNodeIds.begin(),recvGhostNodeIds.end(),globalNodeId);
             if(it != recvGhostNodeIds.end())
                 return std::distance(recvGhostNodeIds.begin(),it)+recvNodeIds.size();
             else
@@ -41,7 +49,10 @@ int ParallelMeshReDistributor::getLocalNodeId(long globalNodeId) {
     return std::distance(recvNodeIds.begin(),it);
 }
 
-inline void ParallelMeshReDistributor::shuffleXYZ() {
+inline void ParallelMeshReDistributor::shuffleNodeMetaData() {
+    std::map<long,int> global_to_local;
+    for(int i=0;i<ugrid.globalNodeIds.size();i++)
+        global_to_local.insert(std::make_pair(ugrid.globalNodeIds[i],i));
     for(int proc:range(nproc)) {
         vector<long> neededXYZ;
         if(MessagePasser::Rank() == proc)
@@ -49,27 +60,34 @@ inline void ParallelMeshReDistributor::shuffleXYZ() {
         MessagePasser::Broadcast(neededXYZ, proc);
         vector<double> sendXYZ;
         vector<long> sendGlobalNodeId;
+        vector<int> sendAssociatedComponentId;
         for(auto globalNodeId : neededXYZ){
-            auto it = std::find(ugrid.globalNodeIds.begin(), ugrid.globalNodeIds.end(), globalNodeId);
-            if(not (it == ugrid.globalNodeIds.end())){
-                auto localNodeId = *it;
+            auto it = global_to_local.find(globalNodeId);
+            if(not (it == global_to_local.end())){
+                auto localNodeId = it->second;
                 sendXYZ.push_back(ugrid.nodes[3*localNodeId+0]);
                 sendXYZ.push_back(ugrid.nodes[3*localNodeId+1]);
                 sendXYZ.push_back(ugrid.nodes[3*localNodeId+2]);
                 sendGlobalNodeId.push_back(globalNodeId);
+                sendAssociatedComponentId.push_back(ugrid.getNodeComponentId(localNodeId));
             }
         }
+
         std::vector<double> just_recv_xyz;
         MessagePasser::Gatherv(sendXYZ, just_recv_xyz,proc);
         std::vector<long> just_recv_xyz_global_node_ids;
         MessagePasser::Gatherv(sendGlobalNodeId, just_recv_xyz_global_node_ids, proc);
+        std::vector<int> just_recv_associated_component_ids;
+        MessagePasser::Gatherv(sendAssociatedComponentId,just_recv_associated_component_ids,proc);
         if(MessagePasser::Rank() == proc){
             recvXYZ.resize(3*just_recv_xyz_global_node_ids.size());
+            recvAssociatedComponentIds.resize(just_recv_associated_component_ids.size());
             for(int index = 0; index < just_recv_xyz_global_node_ids.size(); index++){
                 auto globalNodeId = just_recv_xyz_global_node_ids[index];
                 int localId = getLocalNodeId(globalNodeId);
                 for(int i = 0; i < 3; i++)
                     recvXYZ[3*localId+i] = just_recv_xyz[3*index+i];
+                recvAssociatedComponentIds[localId] = just_recv_associated_component_ids[index];
             }
         }
     }
@@ -298,7 +316,22 @@ inline void Parfait::ParallelMeshReDistributor::shuffleHexs()
 }
 
 inline Parfait::ParallelImportedUgrid Parfait::ParallelMeshReDistributor::createNewParallelUgrid() {
-    return ugrid;
+    std::vector<int> ownership_degree(globalNodeIds.size(),0);
+    std::fill(ownership_degree.begin()+recvNodeIds.size(),ownership_degree.end(),1);
+
+    std::map<long,int> global_to_local;
+    for(int i=0;i<ugrid.globalNodeIds.size();i++)
+        global_to_local.insert(std::make_pair(ugrid.globalNodeIds[i],i));
+
+    return ParallelImportedUgrid(ugrid.globalNodeCount,globalNodeIds,ownership_degree,
+                                 recvAssociatedComponentIds, recvXYZ,
+                                 convertToLocalIds(global_to_local,recvTriangles),
+                                 convertToLocalIds(global_to_local,recvQuads),
+                                 convertToLocalIds(global_to_local,recvTets),
+                                 convertToLocalIds(global_to_local,recvPyramids),
+                                 convertToLocalIds(global_to_local,recvPrisms),
+                                 convertToLocalIds(global_to_local,recvHexs),
+                                 recvTriangleTags,recvQuadTags);
 }
 
 inline void Parfait::ParallelMeshReDistributor::identifyGhostNodes() {
@@ -320,10 +353,10 @@ inline void Parfait::ParallelMeshReDistributor::identifyGhostNodes() {
 
     recvGhostNodeIds = std::vector<long>(uniqueGhostNodeIds.begin(), uniqueGhostNodeIds.end());
 }
+
 void ParallelMeshReDistributor::buildGlobalNodeIds() {
     globalNodeIds = recvNodeIds;
     globalNodeIds.insert(globalNodeIds.end(), recvGhostNodeIds.begin(), recvGhostNodeIds.end());
 }
-
 
 #endif

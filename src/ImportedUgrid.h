@@ -44,7 +44,6 @@ namespace Parfait {
         // (i.e., this stuff doesn't have to be in your mesh)
 
         int getBoundaryTag(int boundaryFaceId) const;
-        int getBoundaryCondition(int BoundaryFaceId) const;
 
         enum {TET = 0, PYRAMID = 1, PRISM = 2, HEX = 3};
         int getCellType(int cellId) const;
@@ -52,9 +51,7 @@ namespace Parfait {
         ImportedUgrid(std::vector<double> nodes, std::vector<int> triangles,
                       std::vector<int> quads, std::vector<int> tets, std::vector<int> pyramids,
                       std::vector<int> prisms, std::vector<int> hexs,
-                      std::vector<int> triangleTags, std::vector<int> quadTags,
-                      std::vector<int> triangleBoundaryConditions,
-                      std::vector<int> quadBoundaryConditions);
+                      std::vector<int> triangleTags, std::vector<int> quadTags);
         std::vector<double> nodes;
         std::vector<int> cellMap;
         std::vector<int> faceMap;
@@ -66,8 +63,6 @@ namespace Parfait {
         std::vector<int> hexs;
         std::vector<int> triangleTags;
         std::vector<int> quadTags;
-        std::vector<int> triangleBoundaryConditions;
-        std::vector<int> quadBoundaryConditions;
         std::vector<int> associated_component_id;
     protected:
         int nnodes;

@@ -25,7 +25,7 @@ namespace Parfait {
 		void identifyGhostNodes();
 		void buildGlobalNodeIds();
 
-		void shuffleXYZ();
+		void shuffleNodeMetaData();
 
 
 		Parfait::ParallelImportedUgrid createNewParallelUgrid();
@@ -37,7 +37,7 @@ namespace Parfait {
 
 		std::vector<long> recvNodeIds;
 		std::vector<long> recvGhostNodeIds;
-		std::vector<int> componentIds;
+		std::vector<int> recvAssociatedComponentIds;
 		std::vector<double> recvXYZ;
 		std::vector<long> recvTriangles;
 		std::vector<int> recvTriangleTags;
@@ -50,6 +50,11 @@ namespace Parfait {
 
 		std::vector<long> globalNodeIds;
 		int getLocalNodeId(long globalNodeId);
+
+        std::map<long,int> global_to_local_map;
+
+		void convertToLocalIds(std::vector<long>& ids);
+        std::vector<int> convertToLocalIds(std::map<long,int> global_to_local_map,const std::vector<long>& ids);
 	};
 
 }

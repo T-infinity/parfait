@@ -190,8 +190,7 @@ inline Parfait::ParallelImportedUgrid Parfait::ParallelMeshReader::distributeGri
     distributeUgrid();
 
     ParallelImportedUgrid ugrid(gridNodeMap.back(), myGlobalNodeIds, myOwnershipDegree, myNodeComponentIds, myNodes, myTriangles, myQuads, myTets,
-                                myPyramids, myPrisms, myHexs, myTriangleTags, myQuadTags,
-                                myTriangleTags, myQuadTags);
+                                myPyramids, myPrisms, myHexs, myTriangleTags, myQuadTags);
     return ugrid;
 }
 

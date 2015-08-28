@@ -146,10 +146,11 @@ void parfait_preprocessor_fill_triangle_tags(int *tags) {
 void parfait_preprocessor_fill_triangle_bcs(int *bcs) {
     throwIfNotInitialized();
     int iter = 0;
+    throw std::logic_error("need to implement boundary conditions.");
     for(int i=0;i<stuff->mesh.numberOfBoundaryFaces();i++){
         auto face = stuff->mesh.getNodesInBoundaryFace(i);
-        if(isTriangle(face))
-            bcs[iter++] = stuff->mesh.getBoundaryCondition(i);
+        //if(isTriangle(face))
+        //    bcs[iter++] = stuff->mesh.getBoundaryCondition(i);
     }
 }
 
@@ -181,10 +182,11 @@ void parfait_preprocessor_fill_quad_tags(int *quad_tags) {
 void parfait_preprocessor_fill_quad_bcs(int *quad_bcs) {
     throwIfNotInitialized();
     int iter = 0;
+    throw std::logic_error("Need to implement boundary conditions");
     for(int i=0;i<stuff->mesh.numberOfBoundaryFaces();i++){
         auto face = stuff->mesh.getNodesInBoundaryFace(i);
-        if(isQuad(face))
-            quad_bcs[iter++] = stuff->mesh.getBoundaryCondition(i);
+        //if(isQuad(face))
+        //    quad_bcs[iter++] = stuff->mesh.getBoundaryCondition(i);
     }
 }
 

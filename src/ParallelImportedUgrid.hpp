@@ -2,22 +2,23 @@
 #define PARFAIT_PARALLELIMPORTEDUGRID_HPP
 namespace Parfait{
   inline ParallelImportedUgrid::ParallelImportedUgrid() :
-          ImportedUgrid({},{},{},{},{},{},{},{},{},{},{}){
+          ImportedUgrid({},{},{},{},{},{},{},{},{}){
   }
 
   inline ParallelImportedUgrid::ParallelImportedUgrid(long globalNodeCount_in,
-                                                      std::vector<long> globalNodeIds_in,
-                                                      std::vector<int> localNodeOwnershipDegree_in,
-                                                      std::vector<int> localNodeComponentIds_in,
-                                                      std::vector<double> nodes, std::vector<int> triangles,
-                                                      std::vector<int> quads, std::vector<int> tets, std::vector<int> pyramids,
-                                                      std::vector<int> prisms, std::vector<int> hexs,
-                                                      std::vector<int> triangleTags, std::vector<int> quadTags,
-                                                      std::vector<int> triangleBoundaryConditions,
-                                                      std::vector<int> quadBoundaryConditions) :
-          ImportedUgrid(nodes, triangles, quads, tets, pyramids, prisms, hexs, triangleTags, quadTags,
-                        triangleBoundaryConditions,
-                        quadBoundaryConditions),
+                                                      const std::vector<long>& globalNodeIds_in,
+                                                      const std::vector<int>& localNodeOwnershipDegree_in,
+                                                      const std::vector<int>& localNodeComponentIds_in,
+                                                      const std::vector<double>& nodes,
+                                                      const std::vector<int>& triangles,
+                                                      const std::vector<int>& quads,
+                                                      const std::vector<int>& tets,
+                                                      const std::vector<int>& pyramids,
+                                                      const std::vector<int>& prisms,
+                                                      const std::vector<int>& hexs,
+                                                      const std::vector<int>& triangleTags,
+                                                      const std::vector<int>& quadTags) :
+          ImportedUgrid(nodes, triangles, quads, tets, pyramids, prisms, hexs, triangleTags, quadTags),
           globalNodeCount(globalNodeCount_in),
           globalNodeIds(globalNodeIds_in),
           localNodeOwnershipDegree(localNodeOwnershipDegree_in),
