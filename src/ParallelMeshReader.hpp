@@ -419,7 +419,7 @@ long ParallelMeshReader::convertComponentNodeIdToGlobal(int id,int grid) const {
     return id + gridNodeMap[grid];
 }
 
-inline std::vector<double> Parfait::ParallelMeshReader::getNodes(int begin,int end) {
+inline std::vector<double> Parfait::ParallelMeshReader::getNodes(long begin, long end) {
     using namespace UgridReader;
     std::vector<double> nodeBuffer(3*(end-begin),0.0);
     int firstGrid  = getFirstGrid(gridNodeMap,begin);
@@ -458,7 +458,7 @@ inline std::vector<double> Parfait::ParallelMeshReader::getNodes(int begin,int e
     return nodeBuffer;
 }
 
-inline std::vector<long> Parfait::ParallelMeshReader::getTriangles(int begin,int end)
+inline std::vector<long> Parfait::ParallelMeshReader::getTriangles(long begin, long end)
 {
     using namespace UgridReader;
     std::vector<long> triangleBuffer(3*(end-begin),0.0);
@@ -496,7 +496,7 @@ inline std::vector<long> Parfait::ParallelMeshReader::getTriangles(int begin,int
     return triangleBuffer;
 }
 
-inline std::vector<int> Parfait::ParallelMeshReader::getTriangleTags(int begin,int end)
+inline std::vector<int> Parfait::ParallelMeshReader::getTriangleTags(long begin, long end)
 {
     using namespace UgridReader;
     std::vector<int> triangleTagBuffer(end-begin,0);
@@ -540,7 +540,7 @@ inline std::vector<int> Parfait::ParallelMeshReader::getTriangleTags(int begin,i
     return triangleTagBuffer;
 }
 
-inline std::vector<long> Parfait::ParallelMeshReader::getQuads(int begin,int end)
+inline std::vector<long> Parfait::ParallelMeshReader::getQuads(long begin, long end)
 {
     using namespace UgridReader;
     std::vector<long> quadBuffer(4*(end-begin),0.0);
@@ -584,7 +584,7 @@ inline std::vector<long> Parfait::ParallelMeshReader::getQuads(int begin,int end
     return quadBuffer;
 }
 
-inline std::vector<int> Parfait::ParallelMeshReader::getQuadTags(int begin,int end)
+inline std::vector<int> Parfait::ParallelMeshReader::getQuadTags(long begin, long end)
 {
     using namespace UgridReader;
     std::vector<int> quadTagBuffer(end-begin,0);
@@ -628,7 +628,7 @@ inline std::vector<int> Parfait::ParallelMeshReader::getQuadTags(int begin,int e
     return quadTagBuffer;
 }
 
-inline std::vector<long> Parfait::ParallelMeshReader::getTets(int begin,int end)
+inline std::vector<long> Parfait::ParallelMeshReader::getTets(long begin, long end)
 {
     using namespace UgridReader;
     std::vector<long> tetBuffer(4*(end-begin),0);
@@ -671,7 +671,7 @@ inline std::vector<long> Parfait::ParallelMeshReader::getTets(int begin,int end)
     return tetBuffer;
 }
 
-inline std::vector<long> Parfait::ParallelMeshReader::getPyramids(int begin,int end)
+inline std::vector<long> Parfait::ParallelMeshReader::getPyramids(long begin, long end)
 {
     using namespace UgridReader;
     std::vector<long> pyramidBuffer(5*(end-begin),0.0);
@@ -715,7 +715,7 @@ inline std::vector<long> Parfait::ParallelMeshReader::getPyramids(int begin,int 
     return pyramidBuffer;
 }
 
-inline std::vector<long> Parfait::ParallelMeshReader::getPrisms(int begin,int end)
+inline std::vector<long> Parfait::ParallelMeshReader::getPrisms(long begin, long end)
 {
     using namespace UgridReader;
     std::vector<long> prismBuffer(6*(end-begin),0);
@@ -760,7 +760,7 @@ inline std::vector<long> Parfait::ParallelMeshReader::getPrisms(int begin,int en
     return prismBuffer;
 }
 
-inline std::vector<long> Parfait::ParallelMeshReader::getHexs(int begin,int end)
+inline std::vector<long> Parfait::ParallelMeshReader::getHexs(long begin, long end)
 {
     using namespace UgridReader;
     std::vector<long> hexBuffer(8*(end-begin),0.0);
@@ -804,7 +804,7 @@ inline std::vector<long> Parfait::ParallelMeshReader::getHexs(int begin,int end)
     return hexBuffer;
 }
 
-inline int Parfait::ParallelMeshReader::getFirstGrid(std::vector<long> &gridMap, int begin)
+inline int Parfait::ParallelMeshReader::getFirstGrid(std::vector<long> &gridMap, long begin)
 {
     int ngrid = (int)gridFiles.size();
     for(int i=0;i<ngrid;i++)
@@ -813,7 +813,7 @@ inline int Parfait::ParallelMeshReader::getFirstGrid(std::vector<long> &gridMap,
     assert(false);
 }
 
-inline int Parfait::ParallelMeshReader::getLastGrid(std::vector<long> &gridMap, int end)
+inline int Parfait::ParallelMeshReader::getLastGrid(std::vector<long> &gridMap, long end)
 {
     if(0==end){return 0;}
     int ngrid = (int)gridFiles.size();
@@ -823,7 +823,7 @@ inline int Parfait::ParallelMeshReader::getLastGrid(std::vector<long> &gridMap, 
     assert(false);
 }
 
-inline int Parfait::ParallelMeshReader::getBeginIndex(std::vector<long> &gridMap, int begin)
+inline int Parfait::ParallelMeshReader::getBeginIndex(std::vector<long> &gridMap, long begin)
 {
     int ngrid = (int)gridFiles.size();
     for(int i=0;i<ngrid;i++)
@@ -834,7 +834,7 @@ inline int Parfait::ParallelMeshReader::getBeginIndex(std::vector<long> &gridMap
     assert(false);
 }
 
-inline int Parfait::ParallelMeshReader::getEndIndex(std::vector<long> &gridMap,int end)
+inline int Parfait::ParallelMeshReader::getEndIndex(std::vector<long> &gridMap, long end)
 {
     if(0==end){return 0;}
     int ngrid = (int)gridFiles.size();
