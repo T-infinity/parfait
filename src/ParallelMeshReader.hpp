@@ -137,10 +137,31 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
     distributePyramids();
     distributePrisms();
     distributeHexs();
+
     mapNodesToLocalSpace();
+    createLocalToGlobalNodeIdMap();
+    createNodeOwnerships();
+    createNodeComponentIds();
 
     if (MessagePasser::Rank() == 0)
         printf("Done Distributing ...\n");
+}
+void ParallelMeshReader::createNodeComponentIds() {
+    myNodeComponentIds = std::vector<int>(localToGlobalId.size());
+    for(int localId = 0; localId < localToGlobalId.size(); localId++){
+        auto globalId = myGlobalNodeIds[localId];
+        auto componentId = getOwningGridOfNode(globalId);
+        myNodeComponentIds[localId] = componentId;
+    }
+}
+void ParallelMeshReader::createNodeOwnerships() {
+    myOwnershipDegree = std::vector<int>(myGlobalNodeIds.size());
+    for(int localId = 0; localId < localToGlobalId.size(); localId++){
+        if(localId < myNodes.size() / 3)
+            myOwnershipDegree[localId] = 0;
+        else
+            myOwnershipDegree[localId] = 1;
+    }
 }
 
 inline void Parfait::ParallelMeshReader::buildDistributionMaps() {
@@ -167,24 +188,8 @@ inline void Parfait::ParallelMeshReader::buildDistributionMaps() {
 
 inline Parfait::ParallelImportedUgrid Parfait::ParallelMeshReader::distributeGridsEvenly() {
     distributeUgrid();
-    std::vector<long> globalNodeIds;
-    for(long localId = 0; localId < localToGlobalId.size(); localId++){
-        globalNodeIds.push_back(localToGlobalId[localId]);
-    }
-    std::vector<int> ownershipDegree(globalNodeIds.size());
-    for(int localId = 0; localId < localToGlobalId.size(); localId++){
-        if(localId < myNodes.size() / 3)
-            ownershipDegree[localId] = 0;
-        else
-            ownershipDegree[localId] = 1;
-    }
-    std::vector<int> nodeComponentIds(localToGlobalId.size());
-    for(int localId = 0; localId < localToGlobalId.size(); localId++){
-        auto globalId = globalNodeIds[localId];
-        auto componentId = getOwningGridOfNode(globalId);
-        nodeComponentIds[localId] = componentId;
-    }
-    ParallelImportedUgrid ugrid(gridNodeMap.back(), globalNodeIds, ownershipDegree, nodeComponentIds, myNodes, myTriangles, myQuads, myTets,
+
+    ParallelImportedUgrid ugrid(gridNodeMap.back(), myGlobalNodeIds, myOwnershipDegree, myNodeComponentIds, myNodes, myTriangles, myQuads, myTets,
                                 myPyramids, myPrisms, myHexs, myTriangleTags, myQuadTags,
                                 myTriangleTags, myQuadTags);
     return ugrid;
@@ -847,3 +852,8 @@ inline int Parfait::ParallelMeshReader::numberOfGrids() const{
     return gridFiles.size();
 }
 
+inline void ParallelMeshReader::createLocalToGlobalNodeIdMap() {
+    for(long localId = 0; localId < localToGlobalId.size(); localId++){
+        myGlobalNodeIds.push_back(localToGlobalId[localId]);
+    }
+}

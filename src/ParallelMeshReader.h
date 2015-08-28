@@ -44,6 +44,12 @@ namespace Parfait {
       std::vector<int> myTriangleTags;
       std::vector<int> myQuadTags;
 
+      std::vector<long> myGlobalNodeIds;
+      std::vector<int> myOwnershipDegree;
+      std::vector<int> myNodeComponentIds;
+
+
+
       void buildDistributionMaps();
       void distributeNodes();
 
@@ -96,7 +102,12 @@ namespace Parfait {
 
       std::map<long, int> globalToLocalId;
       std::map<int, long> localToGlobalId;
+      void createLocalToGlobalNodeIdMap();
+      void createNodeOwnerships();
+      void createNodeComponentIds();
   };
+
+
 }
 
 #include "ParallelMeshReader.hpp"
