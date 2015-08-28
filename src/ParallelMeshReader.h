@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <MessagePasser.h>
 #include <ParallelImportedUgrid.h>
+template <typename T>
+class MessageBuilder;
 
 namespace Parfait {
   class ParallelMeshReader {
@@ -48,8 +50,6 @@ namespace Parfait {
       std::vector<int> myOwnershipDegree;
       std::vector<int> myNodeComponentIds;
 
-
-
       void buildDistributionMaps();
       void distributeNodes();
 
@@ -64,6 +64,10 @@ namespace Parfait {
       void nonRootRecvCells(int cellLength, CellSaver cellSaver);
       template<typename CellSaver>
       void nonRootRecvSurfaceCells(int cellLength, CellSaver cellSaver);
+      template <class CellSaver>
+      void sendTransmitCellToTargets(CellSaver cellSaver,
+                                     MessageBuilder<long> &messageBuilder, const std::set<int> &target_procs,
+                                     const vector<long> &transmitCell) const;
 
       void distributeTriangles();
       void distributeQuads();
@@ -105,6 +109,7 @@ namespace Parfait {
       void createLocalToGlobalNodeIdMap();
       void createNodeOwnerships();
       void createNodeComponentIds();
+
   };
 
 

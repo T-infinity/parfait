@@ -231,12 +231,7 @@ void Parfait::ParallelMeshReader::rootDistributeSurfaceCells(int cellLength, std
             }
             auto tag = tags[cellId];
             transmitCell.push_back(tag);
-            for (int target:target_procs) {
-                if (MessagePasser::Rank() == target)
-                    cellSaver(transmitCell);
-                else
-                    messageBuilder.sendItems(transmitCell, target);
-            }
+            sendTransmitCellToTargets(cellSaver, messageBuilder, target_procs, transmitCell);
         }
     }
     messageBuilder.finishSends();
@@ -257,15 +252,21 @@ void Parfait::ParallelMeshReader::rootDistributeCells(int cellLength, std::vecto
                 target_procs.insert(getOwningProcOfNode(id));
                 transmitCell.push_back(id);
             }
-            for (int target:target_procs) {
-                if (MessagePasser::Rank() == target)
-                    cellSaver(transmitCell);
-                else
-                    messageBuilder.sendItems(transmitCell, target);
-            }
+            sendTransmitCellToTargets(cellSaver, messageBuilder, target_procs, transmitCell);
         }
     }
     messageBuilder.finishSends();
+}
+template <class CellSaver>
+void ParallelMeshReader::sendTransmitCellToTargets(CellSaver cellSaver, MessageBuilder<long> &messageBuilder,
+                                                   const std::set<int> &target_procs,
+                                                   const std::vector<long> &transmitCell) const {
+    for (int target:target_procs) {
+        if (MessagePasser::Rank() == target)
+            cellSaver(transmitCell);
+        else
+            messageBuilder.sendItems(transmitCell, target);
+    }
 }
 
 bool isDoneSignal(const std::vector<long> &signal){
