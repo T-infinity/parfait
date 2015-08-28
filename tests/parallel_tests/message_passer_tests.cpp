@@ -36,30 +36,23 @@ TEST(MessagePasserTests,Exists)
 	MPI_Comm_size(MPI_COMM_WORLD,&size);
 	LONGS_EQUAL(size,NumberOfProcesses());
 	
-	// check that Barrier() exists
-	Barrier();	
-	
+	Barrier();
 
-	// test Send/Recv for integers
-	if(Rank() == 0)
-	{
+	if(Rank() == 0) {
 		int value = 0,sum=0,check_sum=0;
-		for(int i=1;i<NumberOfProcesses();i++)
-		{
+		for(int i=1;i<NumberOfProcesses();i++) {
 			Recv(value,i);
 			sum += value;
 			check_sum += i;
 		}
 		LONGS_EQUAL(check_sum,sum);
 	}
-	else
-	{
+	else {
 		Send(Rank(),0);
 	}
 
 	// test Send/Recv for floats
-	if(Rank() == 0)
-	{
+	if(Rank() == 0) {
 		float value = 0,sum=0,check_sum=0;
 		for(int i=1;i<NumberOfProcesses();i++)
 		{
@@ -69,14 +62,12 @@ TEST(MessagePasserTests,Exists)
 		}
 		LONGS_EQUAL(check_sum,sum);
 	}
-	else
-	{
+	else {
 		Send((float)Rank(),0);
 	}
 
 	// test Send/Recv for doubles
-	if(Rank() == 0)
-	{
+	if(Rank() == 0) {
 		double value = 0,sum=0,check_sum=0;
 		for(int i=1;i<NumberOfProcesses();i++)
 		{
@@ -86,15 +77,13 @@ TEST(MessagePasserTests,Exists)
 		}
 		LONGS_EQUAL(check_sum,sum);
 	}
-	else
-	{
+	else {
 		Send((double)Rank(),0);
 	}
 
 	
 	// test Recv from any source for integers
-	if(Rank() == 0)
-	{
+	if(Rank() == 0) {
 		int value = 0,sum=0,check_sum=0;
 		for(int i=1;i<NumberOfProcesses();i++)
 		{
@@ -104,8 +93,7 @@ TEST(MessagePasserTests,Exists)
 		}
 		LONGS_EQUAL(check_sum,sum);
 	}
-	else
-	{
+	else {
 		Send(Rank(),0);
 	}
 
@@ -742,16 +730,6 @@ TEST(MessagePasserTests,Exists)
 			DOUBLES_EQUAL(junk+(double)(start+i),recv_vec[i],MPI_FLOAT_TOL);
 		}
 	}
-	
-
-	
-
-	
-
-	
-
-
-	
 
 
 	{

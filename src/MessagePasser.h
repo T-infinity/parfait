@@ -10,48 +10,32 @@
 
 namespace MessagePasser
 {
-	// Basic utility functions
 	void Init();
 	void Finalize();
 	int Rank();
 	int NumberOfProcesses();
-	// Overloaded functions to return correct MPI Datatype without dynamic type checking
 	inline MPI_Datatype Type(int    value) {return MPI_INT;}
 	inline MPI_Datatype Type(size_t value) {return MPI_INT;}
     inline MPI_Datatype Type(long   value) {return MPI_LONG;}
 	inline MPI_Datatype Type(float  value) {return MPI_FLOAT;}
 	inline MPI_Datatype Type(double value) {return MPI_DOUBLE;}
 	inline void Barrier() {MPI_Barrier(MPI_COMM_WORLD);}
-	
-	//-------------- point to point communication ---------------------
-	//Send a single value
-	void Send(double value,int destination);
-	void Send(float value,int destination);
-	void Send(int value,int destination);
 
 	template<typename StatusType>
     void Wait(StatusType& status);
 
     template<typename StatusType>
     void WaitAll(std::vector<StatusType>& statuses);
-	
-    // recv a single value
-	void Recv(double &value,int source);
-	void Recv(float &value,int source);
-	void Recv(int &value,int source);
-    void Recv(long &value,int source);
 
-	// recv a single value from any source
-	void Recv(double &value);
-	void Recv(float &value);
-	void Recv(int &value);
-    void Recv(long &value);
+  	template <typename T>
+	void Recv(T &value, int source = 0);
 
-	// send a vector (receiver knows length)
+    template <typename T>
+    void Send(T &value, int source = 0);
+
 	template<typename T>
 	void Send(std::vector<T> &vec,int length,int destination);
 
-    // ready send vector
     template<typename T>
     MessageStatus NonBlockingSend(std::vector<T>& vec,int length,int destination);
 
@@ -61,108 +45,80 @@ namespace MessagePasser
     template<typename T>
     MessageStatus NonBlockingRecv(std::vector<T>& vec,int length,int source);
 
-	// recv a vector (receiver knows length)
 	template<typename T>
 	void Recv(std::vector<T> &vec,int length,int source);
 	
-	// send a vector (receiver doesn't know length)
 	template<typename T>
 	void Send(std::vector<T> &vec,int destination);
 
-	// send a vector of vectors
 	template<typename T>
 	void Send(std::vector<std::vector<T>> &vec,int destination);
 	
-	// recv a vector of vectors
 	template<typename T>
 	void Recv(std::vector<std::vector<T>> &vec,int source);
 
-	// recv a vector (receiver doesn't know length)
 	template<typename T>
 	void Recv(std::vector<T> &vec,int source);
 
-	// -------------  collective communication -----------------------
-	// Gather values to a vector on the root
 	template<typename T>
 	void Gather(T value,std::vector<T> &vec,int rootId);
 	
-	// Gather values to a vector on every proc
 	template<typename T>
 	void AllGather(T value,std::vector<T> &vec);
 
-	// Gather distributed vectors to a single vector on every proc
 	template<typename T>
 	void AllGatherv(const std::vector<T> &send_vec,std::vector<T> &recv_vec,std::vector<int> &map);
 
-	// Same as above but no map passed in/out
 	template<typename T>
 	void AllGatherv(const std::vector<T> &send_vec,std::vector<T> &recv_vec);
 
-
-	// Same as above, but output is stored in vector of vectors (one vector per proc)
 	template <typename T>
-	void AllGatherv(const std::vector<T>& send_vec,
-																 std::vector<std::vector<T>>& vec_of_vec_output);
+	void AllGatherv(const std::vector<T>& send_vec, std::vector<std::vector<T>>& vec_of_vec_output);
 
-	// Gather vectors of a given size to the root
-	template<typename T>
-	void Gather(const std::vector<T> &send_vec,int send_count,std::vector<T> &recv_vec,int rootId);
-	// Gather vectors of a given size to the root
 	template<typename T>
 	void Gather(const std::vector<T> &send_vec,int send_count,std::vector<T> &recv_vec,int rootId);
 
-	// Gatherv vectors of different lengths to the root
+	template<typename T>
+	void Gather(const std::vector<T> &send_vec,int send_count,std::vector<T> &recv_vec,int rootId);
+
 	template<typename T>
 	void Gatherv(const std::vector<T> &send_vec,std::vector<T> &recv_vec,
 			std::vector<int> &map,int rootId);
 	
-    // same as above, but no map passed
     template<typename T>
 	void Gatherv(const std::vector<T> &send_vec,std::vector<T> &recv_vec,
 			int rootId);
 
-	//same as above, but result is vector of vectors
 	template<typename T>
 	void Gatherv(const std::vector<T>& send_vec,
 															std::vector<std::vector<T>>& result,int root_id);
-	// broadcast a value
 	template<typename T>
 	void Broadcast(T &value,int rootId);
 	
-	// broadcast a vector of KNOWN size
 	template<typename T>
 	void Broadcast(std::vector<T> &vec,int vecLength,int rootId);
 
-	// broadcast a vector of unknown size
 	template<typename T>
 	void Broadcast(std::vector<T> &vec,int rootId);
 
-	// scatter a vector that has exactly nproc 	elements
 	template<typename T>
 	void Scatter(std::vector<T> &vec,T &recv_value,int rootId);
 
-	// scatter a vector that divides evenly into the number of procs
 	template<typename T>
 	void Scatter(std::vector<T> &vec,std::vector<T> &recv_vec,int rootId);
 
-	// scatterv a vector that does not divide evenly into number of procs
 	template<typename T>
 	void Scatterv(std::vector<T> &vec,std::vector<T> &recv_vec,int rootId);
 
-	// ----------- Reduction operations ----------------------------------
-	// sum single values to the root
 	template<typename T>
 	T ParallelSum(T value,int rootId);
 
-	// calculate max value across procs
 	template<typename T>
 	T ParallelMax(T value,int rootId);
 	
-	// get the max of values in a vector
 	template<typename T>
 	std::vector<T> ParallelMax(const std::vector<T> &vec,int rootId);
 
-	// get the min of values in a vector
 	template<typename T>
 	std::vector<T> ParallelMax(const std::vector<T> &vec,int rootId);
 	

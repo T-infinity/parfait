@@ -26,61 +26,15 @@ inline int MessagePasser::NumberOfProcesses(){
 	return size;
 }
 
-//Send a single value
-inline void MessagePasser::Send(double value,int destination){
+template <typename T>
+inline void MessagePasser::Send(const T& value,int destination){
     MPI_Send(&value,1,Type(value),destination,0,MPI_COMM_WORLD);
 }
 
-inline void MessagePasser::Send(float value,int destination){
-    MPI_Send(&value,1,Type(value),destination,0,MPI_COMM_WORLD);
-}
-
-inline void MessagePasser::Send(int value,int destination){
-    MPI_Send(&value,1,Type(value),destination,0,MPI_COMM_WORLD);
-}
-
-
-// recv a single value
-inline void MessagePasser::Recv(double &value,int source){
+template <typename T>
+void MessagePasser::Recv(T &value, int source){
     MPI_Status status;
     MPI_Recv(&value,1,Type(value),source,0,MPI_COMM_WORLD,&status);
 }
-
-inline void MessagePasser::Recv(float &value,int source){
-    MPI_Status status;
-    MPI_Recv(&value,1,Type(value),source,0,MPI_COMM_WORLD,&status);
-}
-
-inline void MessagePasser::Recv(int &value,int source){
-    MPI_Status status;
-    MPI_Recv(&value,1,Type(value),source,0,MPI_COMM_WORLD,&status);
-}
-
-inline void MessagePasser::Recv(long &value,int source){
-    MPI_Status status;
-    MPI_Recv(&value,1,Type(value),source,0,MPI_COMM_WORLD,&status);
-}
-
-// recv a single value from any source
-inline void MessagePasser::Recv(double &value){
-    MPI_Status status;
-    MPI_Recv(&value,1,Type(value),MPI_ANY_SOURCE,0,MPI_COMM_WORLD,&status);
-}
-
-inline void MessagePasser::Recv(float &value){
-    MPI_Status status;
-    MPI_Recv(&value,1,Type(value),MPI_ANY_SOURCE,0,MPI_COMM_WORLD,&status);
-}
-
-inline void MessagePasser::Recv(int &value){
-    MPI_Status status;
-    MPI_Recv(&value,1,Type(value),MPI_ANY_SOURCE,0,MPI_COMM_WORLD,&status);
-}
-
-inline void MessagePasser::Recv(long &value){
-    MPI_Status status;
-    MPI_Recv(&value,1,Type(value),MPI_ANY_SOURCE,0,MPI_COMM_WORLD,&status);
-}
-
 #endif
 
