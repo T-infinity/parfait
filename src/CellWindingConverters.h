@@ -45,6 +45,15 @@ namespace Parfait{
             std::swap(prism[2],prism[5]);
         }
     };
+
+    class VtkToCGNS : public CellWindingConverter{
+    public:
+        void convertPrism(int* prism){
+            std::swap(prism[0],prism[3]);
+            std::swap(prism[1],prism[4]);
+            std::swap(prism[2],prism[5]);
+        }
+    };
 }
 
 #endif //PARFAIT_AFLRTOCGNS_H_H
