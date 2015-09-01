@@ -98,9 +98,7 @@ namespace Parfait {
 
 
         return ImportedUgrid(nodes, triangles, quads, tets, pyramids, prisms, hexs,
-                             triangleTags, quadTags,
-                             triangleBoundaryConditions,
-                             quadBoundaryConditions);
+                             triangleTags, quadTags);
     }
 
 #if 0
@@ -220,9 +218,7 @@ inline ImportedUgrid ImportedUgridFactory::readUgrid(std::vector<std::string> &f
 
         fclose(fp);
         return ImportedUgrid(nodes, triangles, quads, tets, pyramids, prisms, hexs,
-                             triangleTags, quadTags,
-                             triangleBoundaryConditions,
-                             quadBoundaryConditions);
+                             triangleTags, quadTags);
     }
 }
 #endif

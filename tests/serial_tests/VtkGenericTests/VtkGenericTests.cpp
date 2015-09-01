@@ -50,9 +50,7 @@ TEST(VtkGenericTests,Exists)
 		vertex += (double)Rank();
 	// create grid on each proc
 	ImportedUgrid ugrid(nodes,triangles,quads,
-		tets,pyramids,prisms,hexs, triangleTags, quadTags,
-		triangleBoundaryConditions,
-		quadBoundaryConditions);
+		tets,pyramids,prisms,hexs, triangleTags, quadTags);
 	// create writer on each proc	
 	std::string meshName = "test";
 	VtkWriter<ImportedUgrid> writer(ugrid,meshName);

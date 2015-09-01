@@ -40,6 +40,7 @@ set(PARFAIT_SERIAL_TESTS_SRC
         vectors/LegacyArrayTests.cpp
         vectors/vector_tools_tests.cpp
         VtkExplodedViewWriter/VtkExplodedViewWriter_test.cpp
+        AflrToCGNS_tests.cpp.cpp
        )
 
 add_executable(ParfaitSerialTests ${PARFAIT_SERIAL_TESTS_SRC} ${HEADERS})

@@ -45,9 +45,7 @@ TEST_GROUP(ImportedUgridTests)
 TEST(ImportedUgridTests,Exists)
 {
 	ImportedUgrid ugrid(nodes,triangles,quads,
-			tets,pyramids,prisms,hexs, triangleTags, quadTags,
-			triangleBoundaryConditions,
-			quadBoundaryConditions);
+			tets,pyramids,prisms,hexs, triangleTags, quadTags);
 
 	LONGS_EQUAL(4,ugrid.numberOfNodes());
 	LONGS_EQUAL(1,ugrid.numberOfCells());
@@ -60,9 +58,7 @@ TEST(ImportedUgridTests,Exists)
 TEST(ImportedUgridTests,FaceTests)
 {
 	ImportedUgrid ugrid(nodes,triangles,quads,
-			tets,pyramids,prisms,hexs, triangleTags, quadTags,
-			triangleBoundaryConditions,
-			quadBoundaryConditions);
+			tets,pyramids,prisms,hexs, triangleTags, quadTags);
 	// create face object from first face of first cell in mesh	
 	CellFace<ImportedUgrid> face(ugrid,0,0);
 	LONGS_EQUAL(3,face.numberOfNodes());
@@ -77,9 +73,7 @@ TEST(ImportedUgridTests,FaceTests)
 TEST(ImportedUgridTests,CellTests)
 {
 	ImportedUgrid ugrid(nodes,triangles,quads,
-			tets,pyramids,prisms,hexs, triangleTags, quadTags,
-			triangleBoundaryConditions,
-			quadBoundaryConditions);
+			tets,pyramids,prisms,hexs, triangleTags, quadTags);
 	// create face object from first face of first cell in mesh	
 	Cell<ImportedUgrid> cell(ugrid,0);
 	LONGS_EQUAL(4,cell.numberOfNodes());
@@ -109,9 +103,7 @@ TEST(ImportedUgridTests,CellTests)
 TEST(ImportedUgridTests,CellCollectionTests)
 {
 	ImportedUgrid ugrid(nodes,triangles,quads,
-			tets,pyramids,prisms,hexs, triangleTags, quadTags,
-			triangleBoundaryConditions,
-			quadBoundaryConditions);
+			tets,pyramids,prisms,hexs, triangleTags, quadTags);
 	Mesh<ImportedUgrid> mesh(ugrid);	
 	
 	LONGS_EQUAL(4,mesh.numberOfNodes());
@@ -145,9 +137,7 @@ TEST(ImportedUgridTests,CellCollectionTests)
 TEST(ImportedUgridTests,BoundaryFaceTests)
 {
 	ImportedUgrid ugrid(nodes,triangles,quads,
-			tets,pyramids,prisms,hexs, triangleTags, quadTags,
-			triangleBoundaryConditions,
-			quadBoundaryConditions);
+			tets,pyramids,prisms,hexs, triangleTags, quadTags);
 
     SurfaceMesh<ImportedUgrid> mesh(ugrid);
     LONGS_EQUAL(4, mesh.numberOfBoundaryFaces());
@@ -179,9 +169,7 @@ TEST(ImportedUgridTests,BoundaryFaceTests)
 TEST(ImportedUgridTests, DirectCellAccess)
 {
 	ImportedUgrid ugrid(nodes,triangles,quads,
-			tets,pyramids,prisms,hexs, triangleTags, quadTags,
-			triangleBoundaryConditions,
-			quadBoundaryConditions);
+			tets,pyramids,prisms,hexs, triangleTags, quadTags);
 	Mesh<ImportedUgrid> mesh(ugrid);	
 
     auto cell = mesh.cell(0);
@@ -191,9 +179,7 @@ TEST(ImportedUgridTests, DirectCellAccess)
 TEST(ImportedUgridTests, DirectFaceAccess)
 {
 	ImportedUgrid ugrid(nodes,triangles,quads,
-			tets,pyramids,prisms,hexs, triangleTags, quadTags,
-			triangleBoundaryConditions,
-			quadBoundaryConditions);
+			tets,pyramids,prisms,hexs, triangleTags, quadTags);
 	Mesh<ImportedUgrid> mesh(ugrid);	
     auto cell = mesh.cell(0);
     auto face = cell.getFace(0);
@@ -212,9 +198,7 @@ void constFunction(const MeshType &mesh)
 TEST(ImportedUgridTests, constCheck)
 {
 	ImportedUgrid ugrid(nodes,triangles,quads,
-			tets,pyramids,prisms,hexs, triangleTags, quadTags,
-			triangleBoundaryConditions,
-			quadBoundaryConditions);
+			tets,pyramids,prisms,hexs, triangleTags, quadTags);
     Mesh<ImportedUgrid> mesh(ugrid);
     constFunction(mesh);
 
