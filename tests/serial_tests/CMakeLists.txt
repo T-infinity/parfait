@@ -43,7 +43,9 @@ set(PARFAIT_SERIAL_TESTS_SRC
         AflrToCGNS_tests.cpp
         CGNSToAflr_tests.cpp
         CGNSToVtk_tests.cpp
+        CGNSToFun3d_tests.cpp
         VtkToCGNS_tests.cpp
+
        )
 
 add_executable(ParfaitSerialTests ${PARFAIT_SERIAL_TESTS_SRC} ${HEADERS})
