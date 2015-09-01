@@ -68,6 +68,28 @@ namespace Parfait{
         }
     };
 
+    class Fun3DToCGNS : public CellWindingConverter{
+    public:
+        void convertPrism(int* prism){
+            std::swap(prism[1],prism[3]);
+            int tmp = prism[2];
+            prism[2] = prism[5];
+            prism[5] = prism[4];
+            prism[4] = tmp;
+        }
+
+        void convertHex(int* hex){
+            int tmp = hex[1];
+            hex[1] = hex[2];
+            hex[2] = hex[6];
+            hex[6] = hex[7];
+            hex[7] = hex[5];
+            hex[5] = hex[3];
+            hex[3] = hex[4];
+            hex[4] =tmp;
+        }
+    };
+
     class VtkToCGNS : public CellWindingConverter{
     public:
         void convertPrism(int* prism){

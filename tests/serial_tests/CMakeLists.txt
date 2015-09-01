@@ -45,6 +45,7 @@ set(PARFAIT_SERIAL_TESTS_SRC
         CGNSToVtk_tests.cpp
         CGNSToFun3d_tests.cpp
         VtkToCGNS_tests.cpp
+        Fun3DToCGNS_tests.cpp
 
        )
 
