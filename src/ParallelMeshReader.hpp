@@ -131,12 +131,25 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
     if (MessagePasser::Rank() == 0)
         printf("Distributing ...\n--nodes\n");
     distributeNodes();
+    if (MessagePasser::Rank() == 0)
+        printf("Distributing ...\n--triangles\n");
     distributeTriangles();
+    if (MessagePasser::Rank() == 0)
+        printf("Distributing ...\n--quads\n");
     distributeQuads();
+    if (MessagePasser::Rank() == 0)
+        printf("Distributing ...\n--tets\n");
     distributeTets();
+    if (MessagePasser::Rank() == 0)
+        printf("Distributing ...\n--pyramids\n");
     distributePyramids();
+    if (MessagePasser::Rank() == 0)
+        printf("Distributing ...\n--prisms\n");
     distributePrisms();
+    if (MessagePasser::Rank() == 0)
+        printf("Distributing ...\n--hexes\n");
     distributeHexs();
+    fflush(stdout);
 
     mapNodesToLocalSpace();
     createLocalToGlobalNodeIdMap();
