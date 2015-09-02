@@ -3,7 +3,7 @@
 #include <CppUTest/CommandLineTestRunner.h>
 
 TEST_GROUP(MessageBuilderTests){};
-
+#if 0
 TEST(MessageBuilderTests, Exists){
 
     MessageBuilder<int> builder;
@@ -15,3 +15,4 @@ TEST(MessageBuilderTests, Exists){
     }
 }
 
+#endif

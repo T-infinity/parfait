@@ -7,7 +7,7 @@
 using std::string;
 
 TEST_GROUP(ParallelMeshReaderTests) { };
-
+#if 0
 TEST(ParallelMeshReaderTests,Exists) {
     auto mesh = Parfait::ParallelMeshReader::readDistributedGrid({"../../grids/6cell.lb8.ugrid"}, {false});
     if(MessagePasser::NumberOfProcesses() == 1){
@@ -33,4 +33,5 @@ TEST(ParallelMeshReaderTests, Maps){
     LONGS_EQUAL(14, reader.totalNumberOfNodes());
     LONGS_EQUAL(1, reader.numberOfGrids());
 }
+#endif
 

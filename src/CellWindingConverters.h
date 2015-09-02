@@ -100,4 +100,4 @@ namespace Parfait{
     };
 }
 
-#endif //PARFAIT_AFLRTOCGNS_H_H
+#endif
