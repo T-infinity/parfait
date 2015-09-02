@@ -1,6 +1,3 @@
-//
-// Created by Cameron T Druyor Jr on 6/29/15.
-//
 #include <vector>
 #include <MessagePasser.h>
 

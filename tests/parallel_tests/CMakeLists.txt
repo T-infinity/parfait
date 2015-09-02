@@ -19,7 +19,6 @@ include_directories(../../tinyxml/src)
         "../../src/*.hpp"
         )
 
-set(CMAKE_EXE_LINKER_FLAGS -L/ump/fldmd/home/cdruyorj/cdruyor_local/parmetis_openmpi/lib)
 set(PARFAIT_PARALLEL_TESTS_SRC
         AllTests.cpp
         ParallelExtent_test.cpp
