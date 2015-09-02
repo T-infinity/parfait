@@ -5,7 +5,7 @@ PROJECT(ParfaitParallelTests)
 
 add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/tests/grids/6cell.lb8.ugrid")
 
-add_definitions(-DPARFAIT_WITH_MPI -DPARFAIT_WITH_PARMETIS)
+add_definitions(-DPARFAIT_WITH_MPI -DPARFAIT_WITH_PARMETIS -DCATCH_WITH_MPI)
 find_package(MPI REQUIRED)
 
 include_directories(
@@ -20,7 +20,7 @@ include_directories(../../tinyxml/src)
         )
 
 set(PARFAIT_PARALLEL_TESTS_SRC
-        AllTests.cpp
+        catch_main.cpp
         ParallelExtent_test.cpp
         ParallelImportedUgrid_test.cpp
         message_passer_tests.cpp

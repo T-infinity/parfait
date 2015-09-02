@@ -4,21 +4,11 @@
 
 #include "MessagePasser.h"
 #include "mpi_compare_tols.h"
-#include "CppUTest/CommandLineTestRunner.h"
+#include "catch.hpp"
 
 using namespace MessagePasser;
-TEST_GROUP(ParallelSumTests)
-{
-  void setup()
-  {
-  }
-  void teardown()
-  {
-  }
-};
 
-TEST(ParallelSumTests,SumIntegers)
-{
+TEST_CASE("SumIntegers"){
   int root = 0;
   int value = Rank();
   int psum = 0;
@@ -28,10 +18,10 @@ TEST(ParallelSumTests,SumIntegers)
     int sum = 0;
     for(int i=0;i<NumberOfProcesses();i++)
       sum += i;
-    LONGS_EQUAL(sum,psum);
+    REQUIRE(sum == psum);
   }
 }
-
+#if 0
 TEST(ParallelSumTests,SumFloats)
 {
   int root = 0;
@@ -63,4 +53,4 @@ TEST(ParallelSumTests,SumDoubles)
     DOUBLES_EQUAL(sum,psum,MPI_DOUBLE_TOL);
   }
 }
-
+#endif
