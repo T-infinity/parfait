@@ -1,10 +1,9 @@
 #include <vector>
 #include <MessagePasser.h>
 
-#include "CppUTest/CommandLineTestRunner.h"
 
 using namespace MessagePasser;
-
+#if 0
 TEST_GROUP(AllGatherv){
     void setup(){
     }
@@ -100,3 +99,4 @@ TEST(AllGatherv,TestWithVectorOfVectors)
 
   }
 }
+#endif

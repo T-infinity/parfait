@@ -1,31 +1,30 @@
 #include "MessagePasser.h"
 #include "Extent.h"
 #include "ParallelExtent.h"
-#include "CppUTest/CommandLineTestRunner.h"
+#include <catch.hpp>
 
 using namespace Parfait;
 
-TEST_GROUP(ParallelExtentBox){};
 
-TEST(ParallelExtentBox, SingleBox){
+TEST_CASE("SingleBox"){
     Extent<double> e({0,0,0},{1,1,1});
     e.hi[0] = MessagePasser::Rank();
     e.hi[1] = MessagePasser::Rank();
     e.hi[2] = MessagePasser::Rank();
 
     auto boundingBox = ParallelExtent::getBoundingBox(e);
-    DOUBLES_EQUAL(0.0, boundingBox.lo[0], 1.0e-17);
-    DOUBLES_EQUAL(0.0, boundingBox.lo[1], 1.0e-17);
-    DOUBLES_EQUAL(0.0, boundingBox.lo[2], 1.0e-17);
+    REQUIRE(0.0 == Approx(boundingBox.lo[0]));
+    REQUIRE(0.0 == Approx(boundingBox.lo[1]));
+    REQUIRE(0.0 == Approx(boundingBox.lo[2]));
 
     int expectedHi = MessagePasser::NumberOfProcesses() - 1;
 
-    DOUBLES_EQUAL(expectedHi, boundingBox.hi[0], 1.0e-17);
-    DOUBLES_EQUAL(expectedHi, boundingBox.hi[1], 1.0e-17);
-    DOUBLES_EQUAL(expectedHi, boundingBox.hi[2], 1.0e-17);
+    REQUIRE(expectedHi == Approx(boundingBox.hi[0]));
+    REQUIRE(expectedHi == Approx(boundingBox.hi[1]));
+    REQUIRE(expectedHi == Approx(boundingBox.hi[2]));
 }
 
-TEST(ParallelExtentBox, VectorOfBoxes){
+TEST_CASE("VectorOfBoxes"){
     std::vector<Extent<int>> boxes;
     int d = MessagePasser::Rank();
     for(int i = 0; i < 100; i++)
@@ -34,10 +33,10 @@ TEST(ParallelExtentBox, VectorOfBoxes){
     auto boundingBox = ParallelExtent::getBoundingBox(boxes);
 
     int expectedHi = MessagePasser::NumberOfProcesses() - 1;
-    DOUBLES_EQUAL(0.0, boundingBox.lo[0], 1.0e-17);
-    DOUBLES_EQUAL(0.0, boundingBox.lo[1], 1.0e-17);
-    DOUBLES_EQUAL(0.0, boundingBox.lo[2], 1.0e-17);
-    DOUBLES_EQUAL(expectedHi, boundingBox.hi[0], 1.0e-17);
-    DOUBLES_EQUAL(expectedHi, boundingBox.hi[1], 1.0e-17);
-    DOUBLES_EQUAL(expectedHi, boundingBox.hi[2], 1.0e-17);
+    REQUIRE(0.0 == Approx(boundingBox.lo[0]));
+    REQUIRE(0.0 == Approx(boundingBox.lo[1]));
+    REQUIRE(0.0 == Approx(boundingBox.lo[2]));
+    REQUIRE(expectedHi == Approx(boundingBox.hi[0]));
+    REQUIRE(expectedHi == Approx(boundingBox.hi[1]));
+    REQUIRE(expectedHi == Approx(boundingBox.hi[2]));
 }

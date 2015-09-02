@@ -2,12 +2,11 @@
 #include "PreProcessor.h"
 #include <ParallelMeshReader.h>
 
-#include "CppUTest/CommandLineTestRunner.h"
 
 using std::string;
 
-TEST_GROUP(ParallelMeshReaderTests) { };
 #if 0
+TEST_GROUP(ParallelMeshReaderTests) { };
 TEST(ParallelMeshReaderTests,Exists) {
     auto mesh = Parfait::ParallelMeshReader::readDistributedGrid({"../../grids/6cell.lb8.ugrid"}, {false});
     if(MessagePasser::NumberOfProcesses() == 1){

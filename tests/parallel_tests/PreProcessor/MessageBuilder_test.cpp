@@ -1,8 +1,6 @@
 #include "MessageBuilder.h"
 #include <vector>
-#include <CppUTest/CommandLineTestRunner.h>
 
-TEST_GROUP(MessageBuilderTests){};
 #if 0
 TEST(MessageBuilderTests, Exists){
 

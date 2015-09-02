@@ -21,9 +21,8 @@ TEST_CASE("SumIntegers"){
     REQUIRE(sum == psum);
   }
 }
-#if 0
-TEST(ParallelSumTests,SumFloats)
-{
+
+TEST_CASE("SumFloats"){
   int root = 0;
   float junk = 1.7e-1;
   float value = junk + (float)Rank();
@@ -34,12 +33,11 @@ TEST(ParallelSumTests,SumFloats)
     float sum = 0.0;
     for(int i=0;i<NumberOfProcesses();i++)
       sum += junk + (float)i;
-    DOUBLES_EQUAL(sum,psum,MPI_FLOAT_TOL);
+    REQUIRE(sum == Approx(psum));
   }
 }
 
-TEST(ParallelSumTests,SumDoubles)
-{
+TEST_CASE("SumDoubles"){
   int root = 0;
   double junk = 1.7e-9;
   double value = junk + (double)Rank();
@@ -50,7 +48,6 @@ TEST(ParallelSumTests,SumDoubles)
     double sum = 0.0;
     for(int i=0;i<NumberOfProcesses();i++)
       sum += junk + (double)i;
-    DOUBLES_EQUAL(sum,psum,MPI_DOUBLE_TOL);
+    REQUIRE(sum == Approx(psum));
   }
 }
-#endif

@@ -12,18 +12,19 @@ include_directories(
     "${CMAKE_SOURCE_DIR}/src"
     "${MPI_INCLUDE_PATH}"
     )
-include_directories(../../tinyxml/src)
+include_directories(../../tinyxml/src
+                    ../)
 
     file(GLOB_RECURSE HEADERS
         "../../src/*.h"
         "../../src/*.hpp"
         )
 
+
 set(PARFAIT_PARALLEL_TESTS_SRC
         catch_main.cpp
         ParallelExtent_test.cpp
         ParallelImportedUgrid_test.cpp
-        message_passer_tests.cpp
         parallel_sum_tests.cpp
         GathervTests.cpp
         AllGathervTests.cpp
@@ -31,9 +32,14 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         PreProcessor/MessageBuilder_test.cpp
        )
 
+add_executable(LegacyParallelTests AllTests.cpp message_passer_tests.cpp)
+target_link_libraries(LegacyParallelTests
+        CppUTest
+        ${MPI_LIBRARIES}
+)
+
 add_executable(ParfaitParallelTests ${PARFAIT_PARALLEL_TESTS_SRC} ${HEADERS})
 target_link_libraries(ParfaitParallelTests
-            CppUTest
             ${MPI_LIBRARIES}
             tinyxml
             parmetis
