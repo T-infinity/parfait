@@ -9,7 +9,12 @@ file(GLOB_RECURSE HEADERS
     "../src/*.hpp"
 )
 
-set(PARFAIT_SERIAL_TESTS_SRC
+set(SERIAL_TESTS_SOURCES
+        catch_main.cpp
+        parfait_mesh/ParfaitMesh_test.cpp
+)
+
+set(LEGACY_SERIAL_TESTS_SOURCES
         AllTests.cpp  
         vtk_slice_writer_tests.cpp
         extent/ExtentBuilderTests.cpp
@@ -46,10 +51,12 @@ set(PARFAIT_SERIAL_TESTS_SRC
         CGNSToFun3d_tests.cpp
         VtkToCGNS_tests.cpp
         Fun3DToCGNS_tests.cpp
-
        )
 
-add_executable(ParfaitSerialTests ${PARFAIT_SERIAL_TESTS_SRC} ${HEADERS})
-include_directories(../../tinyxml/src)
-target_link_libraries(ParfaitSerialTests CppUTest
+add_executable(LegacySerialTests ${LEGACY_SERIAL_TESTS_SOURCES} ${HEADERS})
+include_directories(../../tinyxml/src ../)
+target_link_libraries(LegacySerialTests
+        CppUTest
         tinyxml)
+
+add_executable(ParfaitSerialTests ${SERIAL_TESTS_SOURCES} ${HEADERS} ../catch.hpp)
