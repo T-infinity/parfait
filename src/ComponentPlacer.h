@@ -16,7 +16,7 @@ void placeComponents(Mesh &mesh,ConfigurationReader &config)
 	{
 		double p[3];
 		mesh.getNode(i,p);
-		gridMotions[mesh.getImesh(i)].movePoint(p);
+		gridMotions[mesh.getAssociatedComponentId(i)].movePoint(p);
 		mesh.setNode(i,p);
 	}
 }
