@@ -1,7 +1,7 @@
 namespace MessagePasser {
   template<typename T>
   void Send(std::vector<T> &vec, int length, int destination) {
-      MPI_Send(&vec[0], length, Type(T()), destination, 0, MPI_COMM_WORLD);
+      MPI_Send(vec.data(), length, Type(T()), destination, 0, MPI_COMM_WORLD);
   }
 
 // send a vector (receiver doesn't know length)

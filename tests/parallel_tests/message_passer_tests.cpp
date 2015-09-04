@@ -19,7 +19,6 @@ TEST_GROUP(MessagePasserTests)
 
 TEST(MessagePasserTests,Exists)
 {
-	CHECKPOINT
 	using namespace MessagePasser;
 	using std::vector;
 

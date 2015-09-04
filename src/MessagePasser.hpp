@@ -3,12 +3,9 @@
 
 inline void MessagePasser::Init(){
 	int initialized=0;
-	CHECKPOINT
 	MPI_Initialized(&initialized);
-	CHECKPOINT
 	if(!initialized)
 		MPI_Init(NULL,NULL);
-	CHECKPOINT
 }
 
 inline void MessagePasser::Finalize(){

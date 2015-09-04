@@ -30,4 +30,3 @@ TEST_CASE("Total number of nodes and grids is correct globally"){
     REQUIRE(14 == reader.totalNumberOfNodes());
     REQUIRE(1 == reader.numberOfGrids());
 }
-
