@@ -21,7 +21,6 @@ TEST(MessagePasserTests,Exists)
 {
 	using namespace MessagePasser;
 	using std::vector;
-
 	// check types
 	int a=0;
 	CHECK_EQUAL(MPI_INT,Type(a));	
@@ -121,7 +120,7 @@ TEST(MessagePasserTests,Exists)
 			LONGS_EQUAL(i,vec[i]);
 		}
 	}
-	
+
 	// test Send for vector of floats
 	{
 		std::vector<float> vec;
@@ -195,7 +194,7 @@ TEST(MessagePasserTests,Exists)
 			LONGS_EQUAL(i,vec[i]);
 		}
 	}
-	
+
 	// test Send for vector of floats (size not known by receiver)
 	{
 		std::vector<float> vec;
@@ -264,19 +263,6 @@ TEST(MessagePasserTests,Exists)
 		LONGS_EQUAL(0,(int)vec.size());
 	}
 
-    {
-        // test ready send
-        vector<int> vec(300000,0);
-        if(Rank() == 0){
-            for(int i=0;i<NumberOfProcesses();i++){
-                 NonBlockingSend(vec,i);     
-            }
-        }
-        vector<int> recv_vec;
-        Recv(recv_vec,0);
-        LONGS_EQUAL(300000,recv_vec.size());
-    }
-	
 	// test Send for vector of vector of integers
 	{
 		vector<vector<int>> vec;
@@ -298,7 +284,6 @@ TEST(MessagePasserTests,Exists)
 			}
 		}
 	}
-
 	// test Gather() for integers
 	{
 		int root = 0,value=Rank();
@@ -312,7 +297,8 @@ TEST(MessagePasserTests,Exists)
 				LONGS_EQUAL(i,vec[i]);
 		}
 	}
-	
+#if 1
+
 	{	
 		// test Gather() for floats
 		int root = 0;
@@ -346,7 +332,7 @@ TEST(MessagePasserTests,Exists)
 				DOUBLES_EQUAL(junk+(double)i,vec[i],MPI_DOUBLE_TOL);
 		}
 	}
-	
+
 	// test AllGather() for integers
 	{
 		int root = 0,value=Rank();
@@ -817,6 +803,7 @@ TEST(MessagePasserTests,Exists)
 		auto biggestRank = MessagePasser::ParallelSum(rank);
 		LONGS_EQUAL(MessagePasser::NumberOfProcesses()-1, biggestRank);
 	}
+#endif
 }
 
 

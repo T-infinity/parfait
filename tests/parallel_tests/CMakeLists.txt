@@ -29,6 +29,7 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         AllGathervTests.cpp
         PreProcessor/ParallelMeshReaderTests.cpp
         PreProcessor/MessageBuilder_test.cpp
+        AsyncSends_tests.cpp
        )
 
 add_executable(LegacyParallelTests AllTests.cpp message_passer_tests.cpp)
