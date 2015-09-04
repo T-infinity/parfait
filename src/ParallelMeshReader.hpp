@@ -290,10 +290,11 @@ template<typename CellSaver>
 void Parfait::ParallelMeshReader::nonRootRecvSurfaceCells(int cellLength, CellSaver cellSaver) {
     MessageBuilder<long> builder;
     auto cells = builder.recvItemsFrom(0);
-    for(int index = 0; index < cells.size(); index+=(cellLength+1)){
+    for(int index = 0; index < cells.size() / (cellLength+1); index++){
         std::vector<long> cell;
+        int cellId = index * (cellLength+1);
         for(int i = 0; i < cellLength+1; i++){
-            cell.push_back(cells[index + i]);
+            cell.push_back(cells[cellId + i]);
         }
         cellSaver(cell);
     }
@@ -303,8 +304,9 @@ template<typename CellSaver>
 void Parfait::ParallelMeshReader::nonRootRecvCells(int cellLength, CellSaver cellSaver) {
     MessageBuilder<long> builder;
     auto cells = builder.recvItemsFrom(0);
-    for(int index = 0; index < cells.size(); index+=cellLength){
+    for(int index = 0; index < cells.size() / cellLength; index++){
         std::vector<long> cell;
+        int cellId = index * cellLength;
         for(int i = 0; i < cellLength; i++){
             cell.push_back(cells[index + i]);
         }
