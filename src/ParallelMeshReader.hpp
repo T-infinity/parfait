@@ -149,7 +149,6 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
     if (MessagePasser::Rank() == 0)
         printf("Distributing ...\n--hexes\n");
     distributeHexs();
-    fflush(stdout);
 
     mapNodesToLocalSpace();
     createLocalToGlobalNodeIdMap();
@@ -240,12 +239,6 @@ void Parfait::ParallelMeshReader::rootDistributeSurfaceCells(int cellLength, std
     }
     messageBuilder.finishSends();
 }
-std::set<int> ParallelMeshReader::getTargetProcessors(const std::vector<long> &transmitCell) {
-    std::set<int> target_procs;
-    for(const auto &id : transmitCell)
-        target_procs.insert(getOwningProcOfNode(id));
-    return target_procs;
-}
 template <typename CellGetter, typename CellSaver>
 void Parfait::ParallelMeshReader::rootDistributeCells(int cellLength, std::vector<long> &gridCellMap,
                                                       CellGetter cellGetter, CellSaver cellSaver) {
@@ -261,6 +254,12 @@ void Parfait::ParallelMeshReader::rootDistributeCells(int cellLength, std::vecto
         }
     }
     messageBuilder.finishSends();
+}
+std::set<int> ParallelMeshReader::getTargetProcessors(const std::vector<long> &transmitCell) {
+    std::set<int> target_procs;
+    for(const auto &id : transmitCell)
+        target_procs.insert(getOwningProcOfNode(id));
+    return target_procs;
 }
 std::vector<long> ParallelMeshReader::getCell(int cellLength, const std::vector<long> &cells, int cellId) const {
     std::vector<long> transmitCell;

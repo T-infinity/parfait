@@ -83,7 +83,6 @@ TEST(MessagePasserTests,Exists)
 		Send((double)Rank(),0);
 	}
 
-	
 	// test Recv from any source for integers
 	if(Rank() == 0) {
 		int value = 0,sum=0,check_sum=0;
@@ -306,8 +305,7 @@ TEST(MessagePasserTests,Exists)
 		std::vector<int> vec;
 		Gather(value,vec,root);
 		// check that they were communicated properly to the root
-		if(Rank() == root)
-		{
+		if(Rank() == root) {
 			int nproc = NumberOfProcesses();
 			LONGS_EQUAL(nproc,(int)vec.size());
 			for(int i=0;i<nproc;i++)
@@ -819,7 +817,6 @@ TEST(MessagePasserTests,Exists)
 		auto biggestRank = MessagePasser::ParallelSum(rank);
 		LONGS_EQUAL(MessagePasser::NumberOfProcesses()-1, biggestRank);
 	}
-	
 }
 
 
