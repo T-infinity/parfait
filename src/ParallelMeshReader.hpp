@@ -237,6 +237,7 @@ void Parfait::ParallelMeshReader::rootDistributeSurfaceCells(int cellLength, std
             sendTransmitCellToTargets(cellSaver, messageBuilder, targetProcessors, transmitCell);
         }
     }
+    messageBuilder.padEmptySendsToNonSelf();
     messageBuilder.finishSends();
 }
 template <typename CellGetter, typename CellSaver>
@@ -253,6 +254,7 @@ void Parfait::ParallelMeshReader::rootDistributeCells(int cellLength, std::vecto
             sendTransmitCellToTargets(cellSaver, messageBuilder, targetProcessors, transmitCell);
         }
     }
+    messageBuilder.padEmptySendsToNonSelf();
     messageBuilder.finishSends();
 }
 std::set<int> ParallelMeshReader::getTargetProcessors(const std::vector<long> &transmitCell) {
@@ -307,7 +309,7 @@ void Parfait::ParallelMeshReader::nonRootRecvCells(int cellLength, CellSaver cel
         std::vector<long> cell;
         int cellId = index * cellLength;
         for(int i = 0; i < cellLength; i++){
-            cell.push_back(cells[index + i]);
+            cell.push_back(cells[cellId + i]);
         }
         cellSaver(cell);
     }
