@@ -24,7 +24,6 @@ include_directories(../../tinyxml/src
 set(PARFAIT_PARALLEL_TESTS_SRC
         catch_main.cpp
         ParallelExtent_test.cpp
-        ParallelImportedUgrid_test.cpp
         parallel_sum_tests.cpp
         GathervTests.cpp
         AllGathervTests.cpp

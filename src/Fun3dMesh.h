@@ -41,7 +41,7 @@ namespace Parfait { ;
 
         // everything below this point is specific to Fun3D
         int getGlobalNodeId(int localNodeId);
-        int getImesh(int localNodeId);
+        int getAssociatedComponentId(int localNodeId);
         int getBoundaryTag(int boundaryFaceId);
         int getBoundaryCondition(int boundaryFaceId);
 
@@ -52,7 +52,7 @@ namespace Parfait { ;
         Fun3DMesh() = delete;
         Fun3DMesh(int nnodes0, int nnodes01, double *x, double *y, double *z,
                   int *globalNodeIds,
-                  int *imesh,
+                  int *associatedComponentId,
                   int ntriangles, int *triangles, int *triangleTags, int *triangleBcs,
                   int nquads, int *quads, int *quadTags, int *quadBcs,
                   int ntets, int *tets,
@@ -61,7 +61,7 @@ namespace Parfait { ;
                   int nhexs, int *hexs);
         void freePointers();
 
-        int *imesh;
+        int *associated_component_id;
     private:
         int nnodes0, nnodes01, ntriangles, nquads;
         int ntets, npyramids, nprisms, nhexs;

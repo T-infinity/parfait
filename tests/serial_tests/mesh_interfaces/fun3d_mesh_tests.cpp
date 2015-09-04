@@ -9,7 +9,7 @@ TEST_GROUP(Fun3DMeshTests)
 	vector<double> y;
 	vector<double> z;
 	vector<int> globalNodeIds;
-	vector<int> imesh;
+	vector<int> associated_component_id;
 	vector<int> triangles;
 	vector<int> quads;
 	vector<int> tets;
@@ -30,7 +30,7 @@ TEST_GROUP(Fun3DMeshTests)
 					 2,3,1};
 		tets = {0,1,2,3};
 		globalNodeIds = {0,1,2,3};
-		imesh = {0,0,0,0};
+		associated_component_id = {0,0,0,0};
 		triangleTags = {0,1,2,3};
 	}
 	void teardown()
@@ -42,7 +42,7 @@ TEST(Fun3DMeshTests,Exists)
 	Fun3DMesh funGrid(x.size(),x.size(),
 			x.data(),y.data(),z.data(),
 			globalNodeIds.data(),
-			imesh.data(),
+			associated_component_id.data(),
 			triangles.size()/3,triangles.data(),triangleTags.data(),
 			triangleTags.data(),
 			quads.size()/4,quads.data(),quadTags.data(),
@@ -61,7 +61,7 @@ TEST(Fun3DMeshTests,Exists)
 	for(int i=0;i<4;i++)
 	{
 		LONGS_EQUAL(globalNodeIds[i],funGrid.getGlobalNodeId(i));
-		LONGS_EQUAL(0,funGrid.getImesh(i));
+		LONGS_EQUAL(0, funGrid.getAssociatedComponentId(i));
 	}
 
 	LONGS_EQUAL(3,funGrid.numberOfNodesInBoundaryFace(0));
@@ -81,7 +81,7 @@ TEST(Fun3DMeshTests, constCheck)
 	Fun3DMesh funGrid(x.size(),x.size(),
 			x.data(),y.data(),z.data(),
 			globalNodeIds.data(),
-			imesh.data(),
+			associated_component_id.data(),
 			triangles.size()/3,triangles.data(),triangleTags.data(),
 			triangleTags.data(),
 			quads.size()/4,quads.data(),quadTags.data(),

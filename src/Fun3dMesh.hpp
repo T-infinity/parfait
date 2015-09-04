@@ -1,6 +1,6 @@
 inline Parfait::Fun3DMesh::Fun3DMesh(int nnodes0_in,int nnodes01_in,double *x_in,double *y_in,double *z_in,
 		int *globalNodeIds_in,
-		int *imesh_in,
+		int *associatedComponentId,
 		int ntriangles_in,int *triangles_in,int *triangleTags_in,int *triangleBcs_in,
 		int nquads_in,int *quads_in,int *quadTags_in,int *quadBcs_in,
 		int ntets_in,int *tets_in,
@@ -8,7 +8,7 @@ inline Parfait::Fun3DMesh::Fun3DMesh(int nnodes0_in,int nnodes01_in,double *x_in
 		int nprisms_in,int *prisms_in,
 		int nhexs_in,int *hexs_in)
 	:
-	imesh(imesh_in),
+	associated_component_id(associatedComponentId),
 	nnodes0(nnodes0_in),
 	nnodes01(nnodes01_in),
 	ntriangles(ntriangles_in),
@@ -47,7 +47,7 @@ inline void Parfait::Fun3DMesh::freePointers()
 	free(x);
 	free(y);
 	free(z);
-	free(imesh);
+	free(associated_component_id);
 	free(globalNodeIds);
 	free(triangles);
 	free(triangleTags);
@@ -86,9 +86,9 @@ inline int Parfait::Fun3DMesh::getGlobalNodeId(int localNodeId)
 	return globalNodeIds[localNodeId];
 }
 
-inline int Parfait::Fun3DMesh::getImesh(int localNodeId)
+inline int Parfait::Fun3DMesh::getAssociatedComponentId(int localNodeId)
 {
-	return imesh[localNodeId];
+	return associated_component_id[localNodeId];
 }
 
 inline int Parfait::Fun3DMesh::getBoundaryTag(int boundaryFaceId)
