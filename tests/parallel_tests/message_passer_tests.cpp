@@ -2,6 +2,7 @@
 #include "mpi_compare_tols.h"
 #include <mpi.h>
 #include <vector>
+#include <checkpoint.h>
 
 #include "CppUTest/CommandLineTestRunner.h"
 
@@ -9,6 +10,7 @@ TEST_GROUP(MessagePasserTests)
 {
 	void setup()
 	{
+		std::cout << "Running Message Passer Tests" << std::endl;
 	}
 	void teardown()
 	{
@@ -17,6 +19,7 @@ TEST_GROUP(MessagePasserTests)
 
 TEST(MessagePasserTests,Exists)
 {
+	CHECKPOINT
 	using namespace MessagePasser;
 	using std::vector;
 

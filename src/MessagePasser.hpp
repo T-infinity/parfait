@@ -1,10 +1,14 @@
+#include "checkpoint.h"
 #ifdef PARFAIT_WITH_MPI
 
 inline void MessagePasser::Init(){
 	int initialized=0;
+	CHECKPOINT
 	MPI_Initialized(&initialized);
+	CHECKPOINT
 	if(!initialized)
 		MPI_Init(NULL,NULL);
+	CHECKPOINT
 }
 
 inline void MessagePasser::Finalize(){
@@ -35,6 +39,11 @@ template <typename T>
 void MessagePasser::Recv(T &value, int source){
     MPI_Status status;
     MPI_Recv(&value,1,Type(value),source,0,MPI_COMM_WORLD,&status);
+}
+template <typename T>
+void MessagePasser::Recv(T &value){
+	MPI_Status status;
+	MPI_Recv(&value,1,Type(value),MPI_ANY_SOURCE,0,MPI_COMM_WORLD,&status);
 }
 #endif
 

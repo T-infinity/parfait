@@ -28,10 +28,13 @@ namespace MessagePasser
     void WaitAll(std::vector<StatusType>& statuses);
 
   	template <typename T>
-	void Recv(T &value, int source = 0);
+	void Recv(T &value, int source);
+
+  	template <typename T>
+  	void Recv(T &value);
 
     template <typename T>
-    void Send(T &value, int source = 0);
+    void Send(T &value, int source);
 
 	template<typename T>
 	void Send(std::vector<T> &vec,int length,int destination);
