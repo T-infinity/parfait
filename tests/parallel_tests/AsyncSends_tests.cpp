@@ -1,6 +1,7 @@
 #include <vector>
 #include <MessagePasser.h>
 #include "catch.hpp"
+#include <checkpoint.h>
 
 using namespace MessagePasser;
 
@@ -14,7 +15,8 @@ TEST_CASE("to test async send (and WaitAll)"){
     }
     std::vector<int> recv_vec;
     Recv(recv_vec,0);
+    if(Rank() == 0)
+        WaitAll(statuses);
     REQUIRE(300000 == recv_vec.size());
-    WaitAll(statuses);
 }
 

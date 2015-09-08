@@ -28,8 +28,8 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         GathervTests.cpp
         AllGathervTests.cpp
         PreProcessor/ParallelMeshReaderTests.cpp
-#        PreProcessor/MessageBuilder_test.cpp
-#        AsyncSends_tests.cpp
+        MessageBuilder_test.cpp
+        AsyncSends_tests.cpp
         SelfSend_test.cpp
        )
 
