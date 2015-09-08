@@ -12,7 +12,6 @@ include_directories(
     "${MPI_INCLUDE_PATH}"
     )
 
-set(CMAKE_EXE_LINKER_FLAGS -L/ump/fldmd/home/cdruyorj/cdruyor_local/parmetis_openmpi/lib)
 set(PARFAIT_INTERFACE_SRCS
     parfait_preprocessor.cpp
     parfait_preprocessor.h
