@@ -25,6 +25,11 @@ void MessageBuilder<T>::sendItems(const std::vector<T> &items, int destination){
 template <typename T>
 void MessageBuilder<T>::finishSends(){
     for(int target = 0; target < MessagePasser::NumberOfProcesses(); target++){
+        if(target == MessagePasser::Rank()){
+            if(itemsToSendToRank.count(MessagePasser::Rank()) != 0)
+                throw std::logic_error("Message Builder should not send to himself.");
+            continue;
+        }
         MessagePasser::Send(itemsToSendToRank[target], target);
     }
     itemsToSendToRank.clear();

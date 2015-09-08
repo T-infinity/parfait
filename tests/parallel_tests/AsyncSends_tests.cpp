@@ -1,6 +1,3 @@
-//
-// Created by cdruyorj on 9/4/15.
-//
 #include <vector>
 #include <MessagePasser.h>
 #include "catch.hpp"
@@ -8,7 +5,6 @@
 using namespace MessagePasser;
 
 TEST_CASE("to test async send (and WaitAll)"){
-    // test ready send
     std::vector<int> vec(300000,0);
     std::vector<MessageStatus> statuses;
     if(Rank() == 0){
