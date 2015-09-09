@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <MessagePasser.h>
 #include <ParallelImportedUgrid.h>
+#include "MeshBasicParallel.h"
+
 template <typename T>
 class MessageBuilder;
 
@@ -35,6 +37,8 @@ namespace Parfait {
       std::vector<long> gridPyramidMap;
       std::vector<long> gridPrismMap;
       std::vector<long> gridHexMap;
+
+      MeshBasicParallel mesh;
 
       std::vector<double> myNodes;
       std::vector<int> myTriangles;
