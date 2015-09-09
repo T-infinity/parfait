@@ -13,6 +13,7 @@ set(SERIAL_TESTS_SOURCES
         catch_main.cpp
         parfait_mesh/ParfaitMesh_test.cpp
         cart_block/CartBlockTests.cpp
+        cart_block/CartBlockSliceTests.cpp
 )
 
 set(LEGACY_SERIAL_TESTS_SOURCES
