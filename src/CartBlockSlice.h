@@ -19,23 +19,35 @@ namespace Parfait {
                 b.convertCellIdTo_ijk(lo,min_ijk[0],min_ijk[1],min_ijk[2]);
                 b.convertCellIdTo_ijk(hi,max_ijk[0],max_ijk[1],max_ijk[2]);
                 b.convertCellIdTo_ijk(id,ijk[0],ijk[1],ijk[2]);
+                for(int i=0;i<3;i++)
+                    if(ijk[i]==max_ijk[i])
+                        ijk[i]++;
             };
             void operator++(){
-                if(ijk[0] < max_ijk[0])
+                if(ijk[0] < max_ijk[0]) {
                     ijk[0]++;
-                else if(ijk[1] < max_ijk[1])
+                }
+                else if(ijk[1] < max_ijk[1]) {
                     ijk[1]++;
-                else if(ijk[2] < max_ijk[2])
+                    ijk[0] = min_ijk[0];
+                }
+                else if(ijk[2] < max_ijk[2]) {
                     ijk[2]++;
-                printf("ijk (%i %i %i)\n",ijk[0],ijk[1],ijk[2]);
+                    ijk[0] = min_ijk[0];
+                    ijk[1] = min_ijk[1];
+                }
+                else{
+                    ijk[0] = max_ijk[0] + 1;
+                    ijk[1] = max_ijk[1] + 1;
+                    ijk[2] = max_ijk[2] + 1;
+                }
             };
             bool operator!=(const Iterator &rhs){
-                printf("%i %i %i == %i %i %i\n",ijk[0],ijk[1],ijk[2],rhs.ijk[0],rhs.ijk[1],rhs.ijk[2]);
-                return ijk[0] == rhs.ijk[0] and
-                       ijk[1] == rhs.ijk[1] and
-                       ijk[2] == rhs.ijk[2];
+                return ijk[0] != rhs.ijk[0] or
+                       ijk[1] != rhs.ijk[1] or
+                       ijk[2] != rhs.ijk[2];
             };
-            int  operator*(){return 0;};
+            int  operator*(){return b.convert_ijk_ToCellId(ijk[0],ijk[1],ijk[2]);};
         private:
             const CartBlock& b;
             int min_ijk[3];
