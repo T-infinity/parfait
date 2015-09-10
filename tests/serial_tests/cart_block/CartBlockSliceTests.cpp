@@ -1,4 +1,4 @@
-#include "CartBlockSlice.h"
+#include "CartBlock.h"
 #include "Point.h"
 
 #include "catch.hpp"
@@ -11,12 +11,5 @@ TEST_CASE("Create a slice"){
     int n = 5;
     CartBlock block(p0.data(),p1.data(),n,n,n);
 
-    CartBlockSlice slice(block,0,n*n*n-1);
 
-    REQUIRE((slice.begin() != slice.end()));
-    int count = 0;
-    for(auto thing:slice){
-        count++;
-    }
-    REQUIRE((n*n*n) == count);
 }

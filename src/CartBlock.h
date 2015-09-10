@@ -9,15 +9,11 @@
 namespace Parfait {
     class CartBlock : public Extent<double> {
     public:
-        CartBlock();
-        CartBlock(const double min_xyz[3], const double max_xyz[3]);
-        CartBlock(const double extent_i[6]);
-        CartBlock(const double min_xyz[3], const double max_xyz[3],
+        CartBlock() = delete;
+        CartBlock(const Point<double>& min_xyz, const Point<double>& max_xyz,
                   int ncells_x, int ncells_y, int ncells_z);
-        CartBlock(const double extent[6],
+        CartBlock(const Extent<double>& extent,
                   int ncells_x, int ncells_y, int ncells_z);
-
-        void setDimensions(int ncells_x, int ncells_y, int ncells_z);
 
         double get_dx() const;
         double get_dy() const;

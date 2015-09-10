@@ -1,24 +1,4 @@
-
-
-inline Parfait::CartBlock::CartBlock()
-    : Extent(),
-      kx(0),
-      ky(0),
-      kz(0)
-{
-}
-
-inline Parfait::CartBlock::CartBlock(const double min_xyz[3],const double max_xyz[3])
-    : Extent(min_xyz, max_xyz)
-{
-}
-
-inline Parfait::CartBlock::CartBlock(const double extent[6])
-    : Extent(extent)
-{
-}
-
-inline Parfait::CartBlock::CartBlock(const double min_xyz[3], const double max_xyz[3],
+inline Parfait::CartBlock::CartBlock(const Point<double>& min_xyz, const Point<double>& max_xyz,
                      int ncells_x,int ncells_y,int ncells_z)
     : Extent(min_xyz, max_xyz),
       kx(ncells_x),
@@ -28,25 +8,15 @@ inline Parfait::CartBlock::CartBlock(const double min_xyz[3], const double max_x
   number_of_cells = kx*ky*kz;
 }
 
-inline Parfait::CartBlock::CartBlock(const double extent[3],
+inline Parfait::CartBlock::CartBlock(const Extent<double>& extent,
                      int ncells_x,int ncells_y,int ncells_z)
-    : Extent(extent),
+    : Extent(extent.lo,extent.hi),
       kx(ncells_x),
       ky(ncells_y),
       kz(ncells_z)
 {
   number_of_cells = kx*ky*kz;
 }
-
-inline void Parfait::CartBlock::setDimensions(int ncells_x,int ncells_y,int ncells_z)
-{
-  kx = ncells_x;
-  ky = ncells_y;
-  kz = ncells_z;
-  number_of_cells = kx*ky*kz;
-}
-
-
 
 inline double Parfait::CartBlock::get_dx() const {return getLength_X() / (double) kx;}
 
