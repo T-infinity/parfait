@@ -30,9 +30,8 @@ namespace Parfait {
         int numberOfNodes() const;
 
         int getIdOfContainingCell(double point[3]) const;
-        std::vector<int> getCellIdsInExtent(const Extent<double> &b) const;
-        //void   get_node_ids_in_box(Box &b, std::vector<int> &node_ids); // not implemented yet
-        //
+        std::vector<int> getCellIdsInExtent(const Extent<double> &search_extent) const;
+        Extent<int> getRangeOfOverlappingCells(const Extent<double> &search_extent) const;
         void getNode(int node, double point[3]) const;
         void getCellCentroid(int cell_id, double centroid[3]) const;
         Extent<double> createExtentFromCell(int cell) const;
@@ -46,6 +45,7 @@ namespace Parfait {
         int number_of_cells;
         int kx, ky, kz;
     };
+
 }
 
 #include "CartBlock.hpp"
