@@ -10,7 +10,7 @@ namespace Parfait{
         std::vector<int> tets;
         std::vector<int> pyramids;
         std::vector<int> prisms;
-        std::vector<int> hexs;
+        std::vector<int> hexes;
     };
 }
 #endif 

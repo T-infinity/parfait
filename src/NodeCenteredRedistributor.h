@@ -12,7 +12,7 @@ namespace Parfait {
 	class ParallelMeshReDistributor {
 	template<class T> using vector = std::vector<T>;
 	public:
-		ParallelMeshReDistributor(Parfait::ParallelImportedUgrid &ugrid, std::vector<int> &part);
+		ParallelMeshReDistributor(std::shared_ptr<MeshBasicParallel> ugrid, std::vector<int> &part);
 		//TODO: Maybe just scrap this and rewrite, otherwise, salvage...
 		void shuffleNodeIds();
 		void shuffleTriangles();
@@ -28,10 +28,10 @@ namespace Parfait {
 		void shuffleNodeMetaData();
 
 
-		Parfait::ParallelImportedUgrid createNewParallelUgrid();
+		std::shared_ptr<MeshBasicParallel> createNewParallelUgrid();
 	private:
 		int nproc;
-		Parfait::ParallelImportedUgrid &ugrid;
+		std::shared_ptr<MeshBasicParallel> mesh;
 		std::vector<int> part;
 		std::vector<int> nodeMap;
 

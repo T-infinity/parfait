@@ -16,10 +16,11 @@ namespace Parfait {
   class ParallelMeshReader {
       template<class T> using vector = std::vector<T>;
   public:
-      static ParallelImportedUgrid readDistributedGrid(std::string configurationFileName);
-      static ParallelImportedUgrid readDistributedGrid(std::vector<std::string> gridFiles, std::vector<bool> isBigEndian);
+      static std::shared_ptr<MeshBasicParallel> readDistributedGrid(std::string configurationFileName);
+      static std::shared_ptr<MeshBasicParallel> readDistributedGrid(std::vector<std::string> gridFiles,
+                                                                    std::vector<bool> isBigEndian);
       ParallelMeshReader(std::vector<std::string> gridFiles, std::vector<bool> isBigEndian);
-      ParallelImportedUgrid distributeGridsEvenly();
+      std::shared_ptr<MeshBasicParallel> distributeGridsEvenly();
       std::vector<long> getGridNodeMap();
       std::vector<long> getProcNodeMap();
       long totalNumberOfNodes() const;
@@ -38,21 +39,7 @@ namespace Parfait {
       std::vector<long> gridPrismMap;
       std::vector<long> gridHexMap;
 
-      MeshBasicParallel mesh;
-
-      std::vector<double> myNodes;
-      std::vector<int> myTriangles;
-      std::vector<int> myQuads;
-      std::vector<int> myTets;
-      std::vector<int> myPyramids;
-      std::vector<int> myPrisms;
-      std::vector<int> myHexs;
-      std::vector<int> myTriangleTags;
-      std::vector<int> myQuadTags;
-
-      std::vector<long> myGlobalNodeIds;
-      std::vector<int> myOwnershipDegree;
-      std::vector<int> myNodeComponentIds;
+      std::shared_ptr<MeshBasicParallel> mesh;
 
       void buildDistributionMaps();
       void distributeNodes();

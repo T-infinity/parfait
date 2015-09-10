@@ -1,31 +1,42 @@
 #include "VectorTools.h"
+#include "CGNS.h"
 
 template<typename MeshType>
-std::vector <std::vector<long>> Parfait::NodeToNodeBuilder<MeshType>::buildNodeToNodeConnectivity() {
-    for (int cell_id = 0; cell_id < mesh.numberOfCells(); cell_id++)
-        for (int face_id = 0; face_id < mesh.numberOfFacesInCell(cell_id); face_id++)
-            processFace(cell_id,face_id);
+std::vector <std::vector<int>> Parfait::NodeToNodeBuilder<MeshType>::buildNodeToNodeConnectivity() {
 
-    return returnSetsAsVectors();
-}
-
-template <typename MeshType>
-void Parfait::NodeToNodeBuilder<MeshType>::processFace(int cell_id,int face_id){
-    auto face = mesh.getNodesInCellFace(cell_id,face_id);
-    for (int i = 0; i < face.size(); i++) {
-        int left = face[i];
-        int right = face[(i + 1) % face.size()];
-        if(left < node_to_node.size())
-            insertUnique(node_to_node[left],mesh.getGlobalNodeId(right));
-        if(right < node_to_node.size())
-            insertUnique(node_to_node[right],mesh.getGlobalNodeId(left));
+    for(int cellId = 0; cellId < mesh.numberOfTets(); cellId++){
+        auto cell = mesh.getTet(cellId);
+        for(int edge = 0; edge < CGNS::Edges::Tet::numberOfEdges(); edge++){
+            auto e = CGNS::Edges::Tet::getEdge(cell, edge);
+            addEdge(e[0], e[1]);
+        }
     }
+    for(int cellId = 0; cellId < mesh.numberOfPyramids(); cellId++){
+        auto cell = mesh.getPyramid(cellId);
+        for(int edge = 0; edge < CGNS::Edges::Pyramid::numberOfEdges(); edge++){
+            auto e = CGNS::Edges::Pyramid::getEdge(cell, edge);
+            addEdge(e[0], e[1]);
+        }
+    }    
+    for(int cellId = 0; cellId < mesh.numberOfPrisms(); cellId++){
+        auto cell = mesh.getPrism(cellId);
+        for(int edge = 0; edge < CGNS::Edges::Prism::numberOfEdges(); edge++){
+            auto e = CGNS::Edges::Prism::getEdge(cell, edge);
+            addEdge(e[0], e[1]);
+        }
+    }
+    for(int cellId = 0; cellId < mesh.numberOfHexes(); cellId++){
+        auto cell = mesh.getHex(cellId);
+        for(int edge = 0; edge < CGNS::Edges::Hex::numberOfEdges(); edge++){
+            auto e = CGNS::Edges::Hex::getEdge(cell, edge);
+            addEdge(e[0], e[1]);
+        }
+    }
+    return node_to_node;
 }
 
 template <typename MeshType>
-std::vector<std::vector<long>> Parfait::NodeToNodeBuilder<MeshType>::returnSetsAsVectors(){
-    std::vector <std::vector<long>> n2n;
-    for (auto &set:node_to_node)
-        n2n.push_back(std::vector<long>(set.begin(), set.end()));
-    return n2n;
+void Parfait::NodeToNodeBuilder<MeshType>::addEdge(int left, int right) {
+    insertUnique(node_to_node[right], left);
+    insertUnique(node_to_node[left], right);
 }

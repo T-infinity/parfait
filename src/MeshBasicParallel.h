@@ -3,13 +3,28 @@
 
 #include <memory>
 #include "MeshConnectivity.h"
-#include "MeshParallelMetadata.h"
+#include "MeshParallelMetaData.h"
 
 namespace Parfait {
     class MeshBasicParallel {
+        public:
+        MeshBasicParallel();
         std::shared_ptr<MeshConnectivity> connectivity;
-        std::shared_ptr<MeshParallelMetadata> metaData;
+        std::shared_ptr<MeshParallelMetaData> metaData;
+        int numberOfNodesAtDegree(int degree) const;
     };
+
+  int MeshBasicParallel::numberOfNodesAtDegree(int degree) const {
+      int count = 0;
+      for(auto d : metaData->nodeOwnershipDegree)
+          if(d == 0)
+              count++;
+      return count;
+  }
+  MeshBasicParallel::MeshBasicParallel()
+  : connectivity(std::make_shared<MeshConnectivity>()),
+    metaData(std::make_shared<MeshParallelMetaData>()) {
+  }
 }
 
 #endif

@@ -3,27 +3,28 @@
 #include <ParmetisWrapper.h>
 #include <NodeToNode.h>
 
-
-Parfait::Partitioner::Partitioner(ParallelImportedUgrid& m)
+template <class Mesh>
+Parfait::Partitioner<Mesh>::Partitioner(const Mesh & m)
 :mesh(m)
 {
     NodeToNodeBuilder<decltype(m)> builder(mesh);
 	connectivity = builder.buildNodeToNodeConnectivity();
 }
 
-
-std::vector<long> Parfait::Partitioner::buildProcNodeMap() {
+template <class Mesh>
+std::vector<long> Parfait::Partitioner<Mesh>::buildProcNodeMap() {
 	vector<long> procNodeMap(MessagePasser::NumberOfProcesses());
-	MessagePasser::AllGather((long)mesh.numberOfNodesOfDegreeOrUnder(0), procNodeMap);
+	MessagePasser::AllGather((long)mesh.numberOfOwnedNodes(), procNodeMap);
 	procNodeMap.insert(procNodeMap.begin(),0);
 	for(int i=1;i<procNodeMap.size();i++)
 		procNodeMap[i] += procNodeMap[i-1];
     return procNodeMap;
 }
 
-std::vector<int> Parfait::Partitioner::generatePartVector()
+template <class Mesh>
+std::vector<int> Parfait::Partitioner<Mesh>::generatePartVector()
 {
-	vector<int> part(mesh.numberOfNodesOfDegreeOrUnder(0),0);
+	vector<int> part(mesh.numberOfOwnedNodes(),0);
 	vector<long> ia(connectivity.size()+1,0);
 	for(long i=0;i<connectivity.size();i++)
 		ia[i+1] = ia[i] + connectivity[i].size();

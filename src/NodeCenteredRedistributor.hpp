@@ -3,14 +3,14 @@
 
 #ifdef PARFAIT_WITH_MPI
 
-inline Parfait::ParallelMeshReDistributor::ParallelMeshReDistributor(ParallelImportedUgrid &ugrid_in,
+inline Parfait::ParallelMeshReDistributor::ParallelMeshReDistributor(std::shared_ptr<MeshBasicParallel> ugrid_in,
                                                                      vector<int> &part_in)
-        : ugrid(ugrid_in),
+        : mesh(ugrid_in),
           part(part_in)
 {
     nproc = MessagePasser::NumberOfProcesses();
     nodeMap.assign(nproc,0);
-    MessagePasser::AllGather(ugrid.numberOfNodes(),nodeMap);
+    MessagePasser::AllGather(mesh->numberOfNodesAtDegree(0),nodeMap);
     nodeMap.insert(nodeMap.begin(),0);
     for(int i=2;i<nodeMap.size();i++)
         nodeMap[i] += nodeMap[i-1];
@@ -51,8 +51,8 @@ int ParallelMeshReDistributor::getLocalNodeId(long globalNodeId) {
 
 inline void ParallelMeshReDistributor::shuffleNodeMetaData() {
     std::map<long,int> global_to_local;
-    for(int i=0;i<ugrid.globalNodeIds.size();i++)
-        global_to_local.insert(std::make_pair(ugrid.globalNodeIds[i],i));
+    for(int i=0;i< mesh->metaData->globalNodeIds.size();i++)
+        global_to_local.insert(std::make_pair(mesh->metaData->globalNodeIds[i],i));
     for(int proc:range(nproc)) {
         vector<long> neededXYZ;
         if(MessagePasser::Rank() == proc)
@@ -65,11 +65,11 @@ inline void ParallelMeshReDistributor::shuffleNodeMetaData() {
             auto it = global_to_local.find(globalNodeId);
             if(not (it == global_to_local.end())){
                 auto localNodeId = it->second;
-                sendXYZ.push_back(ugrid.nodes[3*localNodeId+0]);
-                sendXYZ.push_back(ugrid.nodes[3*localNodeId+1]);
-                sendXYZ.push_back(ugrid.nodes[3*localNodeId+2]);
+                sendXYZ.push_back(mesh->metaData->xyz[3*localNodeId+0]);
+                sendXYZ.push_back(mesh->metaData->xyz[3*localNodeId+1]);
+                sendXYZ.push_back(mesh->metaData->xyz[3*localNodeId+2]);
                 sendGlobalNodeId.push_back(globalNodeId);
-                sendAssociatedComponentId.push_back(ugrid.getNodeComponentId(localNodeId));
+                sendAssociatedComponentId.push_back(mesh->metaData->nodeComponentIds[localNodeId]);
             }
         }
 
@@ -108,7 +108,7 @@ inline void Parfait::ParallelMeshReDistributor::shuffleNodeIds()
         sendNodes.reserve(3*count);
         for(int localNodeId=0;localNodeId<part.size();localNodeId++) {
             if(part[localNodeId] == proc) {
-                auto globalNodeId = ugrid.getGlobalNodeId(localNodeId);
+                auto globalNodeId = mesh->metaData->globalNodeIds[localNodeId];
                 sendIds.push_back(globalNodeId);
             }
         }
@@ -125,11 +125,10 @@ inline void Parfait::ParallelMeshReDistributor::shuffleTriangles()
         if(MessagePasser::Rank() == proc)
             neededNodeIds = recvNodeIds;
         MessagePasser::Broadcast(neededNodeIds,proc);
-        // loop over triangles
-        for(int localCellId=0;localCellId<ugrid.triangles.size()/3;localCellId++) {
+        for(int localCellId=0;localCellId< mesh->connectivity->triangles.size()/3;localCellId++) {
             for(int j:range(3)) {
-                int localNodeId = ugrid.triangles[3*localCellId+j];
-                auto globalId = ugrid.getGlobalNodeId(localNodeId);
+                int localNodeId = mesh->connectivity->triangles[3*localCellId+j];
+                auto globalId = mesh->metaData->globalNodeIds[localNodeId];
                 if(binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalId)) {
                     sendTriangleIds.push_back(localCellId);
                     break;
@@ -139,10 +138,10 @@ inline void Parfait::ParallelMeshReDistributor::shuffleTriangles()
         vector<long> sendTriangles;
         vector<int> sendTriangleTags;
         for(auto & localCellId:sendTriangleIds) {
-            sendTriangleTags.push_back(ugrid.triangleTags[localCellId]);
+            sendTriangleTags.push_back(mesh->metaData->triangleTags[localCellId]);
             for(int j:range(3)) {
-                int localNodeId = ugrid.triangles[3*localCellId+j];
-                auto globalId = ugrid.getGlobalNodeId(localNodeId);
+                int localNodeId = mesh->connectivity->triangles[3*localCellId+j];
+                auto globalId = mesh->metaData->globalNodeIds[localNodeId];
                 sendTriangles.push_back(globalId);
             }
         }
@@ -160,10 +159,10 @@ inline void Parfait::ParallelMeshReDistributor::shuffleQuads()
         if(MessagePasser::Rank() == proc)
             neededNodeIds = recvNodeIds;
         MessagePasser::Broadcast(neededNodeIds,proc);
-        for(int localCellId=0;localCellId<ugrid.quads.size()/4;localCellId++) {
+        for(int localCellId=0;localCellId< mesh->connectivity->quads.size()/4;localCellId++) {
             for(int j:range(4)) {
-                int localNodeId = ugrid.quads[4*localCellId+j];
-                auto globalNodeId = ugrid.getGlobalNodeId(localNodeId);
+                int localNodeId = mesh->connectivity->quads[4*localCellId+j];
+                auto globalNodeId = mesh->metaData->globalNodeIds[localNodeId];
                 if(binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalNodeId)) {
                     sendQuadIds.push_back(localCellId);
                     break;
@@ -173,10 +172,10 @@ inline void Parfait::ParallelMeshReDistributor::shuffleQuads()
         vector<long> sendQuads;
         vector<int> sendQuadTags;
         for(const auto & localCellId :sendQuadIds) {
-            sendQuadTags.push_back(ugrid.quadTags[localCellId]);
+            sendQuadTags.push_back(mesh->metaData->quadTags[localCellId]);
             for(int j:range(4)) {
-                int localNodeId = ugrid.quads[4 * localCellId + j];
-                auto globalNodeId = ugrid.getGlobalNodeId(localNodeId);
+                int localNodeId = mesh->connectivity->quads[4 * localCellId + j];
+                auto globalNodeId = mesh->metaData->globalNodeIds[localNodeId];
                 sendQuads.push_back(globalNodeId);
             }
         }
@@ -188,16 +187,16 @@ inline void Parfait::ParallelMeshReDistributor::shuffleQuads()
 inline void Parfait::ParallelMeshReDistributor::shuffleTets()
 {
     vector<long> sendTetIds;
-    sendTetIds.reserve(4*ugrid.tets.size());
+    sendTetIds.reserve(4* mesh->connectivity->tets.size());
     for(int proc=0;proc<nproc;proc++) {
         sendTetIds.clear();
         vector<long> neededNodeIds;
         if(MessagePasser::Rank() == proc)
             neededNodeIds = recvNodeIds;
         MessagePasser::Broadcast(neededNodeIds,proc);
-        for(int i=0;i<ugrid.tets.size()/4;i++) {
+        for(int i=0;i< mesh->connectivity->tets.size()/4;i++) {
             for(int j=0;j<4;j++) {
-                long globalId = ugrid.getGlobalNodeId(ugrid.tets[4*i+j]);
+                long globalId = mesh->metaData->globalNodeIds[mesh->connectivity->tets[4*i+j]];
                 if(binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalId)) {
                     sendTetIds.push_back(i);
                     break;
@@ -208,7 +207,7 @@ inline void Parfait::ParallelMeshReDistributor::shuffleTets()
         sendTets.reserve(4*sendTetIds.size());
         for(auto id:sendTetIds)
             for(int j:range(4))
-                sendTets.push_back(ugrid.getGlobalNodeId(ugrid.tets[4*id+j]));
+                sendTets.push_back(mesh->metaData->globalNodeIds[mesh->connectivity->tets[4*id+j]]);
         MessagePasser::Gatherv(sendTets,recvTets,proc);
     }
 }
@@ -216,7 +215,7 @@ inline void Parfait::ParallelMeshReDistributor::shuffleTets()
 inline void Parfait::ParallelMeshReDistributor::shufflePyramids()
 {
     vector<long> sendPyramidIds;
-    sendPyramidIds.reserve(5*ugrid.pyramids.size());
+    sendPyramidIds.reserve(5* mesh->connectivity->pyramids.size());
     for(int proc:range(nproc))
     {
         sendPyramidIds.clear();
@@ -225,12 +224,12 @@ inline void Parfait::ParallelMeshReDistributor::shufflePyramids()
             neededNodeIds = recvNodeIds;
         MessagePasser::Broadcast(neededNodeIds,proc);
         // loop over pyramids
-        for(int i=0;i<ugrid.pyramids.size()/5;i++)
+        for(int i=0;i< mesh->connectivity->pyramids.size()/5;i++)
         {
             // check if proc owns any nodes in the pyramid
             for(int j:range(5))
             {
-                long globalId = ugrid.getGlobalNodeId(ugrid.pyramids[5*i+j]);
+                long globalId = mesh->metaData->globalNodeIds[mesh->connectivity->pyramids[5*i+j]];
                 if(binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalId))
                 {
                     sendPyramidIds.push_back(i);
@@ -242,7 +241,7 @@ inline void Parfait::ParallelMeshReDistributor::shufflePyramids()
         sendPyramids.reserve(5*sendPyramidIds.size());
         for(auto id:sendPyramidIds)
             for(int j:range(5))
-                sendPyramids.push_back(ugrid.getGlobalNodeId(ugrid.pyramids[5*id+j]));
+                sendPyramids.push_back(mesh->metaData->globalNodeIds[mesh->connectivity->pyramids[5*id+j]]);
         MessagePasser::Gatherv(sendPyramids,recvPyramids,proc);
     }
 }
@@ -250,7 +249,7 @@ inline void Parfait::ParallelMeshReDistributor::shufflePyramids()
 inline void Parfait::ParallelMeshReDistributor::shufflePrisms()
 {
     vector<long> sendPrismIds;
-    sendPrismIds.reserve(6*ugrid.prisms.size());
+    sendPrismIds.reserve(6* mesh->connectivity->prisms.size());
     for(int proc:range(nproc))
     {
         sendPrismIds.clear();
@@ -259,12 +258,12 @@ inline void Parfait::ParallelMeshReDistributor::shufflePrisms()
             neededNodeIds = recvNodeIds;
         MessagePasser::Broadcast(neededNodeIds,proc);
         // loop over prisms
-        for(int i=0;i<ugrid.prisms.size()/6;i++)
+        for(int i=0;i< mesh->connectivity->prisms.size()/6;i++)
         {
             // check if proc owns any nodes in the prism
             for(int j:range(6))
             {
-                long globalId = ugrid.getGlobalNodeId(ugrid.prisms[6*i+j]);
+                long globalId = mesh->metaData->globalNodeIds[mesh->connectivity->prisms[6*i+j]];
                 if(binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalId))
                 {
                     sendPrismIds.push_back(i);
@@ -276,7 +275,7 @@ inline void Parfait::ParallelMeshReDistributor::shufflePrisms()
         sendPrisms.reserve(6*sendPrismIds.size());
         for(auto id:sendPrismIds)
             for(int j:range(6))
-                sendPrisms.push_back(ugrid.getGlobalNodeId(ugrid.prisms[6*id+j]));
+                sendPrisms.push_back(mesh->metaData->globalNodeIds[mesh->connectivity->prisms[6*id+j]]);
         MessagePasser::Gatherv(sendPrisms,recvPrisms,proc);
     }
 }
@@ -284,7 +283,7 @@ inline void Parfait::ParallelMeshReDistributor::shufflePrisms()
 inline void Parfait::ParallelMeshReDistributor::shuffleHexs()
 {
     vector<long> sendHexIds;
-    sendHexIds.reserve(8*ugrid.hexs.size());
+    sendHexIds.reserve(8* mesh->connectivity->hexes.size());
     for(int proc:range(nproc))
     {
         sendHexIds.clear();
@@ -293,12 +292,12 @@ inline void Parfait::ParallelMeshReDistributor::shuffleHexs()
             neededNodeIds = recvNodeIds;
         MessagePasser::Broadcast(neededNodeIds,proc);
         // loop over hexs
-        for(int i=0;i<ugrid.hexs.size()/8;i++)
+        for(int i=0;i< mesh->connectivity->hexes.size()/8;i++)
         {
             // check if proc owns any nodes in the hex
             for(int j:range(8))
             {
-                long globalId = ugrid.getGlobalNodeId(ugrid.hexs[8*i+j]);
+                long globalId = mesh->metaData->globalNodeIds[mesh->connectivity->hexes[8*i+j]];
                 if(binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalId))
                 {
                     sendHexIds.push_back(i);
@@ -310,28 +309,32 @@ inline void Parfait::ParallelMeshReDistributor::shuffleHexs()
         sendHexs.reserve(8*sendHexIds.size());
         for(auto id:sendHexIds)
             for(int j:range(8))
-                sendHexs.push_back(ugrid.getGlobalNodeId(ugrid.hexs[8*id+j]));
+                sendHexs.push_back(mesh->metaData->globalNodeIds[mesh->connectivity->hexes[8*id+j]]);
         MessagePasser::Gatherv(sendHexs,recvHexs,proc);
     }
 }
 
-inline Parfait::ParallelImportedUgrid Parfait::ParallelMeshReDistributor::createNewParallelUgrid() {
+inline std::shared_ptr<MeshBasicParallel> Parfait::ParallelMeshReDistributor::createNewParallelUgrid() {
     std::vector<int> ownership_degree(globalNodeIds.size(),0);
     std::fill(ownership_degree.begin()+recvNodeIds.size(),ownership_degree.end(),1);
 
     std::map<long,int> global_to_local;
-    for(int i=0;i<ugrid.globalNodeIds.size();i++)
-        global_to_local.insert(std::make_pair(ugrid.globalNodeIds[i],i));
+    for(int i=0;i< mesh->metaData->globalNodeIds.size();i++)
+        global_to_local.insert(std::make_pair(mesh->metaData->globalNodeIds[i],i));
 
-    return ParallelImportedUgrid(ugrid.globalNodeCount,globalNodeIds,ownership_degree,
-                                 recvAssociatedComponentIds, recvXYZ,
-                                 convertToLocalIds(global_to_local,recvTriangles),
-                                 convertToLocalIds(global_to_local,recvQuads),
-                                 convertToLocalIds(global_to_local,recvTets),
-                                 convertToLocalIds(global_to_local,recvPyramids),
-                                 convertToLocalIds(global_to_local,recvPrisms),
-                                 convertToLocalIds(global_to_local,recvHexs),
-                                 recvTriangleTags,recvQuadTags);
+    mesh->connectivity->triangles = convertToLocalIds(global_to_local,recvTriangles);
+    mesh->connectivity->quads = convertToLocalIds(global_to_local,recvQuads);
+    mesh->connectivity->tets = convertToLocalIds(global_to_local,recvTets);
+    mesh->connectivity->pyramids = convertToLocalIds(global_to_local,recvPyramids);
+    mesh->connectivity->prisms = convertToLocalIds(global_to_local,recvPrisms);
+    mesh->connectivity->hexes = convertToLocalIds(global_to_local,recvHexs);
+    mesh->metaData->xyz = recvXYZ;
+    mesh->metaData->nodeComponentIds = recvAssociatedComponentIds;
+    mesh->metaData->triangleTags = recvTriangleTags;
+    mesh->metaData->quadTags = recvQuadTags;
+    mesh->metaData->globalNodeIds = globalNodeIds;
+    mesh->metaData->nodeOwnershipDegree = ownership_degree;
+    return mesh;
 }
 
 inline void Parfait::ParallelMeshReDistributor::identifyGhostNodes() {

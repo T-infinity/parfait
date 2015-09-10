@@ -1,18 +1,21 @@
 #ifndef PARMETIS_PREPPER_H
 #define PARMETIS_PREPPER_H
 #include <vector>
+#include <memory>
+#include <MeshBasicParallel.h>
 
 namespace Parfait {
+  template <class Mesh>
     class Partitioner {
         template<class T> using vector = std::vector<T>;
     public:
         Partitioner() = delete;
-        Partitioner(ParallelImportedUgrid &mesh_in);
+        Partitioner(const Mesh & mesh_in);
 
         vector<int> generatePartVector();
         vector<vector<long>> connectivity;
     private:
-        ParallelImportedUgrid &mesh;
+        const Mesh& mesh;
 
         vector<long> buildProcNodeMap();
     };

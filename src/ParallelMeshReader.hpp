@@ -7,20 +7,23 @@
 #include <LinearPartitioner.h>
 #include "MessageBuilder.h"
 
-inline ParallelImportedUgrid Parfait::ParallelMeshReader::readDistributedGrid(std::string configurationFileName) {
+inline std::shared_ptr<MeshBasicParallel> Parfait::ParallelMeshReader::readDistributedGrid(
+        std::string configurationFileName) {
     ConfigurationReader configurationReader(configurationFileName);
     ParallelMeshReader reader(configurationReader.getGridFilenames(), configurationReader.getGridEndianness());
     return reader.distributeGridsEvenly();
 }
 
-inline ParallelImportedUgrid Parfait::ParallelMeshReader::readDistributedGrid(std::vector<std::string> gridFiles, std::vector<bool> isBigEndian){
+inline std::shared_ptr<MeshBasicParallel> Parfait::ParallelMeshReader::readDistributedGrid(
+        std::vector<std::string> gridFiles,
+        std::vector<bool> isBigEndian){
     ParallelMeshReader reader(gridFiles, isBigEndian);
     return reader.distributeGridsEvenly();
 }
 
 inline Parfait::ParallelMeshReader::ParallelMeshReader(std::vector<std::string> gridFiles_in,
                                                        std::vector<bool> isBigEndian_in)
-        : isBigEndian(isBigEndian_in) {
+        : isBigEndian(isBigEndian_in), mesh(std::make_shared<MeshBasicParallel>()) {
 
     gridFiles = gridFiles_in;
     int ngrid = (int) gridFiles.size();
@@ -85,32 +88,32 @@ inline void Parfait::ParallelMeshReader::mapNodesToLocalSpace() {
         globalToLocalId[globalNodeId] = localNodeId++;
     }
 
-    for(auto &id : myTriangles){
+    for(auto &id : mesh->connectivity->triangles){
         if(globalToLocalId.count(id) == 0)
             globalToLocalId[id] = localNodeId++;
         id = globalToLocalId[id];
     }
-    for(auto &id : myQuads){
+    for(auto &id : mesh->connectivity->quads){
         if(globalToLocalId.count(id) == 0)
             globalToLocalId[id] = localNodeId++;
         id = globalToLocalId[id];
     }
-    for(auto &id : myTets){
+    for(auto &id : mesh->connectivity->tets){
         if(globalToLocalId.count(id) == 0)
             globalToLocalId[id] = localNodeId++;
         id = globalToLocalId[id];
     }
-    for(auto &id : myPyramids){
+    for(auto &id : mesh->connectivity->pyramids){
         if(globalToLocalId.count(id) == 0)
             globalToLocalId[id] = localNodeId++;
         id = globalToLocalId[id];
     }
-    for(auto &id : myPrisms){
+    for(auto &id : mesh->connectivity->prisms){
         if(globalToLocalId.count(id) == 0)
             globalToLocalId[id] = localNodeId++;
         id = globalToLocalId[id];
     }
-    for(auto &id : myHexs){
+    for(auto &id : mesh->connectivity->hexes){
         if(globalToLocalId.count(id) == 0)
             globalToLocalId[id] = localNodeId++;
         id = globalToLocalId[id];
@@ -159,20 +162,20 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
         printf("Done Distributing ...\n");
 }
 void ParallelMeshReader::createNodeComponentIds() {
-    myNodeComponentIds = std::vector<int>(localToGlobalId.size());
+    mesh->metaData->nodeComponentIds = std::vector<int>(localToGlobalId.size());
     for(int localId = 0; localId < localToGlobalId.size(); localId++){
-        auto globalId = myGlobalNodeIds[localId];
+        auto globalId = mesh->metaData->globalNodeIds[localId];
         auto componentId = getOwningGridOfNode(globalId);
-        myNodeComponentIds[localId] = componentId;
+        mesh->metaData->nodeComponentIds[localId] = componentId;
     }
 }
 void ParallelMeshReader::createNodeOwnerships() {
-    myOwnershipDegree = std::vector<int>(myGlobalNodeIds.size());
+    mesh->metaData->nodeOwnershipDegree = std::vector<int>(mesh->metaData->globalNodeIds.size());
     for(int localId = 0; localId < localToGlobalId.size(); localId++){
-        if(localId < myNodes.size() / 3)
-            myOwnershipDegree[localId] = 0;
+        if(localId < mesh->metaData->xyz.size() / 3)
+            mesh->metaData->nodeOwnershipDegree[localId] = 0;
         else
-            myOwnershipDegree[localId] = 1;
+            mesh->metaData->nodeOwnershipDegree[localId] = 1;
     }
 }
 
@@ -198,26 +201,23 @@ inline void Parfait::ParallelMeshReader::buildDistributionMaps() {
     }
 }
 
-inline Parfait::ParallelImportedUgrid Parfait::ParallelMeshReader::distributeGridsEvenly() {
+inline std::shared_ptr<MeshBasicParallel> Parfait::ParallelMeshReader::distributeGridsEvenly() {
     distributeUgrid();
-
-    ParallelImportedUgrid ugrid(gridNodeMap.back(), myGlobalNodeIds, myOwnershipDegree, myNodeComponentIds, myNodes, myTriangles, myQuads, myTets,
-                                myPyramids, myPrisms, myHexs, myTriangleTags, myQuadTags);
-    return ugrid;
+    return mesh;
 }
 
 
 inline void Parfait::ParallelMeshReader::distributeNodes() {
     if(MessagePasser::Rank() == 0) {
         int nproc = MessagePasser::NumberOfProcesses();
-        myNodes = getNodes(0,procNodeMap[1]);
+        mesh->metaData->xyz = getNodes(0,procNodeMap[1]);
         for(int proc=1;proc<nproc;proc++) {
             vector<double> nodeBuffer = getNodes(procNodeMap[proc],procNodeMap[proc+1]);
             MessagePasser::Send(nodeBuffer,proc);
         }
     }
     else
-        MessagePasser::Recv(myNodes,0);
+        MessagePasser::Recv(mesh->metaData->xyz,0);
 }
 
 template <typename CellGetter, typename TagGetter, typename CellSaver>
@@ -382,9 +382,9 @@ void ParallelMeshReader::saveTriangle(std::vector<long> triangle){
     triangle.pop_back();
     if(triangle.size() != 3)
         throw std::logic_error("Trying to save a triangle with unexpected length.");
-    myTriangleTags.push_back(tag);
+    mesh->metaData->triangleTags.push_back(tag);
     for(auto id:triangle)
-        myTriangles.push_back(id);
+        mesh->connectivity->triangles.push_back(id);
 }
 
 void ParallelMeshReader::saveQuad(std::vector<long> quad){
@@ -392,25 +392,25 @@ void ParallelMeshReader::saveQuad(std::vector<long> quad){
     quad.pop_back();
     if(quad.size() != 4)
         throw std::logic_error("Trying to save a quad with unexpected length.");
-    myQuadTags.push_back(tag);
+    mesh->metaData->quadTags.push_back(tag);
     for(auto id:quad)
-        myQuads.push_back(id);
+        mesh->connectivity->quads.push_back(id);
 }
 void ParallelMeshReader::saveTet(const std::vector<long>& tet){
     for(auto id:tet)
-        myTets.push_back(id);
+        mesh->connectivity->tets.push_back(id);
 }
 void ParallelMeshReader::savePyramid(const std::vector<long>& pyramid){
     for(auto id:pyramid)
-        myPyramids.push_back(id);
+        mesh->connectivity->pyramids.push_back(id);
 }
 void ParallelMeshReader::savePrism(const std::vector<long>& prism){
     for(auto id:prism)
-        myPrisms.push_back(id);
+        mesh->connectivity->prisms.push_back(id);
 }
 void ParallelMeshReader::saveHex(const std::vector<long>& hex){
     for(auto id:hex)
-        myHexs.push_back(id);
+        mesh->connectivity->hexes.push_back(id);
 }
 
 int Parfait::ParallelMeshReader::getOwningProcOfNode(long id) {
@@ -859,6 +859,6 @@ inline int Parfait::ParallelMeshReader::numberOfGrids() const{
 
 inline void ParallelMeshReader::createLocalToGlobalNodeIdMap() {
     for(long localId = 0; localId < localToGlobalId.size(); localId++){
-        myGlobalNodeIds.push_back(localToGlobalId[localId]);
+        mesh->metaData->globalNodeIds.push_back(localToGlobalId[localId]);
     }
 }

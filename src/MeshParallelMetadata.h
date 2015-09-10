@@ -4,13 +4,15 @@
 #include <vector>
 
 namespace Parfait {
-    class MeshParallelMetadata {
+    class MeshParallelMetaData {
+    public:
         std::vector<double> xyz;
         std::vector<int> triangleTags;
         std::vector<int> quadTags;
 
         std::vector<long> globalNodeIds;
         std::vector<int> nodeOwnershipDegree;
+        std::vector<int> nodeComponentIds;
     };
 }
 
