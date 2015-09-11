@@ -13,6 +13,7 @@ set(SERIAL_TESTS_SOURCES
         catch_main.cpp
         AflrToCGNSTests.cpp
         CGNSToAflrTests.cpp
+        CGNSToFun3dTests.cpp
         parfait_mesh/ParfaitMesh_test.cpp
         connectivity/NodeToNodeTests.cpp
         CGNS_Ordering/CGNSEdgeTests.cpp
@@ -50,7 +51,6 @@ set(LEGACY_SERIAL_TESTS_SOURCES
         vectors/vector_tools_tests.cpp
         VtkExplodedViewWriter/VtkExplodedViewWriter_test.cpp
         CGNSToVtk_tests.cpp
-        CGNSToFun3d_tests.cpp
         VtkToCGNS_tests.cpp
         Fun3DToCGNS_tests.cpp
        )
