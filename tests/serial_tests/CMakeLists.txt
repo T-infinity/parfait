@@ -14,6 +14,7 @@ set(SERIAL_TESTS_SOURCES
         parfait_mesh/ParfaitMesh_test.cpp
         connectivity/NodeToNodeTests.cpp
         CGNS_Ordering/CGNSEdgeTests.cpp
+        cart_block/CartBlockTests.cpp
 )
 
 set(LEGACY_SERIAL_TESTS_SOURCES
@@ -28,7 +29,6 @@ set(LEGACY_SERIAL_TESTS_SOURCES
         adt/adt_3d_point_test.cpp
         adt/adt_test.cpp
         build_neighbors/build_neighbors_test.cpp
-        cart_block/CartBlockTests.cpp
         cart_mesh/cart_mesh_test.cpp
         edge_map/edge_map_test.cpp
         generic_mesh_tools/GenericMeshToolsTests.cpp

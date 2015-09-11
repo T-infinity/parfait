@@ -1,28 +1,17 @@
 #include "CartBlock.h"
 #include "Point.h"
 #include <cmath>
-#include "CppUTest/CommandLineTestRunner.h"
+
+#include "catch.hpp"
+
 using namespace Parfait;
 
-TEST_GROUP(CartBlockTests)
-{
-    double tol;
-	void setup()
-	{
-        tol = 1.0e-14;
-	}
-	void teardown()
-	{
-	}
-};
-
-TEST(CartBlockTests,Exists)
+TEST_CASE("CartBlockTestsExists")
 {
     CartBlock block;
 }
 
-TEST(CartBlockTests, DimensionCheck)
-{
+TEST_CASE("CartBlockTestsDimensionCheck"){
 
     double p1[3] = {1.0,2.0,3.0};
     double p2[3] = {2.2,3.2,4.2};
@@ -40,18 +29,16 @@ TEST(CartBlockTests, DimensionCheck)
     hi[1] = block.hi[1];
     hi[2] = block.hi[2];
 
-    CHECK_EQUAL(p1[0], lo[0]);
-    CHECK_EQUAL(p1[1], lo[1]);
-    CHECK_EQUAL(p1[2], lo[2]);
+    REQUIRE(p1[0] == Approx(lo[0]));
+    REQUIRE(p1[1] == Approx(lo[1]));
+    REQUIRE(p1[2] == Approx(lo[2]));
 
-    CHECK_EQUAL(p2[0], hi[0]);
-    CHECK_EQUAL(p2[1], hi[1]);
-    CHECK_EQUAL(p2[2], hi[2]);
+    REQUIRE(p2[0] == Approx(hi[0]));
+    REQUIRE(p2[1] == Approx(hi[1]));
+    REQUIRE(p2[2] == Approx(hi[2]));
 
 }
-
-TEST(CartBlockTests, Cells)
-{
+TEST_CASE("CartBlockTestsCells"){
     double p1[3] = {0.0,0.0,0.0};
     double p2[3] = {1.0,1.0,1.0};
 
@@ -60,23 +47,22 @@ TEST(CartBlockTests, Cells)
     int numCells_z = 10;
     CartBlock block(p1, p2, numCells_x, numCells_y, numCells_z);
     
-    DOUBLES_EQUAL(0.1, block.get_dx(), tol);
-    DOUBLES_EQUAL(0.2, block.get_dy(), tol);
-    DOUBLES_EQUAL(0.1, block.get_dz(), tol);
+    REQUIRE(0.1 == Approx(block.get_dx()));
+    REQUIRE(0.2 == Approx(block.get_dy()));
+    REQUIRE(0.1 == Approx(block.get_dz()));
 
-    CHECK_EQUAL(10, block.numberOfCells_X());
-    CHECK_EQUAL( 5, block.numberOfCells_Y());
-    CHECK_EQUAL(10, block.numberOfCells_Z());
+    REQUIRE(10 == block.numberOfCells_X());
+    REQUIRE( 5 == block.numberOfCells_Y());
+    REQUIRE(10 == block.numberOfCells_Z());
 
     int numberOfCells = 500;
-    CHECK_EQUAL(numberOfCells, block.numberOfCells());
+    REQUIRE(numberOfCells == block.numberOfCells());
 
     int numberOfNodes = 726;
-    CHECK_EQUAL(numberOfNodes, block.numberOfNodes());
+    REQUIRE(numberOfNodes == block.numberOfNodes());
 }
 
-TEST(CartBlockTests, NodeRetrieval)
-{
+TEST_CASE("CartBlockTestsNodeRetrieval"){
     double p1[3] = {1.0,2.0,3.0};
     double p2[3] = {2.2,3.2,4.2};
 
@@ -97,13 +83,13 @@ TEST(CartBlockTests, NodeRetrieval)
     p4[2] = block.lo[2];
 	block.getNode(0,p5);
 
-    DOUBLES_EQUAL(1.0, p4[0], tol);
-    DOUBLES_EQUAL(2.0, p4[1], tol);
-    DOUBLES_EQUAL(3.0, p4[2], tol);
+    REQUIRE(1.0 == Approx(p4[0]));
+    REQUIRE(2.0 == Approx(p4[1]));
+    REQUIRE(3.0 == Approx(p4[2]));
 
-    DOUBLES_EQUAL(1.0, p5[0], tol);
-    DOUBLES_EQUAL(2.0, p5[1], tol);
-    DOUBLES_EQUAL(3.0, p5[2], tol);
+    REQUIRE(1.0 == Approx(p5[0]));
+    REQUIRE(2.0 == Approx(p5[1]));
+    REQUIRE(3.0 == Approx(p5[2]));
 
 	//block.get_hi_point(p4);
     p4[0] = block.hi[0];
@@ -111,13 +97,13 @@ TEST(CartBlockTests, NodeRetrieval)
     p4[2] = block.hi[2];
 	block.getNode(numNodes-1,p5);
 
-    DOUBLES_EQUAL(2.2, p4[0], tol);
-    DOUBLES_EQUAL(3.2, p4[1], tol);
-    DOUBLES_EQUAL(4.2, p4[2], tol);
+    REQUIRE(2.2 ==Approx(p4[0]));
+    REQUIRE(3.2 ==Approx(p4[1]));
+    REQUIRE(4.2 ==Approx(p4[2]));
 
-    DOUBLES_EQUAL(2.2, p5[0], tol);
-    DOUBLES_EQUAL(3.2, p5[1], tol);
-    DOUBLES_EQUAL(4.2, p5[2], tol);
+    REQUIRE(2.2 == Approx(p5[0]));
+    REQUIRE(3.2 == Approx(p5[1]));
+    REQUIRE(4.2 == Approx(p5[2]));
 
 	//block.get_hi_point(p4);
     p4[0] = block.hi[0];
@@ -127,12 +113,13 @@ TEST(CartBlockTests, NodeRetrieval)
 	p4[2] -= block.getLength_Z();
 	block.getNode(numCells_x+numNodes_x*(numCells_y),p5);
 
-    DOUBLES_EQUAL(2.2, p4[0], tol);
-    DOUBLES_EQUAL(3.2, p4[1], tol);
-    DOUBLES_EQUAL(3.0, p4[2], tol);
+    REQUIRE(2.2 == Approx(p4[0]));
+    REQUIRE(3.2 == Approx(p4[1]));
+    REQUIRE(3.0 == Approx(p4[2]));
 }
 
-TEST(CartBlockTests, LegacyTests){
+
+TEST_CASE("CartBlockTestsLegacyTests"){
 
 	double p1[3],p2[3],p3[3],extent[6];
 	p1[0] = 1.0;
@@ -173,31 +160,31 @@ TEST(CartBlockTests, LegacyTests){
 	dx[0] = a.get_dx();
 	dx[1] = b.get_dx();
 	dx[2] = c.get_dx();
-	assert(fabs(dx[0] - dx[1]) < tol);
-	assert(fabs(dx[0] - dx[2]) < tol);	
+	REQUIRE(fabs(dx[0] - dx[1]) < tol);
+	REQUIRE(fabs(dx[0] - dx[2]) < tol);
 	dy[0] = a.get_dy();
 	dy[1] = b.get_dy();
 	dy[2] = c.get_dy();
-	assert(fabs(dy[0] - dy[1]) < tol);
-	assert(fabs(dy[0] - dy[2]) < tol);	
+	REQUIRE(fabs(dy[0] - dy[1]) < tol);
+	REQUIRE(fabs(dy[0] - dy[2]) < tol);
 	dz[0] = a.get_dz();
 	dz[1] = b.get_dz();
 	dz[2] = c.get_dz();
-	assert(fabs(dz[0] - dz[1]) < tol);
-	assert(fabs(dz[0] - dz[2]) < tol);
+	REQUIRE(fabs(dz[0] - dz[1]) < tol);
+	REQUIRE(fabs(dz[0] - dz[2]) < tol);
 
 	double my_dx,my_dy,my_dz;
 	my_dx = (p2[0] - p1[0])/(double)ncells_x;
 	my_dy = (p2[1] - p1[1])/(double)ncells_y;
 	my_dz = (p2[2] - p1[2])/(double)ncells_z;
-	assert(fabs(my_dx-dx[0]) < tol);
-	assert(fabs(my_dy-dy[0]) < tol);
-	assert(fabs(my_dz-dz[0]) < tol);
+	REQUIRE(fabs(my_dx-dx[0]) < tol);
+	REQUIRE(fabs(my_dy-dy[0]) < tol);
+	REQUIRE(fabs(my_dz-dz[0]) < tol);
 
 	int my_ncells = ncells_x*ncells_y*ncells_z;
-    CHECK_EQUAL(my_ncells, a.numberOfCells());
+    REQUIRE(my_ncells == a.numberOfCells());
 	int my_nnodes = (ncells_x+1)*(ncells_y+1)*(ncells_z+1);
-    CHECK_EQUAL(my_nnodes, a.numberOfNodes());
+    REQUIRE(my_nnodes == a.numberOfNodes());
 
 	// this also relies on the centroid being in the right cell
 	int cell_id = a.getIdOfContainingCell(p3);
@@ -205,14 +192,14 @@ TEST(CartBlockTests, LegacyTests){
 	auto cell = a.createExtentFromCell(cell_id);
 	//cell.get_lo_point(lo);
 	//cell.get_hi_point(hi);
-	assert(cell.contains(Point<double>(p3)));
+	REQUIRE(cell.contains(Point<double>(p3)));
 
 	std::vector<int> ids;
 	// make a box around the whole mesh, and make sure you get
 	// all the cells
 	Extent<double> query_box(p1,p2);
 	ids = a.getCellIdsInExtent(query_box);
-	assert(my_ncells == (int)ids.size());
+	REQUIRE(my_ncells == (int)ids.size());
 	
 	// make a box that does not overlap the mesh and assert that it returns no cells
 	extent[0] = -10.0;
@@ -225,14 +212,14 @@ TEST(CartBlockTests, LegacyTests){
     query_box = Extent<double>(extent);
 	ids = a.getCellIdsInExtent(query_box);
 
-	assert((int)ids.size() == 0);
+	REQUIRE((int)ids.size() == 0);
 
 	// make a box bigger than the mesh and make sure it returns all of them
 	extent[3] = 10.0;
 	//query_box.resize(extent);
     query_box = Extent<double>(extent);
 	ids = a.getCellIdsInExtent(query_box);
-	assert(my_ncells == (int)ids.size());
+	REQUIRE(my_ncells == (int)ids.size());
 
 	// make a box that only touches the -z face
 	extent[3] = 10.0;
@@ -240,7 +227,7 @@ TEST(CartBlockTests, LegacyTests){
 	//query_box.resize(extent);
     query_box = Extent<double>(extent);
 	ids = a.getCellIdsInExtent(query_box);
-	assert(ncells_x*ncells_y == (int)ids.size());
+	REQUIRE((ncells_x*ncells_y) == (int)ids.size());
 
 	// make a box that only touches the +z face
 	extent[5] = 10.0;
@@ -248,7 +235,7 @@ TEST(CartBlockTests, LegacyTests){
 	//query_box.resize(extent);
     query_box = Extent<double>(extent);
 	ids = a.getCellIdsInExtent(query_box);
-	assert(ncells_x*ncells_y == (int)ids.size());
+	REQUIRE((ncells_x*ncells_y) == (int)ids.size());
 	
 	// make a box that only touches the -x face
 	extent[2] = -10.0;
@@ -256,7 +243,7 @@ TEST(CartBlockTests, LegacyTests){
 	//query_box.resize(extent);
     query_box = Extent<double>(extent);
 	ids = a.getCellIdsInExtent(query_box);
-	assert(ncells_z*ncells_y == (int)ids.size());
+	REQUIRE((ncells_z*ncells_y) == (int)ids.size());
 
 	// make a box that only touches the +x face
 	extent[3] = 10.0;
@@ -264,7 +251,7 @@ TEST(CartBlockTests, LegacyTests){
 	//query_box.resize(extent);
     query_box = Extent<double>(extent);
 	ids = a.getCellIdsInExtent(query_box);
-	assert(ncells_z*ncells_y == (int)ids.size());
+	REQUIRE((ncells_z*ncells_y) == (int)ids.size());
 	
 	// make a box that only touches the -y face
 	extent[0] = -10.0;
@@ -272,7 +259,7 @@ TEST(CartBlockTests, LegacyTests){
 	//query_box.resize(extent);
     query_box = Extent<double>(extent);
 	ids = a.getCellIdsInExtent(query_box);
-	assert(ncells_z*ncells_x == (int)ids.size());
+	REQUIRE((ncells_z*ncells_x) == (int)ids.size());
 	
 	// make a box that only touches the +y face
 	extent[4] = 10.0;
@@ -280,7 +267,7 @@ TEST(CartBlockTests, LegacyTests){
 	//query_box.resize(extent);
     query_box = Extent<double>(extent);
 	ids = a.getCellIdsInExtent(query_box);
-	assert(ncells_z*ncells_x == (int)ids.size());
+	REQUIRE((ncells_z*ncells_x) == (int)ids.size());
 		
 	double p4[3],p5[3];
 	// check that node 0 returns the coords of the lo point
@@ -289,18 +276,18 @@ TEST(CartBlockTests, LegacyTests){
     p4[1] = a.lo[1];
     p4[2] = a.lo[2];
 	a.getNode(0,p5);
-	assert(fabs(p5[0]-p4[0]) < 1.0e-15);
-	assert(fabs(p5[1]-p4[1]) < 1.0e-15);
-	assert(fabs(p5[2]-p4[2]) < 1.0e-15);
+	REQUIRE(fabs(p5[0]-p4[0]) < 1.0e-15);
+	REQUIRE(fabs(p5[1]-p4[1]) < 1.0e-15);
+	REQUIRE(fabs(p5[2]-p4[2]) < 1.0e-15);
 	// same check for hi point
 	//a.get_hi_point(p4);
     p4[0] = a.hi[0];
     p4[1] = a.hi[1];
     p4[2] = a.hi[2];
 	a.getNode(my_nnodes-1,p5);
-	assert(fabs(p5[0]-p4[0]) < 1.0e-15);
-	assert(fabs(p5[1]-p4[1]) < 1.0e-15);
-	assert(fabs(p5[2]-p4[2]) < 1.0e-15);
+	REQUIRE(fabs(p5[0]-p4[0]) < 1.0e-15);
+	REQUIRE(fabs(p5[1]-p4[1]) < 1.0e-15);
+	REQUIRE(fabs(p5[2]-p4[2]) < 1.0e-15);
 
 	// check other corners
 	//a.get_hi_point(p4);
@@ -309,9 +296,9 @@ TEST(CartBlockTests, LegacyTests){
     p4[2] = a.hi[2];
 	p4[2] -= a.getLength_Z();
 	a.getNode(ncells_x+nnodes_x*(ncells_y),p5);
-	assert(fabs(p5[0]-p4[0]) < 1.0e-15);
-	assert(fabs(p5[1]-p4[1]) < 1.0e-15);
-	assert(fabs(p5[2]-p4[2]) < 1.0e-15);
+	REQUIRE(fabs(p5[0]-p4[0]) < 1.0e-15);
+	REQUIRE(fabs(p5[1]-p4[1]) < 1.0e-15);
+	REQUIRE(fabs(p5[2]-p4[2]) < 1.0e-15);
 	// check other corners
 	//a.get_hi_point(p4);
     p4[0] = a.hi[0];
@@ -322,9 +309,9 @@ TEST(CartBlockTests, LegacyTests){
 	p4[2] -= a.getLength_Z();
 	p4[1] -= a.getLength_Y();
 	a.getNode(ncells_x,p5);
-	assert(fabs(p5[0]-p4[0]) < 1.0e-15);
-	assert(fabs(p5[1]-p4[1]) < 1.0e-15);
-	assert(fabs(p5[2]-p4[2]) < 1.0e-15);
+	REQUIRE(fabs(p5[0]-p4[0]) < 1.0e-15);
+	REQUIRE(fabs(p5[1]-p4[1]) < 1.0e-15);
+	REQUIRE(fabs(p5[2]-p4[2]) < 1.0e-15);
 	// check other corners
 	//a.get_hi_point(p4);
     p4[0] = a.hi[0];
@@ -332,9 +319,9 @@ TEST(CartBlockTests, LegacyTests){
     p4[2] = a.hi[2];
 	p4[1] -= a.getLength_Y();
 	a.getNode(ncells_x+nnodes_x*nnodes_y*ncells_z,p5);
-	assert(fabs(p5[0]-p4[0]) < 1.0e-15);
-	assert(fabs(p5[1]-p4[1]) < 1.0e-15);
-	assert(fabs(p5[2]-p4[2]) < 1.0e-15);
+	REQUIRE(fabs(p5[0]-p4[0]) < 1.0e-15);
+	REQUIRE(fabs(p5[1]-p4[1]) < 1.0e-15);
+	REQUIRE(fabs(p5[2]-p4[2]) < 1.0e-15);
 	// check other corners
 	//a.get_hi_point(p4);
     p4[0] = a.hi[0];
@@ -342,9 +329,9 @@ TEST(CartBlockTests, LegacyTests){
     p4[2] = a.hi[2];
 	p4[0] -= a.getLength_X();
 	a.getNode(nnodes_x*ncells_y+nnodes_x*nnodes_y*ncells_z,p5);
-	assert(fabs(p5[0]-p4[0]) < 1.0e-15);
-	assert(fabs(p5[1]-p4[1]) < 1.0e-15);
-	assert(fabs(p5[2]-p4[2]) < 1.0e-15);
+	REQUIRE(fabs(p5[0]-p4[0]) < 1.0e-15);
+	REQUIRE(fabs(p5[1]-p4[1]) < 1.0e-15);
+	REQUIRE(fabs(p5[2]-p4[2]) < 1.0e-15);
 	// check other corners
 	//a.get_hi_point(p4);
     p4[0] = a.hi[0];
@@ -353,9 +340,9 @@ TEST(CartBlockTests, LegacyTests){
 	p4[0] -= a.getLength_X();
 	p4[1] -= a.getLength_Y();
 	a.getNode(nnodes_x*nnodes_y*ncells_z,p5);
-	assert(fabs(p5[0]-p4[0]) < 1.0e-15);
-	assert(fabs(p5[1]-p4[1]) < 1.0e-15);
-	assert(fabs(p5[2]-p4[2]) < 1.0e-15);
+	REQUIRE(fabs(p5[0]-p4[0]) < 1.0e-15);
+	REQUIRE(fabs(p5[1]-p4[1]) < 1.0e-15);
+	REQUIRE(fabs(p5[2]-p4[2]) < 1.0e-15);
 	// check other corners
 	//a.get_hi_point(p4);
     p4[0] = a.hi[0];
@@ -364,8 +351,8 @@ TEST(CartBlockTests, LegacyTests){
 	p4[0] -= a.getLength_X();
 	p4[2] -= a.getLength_Z();
 	a.getNode(nnodes_x*ncells_y,p5);
-	assert(fabs(p5[0]-p4[0]) < 1.0e-15);
-	assert(fabs(p5[1]-p4[1]) < 1.0e-15);
-	assert(fabs(p5[2]-p4[2]) < 1.0e-15);
+	REQUIRE(fabs(p5[0]-p4[0]) < 1.0e-15);
+	REQUIRE(fabs(p5[1]-p4[1]) < 1.0e-15);
+	REQUIRE(fabs(p5[2]-p4[2]) < 1.0e-15);
 
 }
