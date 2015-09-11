@@ -15,29 +15,29 @@ set(SERIAL_TESTS_SOURCES
         adt/Adt3DPointTests.cpp
         adt/AdtTests.cpp
         AflrToCGNSTests.cpp
+        cart_block/CartBlockSliceTests.cpp
+        cart_block/CartBlockTests.cpp
+        CGNS_Ordering/CGNSEdgeTests.cpp
         CGNSToAflrTests.cpp
         CGNSToFun3dTests.cpp
         CGNSToVtkTests.cpp
+        connectivity/NodeToNodeTests.cpp
         edge_map/EdgeMapTests.cpp
         extent/ExtentBuilderTests.cpp
         extent/ExtentTests.cpp
-        range_loop/RangeLoopTests.cpp
-        VtkToCGNSTests.cpp
         Fun3DToCGNSTests.cpp
-        parfait_mesh/ParfaitMesh_test.cpp
-        connectivity/NodeToNodeTests.cpp
-        CGNS_Ordering/CGNSEdgeTests.cpp
-        cart_block/CartBlockTests.cpp
-        cart_block/CartBlockSliceTests.cpp
-        point/PointTest.cpp
-        vectors/VectorToolsTests.cpp
         LinearPartitioner/LinearPartitionerTests.cpp
+        parfait_mesh/ParfaitMesh_test.cpp
+        point/PointTest.cpp
+        range_loop/RangeLoopTests.cpp
         vectors/LegacyArrayTests.cpp
+        vectors/VectorToolsTests.cpp
+        VtkSliceWriterTests.cpp
+        VtkToCGNSTests.cpp
 )
 
 set(LEGACY_SERIAL_TESTS_SOURCES
         AllTests.cpp  
-        vtk_slice_writer_tests.cpp
         VtkFieldTests/VtkFieldTests.cpp
         VtkGenericTests/VtkGenericTests.cpp
         VtkSurfaceTests/VtkSurfaceTests.cpp

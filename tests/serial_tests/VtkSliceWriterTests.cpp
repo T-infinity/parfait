@@ -1,3 +1,4 @@
+#include <catch.hpp>
 
 #include "MeshSlice.h"
 #include "Extent.h"
@@ -7,19 +8,15 @@
 #include "VtkGenericWriter.h"
 #include "GenericMeshTools.h"
 
-#include "CppUTest/CommandLineTestRunner.h"
 using namespace Parfait;
-TEST_GROUP(VtkSliceWriter) {
 
-};
-
-TEST(VtkSliceWriter, Exists) {
+TEST_CASE("VtkSliceWriter, Exists") {
     CartMesh cartMesh({0, 0, 0}, {1, 1, 1}, 10, 10, 10);
 
     Extent<double> domain({.49, 0, 0}, {.49, 1, 1});
 }
 
-TEST(VtkSliceWriter, CellCenterData_double){
+TEST_CASE("VtkSliceWriter, CellCenterData_double"){
 
     CartMesh cartMesh({0, 0, 0}, {1, 1, 1}, 10, 10, 10);
     Extent<double> domain({.49, 0, 0}, {.49, 1, 1});
@@ -44,7 +41,7 @@ TEST(VtkSliceWriter, CellCenterData_double){
     }
 }
 
-TEST(VtkSliceWriter, CellCenterData_float){
+TEST_CASE("VtkSliceWriter, CellCenterData_float"){
 
     CartMesh cartMesh({0, 0, 0}, {1, 1, 1}, 10, 10, 10);
     Extent<double> domain({.49, 0, 0}, {.49, 1, 1});
@@ -69,7 +66,7 @@ TEST(VtkSliceWriter, CellCenterData_float){
     }
 }
 
-TEST(VtkSliceWriter, CellCenterData_int){
+TEST_CASE("VtkSliceWriter, CellCenterData_int"){
 
     CartMesh cartMesh({0, 0, 0}, {1, 1, 1}, 10, 10, 10);
     Extent<double> domain({.49, 0, 0}, {.49, 1, 1});
@@ -93,7 +90,7 @@ TEST(VtkSliceWriter, CellCenterData_int){
     }
 }
 
-TEST(VtkSliceWriter, NodeCenterData_double){
+TEST_CASE("VtkSliceWriter, NodeCenterData_double"){
 
     CartMesh cartMesh({0, 0, 0}, {1, 1, 1}, 10, 10, 10);
     Extent<double> domain({.49, 0, 0}, {.49, 1, 1});
@@ -120,7 +117,7 @@ TEST(VtkSliceWriter, NodeCenterData_double){
     }
 }
 
-TEST(VtkSliceWriter, NodeCenterData_float){
+TEST_CASE("VtkSliceWriter, NodeCenterData_float"){
 
     CartMesh cartMesh({0, 0, 0}, {1, 1, 1}, 10, 10, 10);
     Extent<double> domain({.49, 0, 0}, {.49, 1, 1});
@@ -147,7 +144,7 @@ TEST(VtkSliceWriter, NodeCenterData_float){
     }
 }
 
-TEST(VtkSliceWriter, NodeCenterData_int){
+TEST_CASE("VtkSliceWriter, NodeCenterData_int"){
     CartMesh cartMesh({0, 0, 0}, {1, 1, 1}, 10, 10, 10);
 
     Extent<double> domain({.49, 0, 0}, {.49, 1, 1});
@@ -172,7 +169,7 @@ TEST(VtkSliceWriter, NodeCenterData_int){
     }
 }
 
-TEST(VtkSliceWriter, JustWriteSliceMesh){
+TEST_CASE("VtkSliceWriter, JustWriteSliceMesh"){
 
     CartMesh cartMesh({0, 0, 0}, {1, 1, 1}, 10, 10, 10);
     std::vector<double> myData(cartMesh.numberOfCells(), 0);
