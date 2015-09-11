@@ -3,7 +3,7 @@
 
 #include <memory>
 #include "MeshConnectivity.h"
-#include "MeshParallelMetaData.h"
+#include "MeshParallelMetadata.h"
 
 namespace Parfait {
     class MeshBasicParallel {
