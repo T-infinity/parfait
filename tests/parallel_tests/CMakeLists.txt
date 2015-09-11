@@ -32,6 +32,7 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         AsyncSends_tests.cpp
         SelfSend_test.cpp
         PreProcessor/ParallelNodeToNodeTests.cpp
+        PreProcessor/NodeCenteredRedistributorTests.cpp
        )
 
 add_executable(LegacyParallelTests AllTests.cpp message_passer_tests.cpp)

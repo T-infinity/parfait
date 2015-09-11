@@ -35,6 +35,6 @@ namespace Parfait{
       if(MessagePasser::Rank() == 0)
           printf("Redistribute according to new partitioning:\n");
       ParallelMeshReDistributor distributor(mesh,part);
-      return distributor.createNewParallelUgrid();
+      return distributor.redistribute();
   }
 }
