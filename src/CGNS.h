@@ -7,7 +7,7 @@ namespace Parfait {
         constexpr int numberOfEdges() {
             return 6;
         }
-        constexpr std::array<int,2> getEdge(int edge){
+        inline std::array<int,2> getEdge(int edge){
             switch (edge) {
                 case 0: return {0,1};
                 case 1: return {1,2};
@@ -27,7 +27,7 @@ namespace Parfait {
         constexpr int numberOfEdges() {
             return 8;
         }
-        constexpr std::array<int,2> getEdge(int edge){
+        inline std::array<int,2> getEdge(int edge){
             switch (edge) {
                 case 0: return {0,1};
                 case 1: return {1,2};
@@ -49,7 +49,7 @@ namespace Parfait {
         constexpr int numberOfEdges() {
             return 9;
         }
-        constexpr std::array<int,2> getEdge(int edge){
+        inline std::array<int,2> getEdge(int edge){
             switch (edge) {
                 case 0: return {0,1};
                 case 1: return {1,2};
@@ -72,7 +72,7 @@ namespace Parfait {
         constexpr int numberOfEdges() {
             return 12;
         }
-        constexpr std::array<int,2> getEdge(int edge){
+        inline std::array<int,2> getEdge(int edge){
             switch (edge) {
                 case 0: return {0,1};
                 case 1: return {1,2};

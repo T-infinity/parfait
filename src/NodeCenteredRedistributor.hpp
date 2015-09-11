@@ -119,7 +119,6 @@ namespace Parfait {
                   }
               }
           }
-          PARALLEL_CHECKPOINT
           vector<long> sendTriangles;
           vector<int> sendTriangleTags;
           for (auto &localCellId:sendTriangleIds) {
@@ -130,12 +129,9 @@ namespace Parfait {
                   sendTriangles.push_back(globalId);
               }
           }
-          PARALLEL_CHECKPOINT
           vector<int> tmpMap;
           MessagePasser::Gatherv(sendTriangles, recvTriangles, tmpMap, proc);
-          PARALLEL_CHECKPOINT
           MessagePasser::Gatherv(sendTriangleTags, recvTriangleTags, tmpMap, proc);
-          PARALLEL_CHECKPOINT
       }
   }
 

@@ -6,17 +6,12 @@
 
 using namespace Parfait;
 
-TEST_CASE("CartBlockTestsExists")
-{
-    CartBlock block;
-}
-
 TEST_CASE("CartBlockTestsDimensionCheck"){
 
     double p1[3] = {1.0,2.0,3.0};
     double p2[3] = {2.2,3.2,4.2};
 
-	CartBlock block(p1,p2);
+	CartBlock block(p1,p2,1,1,1);
     double lo[3];
     double hi[3];
     //block.get_lo_point(lo);
@@ -147,49 +142,13 @@ TEST_CASE("CartBlockTestsLegacyTests"){
 	nnodes_x = ncells_x+1;
 	nnodes_y = ncells_y+1;
 	nnodes_z = ncells_z+1;
-	CartBlock a(p1,p2);
-	CartBlock b(extent);
 	CartBlock c(p1,p2,ncells_x,ncells_y,ncells_z);
 	CartBlock d(extent,ncells_x,ncells_y,ncells_z);
 
-	a.setDimensions(ncells_x,ncells_y,ncells_z);
-	b.setDimensions(ncells_x,ncells_y,ncells_z);
-
-	double tol = 1.0e-15;
-	double dx[4],dy[4],dz[4];
-	dx[0] = a.get_dx();
-	dx[1] = b.get_dx();
-	dx[2] = c.get_dx();
-	REQUIRE(fabs(dx[0] - dx[1]) < tol);
-	REQUIRE(fabs(dx[0] - dx[2]) < tol);
-	dy[0] = a.get_dy();
-	dy[1] = b.get_dy();
-	dy[2] = c.get_dy();
-	REQUIRE(fabs(dy[0] - dy[1]) < tol);
-	REQUIRE(fabs(dy[0] - dy[2]) < tol);
-	dz[0] = a.get_dz();
-	dz[1] = b.get_dz();
-	dz[2] = c.get_dz();
-	REQUIRE(fabs(dz[0] - dz[1]) < tol);
-	REQUIRE(fabs(dz[0] - dz[2]) < tol);
-
-	double my_dx,my_dy,my_dz;
-	my_dx = (p2[0] - p1[0])/(double)ncells_x;
-	my_dy = (p2[1] - p1[1])/(double)ncells_y;
-	my_dz = (p2[2] - p1[2])/(double)ncells_z;
-	REQUIRE(fabs(my_dx-dx[0]) < tol);
-	REQUIRE(fabs(my_dy-dy[0]) < tol);
-	REQUIRE(fabs(my_dz-dz[0]) < tol);
-
-	int my_ncells = ncells_x*ncells_y*ncells_z;
-    REQUIRE(my_ncells == a.numberOfCells());
-	int my_nnodes = (ncells_x+1)*(ncells_y+1)*(ncells_z+1);
-    REQUIRE(my_nnodes == a.numberOfNodes());
-
 	// this also relies on the centroid being in the right cell
-	int cell_id = a.getIdOfContainingCell(p3);
+	int cell_id = c.getIdOfContainingCell(p3);
 	double lo[3],hi[3];
-	auto cell = a.createExtentFromCell(cell_id);
+	auto cell = c.createExtentFromCell(cell_id);
 	//cell.get_lo_point(lo);
 	//cell.get_hi_point(hi);
 	REQUIRE(cell.contains(Point<double>(p3)));
@@ -198,8 +157,8 @@ TEST_CASE("CartBlockTestsLegacyTests"){
 	// make a box around the whole mesh, and make sure you get
 	// all the cells
 	Extent<double> query_box(p1,p2);
-	ids = a.getCellIdsInExtent(query_box);
-	REQUIRE(my_ncells == (int)ids.size());
+	ids = c.getCellIdsInExtent(query_box);
+	REQUIRE((ncells_x*ncells_y*ncells_z) == (int)ids.size());
 	
 	// make a box that does not overlap the mesh and assert that it returns no cells
 	extent[0] = -10.0;
@@ -210,7 +169,7 @@ TEST_CASE("CartBlockTestsLegacyTests"){
 	extent[5] = 10.0;
 	//query_box.resize(extent);
     query_box = Extent<double>(extent);
-	ids = a.getCellIdsInExtent(query_box);
+	ids = c.getCellIdsInExtent(query_box);
 
 	REQUIRE((int)ids.size() == 0);
 
@@ -218,15 +177,15 @@ TEST_CASE("CartBlockTestsLegacyTests"){
 	extent[3] = 10.0;
 	//query_box.resize(extent);
     query_box = Extent<double>(extent);
-	ids = a.getCellIdsInExtent(query_box);
-	REQUIRE(my_ncells == (int)ids.size());
+	ids = c.getCellIdsInExtent(query_box);
+	REQUIRE((ncells_x*ncells_y*ncells_z) == (int)ids.size());
 
 	// make a box that only touches the -z face
 	extent[3] = 10.0;
 	extent[5] = p1[2];
 	//query_box.resize(extent);
     query_box = Extent<double>(extent);
-	ids = a.getCellIdsInExtent(query_box);
+	ids = c.getCellIdsInExtent(query_box);
 	REQUIRE((ncells_x*ncells_y) == (int)ids.size());
 
 	// make a box that only touches the +z face
@@ -234,7 +193,7 @@ TEST_CASE("CartBlockTestsLegacyTests"){
 	extent[2] = p2[2];
 	//query_box.resize(extent);
     query_box = Extent<double>(extent);
-	ids = a.getCellIdsInExtent(query_box);
+	ids = c.getCellIdsInExtent(query_box);
 	REQUIRE((ncells_x*ncells_y) == (int)ids.size());
 	
 	// make a box that only touches the -x face
@@ -242,7 +201,7 @@ TEST_CASE("CartBlockTestsLegacyTests"){
 	extent[3] = p1[0];
 	//query_box.resize(extent);
     query_box = Extent<double>(extent);
-	ids = a.getCellIdsInExtent(query_box);
+	ids = c.getCellIdsInExtent(query_box);
 	REQUIRE((ncells_z*ncells_y) == (int)ids.size());
 
 	// make a box that only touches the +x face
@@ -250,7 +209,7 @@ TEST_CASE("CartBlockTestsLegacyTests"){
 	extent[0] = p2[0];
 	//query_box.resize(extent);
     query_box = Extent<double>(extent);
-	ids = a.getCellIdsInExtent(query_box);
+	ids = c.getCellIdsInExtent(query_box);
 	REQUIRE((ncells_z*ncells_y) == (int)ids.size());
 	
 	// make a box that only touches the -y face
@@ -258,7 +217,7 @@ TEST_CASE("CartBlockTestsLegacyTests"){
 	extent[4] = p1[1];
 	//query_box.resize(extent);
     query_box = Extent<double>(extent);
-	ids = a.getCellIdsInExtent(query_box);
+	ids = c.getCellIdsInExtent(query_box);
 	REQUIRE((ncells_z*ncells_x) == (int)ids.size());
 	
 	// make a box that only touches the +y face
@@ -266,93 +225,7 @@ TEST_CASE("CartBlockTestsLegacyTests"){
 	extent[1] = p2[1];
 	//query_box.resize(extent);
     query_box = Extent<double>(extent);
-	ids = a.getCellIdsInExtent(query_box);
+	ids = c.getCellIdsInExtent(query_box);
 	REQUIRE((ncells_z*ncells_x) == (int)ids.size());
 		
-	double p4[3],p5[3];
-	// check that node 0 returns the coords of the lo point
-	//a.get_lo_point(p4);
-    p4[0] = a.lo[0];
-    p4[1] = a.lo[1];
-    p4[2] = a.lo[2];
-	a.getNode(0,p5);
-	REQUIRE(fabs(p5[0]-p4[0]) < 1.0e-15);
-	REQUIRE(fabs(p5[1]-p4[1]) < 1.0e-15);
-	REQUIRE(fabs(p5[2]-p4[2]) < 1.0e-15);
-	// same check for hi point
-	//a.get_hi_point(p4);
-    p4[0] = a.hi[0];
-    p4[1] = a.hi[1];
-    p4[2] = a.hi[2];
-	a.getNode(my_nnodes-1,p5);
-	REQUIRE(fabs(p5[0]-p4[0]) < 1.0e-15);
-	REQUIRE(fabs(p5[1]-p4[1]) < 1.0e-15);
-	REQUIRE(fabs(p5[2]-p4[2]) < 1.0e-15);
-
-	// check other corners
-	//a.get_hi_point(p4);
-    p4[0] = a.hi[0];
-    p4[1] = a.hi[1];
-    p4[2] = a.hi[2];
-	p4[2] -= a.getLength_Z();
-	a.getNode(ncells_x+nnodes_x*(ncells_y),p5);
-	REQUIRE(fabs(p5[0]-p4[0]) < 1.0e-15);
-	REQUIRE(fabs(p5[1]-p4[1]) < 1.0e-15);
-	REQUIRE(fabs(p5[2]-p4[2]) < 1.0e-15);
-	// check other corners
-	//a.get_hi_point(p4);
-    p4[0] = a.hi[0];
-    p4[1] = a.hi[1];
-    p4[2] = a.hi[2];
-
-    p4[0] = a.hi[0];
-	p4[2] -= a.getLength_Z();
-	p4[1] -= a.getLength_Y();
-	a.getNode(ncells_x,p5);
-	REQUIRE(fabs(p5[0]-p4[0]) < 1.0e-15);
-	REQUIRE(fabs(p5[1]-p4[1]) < 1.0e-15);
-	REQUIRE(fabs(p5[2]-p4[2]) < 1.0e-15);
-	// check other corners
-	//a.get_hi_point(p4);
-    p4[0] = a.hi[0];
-    p4[1] = a.hi[1];
-    p4[2] = a.hi[2];
-	p4[1] -= a.getLength_Y();
-	a.getNode(ncells_x+nnodes_x*nnodes_y*ncells_z,p5);
-	REQUIRE(fabs(p5[0]-p4[0]) < 1.0e-15);
-	REQUIRE(fabs(p5[1]-p4[1]) < 1.0e-15);
-	REQUIRE(fabs(p5[2]-p4[2]) < 1.0e-15);
-	// check other corners
-	//a.get_hi_point(p4);
-    p4[0] = a.hi[0];
-    p4[1] = a.hi[1];
-    p4[2] = a.hi[2];
-	p4[0] -= a.getLength_X();
-	a.getNode(nnodes_x*ncells_y+nnodes_x*nnodes_y*ncells_z,p5);
-	REQUIRE(fabs(p5[0]-p4[0]) < 1.0e-15);
-	REQUIRE(fabs(p5[1]-p4[1]) < 1.0e-15);
-	REQUIRE(fabs(p5[2]-p4[2]) < 1.0e-15);
-	// check other corners
-	//a.get_hi_point(p4);
-    p4[0] = a.hi[0];
-    p4[1] = a.hi[1];
-    p4[2] = a.hi[2];
-	p4[0] -= a.getLength_X();
-	p4[1] -= a.getLength_Y();
-	a.getNode(nnodes_x*nnodes_y*ncells_z,p5);
-	REQUIRE(fabs(p5[0]-p4[0]) < 1.0e-15);
-	REQUIRE(fabs(p5[1]-p4[1]) < 1.0e-15);
-	REQUIRE(fabs(p5[2]-p4[2]) < 1.0e-15);
-	// check other corners
-	//a.get_hi_point(p4);
-    p4[0] = a.hi[0];
-    p4[1] = a.hi[1];
-    p4[2] = a.hi[2];
-	p4[0] -= a.getLength_X();
-	p4[2] -= a.getLength_Z();
-	a.getNode(nnodes_x*ncells_y,p5);
-	REQUIRE(fabs(p5[0]-p4[0]) < 1.0e-15);
-	REQUIRE(fabs(p5[1]-p4[1]) < 1.0e-15);
-	REQUIRE(fabs(p5[2]-p4[2]) < 1.0e-15);
-
 }

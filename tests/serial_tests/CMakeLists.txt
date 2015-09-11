@@ -16,6 +16,7 @@ set(SERIAL_TESTS_SOURCES
         connectivity/NodeToNodeTests.cpp
         CGNS_Ordering/CGNSEdgeTests.cpp
         cart_block/CartBlockTests.cpp
+        cart_block/CartBlockSliceTests.cpp
 )
 
 set(LEGACY_SERIAL_TESTS_SOURCES

@@ -9,15 +9,11 @@
 namespace Parfait {
     class CartBlock : public Extent<double> {
     public:
-        CartBlock();
-        CartBlock(const double min_xyz[3], const double max_xyz[3]);
-        CartBlock(const double extent_i[6]);
-        CartBlock(const double min_xyz[3], const double max_xyz[3],
+        CartBlock() = delete;
+        CartBlock(const Point<double>& min_xyz, const Point<double>& max_xyz,
                   int ncells_x, int ncells_y, int ncells_z);
-        CartBlock(const double extent[6],
+        CartBlock(const Extent<double>& extent,
                   int ncells_x, int ncells_y, int ncells_z);
-
-        void setDimensions(int ncells_x, int ncells_y, int ncells_z);
 
         double get_dx() const;
         double get_dy() const;
@@ -34,9 +30,8 @@ namespace Parfait {
         int numberOfNodes() const;
 
         int getIdOfContainingCell(double point[3]) const;
-        std::vector<int> getCellIdsInExtent(const Extent<double> &b) const;
-        //void   get_node_ids_in_box(Box &b, std::vector<int> &node_ids); // not implemented yet
-        //
+        std::vector<int> getCellIdsInExtent(const Extent<double> &search_extent) const;
+        Extent<int> getRangeOfOverlappingCells(const Extent<double> &search_extent) const;
         void getNode(int node, double point[3]) const;
         void getCellCentroid(int cell_id, double centroid[3]) const;
         Extent<double> createExtentFromCell(int cell) const;
@@ -50,6 +45,7 @@ namespace Parfait {
         int number_of_cells;
         int kx, ky, kz;
     };
+
 }
 
 #include "CartBlock.hpp"

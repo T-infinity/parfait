@@ -1,24 +1,4 @@
-
-
-inline Parfait::CartBlock::CartBlock()
-    : Extent(),
-      kx(0),
-      ky(0),
-      kz(0)
-{
-}
-
-inline Parfait::CartBlock::CartBlock(const double min_xyz[3],const double max_xyz[3])
-    : Extent(min_xyz, max_xyz)
-{
-}
-
-inline Parfait::CartBlock::CartBlock(const double extent[6])
-    : Extent(extent)
-{
-}
-
-inline Parfait::CartBlock::CartBlock(const double min_xyz[3], const double max_xyz[3],
+inline Parfait::CartBlock::CartBlock(const Point<double>& min_xyz, const Point<double>& max_xyz,
                      int ncells_x,int ncells_y,int ncells_z)
     : Extent(min_xyz, max_xyz),
       kx(ncells_x),
@@ -28,25 +8,15 @@ inline Parfait::CartBlock::CartBlock(const double min_xyz[3], const double max_x
   number_of_cells = kx*ky*kz;
 }
 
-inline Parfait::CartBlock::CartBlock(const double extent[3],
+inline Parfait::CartBlock::CartBlock(const Extent<double>& extent,
                      int ncells_x,int ncells_y,int ncells_z)
-    : Extent(extent),
+    : Extent(extent.lo,extent.hi),
       kx(ncells_x),
       ky(ncells_y),
       kz(ncells_z)
 {
   number_of_cells = kx*ky*kz;
 }
-
-inline void Parfait::CartBlock::setDimensions(int ncells_x,int ncells_y,int ncells_z)
-{
-  kx = ncells_x;
-  ky = ncells_y;
-  kz = ncells_z;
-  number_of_cells = kx*ky*kz;
-}
-
-
 
 inline double Parfait::CartBlock::get_dx() const {return getLength_X() / (double) kx;}
 
@@ -79,68 +49,48 @@ inline int Parfait::CartBlock::getIdOfContainingCell(double point[3]) const
   return convert_ijk_ToCellId(i,j,k);
 }
 
-inline std::vector<int> Parfait::CartBlock::getCellIdsInExtent(const Extent<double> &b) const
-{
-  std::vector<int> cell_ids;
-  Point<double> search_lo,search_hi;
-  search_lo = b.lo;
-  search_hi = b.hi;
-  double hx,hy,hz;
-  Point<double> mesh_lo,mesh_hi;
-  mesh_lo = lo;
-  mesh_hi = hi;
-  // return nothing if the box does not overlap
-  if(!contains(b))
+inline std::vector<int> Parfait::CartBlock::getCellIdsInExtent(const Extent<double> &b) const {
+    std::vector<int> cell_ids;
+    auto slice = getRangeOfOverlappingCells(b);
+    for(int i=slice.lo[0];i<slice.hi[0];i++)
+        for(int j=slice.lo[1];j<slice.hi[1];j++)
+            for(int k=slice.lo[2];k<slice.hi[2];k++)
+                cell_ids.push_back(convert_ijk_ToCellId(i,j,k));
     return cell_ids;
-  // allow the box to be bigger than the mesh in any dimension
-  for(int i=0;i<3;i++)
-  {
-    search_lo[i] = std::max(search_lo[i],mesh_lo[i]);
-    search_hi[i] = std::min(search_hi[i],mesh_hi[i]);
-  }
-  hx = search_lo[0] - mesh_lo[0];
-  hy = search_lo[1] - mesh_lo[1];
-  hz = search_lo[2] - mesh_lo[2];
-  int ilow,jlow,klow,ihigh,jhigh,khigh;
-  ilow = (int)(hx/get_dx());
-  jlow = (int)(hy/get_dy());
-  klow = (int)(hz/get_dz());
-  // adjust to be able to return lower boundary cells
-  ilow = ilow==kx? ilow-1: ilow;
-  jlow = jlow==ky? jlow-1: jlow;
-  klow = klow==kz? klow-1: klow;
-  hx = mesh_hi[0] - search_hi[0];
-  hy = mesh_hi[1] - search_hi[1];
-  hz = mesh_hi[2] - search_hi[2];
-  ihigh = kx - (int)(hx/get_dx());
-  jhigh = ky - (int)(hy/get_dy());
-  khigh = kz - (int)(hz/get_dz());
-  // adjust to be able to return upper boundary cells
-  ihigh = ihigh==0? 1:ihigh;
-  jhigh = jhigh==0? 1:jhigh;
-  khigh = khigh==0? 1:khigh;
-  // create a list of ids between low corner and high corner
-  int icells,jcells,kcells;
-  icells = ihigh - ilow;
-  jcells = jhigh - jlow;
-  kcells = khigh - klow;
-
-  int ncells = icells*jcells*kcells;
-  cell_ids.reserve(ncells);
-  for(int i=ilow;i<ihigh;i++)
-  {
-    for(int j=jlow;j<jhigh;j++)
-    {
-      for(int k=klow;k<khigh;k++)
-      {
-        int id = convert_ijk_ToCellId(i,j,k);
-        cell_ids.push_back(id);
-      }
-    }
-  }
-  return cell_ids;
 }
 
+inline Parfait::Extent<int> Parfait::CartBlock::getRangeOfOverlappingCells(const Extent<double> &search_extent) const {
+    if(!contains(search_extent))
+        return Extent<int>({0,0,0},{0,0,0});
+
+    Extent<double> fitted_search_extent = search_extent;
+    for(int i=0;i<3;i++) {
+        fitted_search_extent.lo[i] = std::max(fitted_search_extent.lo[i],lo[i]);
+        fitted_search_extent.hi[i] = std::min(fitted_search_extent.hi[i],hi[i]);
+    }
+    // I don't remember exactly how this works, but it passes the tests....
+    double hx,hy,hz;
+    hx = fitted_search_extent.lo[0] - lo[0];
+    hy = fitted_search_extent.lo[1] - lo[1];
+    hz = fitted_search_extent.lo[2] - lo[2];
+    int ilow,jlow,klow,ihigh,jhigh,khigh;
+    ilow = (int)(hx/get_dx());
+    jlow = (int)(hy/get_dy());
+    klow = (int)(hz/get_dz());
+    ilow = ilow==kx? ilow-1: ilow;
+    jlow = jlow==ky? jlow-1: jlow;
+    klow = klow==kz? klow-1: klow;
+    hx = hi[0] - fitted_search_extent.hi[0];
+    hy = hi[1] - fitted_search_extent.hi[1];
+    hz = hi[2] - fitted_search_extent.hi[2];
+    ihigh = kx - (int)(hx/get_dx());
+    jhigh = ky - (int)(hy/get_dy());
+    khigh = kz - (int)(hz/get_dz());
+    ihigh = std::max(1,ihigh);
+    jhigh = std::max(1,jhigh);
+    khigh = std::max(1,khigh);
+    return Extent<int>({ilow,jlow,klow},{ihigh,jhigh,khigh});
+}
 
 inline void Parfait::CartBlock::getNode(int node_id,double point[3]) const
 {
