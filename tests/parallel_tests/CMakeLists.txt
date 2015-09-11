@@ -39,16 +39,11 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         ScatterTests.cpp
         ScattervTests.cpp
         ReductionTests.cpp
+        MessagePasserBasicsTests.cpp
         SelfSend_test.cpp
         PreProcessor/ParallelNodeToNodeTests.cpp
         PreProcessor/NodeCenteredRedistributorTests.cpp
        )
-
-add_executable(LegacyParallelTests AllTests.cpp message_passer_legacy_tests.cpp)
-target_link_libraries(LegacyParallelTests
-        CppUTest
-        ${MPI_LIBRARIES}
-)
 
 add_executable(ParfaitParallelTests ${PARFAIT_PARALLEL_TESTS_SRC} ${HEADERS})
 target_link_libraries(ParfaitParallelTests
