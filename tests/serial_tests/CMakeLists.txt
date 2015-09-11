@@ -11,6 +11,9 @@ file(GLOB_RECURSE HEADERS
 
 set(SERIAL_TESTS_SOURCES
         catch_main.cpp
+        adt/Adt3DExtentTests.cpp
+        adt/Adt3DPointTests.cpp
+        adt/AdtTests.cpp
         AflrToCGNSTests.cpp
         CGNSToAflrTests.cpp
         CGNSToFun3dTests.cpp
@@ -38,9 +41,6 @@ set(LEGACY_SERIAL_TESTS_SOURCES
         VtkFieldTests/VtkFieldTests.cpp
         VtkGenericTests/VtkGenericTests.cpp
         VtkSurfaceTests/VtkSurfaceTests.cpp
-        adt/adt_3d_extent_test.cpp
-        adt/adt_3d_point_test.cpp
-        adt/adt_test.cpp
         build_neighbors/build_neighbors_test.cpp
         cart_mesh/cart_mesh_test.cpp
         generic_mesh_tools/GenericMeshToolsTests.cpp

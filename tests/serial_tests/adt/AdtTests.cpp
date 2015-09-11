@@ -1,25 +1,19 @@
-#ifndef ADT_H
+#include <catch.hpp>
 #include "Adt.h"
-#endif
 
-#include "CppUTest/CommandLineTestRunner.h"
 using namespace Parfait;
 
-TEST_GROUP(Adt)
-{
-};
-
-TEST(Adt, StoreNothing){
+TEST_CASE("Adt, StoreNothing"){
 
     Adt<3> adt;
     double extent[6] = {0,0,0,1,1,1};
     auto inside = adt.retrieve(extent);
 
-    LONGS_EQUAL(0, inside.size());
+    REQUIRE(0 == inside.size());
 }
 
 
-TEST(Adt, Store3DPoints){
+TEST_CASE("Adt, Store3DPoints"){
 
     Adt<3> adt;
     double extent[6] = {0,0,0,1,1,1};
@@ -31,7 +25,7 @@ TEST(Adt, Store3DPoints){
     std::vector<int> inside;
     inside = adt.retrieve(extent);
 
-    CHECK_EQUAL(2, inside.size());
+    REQUIRE(2 == inside.size());
 
     extent[0] = 0;
     extent[1] = 0;
@@ -40,8 +34,8 @@ TEST(Adt, Store3DPoints){
     extent[4] = 0.5;
     extent[5] = 0.5;
     inside = adt.retrieve(extent);
-    CHECK_EQUAL(1, inside.size());
-    CHECK_EQUAL(10, inside[0]);
+    REQUIRE(1 == inside.size());
+    REQUIRE(10 == inside[0]);
 
     extent[0] = 0.5;
     extent[1] = 0.5;
@@ -50,11 +44,11 @@ TEST(Adt, Store3DPoints){
     extent[4] = 1;
     extent[5] = 1;
     inside = adt.retrieve(extent);
-    CHECK_EQUAL(1, inside.size());
-    CHECK_EQUAL(11, inside[0]);
+    REQUIRE(1 == inside.size());
+    REQUIRE(11 == inside[0]);
 }
 
-TEST(Adt, Store2DPoints){
+TEST_CASE("Adt, Store2DPoints"){
 
     Adt<2> adt;
     double extent[4] = {0,0,1,1};
@@ -66,26 +60,26 @@ TEST(Adt, Store2DPoints){
     std::vector<int> inside;
     inside = adt.retrieve(extent);
 
-    CHECK_EQUAL(2, inside.size());
+    REQUIRE(2 == inside.size());
 
     extent[0] = 0;
     extent[1] = 0;
     extent[2] = 0.5;
     extent[3] = 0.5;
     inside = adt.retrieve(extent);
-    CHECK_EQUAL(1, inside.size());
-    CHECK_EQUAL(10, inside[0]);
+    REQUIRE(1 == inside.size());
+    REQUIRE(10 == inside[0]);
 
     extent[0] = 0.5;
     extent[1] = 0.5;
     extent[2] = 1;
     extent[3] = 1;
     inside = adt.retrieve(extent);
-    CHECK_EQUAL(1, inside.size());
-    CHECK_EQUAL(11, inside[0]);
+    REQUIRE(1 == inside.size());
+    REQUIRE(11 == inside[0]);
 }
 
-TEST(Adt, Store3DExtents)
+TEST_CASE("Adt, Store3DExtents")
 {
     Adt<6> adt;
 
@@ -100,19 +94,19 @@ TEST(Adt, Store3DExtents)
     std::vector<int> inside;
     inside = adt.retrieve(searchExtent1);
 
-    CHECK_EQUAL(10, inside[0]);
-    CHECK_EQUAL(1, inside.size());
+    REQUIRE(10 == inside[0]);
+    REQUIRE(1 == inside.size());
 
     inside = adt.retrieve(searchExtent2);
-    CHECK_EQUAL(11, inside[0]);
-    CHECK_EQUAL(1, inside.size());
+    REQUIRE(11 == inside[0]);
+    REQUIRE(1 == inside.size());
 
     double searchExtent3[6] = {0,0,0,1,1,1};
     inside = adt.retrieve(searchExtent3);
-    CHECK_EQUAL(2, inside.size());
+    REQUIRE(2 == inside.size());
 }
 
-TEST(Adt, CornerCaseStoreMinus10){
+TEST_CASE("Adt, CornerCaseStoreMinus10"){
 
     Adt<3> adt;
     double extent[6] = {0,0,0,1,1,1};
@@ -120,20 +114,6 @@ TEST(Adt, CornerCaseStoreMinus10){
     adt.store(-10, domain);
     auto inside = adt.retrieve(extent);
 
-    LONGS_EQUAL(1, inside.size());
+    REQUIRE(1 == inside.size());
 }
 
-#if 0
-TEST(Adt, copyable){
-    Adt adt(ADT_3D_POINT);
-
-    double rootDomain[6] = {0,0,0,0,0,0};
-    adt.store(-10, rootDomain);
-
-    Adt adt2 = adt;
-    double extent[6] = {0,0,0,1,1,1};
-    auto inside = adt2.retrieve(extent);
-    LONGS_EQUAL(1, inside.size());
-    LONGS_EQUAL(-10, inside[0]);
-}
-#endif
