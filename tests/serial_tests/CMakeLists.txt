@@ -12,6 +12,8 @@ file(GLOB_RECURSE HEADERS
 set(SERIAL_TESTS_SOURCES
         catch_main.cpp
         parfait_mesh/ParfaitMesh_test.cpp
+        connectivity/NodeToNodeTests.cpp
+        CGNS_Ordering/CGNSEdgeTests.cpp
         cart_block/CartBlockTests.cpp
         cart_block/CartBlockSliceTests.cpp
 )
@@ -29,7 +31,6 @@ set(LEGACY_SERIAL_TESTS_SOURCES
         adt/adt_test.cpp
         build_neighbors/build_neighbors_test.cpp
         cart_mesh/cart_mesh_test.cpp
-        connectivity/NodeToNodeTests.cpp
         edge_map/edge_map_test.cpp
         generic_mesh_tools/GenericMeshToolsTests.cpp
         #Geometry/stl_test.cpp

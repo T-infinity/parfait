@@ -799,9 +799,8 @@ TEST(MessagePasserTests,Exists)
 
 	{
 		// test parallel sum
-		int rank = MessagePasser::Rank();
-		auto biggestRank = MessagePasser::ParallelSum(rank);
-		LONGS_EQUAL(MessagePasser::NumberOfProcesses()-1, biggestRank);
+		auto sum = MessagePasser::ParallelSum(1);
+		LONGS_EQUAL(MessagePasser::NumberOfProcesses(), sum);
 	}
 #endif
 }

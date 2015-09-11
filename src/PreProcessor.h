@@ -2,16 +2,16 @@
 #define PREPROCESSOR_H
 #include <string>
 #include "ConfigurationReader.h"
-#include "ParallelImportedUgrid.h"
 #include <Fun3dMesh.h>
-#include <ImportedUgrid.h>
 #include <MessagePasser.h>
+#include <memory>
+#include <MeshBasicParallel.h>
 
 namespace Parfait {
 	class PreProcessor {
 	public:
 		PreProcessor(std::string xml_input_filename);
-		ParallelImportedUgrid createMesh();
+		std::shared_ptr<MeshBasicParallel> createMesh();
 
 		int getNumberOfGrids() { return gridNames.size(); }
 
@@ -27,7 +27,7 @@ namespace Parfait {
 		std::vector<Parfait::MotionMatrix> grid_initial_positions;
 
 		void setUpGridInfo(std::string xml_input_filename);
-		std::vector<int> calculateNewPartitioning(ParallelImportedUgrid &ugrid);
+		std::vector<int> calculateNewPartitioning(std::shared_ptr<MeshBasicParallel> mesh);
 	};
 }
 #include "PreProcessor.hpp"

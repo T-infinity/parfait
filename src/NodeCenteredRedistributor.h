@@ -7,13 +7,16 @@
 #include <MessagePasser.h>
 #include <ParallelImportedUgrid.h>
 #include <Fun3dMesh.h>
+#include "MeshBasicParallel.h"
 
 namespace Parfait {
 	class ParallelMeshReDistributor {
 	template<class T> using vector = std::vector<T>;
 	public:
-		ParallelMeshReDistributor(Parfait::ParallelImportedUgrid &ugrid, std::vector<int> &part);
-		//TODO: Maybe just scrap this and rewrite, otherwise, salvage...
+		ParallelMeshReDistributor(std::shared_ptr<MeshBasicParallel> mesh, std::vector<int> &part);
+
+		std::shared_ptr<MeshBasicParallel> redistribute();
+	private:
 		void shuffleNodeIds();
 		void shuffleTriangles();
 		void shuffleQuads();
@@ -26,12 +29,8 @@ namespace Parfait {
 		void buildGlobalNodeIds();
 
 		void shuffleNodeMetaData();
-
-
-		Parfait::ParallelImportedUgrid createNewParallelUgrid();
-	private:
 		int nproc;
-		Parfait::ParallelImportedUgrid &ugrid;
+		std::shared_ptr<MeshBasicParallel> mesh;
 		std::vector<int> part;
 		std::vector<int> nodeMap;
 

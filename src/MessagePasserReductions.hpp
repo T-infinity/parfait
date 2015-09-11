@@ -34,8 +34,8 @@ namespace MessagePasser {
 
   template<typename T>
   T ParallelSum(const T &value) {
-	  auto max = ParallelMax(value, 0);
-	  Broadcast(max, 0);
-	  return max;
+	  auto sum = ParallelSum(value, 0);
+	  Broadcast(sum, 0);
+	  return sum;
   }
 }
