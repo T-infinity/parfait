@@ -15,6 +15,7 @@ set(SERIAL_TESTS_SOURCES
         CGNSToAflrTests.cpp
         CGNSToFun3dTests.cpp
         CGNSToVtkTests.cpp
+        edge_map/EdgeMapTests.cpp
         extent/ExtentTests.cpp
         VtkToCGNSTests.cpp
         Fun3DToCGNSTests.cpp
@@ -41,7 +42,6 @@ set(LEGACY_SERIAL_TESTS_SOURCES
         adt/adt_test.cpp
         build_neighbors/build_neighbors_test.cpp
         cart_mesh/cart_mesh_test.cpp
-        edge_map/edge_map_test.cpp
         generic_mesh_tools/GenericMeshToolsTests.cpp
         #Geometry/stl_test.cpp
         #Geometry/facet_test.cpp
