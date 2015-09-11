@@ -31,3 +31,21 @@ TEST_CASE("Gather floats"){
             REQUIRE((junk+(float)i) == vec[i]);
     }
 }
+
+TEST_CASE("gather vector of ints"){
+    int root = 0;
+    std::vector<int> send_vec;
+    send_vec.push_back(Rank());
+    send_vec.push_back(Rank()+1);
+    std::vector<int> recv_vec;
+    Gather(send_vec,2,recv_vec,root);
+// check that they were communicated properly to the root
+    if(Rank() == root) {
+        int nproc = NumberOfProcesses();
+        REQUIRE((2*nproc) == (int)recv_vec.size());
+        for(int i=0;i<nproc;i++) {
+            REQUIRE(i == recv_vec[2*i]);
+            REQUIRE((i+1) == recv_vec[2*i+1]);
+        }
+    }
+}
