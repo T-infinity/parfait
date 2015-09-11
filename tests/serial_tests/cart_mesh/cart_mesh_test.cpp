@@ -39,8 +39,7 @@ TEST(CartMesh, Centroid){
     DOUBLES_EQUAL(0.25, centroid[2], tol);
 }
 
-TEST(CartMesh, GetCellNodes)
-{
+TEST(CartMesh, GetCellNodes) {
     Point<double> lo(0,0,0);
     Point<double> hi(1,1,1);
     int numCells = 2;
@@ -59,8 +58,7 @@ TEST(CartMesh, GetCellNodes)
     CHECK_EQUAL(true, isIn(cellNodes, 13));
 }
 
-TEST(CartMesh, GetFaceNodes)
-{
+TEST(CartMesh, GetFaceNodes) {
     Point<double> lo(0,0,0);
     Point<double> hi(1,1,1);
     int numCells = 2;
@@ -105,8 +103,7 @@ TEST(CartMesh, GetFaceNodes)
     CHECK_EQUAL(true, isIn(faceNodes, 13));
 }
 
-TEST(CartMesh, PlotMesh)
-{
+TEST(CartMesh, PlotMesh) {
 
     Point<double> lo(0,0,0);
     Point<double> hi(1,1,1);
@@ -114,8 +111,7 @@ TEST(CartMesh, PlotMesh)
     CartMesh mesh(lo, hi, numCells, numCells, numCells);
 }
 
-TEST(CartMesh, FaceArea)
-{
+TEST(CartMesh, FaceArea) {
     Point<double> lo(0,0,0);
     Point<double> hi(1,1,1);
     int numCells = 2;
@@ -160,8 +156,7 @@ TEST(CartMesh, FaceArea)
     DOUBLES_EQUAL(area , faceArea[2], tol);
 }
 
-TEST(CartMesh, Neighbors)
-{
+TEST(CartMesh, Neighbors) {
     Point<double> lo(0,0,0);
     Point<double> hi(1,1,1);
     int numCells = 2;
@@ -246,8 +241,7 @@ TEST(CartMesh, Neighbors)
 
 }
 
-TEST(CartMesh, isBoundary)
-{
+TEST(CartMesh, isBoundary) {
     Point<double> lo(0,0,0);
     Point<double> hi(1,1,1);
     int numCells = 2;
@@ -260,8 +254,7 @@ TEST(CartMesh, isBoundary)
     CHECK_EQUAL(false, isBoundary);
 }
 
-TEST(CartMesh, BoundaryTag)
-{
+TEST(CartMesh, BoundaryTag) {
     Point<double> lo(0,0,0);
     Point<double> hi(1,1,1);
     int numCells = 2;
@@ -278,14 +271,3 @@ TEST(CartMesh, BoundaryTag)
     LONGS_EQUAL( 4, mesh.faceBoundaryTag(cellId, 4));
     LONGS_EQUAL(-1, mesh.faceBoundaryTag(cellId, 5));
 }
-
-
-
-
-
-
-
-
-
-
-

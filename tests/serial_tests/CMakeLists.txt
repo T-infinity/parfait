@@ -15,6 +15,7 @@ set(SERIAL_TESTS_SOURCES
         adt/Adt3DPointTests.cpp
         adt/AdtTests.cpp
         AflrToCGNSTests.cpp
+        build_neighbors/build_neighbors_test.cpp
         cart_block/CartBlockSliceTests.cpp
         cart_block/CartBlockTests.cpp
         CGNS_Ordering/CGNSEdgeTests.cpp
@@ -43,7 +44,6 @@ set(LEGACY_SERIAL_TESTS_SOURCES
         AllTests.cpp  
         VtkGenericTests/VtkGenericTests.cpp
         VtkSurfaceTests/VtkSurfaceTests.cpp
-        build_neighbors/build_neighbors_test.cpp
         cart_mesh/cart_mesh_test.cpp
         generic_mesh_tools/GenericMeshToolsTests.cpp
         #Geometry/stl_test.cpp
