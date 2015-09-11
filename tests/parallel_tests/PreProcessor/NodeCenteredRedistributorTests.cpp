@@ -31,7 +31,6 @@ TEST_CASE("Node Centered Redistributor"){
         mesh->metaData->nodeComponentIds = {0,0,0};
         mesh->metaData->xyz = {0,0,1, 1,0,1, 1,1,1};
     }
-    PARALLEL_CHECKPOINT
 
     Parfait::ParallelMeshReDistributor reDistributor(mesh, part);
     mesh = reDistributor.redistribute();
@@ -44,7 +43,6 @@ TEST_CASE("Node Centered Redistributor"){
     auto total = MessagePasser::ParallelSum(number_of_owned_nodes);
     REQUIRE(6 == total);
 
-    PARALLEL_CHECKPOINT
     REQUIRE(mesh->metaData->xyz.size() == 6*3);
 }
 
