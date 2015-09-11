@@ -15,6 +15,8 @@ set(SERIAL_TESTS_SOURCES
         CGNSToAflrTests.cpp
         CGNSToFun3dTests.cpp
         CGNSToVtkTests.cpp
+        VtkToCGNSTests.cpp
+        Fun3DToCGNSTests.cpp
         parfait_mesh/ParfaitMesh_test.cpp
         connectivity/NodeToNodeTests.cpp
         CGNS_Ordering/CGNSEdgeTests.cpp
@@ -51,8 +53,6 @@ set(LEGACY_SERIAL_TESTS_SOURCES
         vectors/LegacyArrayTests.cpp
         vectors/vector_tools_tests.cpp
         VtkExplodedViewWriter/VtkExplodedViewWriter_test.cpp
-        VtkToCGNS_tests.cpp
-        Fun3DToCGNS_tests.cpp
        )
 
 add_executable(LegacySerialTests ${LEGACY_SERIAL_TESTS_SOURCES} ${HEADERS})
