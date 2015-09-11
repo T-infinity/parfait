@@ -23,6 +23,7 @@ set(SERIAL_TESTS_SOURCES
         cart_block/CartBlockTests.cpp
         cart_block/CartBlockSliceTests.cpp
         point/PointTest.cpp
+        vectors/VectorToolsTests.cpp
 )
 
 set(LEGACY_SERIAL_TESTS_SOURCES
@@ -51,7 +52,6 @@ set(LEGACY_SERIAL_TESTS_SOURCES
         ugridWriterTests/ugridWriterTests.cpp
         ugrid_factory/ugrid_factory_tests.cpp
         vectors/LegacyArrayTests.cpp
-        vectors/vector_tools_tests.cpp
         VtkExplodedViewWriter/VtkExplodedViewWriter_test.cpp
        )
 
