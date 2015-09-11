@@ -26,6 +26,7 @@ set(SERIAL_TESTS_SOURCES
         point/PointTest.cpp
         vectors/VectorToolsTests.cpp
         LinearPartitioner/LinearPartitionerTests.cpp
+        vectors/LegacyArrayTests.cpp
 )
 
 set(LEGACY_SERIAL_TESTS_SOURCES
@@ -51,7 +52,6 @@ set(LEGACY_SERIAL_TESTS_SOURCES
         range_loop/RangeLoopTests.cpp
         ugridWriterTests/ugridWriterTests.cpp
         ugrid_factory/ugrid_factory_tests.cpp
-        vectors/LegacyArrayTests.cpp
         VtkExplodedViewWriter/VtkExplodedViewWriter_test.cpp
        )
 

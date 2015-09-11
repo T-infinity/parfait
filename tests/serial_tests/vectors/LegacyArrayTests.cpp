@@ -1,31 +1,20 @@
 #include "LegacyArray.h"
 #include "RangeLoop.h"
-#include "CppUTest/CommandLineTestRunner.h"
+#include <catch.hpp>
 
-TEST_GROUP(LegacyArrayTests)
-{
-	void setup()
-	{
-	}
-	void teardown()
-	{
-	}
-};
-
-TEST(LegacyArrayTests,Exists)
-{
+TEST_CASE("LegacyArrayTests,Exists") {
 	int a[6] = {0,1,2,3,4,5};
 	LegacyArray<int> b(a,6);
 
-	LONGS_EQUAL(6,b.size());
+	REQUIRE(6 == b.size());
 	auto beginIterator = b.begin();
 	auto endIterator   = b.end();
 
 	for(int i:range(b))
-		LONGS_EQUAL(a[i],b[i]);
+		REQUIRE(a[i] == b[i]);
 
 	for(int i:b)
-		LONGS_EQUAL(a[i],i);
+		REQUIRE(a[i] == i);
 	b[0] = 4;
-	LONGS_EQUAL(4,b[0]);	
+	REQUIRE(4 == b[0]);
 }
