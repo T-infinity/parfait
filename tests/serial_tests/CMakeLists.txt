@@ -18,6 +18,7 @@ set(SERIAL_TESTS_SOURCES
         edge_map/EdgeMapTests.cpp
         extent/ExtentBuilderTests.cpp
         extent/ExtentTests.cpp
+        range_loop/RangeLoopTests.cpp
         VtkToCGNSTests.cpp
         Fun3DToCGNSTests.cpp
         parfait_mesh/ParfaitMesh_test.cpp
@@ -49,7 +50,6 @@ set(LEGACY_SERIAL_TESTS_SOURCES
         high_level_mesh_searching/AdtBuilderTests.cpp
         mesh_interfaces/fun3d_mesh_tests.cpp
         mesh_interfaces/imported_ugrid_tests.cpp
-        range_loop/RangeLoopTests.cpp
         ugridWriterTests/ugridWriterTests.cpp
         ugrid_factory/ugrid_factory_tests.cpp
         VtkExplodedViewWriter/VtkExplodedViewWriter_test.cpp
