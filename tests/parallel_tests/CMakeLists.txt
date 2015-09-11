@@ -30,12 +30,13 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         PreProcessor/ParallelMeshReaderTests.cpp
         MessageBuilder_test.cpp
         AsyncSends_tests.cpp
+        SendRecvScalarTests.cpp
         SelfSend_test.cpp
         PreProcessor/ParallelNodeToNodeTests.cpp
         PreProcessor/NodeCenteredRedistributorTests.cpp
        )
 
-add_executable(LegacyParallelTests AllTests.cpp message_passer_tests.cpp)
+add_executable(LegacyParallelTests AllTests.cpp message_passer_legacy_tests.cpp)
 target_link_libraries(LegacyParallelTests
         CppUTest
         ${MPI_LIBRARIES}
