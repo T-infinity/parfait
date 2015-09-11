@@ -37,6 +37,7 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         AllGatherTests.cpp
         BroadcastTests.cpp
         ScatterTests.cpp
+        ScattervTests.cpp
         SelfSend_test.cpp
         PreProcessor/ParallelNodeToNodeTests.cpp
         PreProcessor/NodeCenteredRedistributorTests.cpp
