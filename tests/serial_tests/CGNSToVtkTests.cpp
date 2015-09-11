@@ -1,53 +1,47 @@
+#include <catch.hpp>
 #include "CellWindingConverters.h"
-
-#include <CppUTest/CommandLineTestRunner.h>
-
 using namespace Parfait;
 
 
-TEST_GROUP(CGNSToVtk){
-
-};
-
-TEST(CGNSToVtk, tetsDontChange) {
+TEST_CASE("CGNSToVtk, tetsDontChange") {
     std::array<int,4> tet {0,1,2,3};
     auto original = tet;
     auto converter = CGNSToVtk();
     converter.convertTet(tet.data());
 
     for(int i=0;i<4;i++)
-        LONGS_EQUAL(original[i], tet[i]);
+        REQUIRE(original[i] == tet[i]);
 }
-TEST(CGNSToVtk, pyramidsDontChange) {
+TEST_CASE("CGNSToVtk, pyramidsDontChange") {
     std::array<int,5> pyramid {9,12,4,2,16};
     auto original = pyramid;
     auto converter = CGNSToVtk();
     converter.convertPyramid(pyramid.data());
 
     for(int i=0;i<5;i++)
-        LONGS_EQUAL(pyramid[i],original[i]);
+        REQUIRE(pyramid[i] == original[i]);
 }
 
-TEST(CGNSToVtk, prismsDontChange) {
+TEST_CASE("CGNSToVtk, prismsDontChange") {
     std::array<int,6> prism {0,1,2,3,4,5};
     auto original = prism;
     auto converter = CGNSToVtk();
     converter.convertPrism(prism.data());
 
-    LONGS_EQUAL(original[0], prism[3]);
-    LONGS_EQUAL(original[1], prism[4]);
-    LONGS_EQUAL(original[2], prism[5]);
-    LONGS_EQUAL(original[3], prism[0]);
-    LONGS_EQUAL(original[4], prism[1]);
-    LONGS_EQUAL(original[5], prism[2]);
+    REQUIRE(original[0] == prism[3]);
+    REQUIRE(original[1] == prism[4]);
+    REQUIRE(original[2] == prism[5]);
+    REQUIRE(original[3] == prism[0]);
+    REQUIRE(original[4] == prism[1]);
+    REQUIRE(original[5] == prism[2]);
 }
 
-TEST(CGNSToVtk, hexsDontChange) {
+TEST_CASE("CGNSToVtk, hexsDontChange") {
     std::array<int,8> hex {0,1,2,3,4,5,6,7};
     auto original = hex;
     auto converter = CGNSToVtk();
     converter.convertHex(hex.data());
 
     for(int i=0;i<8;i++)
-        LONGS_EQUAL(original[i], hex[i]);
+        REQUIRE(original[i] == hex[i]);
 }
