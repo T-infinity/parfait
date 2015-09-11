@@ -22,6 +22,7 @@ set(SERIAL_TESTS_SOURCES
         CGNS_Ordering/CGNSEdgeTests.cpp
         cart_block/CartBlockTests.cpp
         cart_block/CartBlockSliceTests.cpp
+        point/PointTest.cpp
 )
 
 set(LEGACY_SERIAL_TESTS_SOURCES
@@ -46,7 +47,6 @@ set(LEGACY_SERIAL_TESTS_SOURCES
         high_level_mesh_searching/AdtBuilderTests.cpp
         mesh_interfaces/fun3d_mesh_tests.cpp
         mesh_interfaces/imported_ugrid_tests.cpp
-        point/point_test.cpp
         range_loop/RangeLoopTests.cpp
         ugridWriterTests/ugridWriterTests.cpp
         ugrid_factory/ugrid_factory_tests.cpp
