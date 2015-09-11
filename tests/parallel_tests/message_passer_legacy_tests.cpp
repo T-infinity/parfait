@@ -38,96 +38,9 @@ TEST(MessagePasserTests,Exists)
 	LONGS_EQUAL(size,NumberOfProcesses());
 	
 	Barrier();
-	{
-		//test scatter for integers
-		int root = 0;
-		std::vector<int> vec;
-		int recv_value;
-		if(Rank() == root)
-			for(int i=0;i<NumberOfProcesses();i++)
-				vec.push_back(i);
-		Scatter(vec,recv_value,root);	
-		LONGS_EQUAL(Rank(),recv_value);
-	}
-	
-	{
-		//test scatter for floats
-		int root = 0;
-		std::vector<float> vec;
-		float recv_value;
-		float junk = 1.7e-5;
-		if(Rank() == root)
-			for(int i=0;i<NumberOfProcesses();i++)
-				vec.push_back(junk+(float)i);
-		Scatter(vec,recv_value,root);	
-		DOUBLES_EQUAL(junk+(float)Rank(),recv_value,MPI_FLOAT_TOL);
-	}
-	
-	{
-		//test scatter for doubles
-		int root = 0;
-		std::vector<double> vec;
-		double recv_value;
-		double junk = 1.7e-13;
-		if(Rank() == root)
-			for(int i=0;i<NumberOfProcesses();i++)
-				vec.push_back(junk+(double)i);
-		Scatter(vec,recv_value,root);	
-		DOUBLES_EQUAL(junk+(double)Rank(),recv_value,MPI_DOUBLE_TOL);
-	}
-	
-	{
-		//test scatter for multiple integers
-		int root = 0;
-		std::vector<int> vec;
-		std::vector<int> recv_vec;
-		if(Rank() == root)
-			for(int i=0;i<NumberOfProcesses();i++)
-			{
-				vec.push_back(i);
-				vec.push_back(i+3);
-			}
-		Scatter(vec,recv_vec,root);	
-		LONGS_EQUAL(2,(int)recv_vec.size());	
-		LONGS_EQUAL(Rank(),recv_vec[0]);
-		LONGS_EQUAL(Rank()+3,recv_vec[1]);
-	}
-	
-	{
-		//test scatter for multiple floats
-		int root = 0;
-		std::vector<float> vec;
-		std::vector<float> recv_vec;
-		float junk = 1.7e-5;
-		if(Rank() == root)
-			for(int i=0;i<NumberOfProcesses();i++)
-			{
-				vec.push_back(junk+(float)i);
-				vec.push_back(junk+(float)(i+3));
-			}
-		Scatter(vec,recv_vec,root);	
-		LONGS_EQUAL(2,(int)recv_vec.size());	
-		DOUBLES_EQUAL(junk+(float)Rank(),recv_vec[0],MPI_FLOAT_TOL);
-		DOUBLES_EQUAL(junk+(float)(Rank()+3),recv_vec[1],MPI_FLOAT_TOL);
-	}
-	
-	{
-		//test scatter for multiple doubles
-		int root = 0;
-		std::vector<double> vec;
-		std::vector<double> recv_vec;
-		double junk = 1.7e-13;
-		if(Rank() == root)
-			for(int i=0;i<NumberOfProcesses();i++)
-			{
-				vec.push_back(junk+(double)i);
-				vec.push_back(junk+(double)(i+3));
-			}
-		Scatter(vec,recv_vec,root);	
-		LONGS_EQUAL(2,(int)recv_vec.size());	
-		DOUBLES_EQUAL(junk+(double)Rank(),recv_vec[0],MPI_DOUBLE_TOL);
-		DOUBLES_EQUAL(junk+(double)(Rank()+3),recv_vec[1],MPI_DOUBLE_TOL);
-	}
+
+
+
 
 	{
 		// test Scatterv for integers
