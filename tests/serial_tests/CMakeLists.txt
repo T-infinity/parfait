@@ -26,19 +26,21 @@ set(SERIAL_TESTS_SOURCES
         extent/ExtentBuilderTests.cpp
         extent/ExtentTests.cpp
         Fun3DToCGNSTests.cpp
+        high_level_mesh_searching/AdtBuilderTests.cpp
         LinearPartitioner/LinearPartitionerTests.cpp
         parfait_mesh/ParfaitMesh_test.cpp
         point/PointTest.cpp
         range_loop/RangeLoopTests.cpp
         vectors/LegacyArrayTests.cpp
         vectors/VectorToolsTests.cpp
+        VtkExplodedViewWriter/VtkExplodedViewWriterTests.cpp
+        VtkFieldTests/VtkFieldTests.cpp
         VtkSliceWriterTests.cpp
         VtkToCGNSTests.cpp
 )
 
 set(LEGACY_SERIAL_TESTS_SOURCES
         AllTests.cpp  
-        VtkFieldTests/VtkFieldTests.cpp
         VtkGenericTests/VtkGenericTests.cpp
         VtkSurfaceTests/VtkSurfaceTests.cpp
         build_neighbors/build_neighbors_test.cpp
@@ -47,12 +49,10 @@ set(LEGACY_SERIAL_TESTS_SOURCES
         #Geometry/stl_test.cpp
         #Geometry/facet_test.cpp
         #Geometry/STLReader_test.cpp
-        high_level_mesh_searching/AdtBuilderTests.cpp
         mesh_interfaces/fun3d_mesh_tests.cpp
         mesh_interfaces/imported_ugrid_tests.cpp
         ugridWriterTests/ugridWriterTests.cpp
         ugrid_factory/ugrid_factory_tests.cpp
-        VtkExplodedViewWriter/VtkExplodedViewWriter_test.cpp
        )
 
 add_executable(LegacySerialTests ${LEGACY_SERIAL_TESTS_SOURCES} ${HEADERS})
