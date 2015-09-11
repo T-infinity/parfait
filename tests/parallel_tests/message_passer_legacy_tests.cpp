@@ -38,75 +38,6 @@ TEST(MessagePasserTests,Exists)
 	LONGS_EQUAL(size,NumberOfProcesses());
 	
 	Barrier();
-	// test Send for vector of vector of integers
-	{
-		vector<vector<int>> vec;
-		if(Rank() == 0)
-		{
-			vector<int> a = {1,2,3};
-			vec.push_back(a);
-			vec.push_back(a);
-			for(int i=1;i<NumberOfProcesses();i++)
-				Send(vec,i);
-		}
-		else
-		{
-			Recv(vec,0);
-			LONGS_EQUAL(2,vec.size());
-			for(auto row:vec)
-			{
-				LONGS_EQUAL(3,row.size());
-			}
-		}
-	}
-	// test Gather() for integers
-	{
-		int root = 0,value=Rank();
-		std::vector<int> vec;
-		Gather(value,vec,root);
-		// check that they were communicated properly to the root
-		if(Rank() == root) {
-			int nproc = NumberOfProcesses();
-			LONGS_EQUAL(nproc,(int)vec.size());
-			for(int i=0;i<nproc;i++)
-				LONGS_EQUAL(i,vec[i]);
-		}
-	}
-#if 1
-
-	{	
-		// test Gather() for floats
-		int root = 0;
-		float junk = 1.7e-12;
-		float value= junk + (float) Rank();
-		std::vector<float> vec;
-		Gather(value,vec,root);
-		// check that they were communicated properly to the root
-		if(Rank() == root)
-		{
-			int nproc = NumberOfProcesses();
-			LONGS_EQUAL(nproc,(int)vec.size());
-			for(int i=0;i<nproc;i++)
-				DOUBLES_EQUAL(junk+(float)i,vec[i],MPI_FLOAT_TOL);
-		}
-	}
-
-	{	
-		// test Gather() for doubles
-		int root = 0;
-		double junk = 1.7e-12;
-		double value= junk + (double) Rank();
-		std::vector<double> vec;
-		Gather(value,vec,root);
-		// check that they were communicated properly to the root
-		if(Rank() == root)
-		{
-			int nproc = NumberOfProcesses();
-			LONGS_EQUAL(nproc,(int)vec.size());
-			for(int i=0;i<nproc;i++)
-				DOUBLES_EQUAL(junk+(double)i,vec[i],MPI_DOUBLE_TOL);
-		}
-	}
 
 	// test AllGather() for integers
 	{
@@ -577,7 +508,6 @@ TEST(MessagePasserTests,Exists)
 		auto sum = MessagePasser::ParallelSum(1);
 		LONGS_EQUAL(MessagePasser::NumberOfProcesses(), sum);
 	}
-#endif
 }
 
 

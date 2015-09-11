@@ -32,6 +32,8 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         AsyncSends_tests.cpp
         SendRecvScalarTests.cpp
         SendRecvVectorTests.cpp
+        SendRecvVectorOfVectorsTests.cpp
+        GatherTests.cpp
         SelfSend_test.cpp
         PreProcessor/ParallelNodeToNodeTests.cpp
         PreProcessor/NodeCenteredRedistributorTests.cpp
