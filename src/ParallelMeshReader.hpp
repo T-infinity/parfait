@@ -6,6 +6,7 @@
 #include <UgridReader.h>
 #include <LinearPartitioner.h>
 #include "MessageBuilder.h"
+#include "ConfigurationReader.h"
 
 inline std::shared_ptr<MeshBasicParallel> Parfait::ParallelMeshReader::readDistributedGrid(
         std::string configurationFileName) {

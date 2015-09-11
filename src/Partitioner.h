@@ -13,7 +13,7 @@ namespace Parfait {
         Partitioner(const Mesh & mesh_in);
 
         vector<int> generatePartVector();
-        vector<vector<long>> connectivity;
+        vector<vector<int>> local_connectivity;
     private:
         const Mesh& mesh;
 

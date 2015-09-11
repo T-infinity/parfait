@@ -14,14 +14,14 @@ namespace Parfait {
         int numberOfNodesAtDegree(int degree) const;
     };
 
-  int MeshBasicParallel::numberOfNodesAtDegree(int degree) const {
+  inline int MeshBasicParallel::numberOfNodesAtDegree(int degree) const {
       int count = 0;
       for(auto d : metaData->nodeOwnershipDegree)
           if(d == 0)
               count++;
       return count;
   }
-  MeshBasicParallel::MeshBasicParallel()
+  inline MeshBasicParallel::MeshBasicParallel()
   : connectivity(std::make_shared<MeshConnectivity>()),
     metaData(std::make_shared<MeshParallelMetaData>()) {
   }

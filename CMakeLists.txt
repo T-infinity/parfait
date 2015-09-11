@@ -8,7 +8,7 @@ include_directories(
     )
 
 add_subdirectory(utils)
-add_subdirectory(src/c_interfaces)
+#add_subdirectory(src/c_interfaces)
 add_subdirectory(tests/serial_tests)
 add_subdirectory(tests/parallel_tests)
 add_subdirectory(tinyxml)

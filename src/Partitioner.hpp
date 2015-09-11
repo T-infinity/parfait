@@ -8,7 +8,7 @@ Parfait::Partitioner<Mesh>::Partitioner(const Mesh & m)
 :mesh(m)
 {
     NodeToNodeBuilder<decltype(m)> builder(mesh);
-	connectivity = builder.buildNodeToNodeConnectivity();
+	local_connectivity = builder.buildNodeToNodeConnectivity();
 }
 
 template <class Mesh>
@@ -25,12 +25,12 @@ template <class Mesh>
 std::vector<int> Parfait::Partitioner<Mesh>::generatePartVector()
 {
 	vector<int> part(mesh.numberOfOwnedNodes(),0);
-	vector<long> ia(connectivity.size()+1,0);
-	for(long i=0;i<connectivity.size();i++)
-		ia[i+1] = ia[i] + connectivity[i].size();
+	vector<long> ia(local_connectivity.size()+1,0);
+	for(long i=0;i< local_connectivity.size();i++)
+		ia[i+1] = ia[i] + local_connectivity[i].size();
 	vector<long> ja;
 	ja.reserve(ia.back());
-	for(auto& row:connectivity)
+	for(auto& row:local_connectivity)
 		for(auto nbr:row)
 			ja.push_back(nbr);
     auto procNodeMap = buildProcNodeMap();
