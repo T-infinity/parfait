@@ -11,16 +11,13 @@ namespace Parfait {
         std::vector<int>& pyramids;
         std::vector<int>& prisms;
         std::vector<int>& hexes;
-        std::vector<long>& globalNodeIds;
-        std::vector<int>& nodeOwnershipDegree;
         public:
         PartitionableMesh(std::shared_ptr<MeshBasicParallel> mesh) :
         tets(mesh->connectivity->tets),
                 pyramids(mesh->connectivity->pyramids),
                 prisms(mesh->connectivity->prisms),
-                hexes(mesh->connectivity->hexes),
-                globalNodeIds(mesh->metaData->globalNodeIds),
-                nodeOwnershipDegree(mesh->metaData->nodeOwnershipDegree){
+                hexes(mesh->connectivity->hexes)
+        {
             std::unordered_set<int> nodes;
             for(int id : tets)
                 nodes.insert(id);
@@ -34,12 +31,6 @@ namespace Parfait {
         }
         int numberOfNodes() const {
             return number_of_nodes;
-        }
-        long getGlobalNodeId(int localId) const {
-            return globalNodeIds[localId];
-        }
-        bool doOwnLocalNode(int localId) const {
-            return nodeOwnershipDegree[localId] == 0;
         }
         int numberOfTets()const {
             return tets.size() / 4;

@@ -3,14 +3,15 @@
 #include <MessagePasser.h>
 #include <MeshBasicParallel.h>
 #include <PartitionableMesh.h>
-#include <NodeToNode.h>
+#include <ParallelPartitionableMesh.h>
+#include <ParallelNodeToNodeBuilder.h>
 
 TEST_CASE("Redistribution Parallel Tests"){
 
     if(MessagePasser::NumberOfProcesses() < 2)
         return;
 
-    auto mesh = std::shared_ptr<Parfait::MeshBasicParallel>();
+    auto mesh = std::make_shared<Parfait::MeshBasicParallel>();
     if(MessagePasser::Rank() == 0){
         mesh->connectivity->prisms = {0,1,2,3,4,5};
         mesh->metaData->nodeOwnershipDegree = {0,0,0,1,1,1};
@@ -28,11 +29,10 @@ TEST_CASE("Redistribution Parallel Tests"){
         mesh->metaData->nodeComponentIds = {0,0,0};
         mesh->metaData->xyz = {0,0,1, 1,0,1, 1,1,1};
     }
-
-    Parfait::PartitionableMesh partitionableMesh(mesh);
-    Parfait::NodeToNodeBuilder<Parfait::PartitionableMesh> nodeBuilder(partitionableMesh);
+    Parfait::ParallelPartitionableMesh partitionableMesh(mesh);
+    Parfait::ParallelNodeToNodeBuilder<Parfait::ParallelPartitionableMesh> nodeBuilder(partitionableMesh);
     auto node_to_node = nodeBuilder.buildNodeToNodeConnectivity();
     if(MessagePasser::Rank() == 0 or MessagePasser::Rank() == 1)
-        REQUIRE(node_to_node.size() == 6);
+        REQUIRE(node_to_node.size() == 3);
 }
 
