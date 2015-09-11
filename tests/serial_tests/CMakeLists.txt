@@ -24,6 +24,7 @@ set(SERIAL_TESTS_SOURCES
         cart_block/CartBlockSliceTests.cpp
         point/PointTest.cpp
         vectors/VectorToolsTests.cpp
+        LinearPartitioner/LinearPartitionerTests.cpp
 )
 
 set(LEGACY_SERIAL_TESTS_SOURCES
@@ -44,7 +45,6 @@ set(LEGACY_SERIAL_TESTS_SOURCES
         #Geometry/stl_test.cpp
         #Geometry/facet_test.cpp
         #Geometry/STLReader_test.cpp
-        LinearPartitioner/LinearPartitioner_test.cpp
         high_level_mesh_searching/AdtBuilderTests.cpp
         mesh_interfaces/fun3d_mesh_tests.cpp
         mesh_interfaces/imported_ugrid_tests.cpp
