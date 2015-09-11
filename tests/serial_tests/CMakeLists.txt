@@ -16,6 +16,7 @@ set(SERIAL_TESTS_SOURCES
         CGNSToFun3dTests.cpp
         CGNSToVtkTests.cpp
         edge_map/EdgeMapTests.cpp
+        extent/ExtentBuilderTests.cpp
         extent/ExtentTests.cpp
         VtkToCGNSTests.cpp
         Fun3DToCGNSTests.cpp
@@ -33,7 +34,6 @@ set(SERIAL_TESTS_SOURCES
 set(LEGACY_SERIAL_TESTS_SOURCES
         AllTests.cpp  
         vtk_slice_writer_tests.cpp
-        extent/ExtentBuilderTests.cpp
         VtkFieldTests/VtkFieldTests.cpp
         VtkGenericTests/VtkGenericTests.cpp
         VtkSurfaceTests/VtkSurfaceTests.cpp
