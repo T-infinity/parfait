@@ -15,6 +15,7 @@ set(SERIAL_TESTS_SOURCES
         CGNSToAflrTests.cpp
         CGNSToFun3dTests.cpp
         CGNSToVtkTests.cpp
+        extent/ExtentTests.cpp
         VtkToCGNSTests.cpp
         Fun3DToCGNSTests.cpp
         parfait_mesh/ParfaitMesh_test.cpp
@@ -31,7 +32,6 @@ set(LEGACY_SERIAL_TESTS_SOURCES
         AllTests.cpp  
         vtk_slice_writer_tests.cpp
         extent/ExtentBuilderTests.cpp
-        extent/extent_test.cpp
         VtkFieldTests/VtkFieldTests.cpp
         VtkGenericTests/VtkGenericTests.cpp
         VtkSurfaceTests/VtkSurfaceTests.cpp
