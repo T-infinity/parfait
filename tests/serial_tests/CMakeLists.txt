@@ -48,7 +48,6 @@ set(LEGACY_SERIAL_TESTS_SOURCES
         #Geometry/stl_test.cpp
         #Geometry/facet_test.cpp
         #Geometry/STLReader_test.cpp
-        mesh_interfaces/fun3d_mesh_tests.cpp
         mesh_interfaces/imported_ugrid_tests.cpp
         ugridWriterTests/ugridWriterTests.cpp
         ugrid_factory/ugrid_factory_tests.cpp

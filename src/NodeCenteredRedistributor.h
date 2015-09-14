@@ -6,7 +6,6 @@
 #include <vector>
 #include <MessagePasser.h>
 #include <ParallelImportedUgrid.h>
-#include <Fun3dMesh.h>
 #include "MeshBasicParallel.h"
 
 namespace Parfait {
