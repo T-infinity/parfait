@@ -283,7 +283,7 @@ namespace Parfait {
 
       nproc = MessagePasser::NumberOfProcesses();
       nodeMap.assign(nproc, 0);
-      MessagePasser::AllGather(mesh->numberOfNodesAtDegree(0), nodeMap);
+      MessagePasser::AllGather(mesh->countNodesAtDegree(0), nodeMap);
       nodeMap.insert(nodeMap.begin(), 0);
       for (int i = 2; i < nodeMap.size(); i++)
           nodeMap[i] += nodeMap[i - 1];

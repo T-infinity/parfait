@@ -11,10 +11,10 @@ namespace Parfait {
         MeshBasicParallel();
         std::shared_ptr<MeshConnectivity> connectivity;
         std::shared_ptr<MeshParallelMetaData> metaData;
-        int numberOfNodesAtDegree(int degree) const;
+        int countNodesAtDegree(int degree) const;
     };
 
-  inline int MeshBasicParallel::numberOfNodesAtDegree(int degree) const {
+  inline int MeshBasicParallel::countNodesAtDegree(int degree) const {
       int count = 0;
       for(auto d : metaData->nodeOwnershipDegree)
           if(d == 0)
