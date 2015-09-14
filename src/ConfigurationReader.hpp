@@ -148,15 +148,17 @@ namespace Parfait {
     }
 
     void ConfigurationReader::print() {
-        for(int i=0;i<gridFilenames.size();i++){
-            printf("Grid %i:\n",i);
-            printf("  -file        %s\n",gridFilenames[i].c_str());
-            if(bigEndian[i])
-                printf("  -endianness  big\n");
-            else
-                printf("  -endianness  little\n");
-            printf("  -Motion matrix:");
-            motionMatrices[i].printMatrix(stdout);
+        if (0 == MessagePasser::Rank()) {
+            for (int i = 0; i < gridFilenames.size(); i++) {
+                printf("Grid %i:\n", i);
+                printf("  -file        %s\n", gridFilenames[i].c_str());
+                if (bigEndian[i])
+                    printf("  -endianness  big\n");
+                else
+                    printf("  -endianness  little\n");
+                printf("  -Motion matrix:");
+                motionMatrices[i].printMatrix(stdout);
+            }
         }
     }
 }
