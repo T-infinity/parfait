@@ -2,6 +2,7 @@
 #define PARFAIT_MESHBASICPARALLEL_H
 
 #include <memory>
+#include <algorithm>
 #include "MeshConnectivity.h"
 #include "MeshParallelMetadata.h"
 
@@ -15,12 +16,9 @@ namespace Parfait {
     };
 
   inline int MeshBasicParallel::countNodesAtDegree(int degree) const {
-      int count = 0;
-      for(auto d : metaData->nodeOwnershipDegree)
-          if(d == 0)
-              count++;
-      return count;
+      return std::count(metaData->nodeOwnershipDegree.begin(),metaData->nodeOwnershipDegree.end(),degree);
   }
+
   inline MeshBasicParallel::MeshBasicParallel()
   : connectivity(std::make_shared<MeshConnectivity>()),
     metaData(std::make_shared<MeshParallelMetaData>()) {
