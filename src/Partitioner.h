@@ -5,21 +5,9 @@
 #include <MeshBasicParallel.h>
 
 namespace Parfait {
-  template <class Mesh>
-    class Partitioner {
-        template<class T> using vector = std::vector<T>;
-    public:
-        Partitioner() = delete;
-        Partitioner(const Mesh & mesh_in);
-
-        vector<int> generatePartVector();
-        vector<vector<int>> local_connectivity;
-    private:
-        const Mesh& mesh;
-
-        vector<long> buildProcNodeMap();
-    };
-
+    namespace Partitioner {
+        std::vector<int> generatePartVector(const std::vector<std::vector<long>>& node_to_node);
+    }
 }
 #include "Partitioner.hpp"
 #endif

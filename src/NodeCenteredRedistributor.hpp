@@ -64,8 +64,6 @@ namespace Parfait {
           std::vector<int> just_recv_associated_component_ids;
           MessagePasser::Gatherv(sendAssociatedComponentId, just_recv_associated_component_ids, proc);
           if (MessagePasser::Rank() == proc) {
-              printf("\nRank %d, just_recv_global_node_ids.size() %d, recv_xyz.size() %d", MessagePasser::Rank(),
-                     just_recv_xyz_global_node_ids.size(), just_recv_xyz.size());
               recvXYZ.resize(3 * just_recv_xyz_global_node_ids.size());
               recvAssociatedComponentIds.resize(just_recv_associated_component_ids.size());
               for (int index = 0; index < just_recv_xyz_global_node_ids.size(); index++) {
@@ -306,10 +304,6 @@ namespace Parfait {
 
       std::fill(ownership_degree.begin() + recvNodeIds.size(), ownership_degree.end(), 1);
 
-      printf("\nRank %d, ownership_degree:", MessagePasser::Rank());
-      for(auto d : ownership_degree)
-          printf(" %d", d);
-
       std::map<long, int> global_to_local;
       for (int i = 0; i < mesh->metaData->globalNodeIds.size(); i++)
           global_to_local.insert(std::make_pair(mesh->metaData->globalNodeIds[i], i));
@@ -331,9 +325,6 @@ namespace Parfait {
 
   inline void ParallelMeshReDistributor::identifyGhostNodes() {
       std::set<long> uniqueGhostNodeIds;
-      printf("\nRank %d recv Nodes: ", MessagePasser::Rank());
-      for(auto id : recvNodeIds)
-          printf(" %d", id);
       if (!std::is_sorted(recvNodeIds.begin(), recvNodeIds.end()))
           throw std::logic_error("Recv node Ids expected in order.");
       for (auto id:recvTets)
@@ -350,9 +341,6 @@ namespace Parfait {
               uniqueGhostNodeIds.insert(id);
 
       recvGhostNodeIds = std::vector<long>(uniqueGhostNodeIds.begin(), uniqueGhostNodeIds.end());
-      printf("\nRank %d, num ghost nodes %d", MessagePasser::Rank(), recvGhostNodeIds.size());
-      for(auto id : recvGhostNodeIds)
-          printf(" %d", id);
   }
 
   void ParallelMeshReDistributor::buildGlobalNodeIds() {

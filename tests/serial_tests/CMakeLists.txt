@@ -44,7 +44,6 @@ set(LEGACY_SERIAL_TESTS_SOURCES
         AllTests.cpp  
         VtkGenericTests/VtkGenericTests.cpp
         VtkSurfaceTests/VtkSurfaceTests.cpp
-        cart_mesh/cart_mesh_test.cpp
         generic_mesh_tools/GenericMeshToolsTests.cpp
         #Geometry/stl_test.cpp
         #Geometry/facet_test.cpp
