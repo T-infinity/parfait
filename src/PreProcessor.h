@@ -2,7 +2,6 @@
 #define PREPROCESSOR_H
 #include <string>
 #include "ConfigurationReader.h"
-#include <Fun3dMesh.h>
 #include <MessagePasser.h>
 #include <memory>
 #include <MeshBasicParallel.h>
