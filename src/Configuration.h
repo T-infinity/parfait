@@ -1,9 +1,8 @@
-#ifndef CONFIGURATION_READER_H
-#define CONFIGURATION_READER_H
+#ifndef CONFIGURATION_H
+#define CONFIGURATION_H
 #include <string>
 #include <vector>
 #include <ConfigurationReader.h>
-#include "Configuration.h"
 #include <MotionMatrix.h>
 #include <iostream>
 #include <stdio.h>
@@ -14,13 +13,25 @@
 #include "tinyxml.h"
 
 namespace Parfait {
-	class ConfigurationReader {
+	class Configuration {
 	public:
-		ConfigurationReader(std::string xmlFile);
-		Configuration createConfiguration();
+        Configuration(int number_of_grids,
+                      std::shared_ptr<std::vector<std::string>> grid_filenames,
+                      std::shared_ptr<std::vector<bool>> is_big_endian,
+                      std::shared_ptr<std::vector<Parfait::MapbcReader>> map_bcs,
+                      std::shared_ptr<std::vector<Parfait::MotionMatrix>> motion_matrices);
+
+        int numberOfGrids();
+		std::string getFilename(int gridId);
+		std::vector<std::string> getGridFilenames();
+		std::vector<bool> getGridEndianness();
+		bool isBigEndian(int gridId);
+		Parfait::MotionMatrix getMotionMatrix(int gridId);
+		int getBoundaryCondition(int gridId, int tag);
+		Parfait::MapbcReader getMapbcObject(int gridId);
+		void print();
 	private:
 		int ngrids;
-		std::string filename;
 		std::shared_ptr<std::vector<std::string>> gridFilenames;
 		std::shared_ptr<std::vector<bool>> bigEndian;
 		std::shared_ptr<std::vector<Parfait::MapbcReader>> mapbcVector;
@@ -40,6 +51,6 @@ namespace Parfait {
 
 
 }
-#include "ConfigurationReader.hpp"
+#include "Configuration.hpp"
 
 #endif

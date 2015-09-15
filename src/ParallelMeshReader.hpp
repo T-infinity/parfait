@@ -11,7 +11,8 @@
 inline std::shared_ptr<MeshBasicParallel> Parfait::ParallelMeshReader::readDistributedGrid(
         std::string configurationFileName) {
     ConfigurationReader configurationReader(configurationFileName);
-    ParallelMeshReader reader(configurationReader.getGridFilenames(), configurationReader.getGridEndianness());
+    Configuration config = configurationReader.createConfiguration();
+    ParallelMeshReader reader(config.getGridFilenames(), config.getGridEndianness());
     return reader.distributeGridsEvenly();
 }
 

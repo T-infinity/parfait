@@ -6,6 +6,10 @@ namespace Parfait {
 		readMapbcFiles();
 	}
 
+    inline Configuration ConfigurationReader::createConfiguration() {
+        return Configuration(ngrids,gridFilenames,bigEndian,mapbcVector,motionMatrices);
+    }
+
 	inline int ConfigurationReader::numberOfGrids() { return ngrids; }
 
     inline std::vector<std::string> ConfigurationReader::getGridFilenames() {
