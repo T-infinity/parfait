@@ -10,14 +10,6 @@ namespace Parfait {
 
 	inline int Configuration::numberOfGrids() { return ngrids; }
 
-    //inline std::vector<std::string> Configuration::getGridFilenames() {
-    //    return gridFilenames;
-    //}
-
-    //inline std::vector<bool> Configuration::getGridEndianness() {
-    //    return bigEndian;
-   // }
-
 	inline bool Configuration::isBigEndian(int gridId) { return bigEndian->at(gridId); }
 
 	inline std::string Configuration::getFilename(int gridId) { return gridFilenames->at(gridId); }

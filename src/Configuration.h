@@ -23,8 +23,6 @@ namespace Parfait {
 
         int numberOfGrids();
 		std::string getFilename(int gridId);
-		//std::vector<std::string> getGridFilenames();
-		//std::vector<bool> getGridEndianness();
 		bool isBigEndian(int gridId);
 		Parfait::MotionMatrix getMotionMatrix(int gridId);
 		int getBoundaryCondition(int gridId, int tag);
