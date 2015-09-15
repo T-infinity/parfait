@@ -1,6 +1,6 @@
 
 namespace Parfait {
-    Configuration::Configuration(int number_of_grids, std::shared_ptr<std::vector<std::string>> grid_filenames,
+    inline Configuration::Configuration(int number_of_grids, std::shared_ptr<std::vector<std::string>> grid_filenames,
                                  std::shared_ptr<std::vector<bool>> is_big_endian,
                                  std::shared_ptr<std::vector<Parfait::MapbcReader>> map_bcs,
                                  std::shared_ptr<std::vector<Parfait::MotionMatrix>> motion_matrices) {
@@ -24,7 +24,7 @@ namespace Parfait {
 		return mapbcVector->at(gridId).boundaryCondition(tag);
 	}
 
-    void Configuration::print() {
+    inline void Configuration::print() {
         if (0 == MessagePasser::Rank()) {
             for (int i = 0; i < gridFilenames->size(); i++) {
                 printf("Grid %i:\n", i);

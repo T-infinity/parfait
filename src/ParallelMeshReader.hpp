@@ -169,7 +169,7 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
     if (MessagePasser::Rank() == 0)
         printf("Done Distributing ...\n");
 }
-void ParallelMeshReader::createNodeComponentIds() {
+inline void ParallelMeshReader::createNodeComponentIds() {
     mesh->metaData->nodeComponentIds = std::vector<int>(localToGlobalId.size());
     for(int localId = 0; localId < localToGlobalId.size(); localId++){
         auto globalId = mesh->metaData->globalNodeIds[localId];
@@ -177,7 +177,7 @@ void ParallelMeshReader::createNodeComponentIds() {
         mesh->metaData->nodeComponentIds[localId] = componentId;
     }
 }
-void ParallelMeshReader::createNodeOwnerships() {
+inline void ParallelMeshReader::createNodeOwnerships() {
     mesh->metaData->nodeOwnershipDegree = std::vector<int>(mesh->metaData->globalNodeIds.size());
     for(int localId = 0; localId < localToGlobalId.size(); localId++){
         if(localId < mesh->metaData->xyz.size() / 3)
@@ -265,13 +265,13 @@ void Parfait::ParallelMeshReader::rootDistributeCells(int cellLength, std::vecto
     messageBuilder.padEmptySendsToNonSelf();
     messageBuilder.finishSends();
 }
-std::set<int> ParallelMeshReader::getTargetProcessors(const std::vector<long> &transmitCell) {
+inline std::set<int> ParallelMeshReader::getTargetProcessors(const std::vector<long> &transmitCell) {
     std::set<int> target_procs;
     for(const auto &id : transmitCell)
         target_procs.insert(getOwningProcOfNode(id));
     return target_procs;
 }
-std::vector<long> ParallelMeshReader::getCell(int cellLength, const std::vector<long> &cells, int cellId) const {
+inline std::vector<long> ParallelMeshReader::getCell(int cellLength, const std::vector<long> &cells, int cellId) const {
     std::vector<long> transmitCell;
     for(int i = 0; i < cellLength; i++){
         auto id = cells[cellLength*cellId + i];
@@ -291,7 +291,7 @@ void ParallelMeshReader::sendTransmitCellToTargets(CellSaver cellSaver, MessageB
     }
 }
 
-bool isDoneSignal(const std::vector<long> &signal){
+inline bool isDoneSignal(const std::vector<long> &signal){
     return 1 == signal.size();
 }
 
@@ -385,7 +385,7 @@ inline void Parfait::ParallelMeshReader::distributeHexs() {
         nonRootRecvCells(8, std::bind(&Parfait::ParallelMeshReader::saveHex, this, std::placeholders::_1));
 }
 
-void ParallelMeshReader::saveTriangle(std::vector<long> triangle){
+inline void ParallelMeshReader::saveTriangle(std::vector<long> triangle){
     auto tag = triangle.back();
     triangle.pop_back();
     if(triangle.size() != 3)
@@ -395,7 +395,7 @@ void ParallelMeshReader::saveTriangle(std::vector<long> triangle){
         mesh->connectivity->triangles.push_back(id);
 }
 
-void ParallelMeshReader::saveQuad(std::vector<long> quad){
+inline void ParallelMeshReader::saveQuad(std::vector<long> quad){
     auto tag = quad.back();
     quad.pop_back();
     if(quad.size() != 4)
@@ -404,33 +404,33 @@ void ParallelMeshReader::saveQuad(std::vector<long> quad){
     for(auto id:quad)
         mesh->connectivity->quads.push_back(id);
 }
-void ParallelMeshReader::saveTet(const std::vector<long>& tet){
+inline void ParallelMeshReader::saveTet(const std::vector<long>& tet){
     for(auto id:tet)
         mesh->connectivity->tets.push_back(id);
 }
-void ParallelMeshReader::savePyramid(const std::vector<long>& pyramid){
+inline void ParallelMeshReader::savePyramid(const std::vector<long>& pyramid){
     for(auto id:pyramid)
         mesh->connectivity->pyramids.push_back(id);
 }
-void ParallelMeshReader::savePrism(const std::vector<long>& prism){
+inline void ParallelMeshReader::savePrism(const std::vector<long>& prism){
     for(auto id:prism)
         mesh->connectivity->prisms.push_back(id);
 }
-void ParallelMeshReader::saveHex(const std::vector<long>& hex){
+inline void ParallelMeshReader::saveHex(const std::vector<long>& hex){
     for(auto id:hex)
         mesh->connectivity->hexes.push_back(id);
 }
 
-int Parfait::ParallelMeshReader::getOwningProcOfNode(long id) {
+inline int Parfait::ParallelMeshReader::getOwningProcOfNode(long id) {
     auto nnodes = gridNodeMap.back();
     return LinearPartitioner::getWorkerOfWorkItem(id, nnodes, MessagePasser::NumberOfProcesses());
 }
 
-int Parfait::ParallelMeshReader::getOwningGridOfNode(long globalId){
+inline int Parfait::ParallelMeshReader::getOwningGridOfNode(long globalId){
     return getOwningGridOfEntity(gridNodeMap, globalId);
 }
 
-int Parfait::ParallelMeshReader::getOwningGridOfEntity(std::vector<long> &gridCellMap, long globalId){
+inline int Parfait::ParallelMeshReader::getOwningGridOfEntity(std::vector<long> &gridCellMap, long globalId){
     for(int gridId = 0; gridId < gridCellMap.size() - 1; gridId++){
         auto start = gridCellMap[gridId];
         auto end = gridCellMap[gridId+1];
@@ -440,7 +440,7 @@ int Parfait::ParallelMeshReader::getOwningGridOfEntity(std::vector<long> &gridCe
     throw std::logic_error("Could not find component grid of cell");
 }
 
-long ParallelMeshReader::convertComponentNodeIdToGlobal(int id,int grid) const {
+inline long ParallelMeshReader::convertComponentNodeIdToGlobal(int id,int grid) const {
     return id + gridNodeMap[grid];
 }
 

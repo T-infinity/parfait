@@ -11,6 +11,7 @@
 #include <MessagePasser.h>
 #include "Point.h"
 #include "tinyxml.h"
+#include <memory>
 
 namespace Parfait {
 	class Configuration {

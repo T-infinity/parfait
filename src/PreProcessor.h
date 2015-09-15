@@ -9,23 +9,17 @@
 namespace Parfait {
 	class PreProcessor {
 	public:
-		PreProcessor(std::string xml_input_filename);
+		PreProcessor(Configuration& configuration);
 		std::shared_ptr<MeshBasicParallel> createMesh();
 
-		int getNumberOfGrids() { return gridNames.size(); }
+		int getNumberOfGrids() { return config.numberOfGrids(); }
 
-		std::string getGridName(int i) { return gridNames[i]; }
+		std::string getGridName(int i) { return config.getFilename(i); }
 
-		bool getIsBigEndian(int i) { return isBigEndian[i]; }
+		bool getIsBigEndian(int i) { return config.isBigEndian(i); }
 
 	private:
-		ConfigurationReader config;
-		std::vector<std::string> gridNames;
-		std::vector<bool> isBigEndian;
-		std::vector<Parfait::MapbcReader> mapbcVector;
-		std::vector<Parfait::MotionMatrix> grid_initial_positions;
-
-		void setUpGridInfo(std::string xml_input_filename);
+		Configuration& config;
 		std::vector<int> calculateNewPartitioning(std::shared_ptr<MeshBasicParallel> mesh);
 	};
 }

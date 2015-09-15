@@ -11,7 +11,7 @@ namespace Parfait {
 
   }
 
-  std::vector<int> ParallelMeshReDistributor::convertToLocalIds(std::map<long, int> global_to_local_map,
+  inline std::vector<int> ParallelMeshReDistributor::convertToLocalIds(std::map<long, int> global_to_local_map,
                                                                 const std::vector<long> &ids) {
       std::vector<int> local_ids;
       for (auto id:ids)
@@ -19,7 +19,7 @@ namespace Parfait {
       return local_ids;
   }
 
-  int ParallelMeshReDistributor::getLocalNodeId(long globalNodeId) {
+  inline int ParallelMeshReDistributor::getLocalNodeId(long globalNodeId) {
       auto it = std::lower_bound(recvNodeIds.begin(), recvNodeIds.end(), globalNodeId);
       if (it == recvNodeIds.end()) {
           it = std::lower_bound(recvGhostNodeIds.begin(), recvGhostNodeIds.end(), globalNodeId);
@@ -343,7 +343,7 @@ namespace Parfait {
       recvGhostNodeIds = std::vector<long>(uniqueGhostNodeIds.begin(), uniqueGhostNodeIds.end());
   }
 
-  void ParallelMeshReDistributor::buildGlobalNodeIds() {
+  inline void ParallelMeshReDistributor::buildGlobalNodeIds() {
       globalNodeIds = recvNodeIds;
       globalNodeIds.insert(globalNodeIds.end(), recvGhostNodeIds.begin(), recvGhostNodeIds.end());
   }

@@ -43,6 +43,7 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         SelfSend_test.cpp
         PreProcessor/ParallelNodeToNodeTests.cpp
         PreProcessor/NodeCenteredRedistributorTests.cpp
+        PreProcessor/PreProcessorTests.cpp
        )
 
 add_executable(ParfaitParallelTests ${PARFAIT_PARALLEL_TESTS_SRC} ${HEADERS})

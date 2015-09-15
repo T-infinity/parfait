@@ -1,7 +1,12 @@
 
 namespace Parfait {
-	inline ConfigurationReader::ConfigurationReader(std::string xmlFile)
-			: filename(xmlFile) {
+    inline ConfigurationReader::ConfigurationReader(std::string xmlFile)
+            : filename(xmlFile),
+              gridFilenames(std::make_shared<std::vector<std::string>>()),
+              bigEndian(std::make_shared<std::vector<bool>>()),
+              motionMatrices(std::make_shared<std::vector<Parfait::MotionMatrix>>()),
+              mapbcVector(std::make_shared<std::vector<MapbcReader>>())
+    {
 		load();
 		readMapbcFiles();
 	}
@@ -58,7 +63,7 @@ namespace Parfait {
         throwIfConfigurationIsInsane();
 	}
 
-    void ConfigurationReader::getRotationForComponent(const TiXmlHandle &ComponentHandle) {
+    inline void ConfigurationReader::getRotationForComponent(const TiXmlHandle &ComponentHandle) {
         TiXmlElement *RotateElement;
         RotateElement = ComponentHandle.FirstChild("rotate").ToElement();
         double rotation_angle = 0.0;
@@ -85,11 +90,11 @@ namespace Parfait {
             }
     }
 
-    bool ConfigurationReader::getEndiannessForComponent(const TiXmlElement *ComponentElement) {
+    inline bool ConfigurationReader::getEndiannessForComponent(const TiXmlElement *ComponentElement) {
         return figureOutEndianness(ComponentElement->Attribute("endian"));
     }
 
-    const Parfait::Point<double> ConfigurationReader::getXYZ(TiXmlElement *element) const {
+    inline const Parfait::Point<double> ConfigurationReader::getXYZ(TiXmlElement *element) const {
         Parfait::Point<double> p;
         int flag;
         double tmp;
@@ -115,12 +120,12 @@ namespace Parfait {
         throw std::domain_error(std::string("Could not determine endianness based on input: ")+s);
     }
 
-    void ConfigurationReader::throwIfBadElement(TiXmlElement *element) {
+    inline void ConfigurationReader::throwIfBadElement(TiXmlElement *element) {
         if(not element)
             throw std::domain_error("Couldn't find expected xml tag");
     }
 
-    void ConfigurationReader::throwIfConfigurationIsInsane() {
+    inline void ConfigurationReader::throwIfConfigurationIsInsane() {
         if(gridFilenames->size() != motionMatrices->size() or
                 gridFilenames->size() != bigEndian->size())
             throw std::logic_error("Configuration doesn't make sense");
