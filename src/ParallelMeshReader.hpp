@@ -12,7 +12,13 @@ inline std::shared_ptr<MeshBasicParallel> Parfait::ParallelMeshReader::readDistr
         std::string configurationFileName) {
     ConfigurationReader configurationReader(configurationFileName);
     Configuration config = configurationReader.createConfiguration();
-    ParallelMeshReader reader(config.getGridFilenames(), config.getGridEndianness());
+    std::vector<std::string> grid_filenames;
+    std::vector<bool> is_grid_big_endian;
+    for(int i=0;i<config.numberOfGrids();i++){
+        grid_filenames.push_back(config.getFilename(i));
+        is_grid_big_endian.push_back(config.isBigEndian(i));
+    }
+    ParallelMeshReader reader(grid_filenames, is_grid_big_endian);
     return reader.distributeGridsEvenly();
 }
 

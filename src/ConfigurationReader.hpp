@@ -10,33 +10,9 @@ namespace Parfait {
         return Configuration(ngrids,gridFilenames,bigEndian,mapbcVector,motionMatrices);
     }
 
-	inline int ConfigurationReader::numberOfGrids() { return ngrids; }
-
-    inline std::vector<std::string> ConfigurationReader::getGridFilenames() {
-        return gridFilenames;
-    }
-
-    inline std::vector<bool> ConfigurationReader::getGridEndianness() {
-        return bigEndian;
-    }
-
-	inline bool ConfigurationReader::isBigEndian(int gridId) { return bigEndian[gridId]; }
-
-	inline std::string ConfigurationReader::getFilename(int gridId) { return gridFilenames[gridId]; }
-
-	inline Parfait::MotionMatrix ConfigurationReader::getMotionMatrix(int gridId) { return motionMatrices[gridId]; }
-
-	inline Parfait::MapbcReader ConfigurationReader::getMapbcObject(int gridId) {
-		return mapbcVector[gridId];
-	}
-
-	inline int ConfigurationReader::getBoundaryCondition(int gridId, int tag) {
-		return mapbcVector[gridId].boundaryCondition(tag);
-	}
-
 	inline void ConfigurationReader::readMapbcFiles() {
-		for (auto filename:gridFilenames)
-			mapbcVector.push_back(filename.substr(0, filename.length() - 5).append("mapbc"));
+		for (auto filename:*gridFilenames)
+			mapbcVector->push_back(filename.substr(0, filename.length() - 5).append("mapbc"));
 	}
 
 	inline void ConfigurationReader::load() {
@@ -58,18 +34,18 @@ namespace Parfait {
 		TiXmlElement *ComponentElement = GlobalHandle.FirstChild("component").ToElement();
 		TiXmlHandle ComponentHandle = GlobalHandle.FirstChild("component");
 		while (ComponentElement) {
-			gridFilenames.push_back(ComponentElement->Attribute("filename"));
-            bigEndian.push_back(getEndiannessForComponent(ComponentElement));
+			gridFilenames->push_back(ComponentElement->Attribute("filename"));
+            bigEndian->push_back(getEndiannessForComponent(ComponentElement));
 
             // if the component has a translation defined, set it
             TiXmlElement *TranslateElement;
             TranslateElement = ComponentHandle.FirstChild("translate").ToElement();
             Point<double> translation;
             translation[0] = translation[1] = translation[2] = 0.0;
-            motionMatrices.push_back(Parfait::MotionMatrix());
+            motionMatrices->push_back(Parfait::MotionMatrix());
             if (TranslateElement) {
                 translation = getXYZ(TranslateElement);
-                motionMatrices.back().setTranslation(translation.data());
+                motionMatrices->back().setTranslation(translation.data());
             }
             getRotationForComponent(ComponentHandle);
 
@@ -80,7 +56,6 @@ namespace Parfait {
 			ngrids++;
 		}
         throwIfConfigurationIsInsane();
-        print();
 	}
 
     void ConfigurationReader::getRotationForComponent(const TiXmlHandle &ComponentHandle) {
@@ -106,7 +81,7 @@ namespace Parfait {
 
                 p1 = getXYZ(AxisBeginElement);
                 p2 = getXYZ(AxisEndElement);
-                motionMatrices.back().addRotation(p1.data(), p2.data(), rotation_angle);
+                motionMatrices->back().addRotation(p1.data(), p2.data(), rotation_angle);
             }
     }
 
@@ -146,23 +121,8 @@ namespace Parfait {
     }
 
     void ConfigurationReader::throwIfConfigurationIsInsane() {
-        if(gridFilenames.size() != motionMatrices.size() or
-                gridFilenames.size() != bigEndian.size())
+        if(gridFilenames->size() != motionMatrices->size() or
+                gridFilenames->size() != bigEndian->size())
             throw std::logic_error("Configuration doesn't make sense");
-    }
-
-    void ConfigurationReader::print() {
-        if (0 == MessagePasser::Rank()) {
-            for (int i = 0; i < gridFilenames.size(); i++) {
-                printf("Grid %i:\n", i);
-                printf("  -file        %s\n", gridFilenames[i].c_str());
-                if (bigEndian[i])
-                    printf("  -endianness  big\n");
-                else
-                    printf("  -endianness  little\n");
-                printf("  -Motion matrix:");
-                motionMatrices[i].printMatrix(stdout);
-            }
-        }
     }
 }
