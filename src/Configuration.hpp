@@ -2,27 +2,31 @@
 namespace Parfait {
     inline Configuration::Configuration(int number_of_grids, std::shared_ptr<std::vector<std::string>> grid_filenames,
                                  std::shared_ptr<std::vector<bool>> is_big_endian,
-                                 std::shared_ptr<std::vector<Parfait::MapbcReader>> map_bcs,
-                                 std::shared_ptr<std::vector<Parfait::MotionMatrix>> motion_matrices) {
-
-        throw std::logic_error("constructor not implemented yet");
+                                        std::shared_ptr<std::vector<Parfait::MapbcReader>> map_bcs,
+                                        std::shared_ptr<std::vector<Parfait::MotionMatrix>> motion_matrices)
+            :ngrids(number_of_grids),
+             bigEndian(is_big_endian),
+             mapbcVector(map_bcs),
+             motionMatrices(motion_matrices),
+             gridFilenames(grid_filenames)
+    {
     }
 
-	inline int Configuration::numberOfGrids() { return ngrids; }
+    inline int Configuration::numberOfGrids() { return ngrids; }
 
-	inline bool Configuration::isBigEndian(int gridId) { return bigEndian->at(gridId); }
+    inline bool Configuration::isBigEndian(int gridId) { return bigEndian->at(gridId); }
 
-	inline std::string Configuration::getFilename(int gridId) { return gridFilenames->at(gridId); }
+    inline std::string Configuration::getFilename(int gridId) { return gridFilenames->at(gridId); }
 
-	inline Parfait::MotionMatrix Configuration::getMotionMatrix(int gridId) { return motionMatrices->at(gridId); }
+    inline Parfait::MotionMatrix Configuration::getMotionMatrix(int gridId) { return motionMatrices->at(gridId); }
 
-	inline Parfait::MapbcReader Configuration::getMapbcObject(int gridId) {
-		return mapbcVector->at(gridId);
-	}
+    inline Parfait::MapbcReader Configuration::getMapbcObject(int gridId) {
+        return mapbcVector->at(gridId);
+    }
 
-	inline int Configuration::getBoundaryCondition(int gridId, int tag) {
-		return mapbcVector->at(gridId).boundaryCondition(tag);
-	}
+    inline int Configuration::getBoundaryCondition(int gridId, int tag) {
+        return mapbcVector->at(gridId).boundaryCondition(tag);
+    }
 
     inline void Configuration::print() {
         if (0 == MessagePasser::Rank()) {
