@@ -229,3 +229,18 @@ TEST_CASE("CartBlockTestsLegacyTests"){
 	REQUIRE((ncells_z*ncells_x) == (int)ids.size());
 		
 }
+
+TEST_CASE("get cell nodes"){
+    CartBlock block({0,0,0},{1,1,1},1,1,1);
+    auto cell = block.getNodesInCell(0);
+    REQUIRE(8 == cell.size());
+
+    REQUIRE(0 == cell[0]);
+    REQUIRE(1 == cell[1]);
+    REQUIRE(2 == cell[2]);
+    REQUIRE(3 == cell[3]);
+    REQUIRE(4 == cell[4]);
+    REQUIRE(5 == cell[5]);
+    REQUIRE(6 == cell[6]);
+    REQUIRE(7 == cell[7]);
+}

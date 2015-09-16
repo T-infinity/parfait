@@ -97,7 +97,6 @@ void VtkVolumeWriter::addCellData(std::string name,
     vtk_grid->GetCellData()->AddArray(stuff);
 }
 
-
 inline void VtkVolumeWriter::writeBinary(){
     using namespace MessagePasser;
     vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer =

@@ -1,7 +1,8 @@
 #ifndef VTK_VOLUME_WRITER_H
 #define VTK_VOLUME_WRITER_H
 
-#ifdef PARFAIT_WITH_VTK
+//#ifdef PARFAIT_WITH_VTK
+#if 1
 
 #include <string>
 #include <vector>

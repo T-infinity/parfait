@@ -35,6 +35,22 @@ inline int Parfait::CartBlock::numberOfCells() const {return number_of_cells;}
 
 inline int Parfait::CartBlock::numberOfNodes() const {return (kx+1)*(ky+1)*(kz+1);}
 
+inline std::vector<int> Parfait::CartBlock::getNodesInCell(int id) {
+    int i, j, k;
+    convertCellIdTo_ijk(id, i, j, k);
+
+    std::vector<int> cellNodes(8);
+    cellNodes[0] = convert_ijk_ToNodeId(i  , j  , k  );
+    cellNodes[1] = convert_ijk_ToNodeId(i+1, j  , k  );
+    cellNodes[2] = convert_ijk_ToNodeId(i  , j+1, k  );
+    cellNodes[3] = convert_ijk_ToNodeId(i+1, j+1, k  );
+    cellNodes[4] = convert_ijk_ToNodeId(i  , j  , k+1);
+    cellNodes[5] = convert_ijk_ToNodeId(i+1, j  , k+1);
+    cellNodes[6] = convert_ijk_ToNodeId(i  , j+1, k+1);
+    cellNodes[7] = convert_ijk_ToNodeId(i+1, j+1, k+1);
+    return cellNodes;
+}
+
 inline int Parfait::CartBlock::getIdOfContainingCell(double point[3]) const
 {
   assert(contains(Point<double>(point)));

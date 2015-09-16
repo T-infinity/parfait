@@ -29,6 +29,8 @@ namespace Parfait {
         int numberOfCells() const;
         int numberOfNodes() const;
 
+        std::vector<int> getNodesInCell(int id);
+
         int getIdOfContainingCell(double point[3]) const;
         std::vector<int> getCellIdsInExtent(const Extent<double> &search_extent) const;
         Extent<int> getRangeOfOverlappingCells(const Extent<double> &search_extent) const;
