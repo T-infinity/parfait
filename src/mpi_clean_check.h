@@ -2,7 +2,8 @@
 #define MPI_CLEAN_CHECK
 
 #include <mpi.h>
-#define CHECK_MPI_CLEAN    int incoming_exists = false; \
+#define CHECK_MPI_CLEAN    { \
+                           int incoming_exists = false; \
                            MPI_Status status; \
                            int rank; \
                            MPI_Comm_rank(MPI_COMM_WORLD, &rank); \
@@ -10,6 +11,7 @@
                            if(incoming_exists) {\
                                fprintf(stderr, "RANK %d, Detected non-clean incomming MPI message. %s %d",rank, __FILE__,__LINE__); \
                                abort(); \
+                           } \
                            }
 
 #endif
