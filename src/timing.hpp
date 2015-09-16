@@ -4,11 +4,6 @@ namespace Parfait{
         std::cout << ms.count() << "ms\n";
     }
 
-    inline void printElapsedSeconds(Clock::time_point t0, Clock::time_point t1){
-        seconds s = std::chrono::duration_cast<seconds>(t1-t0);
-        std::cout << s.count() << "seconds \n";
-    }
-
     inline void printReadableElapsedTime(Clock::time_point t0, Clock::time_point t1){
         hours h = std::chrono::duration_cast<hours>(t1-t0);
         minutes m = std::chrono::duration_cast<minutes>(t1-t0);

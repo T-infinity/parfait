@@ -13,7 +13,6 @@ namespace Parfait {
     auto Now() {return Clock::now();}
 
     void printTimeDifference(Clock::time_point t0, Clock::time_point t1);
-    void printElapsedSeconds(Clock::time_point t0, Clock::time_point t1);
     void printReadableElapsedTime(Clock::time_point t0, Clock::time_point t1);
 
 }
