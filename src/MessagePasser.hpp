@@ -8,6 +8,17 @@ inline void MessagePasser::Init(){
 		MPI_Init(NULL,NULL);
 }
 
+inline void MessagePasser::InitWithThreads(){
+	int initialized=0;
+	MPI_Initialized(&initialized);
+	int provided;
+	if(!initialized)
+		MPI_Init_thread(NULL, NULL, MPI_THREAD_MULTIPLE, &provided);
+	if(provided != MPI_THREAD_MULTIPLE)
+		throw std::logic_error("Could not instantiate MPI runtime with MPI_THREAD_MULTIPLE");
+}
+
+
 inline void MessagePasser::Finalize(){
 	int finalized=0;
 	MPI_Finalized(&finalized);

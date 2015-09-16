@@ -12,6 +12,7 @@ namespace MessagePasser
 {
 	void Init();
 	void Finalize();
+    void InitWithThreads();
 	int Rank();
 	int NumberOfProcesses();
 	inline MPI_Datatype Type(int    value) {return MPI_INT;}
