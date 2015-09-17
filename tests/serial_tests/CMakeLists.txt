@@ -29,6 +29,7 @@ set(SERIAL_TESTS_SOURCES
         Fun3DToCGNSTests.cpp
         high_level_mesh_searching/AdtBuilderTests.cpp
         LinearPartitioner/LinearPartitionerTests.cpp
+        LoggerTests.cpp
         parfait_mesh/ParfaitMesh_test.cpp
         point/PointTest.cpp
         range_loop/RangeLoopTests.cpp
