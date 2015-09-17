@@ -42,12 +42,12 @@ inline std::vector<int> Parfait::CartBlock::getNodesInCell(int id) {
     std::vector<int> cellNodes(8);
     cellNodes[0] = convert_ijk_ToNodeId(i  , j  , k  );
     cellNodes[1] = convert_ijk_ToNodeId(i+1, j  , k  );
-    cellNodes[2] = convert_ijk_ToNodeId(i  , j+1, k  );
-    cellNodes[3] = convert_ijk_ToNodeId(i+1, j+1, k  );
+    cellNodes[2] = convert_ijk_ToNodeId(i+1, j+1, k  );
+    cellNodes[3] = convert_ijk_ToNodeId(i  , j+1, k  );
     cellNodes[4] = convert_ijk_ToNodeId(i  , j  , k+1);
     cellNodes[5] = convert_ijk_ToNodeId(i+1, j  , k+1);
-    cellNodes[6] = convert_ijk_ToNodeId(i  , j+1, k+1);
-    cellNodes[7] = convert_ijk_ToNodeId(i+1, j+1, k+1);
+    cellNodes[6] = convert_ijk_ToNodeId(i+1, j+1, k+1);
+    cellNodes[7] = convert_ijk_ToNodeId(i  , j+1, k+1);
     return cellNodes;
 }
 
@@ -115,6 +115,12 @@ inline void Parfait::CartBlock::getNode(int node_id,double point[3]) const
   point[0] = lo[0] + (get_dx())*((double)(i));
   point[1] = lo[1] + (get_dy())*((double)(j));
   point[2] = lo[2] + (get_dz())*((double)(k));
+}
+
+inline Parfait::Point<double> Parfait::CartBlock::getNode(int node_id) const {
+    Point<double> p;
+    getNode(node_id,p.data());
+    return p;
 }
 
 inline void Parfait::CartBlock::getCellCentroid(int cell_id,double point[3]) const

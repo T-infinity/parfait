@@ -5,7 +5,7 @@ PROJECT(ParfaitParallelTests)
 
 add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/tests/grids/6cell.lb8.ugrid")
 
-add_definitions(-DPARFAIT_WITH_MPI -DPARFAIT_WITH_PARMETIS -DCATCH_WITH_MPI)
+add_definitions(-DPARFAIT_WITH_MPI -DPARFAIT_WITH_PARMETIS -DCATCH_WITH_MPI -DPARFAIT_WITH_VTK)
 find_package(MPI REQUIRED)
 
 include_directories(
@@ -53,3 +53,26 @@ target_link_libraries(ParfaitParallelTests
             parmetis
             metis
             )
+
+
+set(VTK_WRITING_SOURCES
+        catch_main.cpp
+        VtkUnstructuredWriterTests.cpp
+)
+
+find_package(VTK REQUIRED)
+include(${VTK_USE_FILE})
+LIST(REMOVE_ITEM VTK_LIBRARIES
+        vtkPointSpriteRendering
+        vtkPointSpriteGraphics
+        vtkQvis
+        vtkUtilitiesPythonInitializer
+        vtkEyeDomeLighting
+        vtkSciberQuest
+)
+
+add_executable(VtkTests ${VTK_WRITING_SOURCES})
+target_link_libraries(VtkTests
+        ${MPI_LIBRARIES}
+        ${VTK_LIBRARIES}
+)

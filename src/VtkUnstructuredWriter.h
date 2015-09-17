@@ -1,8 +1,7 @@
 #ifndef VTK_VOLUME_WRITER_H
 #define VTK_VOLUME_WRITER_H
 
-//#ifdef PARFAIT_WITH_VTK
-#if 1
+#ifdef PARFAIT_WITH_VTK
 
 #include <string>
 #include <vector>
@@ -23,42 +22,46 @@
 #include <vtkXMLPUnstructuredGridWriter.h>
 #include <MessagePasser.h>
 
-class VtkVolumeWriter{
+namespace Parfait {
+    class VtkUnstructuredWriter {
     public:
         template<typename MeshType>
-        VtkVolumeWriter(std::string name,MeshType& mesh);
+        VtkUnstructuredWriter(std::string name, MeshType &mesh);
 
         void writeBinary();
-        
+
         template<typename T>
-        void addNodeData(std::string name,T* data,int number_of_components);
-       
+        void addNodeData(std::string name, T *data, int number_of_components);
+
         template<typename T>
-        void addCellData(std::string name,T* data,int number_of_components);
+        void addCellData(std::string name, T *data, int number_of_components);
+
     private:
         std::string base_name;
         vtkSmartPointer<vtkUnstructuredGrid> vtk_grid =
-            vtkSmartPointer<vtkUnstructuredGrid>::New();
-        
-        template<typename MeshType>
-        void setPoints(MeshType& mesh);
+                vtkSmartPointer<vtkUnstructuredGrid>::New();
 
         template<typename MeshType>
-        void setCells(MeshType& mesh);
+        void setPoints(MeshType &mesh);
 
-        vtkSmartPointer<vtkIntArray> createVtkArrayPointer(int* data){
+        template<typename MeshType>
+        void setCells(MeshType &mesh);
+
+        vtkSmartPointer<vtkIntArray> createVtkArrayPointer(int *data) {
             return vtkSmartPointer<vtkIntArray>::New();
         }
-        vtkSmartPointer<vtkFloatArray> createVtkArrayPointer(float* data){
+
+        vtkSmartPointer<vtkFloatArray> createVtkArrayPointer(float *data) {
             return vtkSmartPointer<vtkFloatArray>::New();
         }
-        vtkSmartPointer<vtkDoubleArray> createVtkArrayPointer(double* data){
+
+        vtkSmartPointer<vtkDoubleArray> createVtkArrayPointer(double *data) {
             return vtkSmartPointer<vtkDoubleArray>::New();
         }
-};
+    };
+}
 
-
-#include "VtkVolumeWriter.hpp"
+#include "VtkUnstructuredWriter.hpp"
 
 #endif // PARFAIT_WITH_VTK
 #endif

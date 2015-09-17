@@ -35,6 +35,7 @@ namespace Parfait {
         std::vector<int> getCellIdsInExtent(const Extent<double> &search_extent) const;
         Extent<int> getRangeOfOverlappingCells(const Extent<double> &search_extent) const;
         void getNode(int node, double point[3]) const;
+        Point<double> getNode(int node_id) const;
         void getCellCentroid(int cell_id, double centroid[3]) const;
         Extent<double> createExtentFromCell(int cell) const;
 

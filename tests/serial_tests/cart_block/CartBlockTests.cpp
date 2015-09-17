@@ -237,10 +237,10 @@ TEST_CASE("get cell nodes"){
 
     REQUIRE(0 == cell[0]);
     REQUIRE(1 == cell[1]);
-    REQUIRE(2 == cell[2]);
-    REQUIRE(3 == cell[3]);
+    REQUIRE(3 == cell[2]);
+    REQUIRE(2 == cell[3]);
     REQUIRE(4 == cell[4]);
     REQUIRE(5 == cell[5]);
-    REQUIRE(6 == cell[6]);
-    REQUIRE(7 == cell[7]);
+    REQUIRE(7 == cell[6]);
+    REQUIRE(6 == cell[7]);
 }
