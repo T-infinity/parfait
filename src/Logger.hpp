@@ -38,7 +38,7 @@ namespace Parfait {
       fclose(i->file);
       openFile(file_name);
   }
-  inline void Logger::setOutput(FILE *output) {
+  inline void Logger::setOutputStream(FILE *output) {
       auto i = instance();
       fclose(i->file);
       i->file = output;

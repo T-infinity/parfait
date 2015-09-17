@@ -12,7 +12,7 @@ namespace Parfait{
       ~Logger();
 
       static void setFileName(std::string file_name);
-      static void setOutput(FILE *output);
+      static void setOutputStream(FILE *output);
   private:
       Logger();
       static Logger* logger;
