@@ -16,8 +16,8 @@ namespace MessagePasser
 	int Rank();
 	int NumberOfProcesses();
 	inline MPI_Datatype Type(int    value) {return MPI_INT;}
-	inline MPI_Datatype Type(size_t value) {return MPI_INT;}
-    inline MPI_Datatype Type(long   value) {return MPI_LONG;}
+	inline MPI_Datatype Type(size_t value) {return MPI_LONG;}
+  inline MPI_Datatype Type(long   value) {return MPI_LONG;}
 	inline MPI_Datatype Type(float  value) {return MPI_FLOAT;}
 	inline MPI_Datatype Type(double value) {return MPI_DOUBLE;}
 	inline void Barrier() {MPI_Barrier(MPI_COMM_WORLD);}
