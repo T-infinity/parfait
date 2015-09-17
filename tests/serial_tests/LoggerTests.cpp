@@ -7,7 +7,7 @@ TEST_CASE("Logger Exists"){
     Logger::log("hello log %d", 5);
     Logger::setFileName("cool-output.txt");
     Logger::log("hello log 6");
-    Logger::setOutput(stdout);
+    Logger::setOutputStream(stdout);
     Logger::log("hello log 7");
 }
 
