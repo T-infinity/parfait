@@ -41,6 +41,19 @@ TEST_CASE("Parallel min reduction for a single element"){
         REQUIRE(value == MessagePasser::Rank());
 }
 
+TEST_CASE("Parallel min-all reduction for a single element"){
+    int root = MessagePasser::NumberOfProcesses()-1;
+    int value = MessagePasser::Rank();
+    value = MessagePasser::ParallelMinAll(value);
+    REQUIRE(0 == value);
+}
+
+TEST_CASE("Parallel max-all reduction for a single element"){
+    int value = MessagePasser::Rank();
+    value = MessagePasser::ParallelMaxAll(value);
+    REQUIRE((MessagePasser::NumberOfProcesses()-1 == value));
+}
+
 TEST_CASE("Parallel sum of an integer"){
     auto sum = MessagePasser::ParallelSum(1);
     REQUIRE(MessagePasser::NumberOfProcesses() == sum);

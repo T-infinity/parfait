@@ -16,8 +16,23 @@ namespace MessagePasser {
   template<typename T>
   T ParallelMin(T value, int rootId) {
 	  T tmp = value;
-	  T max = value;
-	  MPI_Reduce(&tmp, &max, 1, Type(value), MPI_MIN, rootId, MPI_COMM_WORLD);
+	  T min = value;
+	  MPI_Reduce(&tmp, &min, 1, Type(value), MPI_MIN, rootId, MPI_COMM_WORLD);
+	  return min;
+  }
+  template <typename T>
+  T ParallelMinAll(T value) {
+	  T tmp = value;
+	  T min;
+	  MPI_Allreduce(&tmp, &min, 1, Type(value), MPI_MIN, MPI_COMM_WORLD);
+	  return min;
+  }
+
+  template <typename T>
+  T ParallelMaxAll(T value) {
+	  T tmp = value;
+	  T max;
+	  MPI_Allreduce(&tmp, &max, 1, Type(value), MPI_MAX, MPI_COMM_WORLD);
 	  return max;
   }
 
