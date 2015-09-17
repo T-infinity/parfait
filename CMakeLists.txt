@@ -12,3 +12,7 @@ add_subdirectory(utils)
 add_subdirectory(tests/serial_tests)
 add_subdirectory(tests/parallel_tests)
 add_subdirectory(tinyxml)
+
+if(PARFAIT_WITH_VTK)
+    add_subdirectory(tests/vtk_tests)
+endif()

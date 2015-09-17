@@ -54,24 +54,3 @@ target_link_libraries(ParfaitParallelTests
             metis
             )
 
-set(VTK_WRITING_SOURCES
-        catch_main.cpp
-        VtkUnstructuredWriterTests.cpp
-)
-
-find_package(VTK REQUIRED)
-include(${VTK_USE_FILE})
-LIST(REMOVE_ITEM VTK_LIBRARIES
-        vtkPointSpriteRendering
-        vtkPointSpriteGraphics
-        vtkQvis
-        vtkUtilitiesPythonInitializer
-        vtkEyeDomeLighting
-        vtkSciberQuest
-)
-
-add_executable(VtkTests ${VTK_WRITING_SOURCES})
-target_link_libraries(VtkTests
-        ${MPI_LIBRARIES}
-        ${VTK_LIBRARIES}
-)
