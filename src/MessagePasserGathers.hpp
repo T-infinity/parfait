@@ -8,7 +8,7 @@ void MessagePasser::Gather(T value,std::vector<T> &vec,int rootId) {
 template<typename T>
 void MessagePasser::AllGather(T value,std::vector<T> &vec) {
 	vec.assign(NumberOfProcesses(),0);
-	MPI_Allgather(&value,1,Type(value),&vec[0],1,Type(value),MPI_COMM_WORLD);
+	MPI_Allgather(&value,sizeof(T),MPI_CHAR,vec.data(),sizeof(T),MPI_CHAR,MPI_COMM_WORLD);
 }
 
 template<typename T>
@@ -18,15 +18,15 @@ void MessagePasser::Gather(const std::vector<T> &send_vec,int send_count,std::ve
 		recv_vec.clear();
 		recv_vec.assign(send_count*NumberOfProcesses(),0);
 	}
-	MPI_Gather(&send_vec[0],send_count,Type(T()),&recv_vec[0],send_count,
-			Type(T()),rootId,MPI_COMM_WORLD);
+	MPI_Gather(send_vec.data(),send_count*sizeof(T),MPI_CHAR,recv_vec.data(),send_count*sizeof(T),
+			MPI_CHAR,rootId,MPI_COMM_WORLD);
 }
 
 template<typename T>
 void MessagePasser::Gatherv(const std::vector<T> &send_vec,std::vector<T> &recv_vec,
 		std::vector<int> &map,int rootId)
 {
-	int sendcount = (int)send_vec.size();	
+	int sendcount = (int)send_vec.size();
 	int nproc = NumberOfProcesses();
 	std::vector<int> recv_counts(nproc,0);
 	Gather(sendcount,recv_counts,rootId);
