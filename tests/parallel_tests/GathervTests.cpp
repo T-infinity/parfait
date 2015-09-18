@@ -1,7 +1,3 @@
-//
-// Created by Cameron T Druyor Jr on 7/1/15.
-//
-
 #include <vector>
 #include <MessagePasser.h>
 #include "mpi_compare_tols.h"

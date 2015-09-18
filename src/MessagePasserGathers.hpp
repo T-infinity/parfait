@@ -24,7 +24,7 @@ void MessagePasser::Gather(const std::vector<T> &send_vec,int send_count,std::ve
 template<typename T>
 void MessagePasser::Gatherv(const std::vector<T> &send_vec,std::vector<T> &recv_vec,
 		std::vector<int> &map,int rootId) {
-	int sendcount = (int)send_vec.size();
+	int sendcount = (int)send_vec.size()*sizeof(T);
 	int nproc = NumberOfProcesses();
 	std::vector<int> recv_counts(nproc,0);
 	Gather(sendcount,recv_counts,rootId);
@@ -32,27 +32,30 @@ void MessagePasser::Gatherv(const std::vector<T> &send_vec,std::vector<T> &recv_
 		map.assign(nproc+1,0);
 		for(int i=1;i<nproc+1;i++)
 			map[i] = map[i-1] + recv_counts[i-1];
-		recv_vec.assign(map.back(),0);
+		recv_vec.assign(map.back()/sizeof(T),0);
 	}
-	MPI_Gatherv(&send_vec[0],sendcount,Type(T()),
-			&recv_vec[0],&recv_counts[0],&map[0],Type(T()),
-			rootId,MPI_COMM_WORLD);	
+	MPI_Gatherv(send_vec.data(),sendcount,MPI_CHAR,
+			recv_vec.data(),recv_counts.data(),map.data(),MPI_CHAR,
+			rootId,MPI_COMM_WORLD);
+	// make map make sense for original datatype
+	for(auto& x:map)
+		x /= sizeof(T);
 }
 
 template<typename T>
 void MessagePasser::Gatherv(const std::vector<T>& send_vec,
-														std::vector<std::vector<T>>& result,int root_id){
+							std::vector<std::vector<T>>& result,int root_id){
 	std::vector<int> map;
 	std::vector<T> recv;
 	if(Rank() == root_id)
 		result.assign(NumberOfProcesses(),std::vector<T>());
 	Gatherv(send_vec,recv,map,root_id);
-  if(Rank() == root_id) {
-    for (int i = 0; i < NumberOfProcesses(); i++) {
-      for(int j=map[i];j<map[i+1];j++)
-      	result[i].push_back(recv[j]);
-    }
-  }
+	if(Rank() == root_id) {
+		for (int i = 0; i < NumberOfProcesses(); i++) {
+			for(int j=map[i];j<map[i+1];j++)
+				result[i].push_back(recv[j]);
+		}
+	}
 }
 
 template<typename T>
@@ -85,19 +88,19 @@ void MessagePasser::AllGatherv(const std::vector<T>& send_vec,
 
 
 template<typename T>
-void MessagePasser::AllGatherv(const std::vector<T> &send_vec,std::vector<T> &recv_vec,std::vector<int> &map)
-{
-	int sendcount = (int)send_vec.size();	
+void MessagePasser::AllGatherv(const std::vector<T> &send_vec,std::vector<T> &recv_vec,std::vector<int> &map) {
+	int sendcount = (int)send_vec.size()*sizeof(T);
 	int nproc = NumberOfProcesses();
 	std::vector<int> recv_counts(nproc,0);
 	AllGather(sendcount,recv_counts);
-	map.clear();
 	map.assign(nproc+1,0);
 	for(int i=1;i<nproc+1;i++)
 		map[i] = map[i-1] + recv_counts[i-1];
 	recv_vec.clear();
-	recv_vec.assign(map.back(),0);
-	MPI_Allgatherv(&send_vec[0],sendcount,Type(T()),
-			&recv_vec[0],&recv_counts[0],&map[0],Type(T()),
-			MPI_COMM_WORLD);	
+	recv_vec.assign(map.back()/sizeof(T),0);
+	MPI_Allgatherv(&send_vec[0],sendcount,MPI_CHAR,
+			&recv_vec[0],&recv_counts[0],&map[0],MPI_CHAR,
+			MPI_COMM_WORLD);
+	for(auto& x:map)
+		x /= sizeof(T);
 }
