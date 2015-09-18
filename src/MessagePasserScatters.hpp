@@ -2,7 +2,7 @@ namespace MessagePasser {
 // scatter a vector that has exactly nproc 	elements
   template<typename T>
   void Scatter(std::vector<T> &vec, T &recv_value, int rootId) {
-	  MPI_Scatter(&vec[0], 1, Type(recv_value), &recv_value, 1, Type(recv_value), rootId, MPI_COMM_WORLD);
+	  MPI_Scatter(vec.data(), sizeof(T), MPI_CHAR, &recv_value, sizeof(T), MPI_CHAR, rootId, MPI_COMM_WORLD);
   }
 
 // scatter a vector that divides evenly into the number of procs
@@ -15,10 +15,8 @@ namespace MessagePasser {
 		  size = total_length / NumberOfProcesses();
 	  }
 	  Broadcast(size, rootId);
-	  recv_vec.clear();
 	  recv_vec.assign(size, 0);
-	  T t;
-	  MPI_Scatter(&vec[0], size, Type(t), &recv_vec[0], size, Type(t), rootId, MPI_COMM_WORLD);
+	  MPI_Scatter(vec.data(), size*sizeof(T), MPI_CHAR, recv_vec.data(), size*sizeof(T), MPI_CHAR, rootId, MPI_COMM_WORLD);
   }
 
 // scatterv a vector that does not divide evenly into number of procs
@@ -30,20 +28,23 @@ namespace MessagePasser {
 	  if (Rank() == rootId) {
 		  int total_size = (int) vec.size();
 		  int nproc = NumberOfProcesses();
+          sendcounts.assign(nproc,total_size / nproc);
 		  for (int i = 0; i < nproc; i++)
 			  if (i < (total_size % nproc))
-				  sendcounts.push_back(total_size / nproc + 1);
-			  else
-				  sendcounts.push_back(total_size / nproc);
+				  sendcounts[i]++;
 		  displs.assign(nproc, 0);
 		  for (int i = 1; i < nproc; i++)
 			  displs[i] = displs[i - 1] + sendcounts[i - 1];
 	  }
 	  Scatter(sendcounts, local_size, rootId);
-	  recv_vec.clear();
 	  recv_vec.assign(local_size, 0);
-	  T t;
-	  MPI_Scatterv(&vec[0], &sendcounts[0], &displs[0], Type(t),
-				   &recv_vec[0], local_size, Type(t), rootId, MPI_COMM_WORLD);
+        //convert sendcounts etc to char numbering
+        for(auto& x:sendcounts)
+            x *= sizeof(T);
+        for(auto& x:displs)
+            x *= sizeof(T);
+        local_size *= sizeof(T);
+	  MPI_Scatterv(vec.data(), sendcounts.data(), displs.data(), MPI_CHAR,
+				   recv_vec.data(), local_size, MPI_CHAR, rootId, MPI_COMM_WORLD);
   }
 }
