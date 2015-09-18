@@ -7,7 +7,7 @@ void MessagePasser::Gather(T value,std::vector<T> &vec,int rootId) {
 
 template<typename T>
 void MessagePasser::AllGather(T value,std::vector<T> &vec) {
-	vec.assign(NumberOfProcesses(),0);
+	vec.resize(NumberOfProcesses());
 	MPI_Allgather(&value,sizeof(T),MPI_CHAR,vec.data(),sizeof(T),MPI_CHAR,MPI_COMM_WORLD);
 }
 
@@ -15,7 +15,7 @@ template<typename T>
 void MessagePasser::Gather(const std::vector<T> &send_vec,int send_count,std::vector<T> &recv_vec,int rootId) {
 	if(Rank() == rootId) {
 		recv_vec.clear();
-		recv_vec.assign(send_count*NumberOfProcesses(),0);
+		recv_vec.resize(send_count*NumberOfProcesses());
 	}
 	MPI_Gather(send_vec.data(),send_count*sizeof(T),MPI_CHAR,recv_vec.data(),send_count*sizeof(T),
 			MPI_CHAR,rootId,MPI_COMM_WORLD);
@@ -32,7 +32,7 @@ void MessagePasser::Gatherv(const std::vector<T> &send_vec,std::vector<T> &recv_
 		map.assign(nproc+1,0);
 		for(int i=1;i<nproc+1;i++)
 			map[i] = map[i-1] + recv_counts[i-1];
-		recv_vec.assign(map.back()/sizeof(T),0);
+		recv_vec.resize(map.back()/sizeof(T));
 	}
 	MPI_Gatherv(send_vec.data(),sendcount,MPI_CHAR,
 			recv_vec.data(),recv_counts.data(),map.data(),MPI_CHAR,
@@ -97,7 +97,7 @@ void MessagePasser::AllGatherv(const std::vector<T> &send_vec,std::vector<T> &re
 	for(int i=1;i<nproc+1;i++)
 		map[i] = map[i-1] + recv_counts[i-1];
 	recv_vec.clear();
-	recv_vec.assign(map.back()/sizeof(T),0);
+	recv_vec.resize(map.back()/sizeof(T));
 	MPI_Allgatherv(&send_vec[0],sendcount,MPI_CHAR,
 			&recv_vec[0],&recv_counts[0],&map[0],MPI_CHAR,
 			MPI_COMM_WORLD);

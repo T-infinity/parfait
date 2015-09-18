@@ -38,7 +38,8 @@ namespace MessagePasser {
 
   template<typename T>
   std::vector<T> ParallelMax(const std::vector<T> &vec, int rootId) {
-	  std::vector<T> result(vec.size(), 0);
+	  std::vector<T> result;
+          result.resize(vec.size());
 	  if (vec.size() > 0)
 		  MPI_Reduce((void *) vec.data(), result.data(),
 					 vec.size(), Type(T()), MPI_MAX, rootId, MPI_COMM_WORLD);
@@ -47,7 +48,8 @@ namespace MessagePasser {
 
   template<typename T>
   std::vector<T> ParallelMin(const std::vector<T> &vec, int rootId) {
-	  std::vector<T> result(vec.size(), 0);
+	  std::vector<T> result;
+          result.resize(vec.size());
 	  if (vec.size() > 0)
 		  MPI_Reduce((void *) vec.data(), result.data(),
 					 vec.size(), Type(T()), MPI_MIN, rootId, MPI_COMM_WORLD);

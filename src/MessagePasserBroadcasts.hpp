@@ -31,7 +31,7 @@ namespace MessagePasser {
 	  Broadcast(size, rootId);
 	  if (Rank() != rootId) {
 		  vec.clear();
-		  vec.assign(size, 0);
+		  vec.resize(size);
 	  }
 	  MPI_Bcast(vec.data(), size*sizeof(T), MPI_CHAR, rootId, MPI_COMM_WORLD);
   }

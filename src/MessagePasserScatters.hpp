@@ -15,7 +15,7 @@ namespace MessagePasser {
 		  size = total_length / NumberOfProcesses();
 	  }
 	  Broadcast(size, rootId);
-	  recv_vec.assign(size, 0);
+	  recv_vec.resize(size);
 	  MPI_Scatter(vec.data(), size*sizeof(T), MPI_CHAR, recv_vec.data(), size*sizeof(T), MPI_CHAR, rootId, MPI_COMM_WORLD);
   }
 
@@ -37,7 +37,7 @@ namespace MessagePasser {
 			  displs[i] = displs[i - 1] + sendcounts[i - 1];
 	  }
 	  Scatter(sendcounts, local_size, rootId);
-	  recv_vec.assign(local_size, 0);
+	  recv_vec.resize(local_size);
         //convert sendcounts etc to char numbering
         for(auto& x:sendcounts)
             x *= sizeof(T);
