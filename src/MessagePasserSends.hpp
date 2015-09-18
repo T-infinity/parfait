@@ -1,7 +1,7 @@
 namespace MessagePasser {
   template<typename T>
   void Send(std::vector<T> &vec, int length, int destination) {
-      MPI_Send(vec.data(), length, Type(T()), destination, 0, MPI_COMM_WORLD);
+      MPI_Send(vec.data(), length*sizeof(T), MPI_CHAR, destination, 0, MPI_COMM_WORLD);
   }
 
 // send a vector (receiver doesn't know length)
@@ -23,17 +23,14 @@ namespace MessagePasser {
       for (auto &row:vec)
           for (auto val:row)
               sendBuffer.push_back(val);
-      // send map to destination
       Send(sendBufferMap, destination);
-      // send buffer to destination
       Send(sendBuffer, destination);
   }
 
-// ready send a vector
   template<typename T>
   MessageStatus NonBlockingSend(std::vector<T> &vec, int length, int destination) {
       MessageStatus status;
-      MPI_Isend(vec.data(), length, Type(T()), destination, 0, MPI_COMM_WORLD, status.request());
+      MPI_Isend(vec.data(), length*sizeof(T), MPI_CHAR, destination, 0, MPI_COMM_WORLD, status.request());
       return status;
   }
 
