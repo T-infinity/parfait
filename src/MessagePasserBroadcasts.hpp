@@ -19,7 +19,7 @@ namespace MessagePasser {
 			  vec.resize(vecLength);
 	  }
 	  if (vecLength != 0)
-		  MPI_Bcast(&vec[0], vecLength, Type(T()), rootId, MPI_COMM_WORLD);
+		  MPI_Bcast(vec.data(), vecLength*sizeof(T), MPI_CHAR, rootId, MPI_COMM_WORLD);
   }
 
   // broadcast a vector of unknown size
@@ -33,6 +33,6 @@ namespace MessagePasser {
 		  vec.clear();
 		  vec.assign(size, 0);
 	  }
-	  MPI_Bcast(&vec[0], size, Type(T()), rootId, MPI_COMM_WORLD);
+	  MPI_Bcast(vec.data(), size*sizeof(T), MPI_CHAR, rootId, MPI_COMM_WORLD);
   }
 }
