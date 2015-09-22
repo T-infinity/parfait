@@ -3,7 +3,8 @@
 
 TEST_CASE("Stream POD") {
     MessagePasser::Stream stream;
-    stream << 5;
+    int b = 5;
+    stream << b;
     int a;
     stream >> a;
     REQUIRE(a == 5);
@@ -36,15 +37,11 @@ public:
 };
 
 MessagePasser::Stream& operator<<(MessagePasser::Stream &stream, const MyClass& myClass){
-    stream << myClass.a;
-    stream << myClass.vec;
-    stream << myClass.d;
+    stream << myClass.a << myClass.vec << myClass.d;
 }
 
 MessagePasser::Stream& operator>>(MessagePasser::Stream &stream, MyClass& myClass){
-    stream >> myClass.a;
-    stream >> myClass.vec;
-    stream >> myClass.d;
+    stream >> myClass.a >> myClass.vec >> myClass.d;
 }
 
 TEST_CASE("Stream user defined class"){
