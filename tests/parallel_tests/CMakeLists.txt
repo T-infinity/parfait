@@ -41,6 +41,7 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         ReductionTests.cpp
         MessagePasserBasicsTests.cpp
         SelfSend_test.cpp
+        StreamTests.cpp
         PreProcessor/ParallelNodeToNodeTests.cpp
         PreProcessor/NodeCenteredRedistributorTests.cpp
         PreProcessor/PreProcessorTests.cpp
