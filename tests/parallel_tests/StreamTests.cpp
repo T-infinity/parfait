@@ -59,15 +59,23 @@ TEST_CASE("Stream user defined class"){
     REQUIRE(recving.d == 5.5);
 }
 
-//TEST_CASE("Stream vector of user defined class"){
-//    std::vector<MyClass> myVector(3);
-//    for(int i = 0; i < 3; i++){
-//        myVector[i].a = i;
-//        myVector[i].vec = std::vector<int>{i,i+1,i+2};
-//        myVector[i].d = i*1.1;
-//    }
-//
-//    MessagePasser::Stream stream;
-//    stream << myVector;
-//}
+TEST_CASE("Stream vector of user defined class"){
+    std::vector<MyClass> myVector(3);
+    for(int i = 0; i < 3; i++){
+        myVector[i].a = i;
+        myVector[i].vec = std::vector<int>{i,i+1,i+2};
+        myVector[i].d = i*1.1;
+    }
+
+    MessagePasser::Stream stream;
+    stream << myVector;
+    std::vector<MyClass> myOutputVector;
+    stream >> myOutputVector;
+    REQUIRE(myOutputVector.size() == 3);
+    for(int i = 0; i < 3; i++){
+        REQUIRE(myOutputVector[i].a == i);
+        REQUIRE((myOutputVector[i].vec == std::vector<int>{i,i+1,i+2}));
+        REQUIRE(myVector[i].d == i*1.1);
+    }
+}
 
