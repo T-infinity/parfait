@@ -14,6 +14,7 @@ namespace Parfait {
     public:
         VtkWriter(MeshType &meshInterface, std::string vtkFilename);
         void writeAscii();
+        void writeAsciiSerial();
         void writeFile();
         void addScalarField(bool isNodeData, std::string fieldName, int *data);
         void addScalarField(bool isNodeData, std::string fieldName, float *data);

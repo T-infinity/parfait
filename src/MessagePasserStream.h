@@ -66,7 +66,6 @@ namespace MessagePasser{
           return *this;
       }
   };
-
 }
 
 #endif 

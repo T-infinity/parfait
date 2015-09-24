@@ -1,5 +1,6 @@
 #include "checkpoint.h"
 #ifdef PARFAIT_WITH_MPI
+#include <stdexcept>
 
 inline void MessagePasser::Init(){
 	int initialized=0;
