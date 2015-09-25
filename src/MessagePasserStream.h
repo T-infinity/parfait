@@ -1,6 +1,6 @@
 #pragma once
 
-#include <queue>
+#include <list>
 #include <stddef.h>
 #include <cstring>
 #include <iostream>
@@ -20,32 +20,44 @@ namespace MessagePasser{
 
   class Stream {
   private:
-      std::queue<Element> elements;
+      std::list<Element> elements;
   public:
+
+      Stream& operator<<(Stream &s){
+          for(auto &e : s.elements)
+              elements.emplace_back(e);
+          return *this;
+      }
+
+      Stream& operator>>(Stream &s){
+          s << *this;
+          return *this;
+      }
+
       template <typename T>
       typename std::enable_if<std::is_pod<T>::value, Stream &>::type
       operator<<(const T& a){
-          elements.push(Element(sizeof(a), (char*)&a));
+          elements.push_back(Element(sizeof(a), (char*)&a));
           return *this;
       }
       template <typename T>
       typename std::enable_if<std::is_pod<T>::value, Stream &>::type
       operator>>(T& a){
           auto e = elements.front();
-          elements.pop();
+          elements.pop_front();
           a = *(T*)e.data_copy.data();
           return *this;
       }
 
       template <typename T> typename std::enable_if<std::is_pod<T>::value, Stream &>::type
       operator<<(const std::vector<T>& vec){
-          elements.push(Element{(vec.size()*sizeof(T)), (char*)vec.data()});
+          elements.push_back(Element{(vec.size()*sizeof(T)), (char*)vec.data()});
           return *this;
       }
       template <typename T> typename std::enable_if<std::is_pod<T>::value, Stream &>::type
               operator>>(std::vector<T>& vec){
           auto e = elements.front();
-          elements.pop();
+          elements.pop_front();
           auto length = e.length / sizeof(T);
           vec.resize(length);
           std::memcpy(vec.data(), e.data_copy.data(), e.length);
@@ -54,7 +66,7 @@ namespace MessagePasser{
 
       template <typename T> typename std::enable_if<not std::is_pod<T>::value, Stream &>::type
       operator<<(const std::vector<T>& vec){
-          elements.push(Element{vec.size()});
+          elements.push_back(Element{vec.size()});
           for(auto &e :vec)
               *this << e;
           return *this;
@@ -62,7 +74,7 @@ namespace MessagePasser{
       template <typename T> typename std::enable_if<not std::is_pod<T>::value, Stream &>::type
       operator>>(std::vector<T>& vec){
           auto e = elements.front();
-          elements.pop();
+          elements.pop_front();
           vec.resize(e.length);
           for(auto & v : vec)
               *this >> v;

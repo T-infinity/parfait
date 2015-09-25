@@ -80,3 +80,62 @@ TEST_CASE("Stream vector of user defined class"){
     }
 }
 
+TEST_CASE("Stream your stream"){
+    MessagePasser::Stream s1;
+    int a = 5;
+    s1 << a;
+    int b = 6;
+    MessagePasser::Stream s2;
+    s2 << b;
+    s1 << s2;
+
+    MessagePasser::Stream s3;
+    s1 >> s3;
+    int c;
+    s3 >> c;
+    REQUIRE(c == 5);
+}
+
+TEST_CASE("Chained Stream POD") {
+    MessagePasser::Stream stream;
+    int a = 5;
+    int b = 6;
+    int c = 7;
+
+    stream << a << b << c;
+
+    a = b = c = 9;
+
+    int d;
+    int e;
+    int f;
+
+    stream >> d >> e >> f;
+
+    REQUIRE(d == 5);
+    REQUIRE(e == 6);
+    REQUIRE(f == 7);
+}
+
+TEST_CASE("Chained Stream Dawg") {
+    MessagePasser::Stream s1;
+
+    int a = 5;
+    int b = 6;
+    int c = 7;
+
+    s1 << a << b << c;
+
+    MessagePasser::Stream s2;
+
+    int d = 8;
+    int e = 9;
+
+    s2 << d << e << s1;
+
+    std::vector<int> vec(5);
+
+    for(auto &it : vec) s2 >> it;
+
+    REQUIRE(vec == (std::vector<int> {8,9,5,6,7}));
+}
