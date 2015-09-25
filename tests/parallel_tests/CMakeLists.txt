@@ -5,7 +5,11 @@ PROJECT(ParfaitParallelTests)
 
 add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/tests/grids/6cell.lb8.ugrid")
 
-add_definitions(-DPARFAIT_WITH_MPI -DPARFAIT_WITH_PARMETIS -DCATCH_WITH_MPI -DPARFAIT_WITH_VTK)
+add_definitions(-DPARFAIT_WITH_MPI
+#-DPARFAIT_WITH_PARMETIS
+        -DCATCH_WITH_MPI
+#-DPARFAIT_WITH_VTK
+)
 find_package(MPI REQUIRED)
 
 include_directories(
@@ -23,11 +27,11 @@ include_directories(../../tinyxml/src
 
 set(PARFAIT_PARALLEL_TESTS_SRC
         catch_main.cpp
+        DangerStreamTests.cpp
         ParallelExtent_test.cpp
         parallel_sum_tests.cpp
         GathervTests.cpp
         AllGathervTests.cpp
-        PreProcessor/ParallelMeshReaderTests.cpp
         MessageBuilder_test.cpp
         AsyncSends_tests.cpp
         SendRecvScalarTests.cpp
@@ -42,16 +46,19 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         MessagePasserBasicsTests.cpp
         SelfSend_test.cpp
         StreamTests.cpp
-        PreProcessor/ParallelNodeToNodeTests.cpp
-        PreProcessor/NodeCenteredRedistributorTests.cpp
-        PreProcessor/PreProcessorTests.cpp
+        #PreProcessor/ParallelNodeToNodeTests.cpp
+        #PreProcessor/NodeCenteredRedistributorTests.cpp
+        #PreProcessor/PreProcessorTests.cpp
+        #PreProcessor/ParallelMeshReaderTests.cpp
        )
 
-add_executable(ParfaitParallelTests ${PARFAIT_PARALLEL_TESTS_SRC} ${HEADERS})
+add_executable(ParfaitParallelTests
+        ${PARFAIT_PARALLEL_TESTS_SRC}
+        ${HEADERS})
 target_link_libraries(ParfaitParallelTests
             ${MPI_LIBRARIES}
             tinyxml
-            parmetis
+            #parmetis
             metis
             )
 

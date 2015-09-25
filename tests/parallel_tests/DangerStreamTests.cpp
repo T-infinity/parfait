@@ -1,11 +1,10 @@
 #include <catch.hpp>
-#include "MessagePasserStream.h"
+#include "MessagePasserDangerStream.h"
 
-TEST_CASE("Stream POD") {
-    MessagePasser::Stream stream;
+TEST_CASE("DangerStream POD") {
+    MessagePasser::DangerStream stream;
     int b = 5;
     stream << b;
-    b = 7; // invalidate b to prove that the data was copied
     int a;
     stream >> a;
     REQUIRE(a == 5);
@@ -14,13 +13,12 @@ TEST_CASE("Stream POD") {
     double d;
     stream >> d;
 }
-TEST_CASE("Stream vector of POD"){
+TEST_CASE("DangerStream vector of POD"){
 
-    MessagePasser::Stream stream;
+    MessagePasser::DangerStream stream;
     std::vector<int> input = {1,2,3};
     std::vector<int> output;
     stream << input;
-    input.assign(3,9);
     stream >> output;
     REQUIRE(( output == std::vector<int>{1,2,3} ));
 }
@@ -33,44 +31,42 @@ public:
     int a;
     std::vector<int> vec;
     double d;
-    friend MessagePasser::Stream & operator<<(MessagePasser::Stream &stream, const MyClass& myClass);
-    friend MessagePasser::Stream & operator>>(MessagePasser::Stream &stream, MyClass& myClass);
+    friend MessagePasser::DangerStream & operator<<(MessagePasser::DangerStream &stream, const MyClass& myClass);
+    friend MessagePasser::DangerStream & operator>>(MessagePasser::DangerStream &stream, MyClass& myClass);
 
 };
 
-MessagePasser::Stream & operator<<(MessagePasser::Stream &stream, const MyClass& myClass){
+MessagePasser::DangerStream & operator<<(MessagePasser::DangerStream &stream, const MyClass& myClass){
     stream << myClass.a << myClass.vec << myClass.d;
 }
 
-MessagePasser::Stream & operator>>(MessagePasser::Stream &stream, MyClass& myClass){
+MessagePasser::DangerStream & operator>>(MessagePasser::DangerStream &stream, MyClass& myClass){
     stream >> myClass.a >> myClass.vec >> myClass.d;
 }
 
-TEST_CASE("Stream user defined class"){
+TEST_CASE("DangerStream user defined class"){
 
     MyClass sending(9, {1,2,3}, 5.5);
-    MessagePasser::Stream stream;
+    MessagePasser::DangerStream stream;
     stream << sending;
     MyClass recving;
-    sending.a = 9001;
-    sending.vec[0] = 9001;
     stream >> recving;
     REQUIRE(recving.a == 9);
     REQUIRE((recving.vec == std::vector<int>{1,2,3}));
     REQUIRE(recving.d == 5.5);
 }
 
-TEST_CASE("Stream vector of user defined class"){
+TEST_CASE("DangerStream vector of user defined class"){
     std::vector<MyClass> myVector(3);
     for(int i = 0; i < 3; i++){
         myVector[i].a = i;
         myVector[i].vec = std::vector<int>{i,i+1,i+2};
         myVector[i].d = i*1.1;
     }
-    MessagePasser::Stream stream;
+
+    MessagePasser::DangerStream stream;
     stream << myVector;
     std::vector<MyClass> myOutputVector;
-    myVector[0].vec[0] = 9001;
     stream >> myOutputVector;
     REQUIRE(myOutputVector.size() == 3);
     for(int i = 0; i < 3; i++){
