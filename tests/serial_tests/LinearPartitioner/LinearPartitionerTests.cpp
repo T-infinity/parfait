@@ -76,5 +76,7 @@ bool rangeOwns(const LinearPartitioner::Range &range, long id) {
 
 TEST_CASE("Range owned"){
     REQUIRE(rangeOwns({0, 100}, 0));
+    REQUIRE(rangeOwns({0, 100}, 5));
     REQUIRE(not rangeOwns({0,100}, 100));
+    REQUIRE(not rangeOwns({0,100}, 1000));
 }
