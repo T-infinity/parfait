@@ -70,3 +70,11 @@ TEST_CASE("LinearPartitionerTests, getLocalId"){
     REQUIRE(1 == localId);
 }
 
+bool rangeOwns(const LinearPartitioner::Range &range, long id) {
+    return range.owns(id);
+}
+
+TEST_CASE("Range owned"){
+    REQUIRE(rangeOwns({0, 100}, 0));
+    REQUIRE(not rangeOwns({0,100}, 100));
+}

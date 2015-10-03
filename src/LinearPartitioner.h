@@ -4,11 +4,13 @@
 
 namespace Parfait {
   namespace LinearPartitioner {
-    struct Range {
+    class Range {
+    public:
         Range() = default;
         Range(long start, long end);
         long start;
         long end;
+        bool owns(long id) const;
     };
     struct OwnerLocalIdPair{
         OwnerLocalIdPair() = default;
@@ -23,7 +25,8 @@ namespace Parfait {
     Range getRangeForProc(long procId, long numWorkItems);
     OwnerLocalIdPair getOwnerLocalIdPairOfGlobalItem(long globalItemId, long numWorkItems, long numWorkers);
     long getLocalIdOfItemOnWorker(long globalItemId, long workerId, long numWorkItems, long numWorkers);
-    }
+
+  }
 }
 
 #include "LinearPartitioner.hpp"

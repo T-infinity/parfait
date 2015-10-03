@@ -63,7 +63,9 @@ namespace Parfait {
         return getRangeForWorker(MessagePasser::Rank(), numWorkItems, MessagePasser::NumberOfProcesses());
     }
 
-
+    inline bool Range::owns(long id) const {
+        return id >= start and id < end;
+    }
   }
 }
 #endif 
