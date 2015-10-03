@@ -6,8 +6,10 @@
 namespace Parfait {
   namespace LinearPartitioner {
 
-    inline Range::Range(long start_in, long end_in)
-            : start(start_in), end(end_in) { }
+    template <typename T>
+    Range<T>::Range(T start, T end)
+            : start(start), end(end) { }
+
     inline OwnerLocalIdPair::OwnerLocalIdPair(long owner_in, long id_in)
             : owner(owner_in), id(id_in) { }
 
@@ -25,7 +27,7 @@ namespace Parfait {
         if (id >= numIds or id < 0)
             throw std::logic_error("Requested partitioning information of invalid Id: " + std::to_string(id));
     };
-    inline Range getRangeForWorker(long id, long numWorkItems, long numWorkers) {
+    inline Range<long> getRangeForWorker(long id, long numWorkItems, long numWorkers) {
         throwIfIdInvalid(id, numWorkers);
         long left_overs = numWorkItems % numWorkers;
         long work_per_worker = numWorkItems / numWorkers;
@@ -55,15 +57,16 @@ namespace Parfait {
         return globalItemId - range.start;
     }
 
-    inline Range getRangeForProc(long procId, long numWorkItems){
+    inline Range<long> getRangeForProc(long procId, long numWorkItems){
         return getRangeForWorker(procId, numWorkItems, MessagePasser::NumberOfProcesses());
     }
 
-    inline Range getRangeForCurrentProc(long numWorkItems){
+    inline Range<long> getRangeForCurrentProc(long numWorkItems){
         return getRangeForWorker(MessagePasser::Rank(), numWorkItems, MessagePasser::NumberOfProcesses());
     }
 
-    inline bool Range::owns(long id) const {
+    template <typename T>
+    bool Range<T>::owns(T id) const {
         return id >= start and id < end;
     }
   }

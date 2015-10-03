@@ -70,7 +70,8 @@ TEST_CASE("LinearPartitionerTests, getLocalId"){
     REQUIRE(1 == localId);
 }
 
-bool rangeOwns(const LinearPartitioner::Range &range, long id) {
+template <typename T>
+bool rangeOwns(const LinearPartitioner::Range<T> &range, T id) {
     return range.owns(id);
 }
 
