@@ -81,3 +81,9 @@ TEST_CASE("Range owned"){
     REQUIRE(not rangeOwns({0,100}, 100));
     REQUIRE(not rangeOwns({0,100}, 1000));
 }
+
+
+TEST_CASE("Range owns large data types"){
+    typedef unsigned long int MortonId;
+    REQUIRE(not rangeOwns(LinearPartitioner::Range<MortonId> {0, 1152921504606846976}, (MortonId)1152921504606846977));
+}

@@ -7,7 +7,7 @@ namespace Parfait {
     template <typename T>
     class Range {
     public:
-        Range() = default;
+        Range(){}
         Range(T start, T end);
         T start;
         T end;
@@ -20,8 +20,8 @@ namespace Parfait {
         long id;
     };
 
-    long getWorkerOfWorkItem(long itemId, long numWorkItems, long numWorkers);
-    Range<long> getRangeForWorker(long id, long numWorkItems, long numWorkers);
+    long getWorkerOfWorkItem(long item_id, long numWorkItems, long numWorkers);
+    Range<long> getRangeForWorker(long worker_id, long numWorkItems, long numWorkers);
     Range<long> getRangeForCurrentProc(long numWorkItems);
     Range<long> getRangeForProc(long procId, long numWorkItems);
     OwnerLocalIdPair getOwnerLocalIdPairOfGlobalItem(long globalItemId, long numWorkItems, long numWorkers);

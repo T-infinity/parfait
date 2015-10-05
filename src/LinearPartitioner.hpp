@@ -27,24 +27,24 @@ namespace Parfait {
         if (id >= numIds or id < 0)
             throw std::logic_error("Requested partitioning information of invalid Id: " + std::to_string(id));
     };
-    inline Range<long> getRangeForWorker(long id, long numWorkItems, long numWorkers) {
-        throwIfIdInvalid(id, numWorkers);
+    inline Range<long> getRangeForWorker(long worker_id, long numWorkItems, long numWorkers) {
+        throwIfIdInvalid(worker_id, numWorkers);
         long left_overs = numWorkItems % numWorkers;
         long work_per_worker = numWorkItems / numWorkers;
-        long start = computeStartGivenLeftOvers(id, work_per_worker, left_overs);
-        long end = computeStartGivenLeftOvers(id + 1, work_per_worker, left_overs);
+        long start = computeStartGivenLeftOvers(worker_id, work_per_worker, left_overs);
+        long end = computeStartGivenLeftOvers(worker_id + 1, work_per_worker, left_overs);
         return {start, end};
     }
 
-    inline long getWorkerOfWorkItem(long itemId, long numWorkItems, long numWorkers){
-        throwIfIdInvalid(itemId, numWorkItems);
+    inline long getWorkerOfWorkItem(long item_id, long numWorkItems, long numWorkers){
+        throwIfIdInvalid(item_id, numWorkItems);
         long num_left_workers = numWorkItems % numWorkers;
         long work_items_per_worker = numWorkItems / numWorkers;
         long num_work_items_left = (work_items_per_worker+1) * num_left_workers;
-        if(itemId < num_work_items_left)
-            return itemId / (work_items_per_worker+1);
-        itemId -= num_work_items_left;
-            return itemId / work_items_per_worker + num_left_workers;
+        if(item_id < num_work_items_left)
+            return item_id / (work_items_per_worker + 1);
+        item_id -= num_work_items_left;
+            return item_id / work_items_per_worker + num_left_workers;
     }
 
     inline OwnerLocalIdPair getOwnerLocalIdPairOfGlobalItem(long globalItemId, long numWorkItems, long numWorkers){
