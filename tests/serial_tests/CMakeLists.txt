@@ -22,6 +22,7 @@ set(SERIAL_TESTS_SOURCES
         CGNSToAflrTests.cpp
         CGNSToFun3dTests.cpp
         CGNSToVtkTests.cpp
+        CompressedMapTests.cpp
         connectivity/NodeToNodeTests.cpp
         edge_map/EdgeMapTests.cpp
         extent/ExtentBuilderTests.cpp
