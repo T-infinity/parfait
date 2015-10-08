@@ -40,7 +40,7 @@ inline int MessagePasser::NumberOfProcesses(){
 }
 
 template <typename T>
-inline void MessagePasser::Send(const T& value,int destination){
+void MessagePasser::Send(const T& value,int destination){
     MPI_Send(&value,1,Type(value),destination,0,MPI_COMM_WORLD);
 }
 

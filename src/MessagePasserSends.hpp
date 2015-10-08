@@ -4,14 +4,12 @@ namespace MessagePasser {
       MPI_Send(vec.data(), length*sizeof(T), MPI_CHAR, destination, 0, MPI_COMM_WORLD);
   }
 
-// send a vector (receiver doesn't know length)
   template<typename T>
   void Send(std::vector<T> &vec, int destination) {
       int length = (int) vec.size();
       Send(vec, length, destination);
   }
 
-// send a vector of vectors
   template<typename T>
   void Send(std::vector<std::vector<T>> &vec, int destination) {
       // pack into a contiguous buffer

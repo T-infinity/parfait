@@ -1,3 +1,4 @@
+#include <cstdlib>
 namespace MessagePasser {
   template<typename T>
   void Broadcast(T &value, int rootId) {
@@ -13,7 +14,7 @@ namespace MessagePasser {
 			  fprintf(stderr, "send a vector of the wrong length\n");
 			  fprintf(stderr, "-----------Rank: %i   Vector length: %i   Message size: %i\n",
 					  Rank(), vec.size(), vecLength);
-			  exit(0);
+                          std::exit(0);
 		  }
 		  else
 			  vec.resize(vecLength);
