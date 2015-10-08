@@ -1,5 +1,5 @@
 #pragma once
-
+#include <stdexcept>
 namespace Parfait {
   template<typename T>
   long getIndexOfItemInRange(const std::vector <T> &map, const T &item) {
