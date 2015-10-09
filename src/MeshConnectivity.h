@@ -18,6 +18,13 @@ namespace Parfait{
         int numberOfPyramids() {return pyramids.size()/5;}
         int numberOfPrisms() {return prisms.size()/6;}
         int numberOfHexes() {return hexes.size()/8;}
+
+        int* getTrianglePtr(int id) { return &triangles[3*id];}
+        int* getQuadPtr(int id) { return &quads[4*id];}
+        int* getTetPtr(int id) {return &tets[4*id];};
+        int* getPyramidPtr(int id) {return &pyramids[5*id];}
+        int* getPrismPtr(int id) {return &prisms[6*id];}
+        int* getHexPtr(int id) {return &hexes[8*id];}
     };
 }
 #endif 
