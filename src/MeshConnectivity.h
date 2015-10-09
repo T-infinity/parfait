@@ -27,6 +27,7 @@ namespace Parfait{
         int* getHexPtr(int id) {return &hexes[8*id];}
 
         int numberOfCells() {return numberOfTets()+numberOfPyramids()+numberOfPrisms()+numberOfHexes();}
+        int numberOfFaces() {return numberOfTriangles()+numberOfQuads();}
         int sizeOfCell(int id) {
             if(id<numberOfTets()) return 4;
             id -= numberOfTets();
@@ -35,6 +36,11 @@ namespace Parfait{
             if(id<numberOfPrisms()) return 6;
             return 8;
         }
+        int sizeOfFace(int id){
+            if(id<numberOfTriangles())
+                return 3;
+            return 4;
+        }
         int* getCellPtr(int id) {
             switch(sizeOfCell(id)){
                 case 4: return &tets[4*id];
@@ -42,6 +48,11 @@ namespace Parfait{
                 case 6: return &prisms[6*convertToInternalId(id)];
                 case 8: return &hexes[8*convertToInternalId(id)];
             }
+        }
+        int* getFacePtr(int id){
+            if(sizeOfFace(id) == 3)
+                return &triangles[3*id];
+            return &quads[4*(id-numberOfTriangles())];
         }
 
     private:

@@ -106,5 +106,30 @@ TEST_CASE("test getters"){
             REQUIRE(9 == p[7]);
         }
     }
+
+    SECTION("generic access for boundary faces"){
+        connectivity.triangles = {5,4,3};
+        connectivity.quads = {8,7,6,2};
+
+        REQUIRE(2 == connectivity.numberOfFaces());
+
+        REQUIRE(3 == connectivity.sizeOfFace(0));
+        REQUIRE(4 == connectivity.sizeOfFace(1));
+
+        SECTION("check triangle"){
+            int *p = connectivity.getFacePtr(0);
+            REQUIRE(5 == p[0]);
+            REQUIRE(4 == p[1]);
+            REQUIRE(3 == p[2]);
+        }
+
+        SECTION("check quad"){
+            int *p = connectivity.getFacePtr(1);
+            REQUIRE(8 == p[0]);
+            REQUIRE(7 == p[1]);
+            REQUIRE(6 == p[2]);
+            REQUIRE(2 == p[3]);
+        }
+    }
 }
 
