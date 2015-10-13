@@ -40,7 +40,7 @@ set(SERIAL_TESTS_SOURCES
         VtkSliceWriterTests.cpp
         VtkToCGNSTests.cpp
         MeshConnectivityTests.cpp
-)
+        MeshMetaDataTests.cpp)
 
 set(LEGACY_SERIAL_TESTS_SOURCES
         AllTests.cpp  
