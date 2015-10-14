@@ -1,8 +1,6 @@
 #ifndef PARFAIT_LINEARPARTITIONER_HPP
 #define PARFAIT_LINEARPARTITIONER_HPP
 
-#include <MessagePasser.h>
-
 namespace Parfait {
   namespace LinearPartitioner {
 
@@ -55,14 +53,6 @@ namespace Parfait {
     inline long getLocalIdOfItemOnWorker(long globalItemId, long workerId, long numWorkItems, long numWorkers){
         auto range = getRangeForWorker(workerId, numWorkItems, numWorkers);
         return globalItemId - range.start;
-    }
-
-    inline Range<long> getRangeForProc(long procId, long numWorkItems){
-        return getRangeForWorker(procId, numWorkItems, MessagePasser::NumberOfProcesses());
-    }
-
-    inline Range<long> getRangeForCurrentProc(long numWorkItems){
-        return getRangeForWorker(MessagePasser::Rank(), numWorkItems, MessagePasser::NumberOfProcesses());
     }
 
     template <typename T>
