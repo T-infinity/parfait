@@ -6,10 +6,12 @@
 
 #ifdef PARFAIT_WITH_PARMETIS
 #include <parmetis.h>
-#endif
-
+#include <metis.h>
+#else
 typedef long int idx_t;
 typedef double real_t;
+#endif
+
 
 struct ParMetisInfo{
     idx_t *vertex_weights = NULL;
@@ -76,8 +78,8 @@ inline void PartitionMesh(int rank,int nproc,
                                       part.data(),
                                       &parMetisInfo.comm);
 
-    if(metis == METIS_OK && rank == 0)
-		printf("METIS Ok!\n");
+    if(metis != METIS_OK)
+		throw std::logic_error("Metis reported a failure");
 #else
     throw std::logic_error("Can not partition without parmetis");
 #endif

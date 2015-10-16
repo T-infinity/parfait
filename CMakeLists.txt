@@ -15,6 +15,10 @@ add_subdirectory(utils)
 add_subdirectory(tests/serial_tests)
 add_subdirectory(tinyxml)
 
+if(PARFAIT_WITH_PARMETIS)
+  message("Parmetis enabled at top level")
+endif()
+
 if(PARFAIT_WITH_MPI)
   add_subdirectory(tests/parallel_tests)
 endif()
