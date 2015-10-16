@@ -7,6 +7,10 @@
 #include "NodeCenteredRedistributor.h"
 #include "timing.h"
 
+#ifdef PARFAIT_WITH_PARMETIS
+#include "ParmetisPartitioner.h"
+#endif
+
 namespace Parfait{
   inline PreProcessor::PreProcessor(Configuration& configuration)
           :config(configuration)
@@ -27,8 +31,13 @@ namespace Parfait{
       Parfait::ParallelNodeToNodeBuilder<decltype(partitionableMesh)> n2n_builder(partitionableMesh);
       auto n2n = n2n_builder.buildNodeToNodeConnectivity();
       auto after_building_node_to_node = Now();
-      Parfait::Partitioner partitioner;
-      auto part = partitioner.generatePartVector(n2n);
+      std::shared_ptr<Parfait::Partitioner> partitioner;
+#ifdef PARFAIT_WITH_PARMETIS
+      partitioner = std::make_shared<Parfait::ParmetisPartitioner>();
+#else
+      partitioner = std::make_shared<Parfait::ErrorPartitioner>();
+#endif
+      auto part = partitioner->generatePartVector(n2n);
       auto after_parmetis = Now();
       ParallelMeshReDistributor distributor(mesh,part);
       auto distributed = distributor.redistribute();

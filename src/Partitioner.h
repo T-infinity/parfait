@@ -5,10 +5,15 @@
 #include <MeshBasicParallel.h>
 
 namespace Parfait {
-    class Partitioner {
-    public:
-        std::vector<int> generatePartVector(const std::vector<std::vector<long>>& node_to_node);
-    };
+  class Partitioner {
+  public:
+      virtual std::vector<int> generatePartVector(const std::vector<std::vector<long>>& node_to_node) = 0;
+  };
+  class ErrorPartitioner : public Partitioner{
+      virtual std::vector<int> generatePartVector(const std::vector<std::vector<long>>& node_to_node){
+          throw std::logic_error("No partitioners available");
+      }
+  };
+
 }
-#include "Partitioner.hpp"
 #endif
