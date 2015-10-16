@@ -35,17 +35,6 @@ namespace Parfait {
 		std::shared_ptr<std::vector<bool>> bigEndian;
 		std::shared_ptr<std::vector<Parfait::MapbcReader>> mapbcVector;
 		std::shared_ptr<std::vector<Parfait::MotionMatrix>> motionMatrices;
-		void load();
-		void readMapbcFiles();
-		void loadComponents(TiXmlHandle globalHandle);
-		bool figureOutEndianness(std::string s);
-
-		const Parfait::Point<double> getXYZ(TiXmlElement *element) const;
-		void throwIfBadElement(TiXmlElement* element);
-		void throwIfConfigurationIsInsane();
-		bool getEndiannessForComponent(const TiXmlElement *ComponentElement);
-
-		void getRotationForComponent(const TiXmlHandle &ComponentHandle);
 	};
 }
 #include "Configuration.hpp"
