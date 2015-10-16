@@ -104,8 +104,6 @@ namespace Parfait {
       std::set<int> getTargetProcessors(const vector<long> &transmitCell);
       std::vector<long> getCell(int cellLength, const vector<long> &cells, int cellId) const;
   };
-
-
 }
 
 #include "ParallelMeshReader.hpp"

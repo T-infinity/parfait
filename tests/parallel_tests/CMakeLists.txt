@@ -2,11 +2,10 @@
 cmake_minimum_required(VERSION 2.8)
 
 PROJECT(ParfaitParallelTests)
-
 add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/tests/grids/6cell.lb8.ugrid")
 
 add_definitions(-DPARFAIT_WITH_MPI
-#-DPARFAIT_WITH_PARMETIS
+        -DPARFAIT_WITH_PARMETIS
         -DCATCH_WITH_MPI
 #-DPARFAIT_WITH_VTK
 )
@@ -46,10 +45,10 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         MessagePasserBasicsTests.cpp
         SelfSend_test.cpp
         StreamTests.cpp
-        #PreProcessor/ParallelNodeToNodeTests.cpp
-        #PreProcessor/NodeCenteredRedistributorTests.cpp
-        #PreProcessor/PreProcessorTests.cpp
-        #PreProcessor/ParallelMeshReaderTests.cpp
+        PreProcessor/ParallelNodeToNodeTests.cpp
+        PreProcessor/NodeCenteredRedistributorTests.cpp
+        PreProcessor/PreProcessorTests.cpp
+        PreProcessor/ParallelMeshReaderTests.cpp
        )
 
 add_executable(ParfaitParallelTests
@@ -58,7 +57,7 @@ add_executable(ParfaitParallelTests
 target_link_libraries(ParfaitParallelTests
             ${MPI_LIBRARIES}
             tinyxml
-            #parmetis
+            parmetis
             metis
             )
 
