@@ -1,7 +1,3 @@
-//
-// Created by cdruyorj on 8/20/15.
-//
-
 #ifndef PARFAIT_PARFAIT_PREPROCESSOR_H
 #define PARFAIT_PARFAIT_PREPROCESSOR_H
 

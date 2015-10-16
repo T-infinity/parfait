@@ -10,9 +10,7 @@
 namespace Parfait{
   inline PreProcessor::PreProcessor(Configuration& configuration)
           :config(configuration)
-  {
-  }
-
+  { }
 
   inline std::shared_ptr<MeshBasicParallel> PreProcessor::createMesh(){
       auto before_reading = Now();
@@ -46,6 +44,5 @@ namespace Parfait{
           printReadableElapsedTime(after_parmetis, after_redistributing);
       }
       return distributed;
-      //return distributor.redistribute();
   }
 }

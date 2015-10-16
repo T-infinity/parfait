@@ -47,8 +47,6 @@ namespace Parfait {
 
 		void getRotationForComponent(const TiXmlHandle &ComponentHandle);
 	};
-
-
 }
 #include "Configuration.hpp"
 

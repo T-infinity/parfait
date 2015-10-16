@@ -7,12 +7,12 @@ using std::string;
 using namespace Parfait;
 
 TEST_CASE("Read in grid based on xml file (on one proc)") {
-    //auto mesh = ParallelMeshReader::readDistributedGrid({"../../grids/6cell.lb8.ugrid"}, {false});
     ConfigurationReader reader("6cell.xml");
     Configuration config = reader.createConfiguration();
-    PreProcessor preProcessor(config);
 
+    PreProcessor preProcessor(config);
     auto mesh = preProcessor.createMesh();
+
     if(MessagePasser::NumberOfProcesses() == 1){
         REQUIRE(12 == (mesh->connectivity->triangles.size() / 3));
         REQUIRE(12 == mesh->metaData->triangleTags.size());
