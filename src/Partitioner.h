@@ -5,9 +5,10 @@
 #include <MeshBasicParallel.h>
 
 namespace Parfait {
-    namespace Partitioner {
+    class Partitioner {
+    public:
         std::vector<int> generatePartVector(const std::vector<std::vector<long>>& node_to_node);
-    }
+    };
 }
 #include "Partitioner.hpp"
 #endif

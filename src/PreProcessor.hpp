@@ -27,7 +27,8 @@ namespace Parfait{
       Parfait::ParallelNodeToNodeBuilder<decltype(partitionableMesh)> n2n_builder(partitionableMesh);
       auto n2n = n2n_builder.buildNodeToNodeConnectivity();
       auto after_building_node_to_node = Now();
-      auto part = Parfait::Partitioner::generatePartVector(n2n);
+      Parfait::Partitioner partitioner;
+      auto part = partitioner.generatePartVector(n2n);
       auto after_parmetis = Now();
       ParallelMeshReDistributor distributor(mesh,part);
       auto distributed = distributor.redistribute();
