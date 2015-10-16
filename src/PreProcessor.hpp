@@ -3,7 +3,6 @@
 #include <PartitionableMesh.h>
 #include <ParallelPartitionableMesh.h>
 #include <ParallelNodeToNodeBuilder.h>
-#include "ParmetisWrapper.h"
 #include "NodeCenteredRedistributor.h"
 #include "timing.h"
 

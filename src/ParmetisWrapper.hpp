@@ -3,14 +3,9 @@
 #include <stdio.h>
 #include <vector>
 #include <MessagePasser.h>
-
-#ifdef PARFAIT_WITH_PARMETIS
 #include <parmetis.h>
 #include <metis.h>
-#else
-typedef long int idx_t;
-typedef double real_t;
-#endif
+
 
 
 struct ParMetisInfo{
@@ -61,7 +56,6 @@ inline void PartitionMesh(int rank,int nproc,
 
 
     printf("Rank %i: has %i nodes for ParMETIS\n",rank,nnodes);
-#ifdef PARFAIT_WITH_PARMETIS
 	auto metis = ParMETIS_V3_PartKway(vtxdist.data(),
                                       xadj.data(),
                                       adjncy.data(),
@@ -80,9 +74,6 @@ inline void PartitionMesh(int rank,int nproc,
 
     if(metis != METIS_OK)
 		throw std::logic_error("Metis reported a failure");
-#else
-    throw std::logic_error("Can not partition without parmetis");
-#endif
 	for(int i=0;i<nnodes;i++)
 		part_vec[i] = part[i];
 }
