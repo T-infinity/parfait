@@ -4,60 +4,73 @@ cmake_minimum_required(VERSION 2.8)
 PROJECT(ParfaitParallelTests)
 add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/tests/grids/6cell.lb8.ugrid")
 
-add_definitions(-DPARFAIT_WITH_MPI
-        -DPARFAIT_WITH_PARMETIS
-        -DCATCH_WITH_MPI
-#-DPARFAIT_WITH_VTK
-)
+add_definitions( 
+  -DPARFAIT_WITH_MPI 
+  -DCATCH_WITH_MPI
+  )
+
+if(PARFAIT_WITH_PARMETIS)
+  add_definitions(
+    -DPARFAIT_WITH_PARMETIS
+    )
+endif()
+
 find_package(MPI REQUIRED)
 
 include_directories(
-    "${CMAKE_SOURCE_DIR}/src"
-    "${MPI_INCLUDE_PATH}"
-    )
+  "${CMAKE_SOURCE_DIR}/src"
+  "${MPI_INCLUDE_PATH}"
+  )
 include_directories(../../tinyxml/src
-                    ../)
+  ../)
 
-    file(GLOB_RECURSE HEADERS
-        "../../src/*.h"
-        "../../src/*.hpp"
-        )
+file(GLOB_RECURSE HEADERS
+  "../../src/*.h"
+  "../../src/*.hpp"
+  )
 
 
 set(PARFAIT_PARALLEL_TESTS_SRC
-        catch_main.cpp
-        DangerStreamTests.cpp
-        ParallelExtent_test.cpp
-        parallel_sum_tests.cpp
-        GathervTests.cpp
-        AllGathervTests.cpp
-        MessageBuilder_test.cpp
-        AsyncSends_tests.cpp
-        SendRecvScalarTests.cpp
-        SendRecvVectorTests.cpp
-        SendRecvVectorOfVectorsTests.cpp
-        GatherTests.cpp
-        AllGatherTests.cpp
-        BroadcastTests.cpp
-        ScatterTests.cpp
-        ScattervTests.cpp
-        ReductionTests.cpp
-        MessagePasserBasicsTests.cpp
-        SelfSend_test.cpp
-        StreamTests.cpp
-        PreProcessor/ParallelNodeToNodeTests.cpp
-        PreProcessor/NodeCenteredRedistributorTests.cpp
-        PreProcessor/PreProcessorTests.cpp
-        PreProcessor/ParallelMeshReaderTests.cpp
-       )
+  catch_main.cpp
+  DangerStreamTests.cpp
+  ParallelExtent_test.cpp
+  parallel_sum_tests.cpp
+  GathervTests.cpp
+  AllGathervTests.cpp
+  MessageBuilder_test.cpp
+  AsyncSends_tests.cpp
+  SendRecvScalarTests.cpp
+  SendRecvVectorTests.cpp
+  SendRecvVectorOfVectorsTests.cpp
+  GatherTests.cpp
+  AllGatherTests.cpp
+  BroadcastTests.cpp
+  ScatterTests.cpp
+  ScattervTests.cpp
+  ReductionTests.cpp
+  MessagePasserBasicsTests.cpp
+  SelfSend_test.cpp
+  StreamTests.cpp
+  PreProcessor/ParallelNodeToNodeTests.cpp
+  PreProcessor/NodeCenteredRedistributorTests.cpp
+  PreProcessor/PreProcessorTests.cpp
+  PreProcessor/ParallelMeshReaderTests.cpp
+  )
 
 add_executable(ParfaitParallelTests
-        ${PARFAIT_PARALLEL_TESTS_SRC}
-        ${HEADERS})
-target_link_libraries(ParfaitParallelTests
-            ${MPI_LIBRARIES}
-            tinyxml
-            parmetis
-            metis
-            )
+  ${PARFAIT_PARALLEL_TESTS_SRC}
+  ${HEADERS})
+if(PARFAIT_WITH_PARMETIS)
+  target_link_libraries(ParfaitParallelTests
+    ${MPI_LIBRARIES}
+    tinyxml
+    parmetis
+    metis
+    )
+else()
+  target_link_libraries(ParfaitParallelTests
+    ${MPI_LIBRARIES}
+    tinyxml
+    )
+endif()
 
