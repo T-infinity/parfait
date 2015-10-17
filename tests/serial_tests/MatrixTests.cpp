@@ -2,7 +2,7 @@
 #include "SparseMatrix.h"
 
 using namespace Parfait;
-TEST_CASE("SparseMatrix Exists"){
+TEST_CASE("SparseMatrix create from Compressed Row Storage"){
     int nrows = 3;
     int nnz = 9;
     std::vector<int> ia = {0,3,6,9};
