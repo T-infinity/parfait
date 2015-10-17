@@ -5,8 +5,8 @@ namespace Parfait {
   namespace LinearPartitioner {
 
     template <typename T>
-    Range<T>::Range(T start, T end)
-            : start(start), end(end) { }
+    Range<T>::Range(T start_in, T end_in)
+            : start(start_in), end(end_in) { }
 
     inline OwnerLocalIdPair::OwnerLocalIdPair(long owner_in, long id_in)
             : owner(owner_in), id(id_in) { }

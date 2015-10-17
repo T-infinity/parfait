@@ -31,9 +31,10 @@ inline std::shared_ptr<MeshBasicParallel> Parfait::ParallelMeshReader::readDistr
 
 inline Parfait::ParallelMeshReader::ParallelMeshReader(std::vector<std::string> gridFiles_in,
                                                        std::vector<bool> isBigEndian_in)
-        : isBigEndian(isBigEndian_in), mesh(std::make_shared<MeshBasicParallel>()) {
+        : isBigEndian(isBigEndian_in), 
+          mesh(std::make_shared<MeshBasicParallel>()),
+          gridFiles(gridFiles_in){
 
-    gridFiles = gridFiles_in;
     int ngrid = (int) gridFiles.size();
     gridNodeMap.reserve(ngrid);
     gridTriangleMap.reserve(ngrid);
