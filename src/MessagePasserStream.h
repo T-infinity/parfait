@@ -80,5 +80,10 @@ namespace MessagePasser{
               *this >> v;
           return *this;
       }
+      std::list<Element> getElements();
   };
+
+  std::list<Element> Stream::getElements() {
+      return elements;
+  }
 }

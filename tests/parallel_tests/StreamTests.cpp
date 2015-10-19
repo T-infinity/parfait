@@ -117,7 +117,7 @@ TEST_CASE("Chained Stream POD") {
     REQUIRE(f == 7);
 }
 
-TEST_CASE("Chained Stream Dawg") {
+TEST_CASE("Chained Stream") {
     MessagePasser::Stream s1;
 
     int a = 5;
@@ -138,4 +138,15 @@ TEST_CASE("Chained Stream Dawg") {
     for(auto &it : vec) s2 >> it;
 
     REQUIRE(vec == (std::vector<int> {8,9,5,6,7}));
+}
+
+TEST_CASE("Get elements of a stream for communications"){
+    MessagePasser::Stream s1;
+
+    int a = 5;
+    int b = 6;
+    int c = 7;
+
+    auto elements = s1.getElements();
+    REQUIRE(elements.size() == 3);
 }
