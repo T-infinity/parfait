@@ -83,7 +83,7 @@ namespace MessagePasser{
       std::list<Element> getElements();
   };
 
-  std::list<Element> Stream::getElements() {
+  inline std::list<Element> Stream::getElements() {
       return elements;
   }
 }
