@@ -35,7 +35,6 @@ public:
     double d;
     friend MessagePasser::Stream & operator<<(MessagePasser::Stream &stream, const MyClass& myClass);
     friend MessagePasser::Stream & operator>>(MessagePasser::Stream &stream, MyClass& myClass);
-
 };
 
 MessagePasser::Stream & operator<<(MessagePasser::Stream &stream, const MyClass& myClass){
@@ -150,4 +149,66 @@ TEST_CASE("Get elements of a stream for communications"){
 
     auto elements = s1.getElements();
     REQUIRE(elements.size() == 3);
+}
+
+class Header {
+public:
+    int source;
+    int destination;
+    int ticket;
+};
+
+TEST_CASE("Push non-pod front") {
+    MessagePasser::Stream s;
+    Header h;
+    h.source = 1;
+    h.destination = 2;
+    h.ticket = 3;
+
+    s.push_front(h);
+    auto elements = s.getElements();
+    REQUIRE(elements.size() == 1);
+    Header h2;
+    s >> h2;
+    REQUIRE(h2.source == 1);
+    REQUIRE(h2.destination == 2);
+    REQUIRE(h2.ticket == 3);
+    elements = s.getElements();
+    REQUIRE(elements.size() == 0);
+
+    MyClass myclass(1, {2,3,4}, 5.0);
+    s.push_front(myclass);
+    REQUIRE(s.getElements().size() == 3);
+    MyClass myClass2;
+    s >> myClass2;
+    REQUIRE(myClass2.a == 1);
+    REQUIRE((myClass2.vec == std::vector<int>{2,3,4}));
+    REQUIRE(myClass2.d == 5.0);
+}
+
+TEST_CASE("Push Front"){
+    MessagePasser::Stream s1;
+
+    int a = 5;
+    int b = 6;
+    int c = 7;
+    s1 << a << b << c;
+
+    int aa;
+    s1 >> aa;
+    REQUIRE(aa == 5);
+    s1.push_front(aa);
+
+    int aaa;
+    s1 >> aaa;
+    REQUIRE(aaa == 5);
+
+
+
+    int bb;
+    s1 >> bb;
+    REQUIRE(bb == 6);
+    int cc;
+    s1 >> cc;
+    REQUIRE(cc == 7);
 }

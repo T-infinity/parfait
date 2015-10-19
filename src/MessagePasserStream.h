@@ -80,10 +80,25 @@ namespace MessagePasser{
               *this >> v;
           return *this;
       }
-      std::list<Element> getElements();
-  };
 
-  inline std::list<Element> Stream::getElements() {
-      return elements;
-  }
+      template <typename T> typename std::enable_if<std::is_pod<T>::value, void>::type
+      push_front(const T& a) {
+          elements.push_front(Element{sizeof(a), (char*)&a});
+      }
+
+      template <typename T> typename std::enable_if<not std::is_pod<T>::value, void>::type
+      push_front(const T& a) {
+          printf("\npushing non-pod object to the front"); fflush(stdout);
+          Stream s;
+          s << a;
+          for(auto it = s.elements.rbegin(); it != s.elements.rend(); it++ ) {
+              auto e = *it;
+              elements.push_front(e);
+          }
+      }
+
+      inline std::list<Element> getElements(){
+          return elements;
+      }
+  };
 }

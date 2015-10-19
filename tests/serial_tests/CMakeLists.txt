@@ -34,6 +34,7 @@ set(SERIAL_TESTS_SOURCES
         parfait_mesh/ParfaitMesh_test.cpp
         point/PointTest.cpp
         range_loop/RangeLoopTests.cpp
+        StreamTests.cpp
         vectors/LegacyArrayTests.cpp
         vectors/VectorToolsTests.cpp
         VtkExplodedViewWriter/VtkExplodedViewWriterTests.cpp
