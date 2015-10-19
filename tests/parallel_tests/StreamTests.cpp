@@ -146,6 +146,7 @@ TEST_CASE("Get elements of a stream for communications"){
     int a = 5;
     int b = 6;
     int c = 7;
+    s1 << a << b << c;
 
     auto elements = s1.getElements();
     REQUIRE(elements.size() == 3);
