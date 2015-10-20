@@ -10,7 +10,7 @@ namespace MessagePasser{
   struct Element {
       size_t length;
       std::vector<char> data_copy;
-      Element(size_t n) :length(n){}
+      Element(size_t n) :length(n), data_copy(length){}
       Element(size_t length, char* data)
               :length(length),
                data_copy(data,data+length)
@@ -99,6 +99,9 @@ namespace MessagePasser{
 
       inline std::list<Element> getElements(){
           return elements;
+      }
+      inline void push_element(const Element& e){
+          elements.push_back(e);
       }
   };
 }
