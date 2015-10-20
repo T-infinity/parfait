@@ -187,28 +187,42 @@ TEST_CASE("Push non-pod front") {
 }
 
 TEST_CASE("Push Front"){
-    MessagePasser::Stream s1;
+    MessagePasser::Stream s;
 
     int a = 5;
     int b = 6;
     int c = 7;
-    s1 << a << b << c;
+    s << a << b << c;
+
+
+    Header h;
+    h.source = 1;
+    h.destination = 2;
+    h.ticket = 3;
+
+    s.push_front(h);
+    Header h_out;
+    s >> h_out;
+    REQUIRE(h_out.source == 1);
+    REQUIRE(h_out.destination == 2);
+    REQUIRE(h_out.ticket == 3);
+
 
     int aa;
-    s1 >> aa;
+    s >> aa;
     REQUIRE(aa == 5);
-    s1.push_front(aa);
+    s.push_front(aa);
 
     int aaa;
-    s1 >> aaa;
+    s >> aaa;
     REQUIRE(aaa == 5);
 
 
 
     int bb;
-    s1 >> bb;
+    s >> bb;
     REQUIRE(bb == 6);
     int cc;
-    s1 >> cc;
+    s >> cc;
     REQUIRE(cc == 7);
 }
