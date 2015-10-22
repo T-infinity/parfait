@@ -12,7 +12,6 @@ TEST_CASE("Adt, StoreNothing"){
     REQUIRE(0 == inside.size());
 }
 
-
 TEST_CASE("Adt, Store3DPoints"){
 
     Adt<3> adt;

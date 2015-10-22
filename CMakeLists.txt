@@ -2,7 +2,12 @@ cmake_minimum_required(VERSION 2.6)
 project(parfait)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
+link_directories(
+    ${CMAKE_LIBRARY_PATH}
+    )
+
 include_directories(
+  ${CMAKE_INCLUDE_PATH}
   src
   utils
   )
@@ -14,10 +19,6 @@ add_subdirectory(utils)
 #add_subdirectory(src/c_interfaces)
 add_subdirectory(tests/serial_tests)
 add_subdirectory(tinyxml)
-
-if(PARFAIT_WITH_PARMETIS)
-  message("Parmetis enabled at top level")
-endif()
 
 if(PARFAIT_WITH_MPI)
   add_subdirectory(tests/parallel_tests)
