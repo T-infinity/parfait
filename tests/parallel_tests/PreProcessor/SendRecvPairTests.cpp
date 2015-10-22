@@ -101,6 +101,12 @@ TEST_CASE("Create Correct Send Receive Pairs") {
         REQUIRE((sendReceivePair.send[0][0] == other[MessagePasser::Rank()]));
         REQUIRE((sendReceivePair.send[1][0] == other[MessagePasser::Rank()]));
         REQUIRE((sendReceivePair.send[2][0] == other[MessagePasser::Rank()]));
+        REQUIRE(sendReceivePair.recv[0] == -1);
+        REQUIRE(sendReceivePair.recv[1] == -1);
+        REQUIRE(sendReceivePair.recv[2] == -1);
+        REQUIRE(sendReceivePair.recv[3] == 1);
+        REQUIRE(sendReceivePair.recv[4] == 1);
+        REQUIRE(sendReceivePair.recv[5] == 1);
     }
     if (MessagePasser::Rank() == 1) {
         REQUIRE(sendReceivePair.send[0].size() == 0);
@@ -112,6 +118,11 @@ TEST_CASE("Create Correct Send Receive Pairs") {
         REQUIRE((sendReceivePair.send[3][0] == other[MessagePasser::Rank()]));
         REQUIRE((sendReceivePair.send[4][0] == other[MessagePasser::Rank()]));
         REQUIRE((sendReceivePair.send[5][0] == other[MessagePasser::Rank()]));
+        REQUIRE(sendReceivePair.recv[0] == 0);
+        REQUIRE(sendReceivePair.recv[1] == 0);
+        REQUIRE(sendReceivePair.recv[2] == 0);
+        REQUIRE(sendReceivePair.recv[3] == -1);
+        REQUIRE(sendReceivePair.recv[4] == -1);
+        REQUIRE(sendReceivePair.recv[5] == -1);
     }
-
 }

@@ -37,6 +37,7 @@ namespace Parfait {
             std::vector<long> do_need_remote_nodes;
             if(proc != MessagePasser::Rank()) {
                 do_need_remote_nodes = doNeedRemoteNodes(needed_nodes, remote_nodes);
+                markRecvFromProc(do_need_remote_nodes, proc);
                 MessagePasser::Send(do_need_remote_nodes, proc);
             }
             else {
@@ -84,6 +85,11 @@ namespace Parfait {
                 respond[index] = -1;
         }
         return respond;
+    }
+
+    inline void NodePairCreator::markRecvFromProc(std::vector<long> &nodes_to_recv, int proc) {
+        for(auto &global : nodes_to_recv)
+            pair.recv[global] = proc;
     }
   }
 }

@@ -26,6 +26,7 @@ namespace Parfait {
                                             std::vector<long> &remote_nodes);
         void buildPair();
         void buildGlobalToLocalMap();
+        void markRecvFromProc(std::vector<long> &nodes_to_recv, int proc);
     };
 
   }
