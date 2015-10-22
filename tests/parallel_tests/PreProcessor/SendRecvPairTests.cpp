@@ -89,7 +89,9 @@ TEST_CASE("Create Correct Send Receive Pairs") {
     std::array<int, 2> other = {1, 0};
 
     REQUIRE(sendReceivePair.send.size() == 6);
-    if(MessagePasser::Rank() == 0) {
+    REQUIRE(sendReceivePair.recv.size() == 6);
+
+    if (MessagePasser::Rank() == 0) {
         REQUIRE(sendReceivePair.send[0].size() == 1);
         REQUIRE(sendReceivePair.send[1].size() == 1);
         REQUIRE(sendReceivePair.send[2].size() == 1);
@@ -100,6 +102,16 @@ TEST_CASE("Create Correct Send Receive Pairs") {
         REQUIRE((sendReceivePair.send[1][0] == other[MessagePasser::Rank()]));
         REQUIRE((sendReceivePair.send[2][0] == other[MessagePasser::Rank()]));
     }
-
+    if (MessagePasser::Rank() == 1) {
+        REQUIRE(sendReceivePair.send[0].size() == 0);
+        REQUIRE(sendReceivePair.send[1].size() == 0);
+        REQUIRE(sendReceivePair.send[2].size() == 0);
+        REQUIRE(sendReceivePair.send[3].size() == 1);
+        REQUIRE(sendReceivePair.send[4].size() == 1);
+        REQUIRE(sendReceivePair.send[5].size() == 1);
+        REQUIRE((sendReceivePair.send[3][0] == other[MessagePasser::Rank()]));
+        REQUIRE((sendReceivePair.send[4][0] == other[MessagePasser::Rank()]));
+        REQUIRE((sendReceivePair.send[5][0] == other[MessagePasser::Rank()]));
+    }
 
 }

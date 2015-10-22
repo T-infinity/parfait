@@ -7,6 +7,7 @@
 namespace Parfait {
 
   namespace SendReceivePairCreator {
+
     class NodePairCreator {
     private:
         std::shared_ptr<ParallelMesh> mesh;
@@ -24,10 +25,11 @@ namespace Parfait {
         std::vector<long> doNeedRemoteNodes(const std::vector<long> &needed_nodes,
                                             std::vector<long> &remote_nodes);
         void buildPair();
+        void buildGlobalToLocalMap();
     };
 
-
   }
+
 }
 
 #include "SendReceivePairNodeCreator.hpp"

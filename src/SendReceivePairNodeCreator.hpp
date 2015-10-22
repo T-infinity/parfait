@@ -7,6 +7,9 @@ namespace Parfait {
 
     inline NodePairCreator::NodePairCreator(std::shared_ptr<ParallelMesh> mesh_in)
             : mesh(mesh_in) {
+        buildGlobalToLocalMap();
+    }
+    inline void NodePairCreator::buildGlobalToLocalMap() {
         for(int local = 0; local < mesh->metaData->globalNodeIds.size(); local++){
             auto & global = mesh->metaData->globalNodeIds[local];
             global_to_local[global] = local;
@@ -16,8 +19,10 @@ namespace Parfait {
     inline SendReceivePair NodePairCreator::create() {
         num_local_nodes = mesh->countNodesAtDegree(0);
         num_ghost_nodes = mesh->countNodesAtDegree(0);
-        for(int local = 0; local < num_local_nodes + num_ghost_nodes; local++)
+        int total_nodes = num_ghost_nodes + num_local_nodes;
+        for(int local = 0; local < total_nodes; local++)
             pair.send[local] = std::vector<int>{};
+        pair.recv.resize(total_nodes, -1);
 
         buildPair();
         return pair;
