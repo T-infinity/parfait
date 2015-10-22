@@ -6,15 +6,15 @@
 #include <vector>
 #include <MessagePasser.h>
 #include <ParallelImportedUgrid.h>
-#include "MeshBasicParallel.h"
+#include "ParallelMesh.h"
 
 namespace Parfait {
 	class ParallelMeshReDistributor {
 	template<class T> using vector = std::vector<T>;
 	public:
-		ParallelMeshReDistributor(std::shared_ptr<MeshBasicParallel> mesh, std::vector<int> &part);
+		ParallelMeshReDistributor(std::shared_ptr<ParallelMesh> mesh, std::vector<int> &part);
 
-		std::shared_ptr<MeshBasicParallel> redistribute();
+		std::shared_ptr<ParallelMesh> redistribute();
 	private:
 		void shuffleNodeIds();
 		void shuffleTriangles();
@@ -29,7 +29,7 @@ namespace Parfait {
 
 		void shuffleNodeMetaData();
 		int nproc;
-		std::shared_ptr<MeshBasicParallel> mesh;
+		std::shared_ptr<ParallelMesh> mesh;
 		std::vector<int> part;
 		std::vector<int> nodeMap;
 

@@ -7,19 +7,19 @@
 #include "MeshParallelMetadata.h"
 
 namespace Parfait {
-    class MeshBasicParallel {
+    class ParallelMesh {
         public:
-        MeshBasicParallel();
+        ParallelMesh();
         std::shared_ptr<MeshConnectivity> connectivity;
         std::shared_ptr<MeshParallelMetaData> metaData;
         int countNodesAtDegree(int degree) const;
     };
 
-  inline int MeshBasicParallel::countNodesAtDegree(int degree) const {
+  inline int ParallelMesh::countNodesAtDegree(int degree) const {
       return std::count(metaData->nodeOwnershipDegree.begin(),metaData->nodeOwnershipDegree.end(),degree);
   }
 
-  inline MeshBasicParallel::MeshBasicParallel()
+  inline ParallelMesh::ParallelMesh()
   : connectivity(std::make_shared<MeshConnectivity>()),
     metaData(std::make_shared<MeshParallelMetaData>()) {
   }

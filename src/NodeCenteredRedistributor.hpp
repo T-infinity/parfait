@@ -4,7 +4,7 @@
 #ifdef PARFAIT_WITH_MPI
 
 namespace Parfait {
-  inline ParallelMeshReDistributor::ParallelMeshReDistributor(std::shared_ptr<MeshBasicParallel> mesh_in,
+  inline ParallelMeshReDistributor::ParallelMeshReDistributor(std::shared_ptr<ParallelMesh> mesh_in,
                                                               vector<int> &part_in)
           : mesh(mesh_in),
             part(part_in) {
@@ -279,7 +279,7 @@ namespace Parfait {
       }
   }
 
-  inline std::shared_ptr<MeshBasicParallel> ParallelMeshReDistributor::redistribute() {
+  inline std::shared_ptr<ParallelMesh> ParallelMeshReDistributor::redistribute() {
 
       nproc = MessagePasser::NumberOfProcesses();
       nodeMap.assign(nproc, 0);

@@ -5,13 +5,13 @@
 #include "Configuration.h"
 #include <MessagePasser.h>
 #include <memory>
-#include <MeshBasicParallel.h>
+#include "ParallelMesh.h"
 
 namespace Parfait {
 	class PreProcessor {
 	public:
 		PreProcessor(Configuration& configuration);
-		std::shared_ptr<MeshBasicParallel> createMesh();
+		std::shared_ptr<ParallelMesh> createMesh();
 
 		int getNumberOfGrids() { return config.numberOfGrids(); }
 
@@ -21,7 +21,7 @@ namespace Parfait {
 
 	private:
 		Configuration& config;
-		std::vector<int> calculateNewPartitioning(std::shared_ptr<MeshBasicParallel> mesh);
+		std::vector<int> calculateNewPartitioning(std::shared_ptr<ParallelMesh> mesh);
 	};
 }
 #include "PreProcessor.hpp"

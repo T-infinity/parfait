@@ -12,7 +12,7 @@ namespace Parfait {
         std::vector<int>& prisms;
         std::vector<int>& hexes;
         public:
-        PartitionableMesh(std::shared_ptr<MeshBasicParallel> mesh) :
+        PartitionableMesh(std::shared_ptr<ParallelMesh> mesh) :
         tets(mesh->connectivity->tets),
                 pyramids(mesh->connectivity->pyramids),
                 prisms(mesh->connectivity->prisms),

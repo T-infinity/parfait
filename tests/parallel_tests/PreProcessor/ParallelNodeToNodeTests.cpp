@@ -1,7 +1,7 @@
 #include <catch.hpp>
 #include <memory>
 #include <MessagePasser.h>
-#include <MeshBasicParallel.h>
+#include "ParallelMesh.h"
 #include <PartitionableMesh.h>
 #include <ParallelPartitionableMesh.h>
 #include <ParallelNodeToNodeBuilder.h>
@@ -11,7 +11,7 @@ TEST_CASE("Redistribution Parallel Tests"){
     if(MessagePasser::NumberOfProcesses() < 2)
         return;
 
-    auto mesh = std::make_shared<Parfait::MeshBasicParallel>();
+    auto mesh = std::make_shared<Parfait::ParallelMesh>();
     if(MessagePasser::Rank() == 0){
         mesh->connectivity->prisms = {0,1,2,3,4,5};
         mesh->metaData->nodeOwnershipDegree = {0,0,0,1,1,1};

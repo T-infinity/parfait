@@ -207,7 +207,6 @@ TEST_CASE("Push Front"){
     REQUIRE(h_out.destination == 2);
     REQUIRE(h_out.ticket == 3);
 
-
     int aa;
     s >> aa;
     REQUIRE(aa == 5);
@@ -216,8 +215,6 @@ TEST_CASE("Push Front"){
     int aaa;
     s >> aaa;
     REQUIRE(aaa == 5);
-
-
 
     int bb;
     s >> bb;

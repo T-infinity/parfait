@@ -2,12 +2,12 @@
 #define PARFAIT_PARALLELPARTITIONABLEMESH_H
 
 #include <memory>
-#include <MeshBasicParallel.h>
+#include "ParallelMesh.h"
 
 namespace Parfait {
   class ParallelPartitionableMesh : public PartitionableMesh {
   public:
-      inline ParallelPartitionableMesh(std::shared_ptr<MeshBasicParallel> mesh) :
+      inline ParallelPartitionableMesh(std::shared_ptr<ParallelMesh> mesh) :
               PartitionableMesh(mesh),
               nodeOwnershipDegree(mesh->metaData->nodeOwnershipDegree),
               globalNodeIds(mesh->metaData->globalNodeIds){}

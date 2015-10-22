@@ -1,6 +1,6 @@
 #include <catch.hpp>
 #include <MessagePasser.h>
-#include <MeshBasicParallel.h>
+#include "ParallelMesh.h"
 #include <memory>
 #include <NodeCenteredRedistributor.h>
 
@@ -10,7 +10,7 @@ TEST_CASE("Node Centered Redistributor"){
     if(NumberOfProcesses() != 2)
         return;
 
-    auto mesh = std::make_shared<Parfait::MeshBasicParallel>();
+    auto mesh = std::make_shared<Parfait::ParallelMesh>();
     std::vector<int> part(3, Rank());
     if(Rank() == 0){
         mesh->connectivity->prisms = {0,1,2,3,4,5};

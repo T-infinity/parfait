@@ -8,7 +8,7 @@
 #include "MessageBuilder.h"
 #include "ConfigurationReader.h"
 
-inline std::shared_ptr<MeshBasicParallel> Parfait::ParallelMeshReader::readDistributedGrid(
+inline std::shared_ptr<ParallelMesh> Parfait::ParallelMeshReader::readDistributedGrid(
         std::string configurationFileName) {
     ConfigurationReader configurationReader(configurationFileName);
     Configuration config = configurationReader.createConfiguration();
@@ -22,7 +22,7 @@ inline std::shared_ptr<MeshBasicParallel> Parfait::ParallelMeshReader::readDistr
     return reader.distributeGridsEvenly();
 }
 
-inline std::shared_ptr<MeshBasicParallel> Parfait::ParallelMeshReader::readDistributedGrid(
+inline std::shared_ptr<ParallelMesh> Parfait::ParallelMeshReader::readDistributedGrid(
         std::vector<std::string> gridFiles,
         std::vector<bool> isBigEndian){
     ParallelMeshReader reader(gridFiles, isBigEndian);
@@ -32,7 +32,7 @@ inline std::shared_ptr<MeshBasicParallel> Parfait::ParallelMeshReader::readDistr
 inline Parfait::ParallelMeshReader::ParallelMeshReader(std::vector<std::string> gridFiles_in,
                                                        std::vector<bool> isBigEndian_in)
         : isBigEndian(isBigEndian_in), 
-          mesh(std::make_shared<MeshBasicParallel>()),
+          mesh(std::make_shared<ParallelMesh>()),
           gridFiles(gridFiles_in){
 
     int ngrid = (int) gridFiles.size();
@@ -210,7 +210,7 @@ inline void Parfait::ParallelMeshReader::buildDistributionMaps() {
     }
 }
 
-inline std::shared_ptr<MeshBasicParallel> Parfait::ParallelMeshReader::distributeGridsEvenly() {
+inline std::shared_ptr<ParallelMesh> Parfait::ParallelMeshReader::distributeGridsEvenly() {
     distributeUgrid();
     return mesh;
 }

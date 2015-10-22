@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <MessagePasser.h>
 #include <ParallelImportedUgrid.h>
-#include "MeshBasicParallel.h"
+#include "ParallelMesh.h"
 
 template <typename T>
 class MessageBuilder;
@@ -16,11 +16,11 @@ namespace Parfait {
   class ParallelMeshReader {
       template<class T> using vector = std::vector<T>;
   public:
-      static std::shared_ptr<MeshBasicParallel> readDistributedGrid(std::string configurationFileName);
-      static std::shared_ptr<MeshBasicParallel> readDistributedGrid(std::vector<std::string> gridFiles,
+      static std::shared_ptr<ParallelMesh> readDistributedGrid(std::string configurationFileName);
+      static std::shared_ptr<ParallelMesh> readDistributedGrid(std::vector<std::string> gridFiles,
                                                                     std::vector<bool> isBigEndian);
       ParallelMeshReader(std::vector<std::string> gridFiles, std::vector<bool> isBigEndian);
-      std::shared_ptr<MeshBasicParallel> distributeGridsEvenly();
+      std::shared_ptr<ParallelMesh> distributeGridsEvenly();
       std::vector<long> getGridNodeMap();
       std::vector<long> getProcNodeMap();
       long totalNumberOfNodes() const;
@@ -39,7 +39,7 @@ namespace Parfait {
       std::vector<long> gridPrismMap;
       std::vector<long> gridHexMap;
 
-      std::shared_ptr<MeshBasicParallel> mesh;
+      std::shared_ptr<ParallelMesh> mesh;
 
       void buildDistributionMaps();
       void distributeNodes();

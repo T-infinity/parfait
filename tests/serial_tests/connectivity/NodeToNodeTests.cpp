@@ -1,7 +1,7 @@
 #include <ImportedUgrid.h>
 #include "NodeToNode.h"
 #include <catch.hpp>
-#include <MeshBasicParallel.h>
+#include "ParallelMesh.h"
 #include <PartitionableMesh.h>
 using namespace Parfait;
 
@@ -15,7 +15,7 @@ TEST_CASE("NodeToNodeTests,Exists") {
     vector<int> tets {0,1,2,3};
     ImportedUgrid one_tet_mesh(xyz,{},{},tets,{},{},{},{},{});
 
-    auto mesh = std::make_shared<MeshBasicParallel>();
+    auto mesh = std::make_shared<ParallelMesh>();
     mesh->connectivity->tets = tets;
     mesh->metaData->xyz = xyz;
     PartitionableMesh partitionableMesh(mesh);

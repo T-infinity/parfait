@@ -2,7 +2,7 @@
 #define PARMETIS_PREPPER_H
 #include <vector>
 #include <memory>
-#include <MeshBasicParallel.h>
+#include "ParallelMesh.h"
 
 namespace Parfait {
   class Partitioner {

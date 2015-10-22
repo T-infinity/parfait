@@ -15,7 +15,7 @@ namespace Parfait{
           :config(configuration)
   { }
 
-  inline std::shared_ptr<MeshBasicParallel> PreProcessor::createMesh(){
+  inline std::shared_ptr<ParallelMesh> PreProcessor::createMesh(){
       auto before_reading = Now();
       std::vector<std::string> grid_names;
       std::vector<bool> is_big_endian;
