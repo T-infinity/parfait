@@ -16,18 +16,18 @@ namespace Parfait {
 
 		std::shared_ptr<ParallelMesh> redistribute();
 	private:
-		void shuffleNodeIds();
-		void shuffleTriangles();
-		void shuffleQuads();
-		void shuffleTets();
-		void shufflePyramids();
-		void shufflePrisms();
-		void shuffleHexs();
+		void redistributeNodeIds();
+		void redistributeTriangles();
+		void redistributeQuads();
+		void redistributeTets();
+		void redistributePyramids();
+		void redistributePrisms();
+		void redistributeHexes();
 
 		void identifyGhostNodes();
 		void buildGlobalNodeIds();
 
-		void shuffleNodeMetaData();
+		void redistributeNodeMetaData();
 		int nproc;
 		std::shared_ptr<ParallelMesh> mesh;
 		std::vector<int> part;
@@ -51,9 +51,9 @@ namespace Parfait {
 
         std::map<long,int> global_to_local_map;
 
-		void convertToLocalIds(std::vector<long>& ids);
         std::vector<int> convertToLocalIds(std::map<long,int> global_to_local_map,const std::vector<long>& ids);
 	};
+
 
 }
 #include "NodeCenteredRedistributor.hpp"

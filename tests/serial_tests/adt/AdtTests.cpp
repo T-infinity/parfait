@@ -105,14 +105,13 @@ TEST_CASE("Adt, Store3DExtents")
     REQUIRE(2 == inside.size());
 }
 
-TEST_CASE("Adt, CornerCaseStoreMinus10"){
+TEST_CASE("Adt, CornerCaseStoreMinus10") {
 
     Adt<3> adt;
-    double extent[6] = {0,0,0,1,1,1};
-    double domain[6] = {0,0,0,0,0,0};
+    double extent[6] = {0, 0, 0, 1, 1, 1};
+    double domain[6] = {0, 0, 0, 0, 0, 0};
     adt.store(-10, domain);
     auto inside = adt.retrieve(extent);
 
     REQUIRE(1 == inside.size());
 }
-
