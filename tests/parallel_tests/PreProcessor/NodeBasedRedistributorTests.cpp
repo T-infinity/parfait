@@ -32,7 +32,7 @@ TEST_CASE("Node Centered Redistributor"){
         mesh->metaData->xyz = {0,0,1, 1,0,1, 1,1,1};
     }
 
-    Parfait::ParallelMeshReDistributor reDistributor(mesh, part);
+    Parfait::NodeBasedRedistributor reDistributor(mesh, part);
     mesh = reDistributor.redistribute();
 
     int number_of_owned_nodes = 0;

@@ -38,7 +38,7 @@ namespace Parfait{
 #endif
       auto part = partitioner->generatePartVector(n2n);
       auto after_parmetis = Now();
-      ParallelMeshReDistributor distributor(mesh,part);
+      NodeBasedRedistributor distributor(mesh,part);
       auto distributed = distributor.redistribute();
       auto after_redistributing = Now();
 

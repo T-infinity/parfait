@@ -4,14 +4,14 @@
 #ifdef PARFAIT_WITH_MPI
 
 namespace Parfait {
-  inline ParallelMeshReDistributor::ParallelMeshReDistributor(std::shared_ptr<ParallelMesh> mesh_in,
+  inline NodeBasedRedistributor::NodeBasedRedistributor(std::shared_ptr<ParallelMesh> mesh_in,
                                                               vector<int> &part_in)
           : mesh(mesh_in),
             part(part_in) {
 
   }
 
-  inline std::vector<int> ParallelMeshReDistributor::convertToLocalIds(std::map<long, int> global_to_local_map,
+  inline std::vector<int> NodeBasedRedistributor::convertToLocalIds(std::map<long, int> global_to_local_map,
                                                                 const std::vector<long> &ids) {
       std::vector<int> local_ids;
       for (auto id:ids)
@@ -19,7 +19,7 @@ namespace Parfait {
       return local_ids;
   }
 
-  inline int ParallelMeshReDistributor::getLocalNodeId(long globalNodeId) {
+  inline int NodeBasedRedistributor::getLocalNodeId(long globalNodeId) {
       auto it = std::lower_bound(recvNodeIds.begin(), recvNodeIds.end(), globalNodeId);
       if (it == recvNodeIds.end()) {
           it = std::lower_bound(recvGhostNodeIds.begin(), recvGhostNodeIds.end(), globalNodeId);
@@ -31,7 +31,7 @@ namespace Parfait {
       return std::distance(recvNodeIds.begin(), it);
   }
 
-  inline void ParallelMeshReDistributor::shuffleNodeMetaData() {
+  inline void NodeBasedRedistributor::shuffleNodeMetaData() {
       std::map<long, int> global_to_local;
       for (int i = 0; i < mesh->metaData->globalNodeIds.size(); i++)
           global_to_local.insert(std::make_pair(mesh->metaData->globalNodeIds[i], i));
@@ -77,7 +77,7 @@ namespace Parfait {
       }
   }
 
-  inline void ParallelMeshReDistributor::shuffleNodeIds() {
+  inline void NodeBasedRedistributor::shuffleNodeIds() {
       for (int proc:range(nproc)) {
           int count = 0;
           for (int owner:part)
@@ -100,7 +100,7 @@ namespace Parfait {
       std::sort(recvNodeIds.begin(), recvNodeIds.end());
   }
 
-  inline void ParallelMeshReDistributor::shuffleTriangles() {
+  inline void NodeBasedRedistributor::shuffleTriangles() {
       for (int proc:range(nproc)) {
           vector<long> sendTriangleIds;
           vector<long> neededNodeIds;
@@ -133,7 +133,7 @@ namespace Parfait {
       }
   }
 
-  inline void ParallelMeshReDistributor::shuffleQuads() {
+  inline void NodeBasedRedistributor::shuffleQuads() {
       for (int proc:range(nproc)) {
           vector<long> sendQuadIds;
           vector<long> neededNodeIds;
@@ -165,7 +165,7 @@ namespace Parfait {
       }
   }
 
-  inline void ParallelMeshReDistributor::shuffleTets() {
+  inline void NodeBasedRedistributor::shuffleTets() {
       vector<long> sendTetIds;
       sendTetIds.reserve(4 * mesh->connectivity->tets.size());
       for (int proc = 0; proc < nproc; proc++) {
@@ -192,7 +192,7 @@ namespace Parfait {
       }
   }
 
-  inline void ParallelMeshReDistributor::shufflePyramids() {
+  inline void NodeBasedRedistributor::shufflePyramids() {
       vector<long> sendPyramidIds;
       sendPyramidIds.reserve(5 * mesh->connectivity->pyramids.size());
       for (int proc:range(nproc)) {
@@ -221,7 +221,7 @@ namespace Parfait {
       }
   }
 
-  inline void ParallelMeshReDistributor::shufflePrisms() {
+  inline void NodeBasedRedistributor::shufflePrisms() {
       vector<long> sendPrismIds;
       sendPrismIds.reserve(6 * mesh->connectivity->prisms.size());
       for (int proc:range(nproc)) {
@@ -250,7 +250,7 @@ namespace Parfait {
       }
   }
 
-  inline void ParallelMeshReDistributor::shuffleHexs() {
+  inline void NodeBasedRedistributor::shuffleHexs() {
       vector<long> sendHexIds;
       sendHexIds.reserve(8 * mesh->connectivity->hexes.size());
       for (int proc:range(nproc)) {
@@ -279,7 +279,7 @@ namespace Parfait {
       }
   }
 
-  inline std::shared_ptr<ParallelMesh> ParallelMeshReDistributor::redistribute() {
+  inline std::shared_ptr<ParallelMesh> NodeBasedRedistributor::redistribute() {
 
       nproc = MessagePasser::NumberOfProcesses();
       nodeMap.assign(nproc, 0);
@@ -323,7 +323,7 @@ namespace Parfait {
       return mesh;
   }
 
-  inline void ParallelMeshReDistributor::identifyGhostNodes() {
+  inline void NodeBasedRedistributor::identifyGhostNodes() {
       std::set<long> uniqueGhostNodeIds;
       if (!std::is_sorted(recvNodeIds.begin(), recvNodeIds.end()))
           throw std::logic_error("Recv node Ids expected in order.");
@@ -343,7 +343,7 @@ namespace Parfait {
       recvGhostNodeIds = std::vector<long>(uniqueGhostNodeIds.begin(), uniqueGhostNodeIds.end());
   }
 
-  inline void ParallelMeshReDistributor::buildGlobalNodeIds() {
+  inline void NodeBasedRedistributor::buildGlobalNodeIds() {
       globalNodeIds = recvNodeIds;
       globalNodeIds.insert(globalNodeIds.end(), recvGhostNodeIds.begin(), recvGhostNodeIds.end());
   }

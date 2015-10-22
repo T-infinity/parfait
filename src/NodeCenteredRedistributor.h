@@ -9,10 +9,10 @@
 #include "ParallelMesh.h"
 
 namespace Parfait {
-	class ParallelMeshReDistributor {
+	class NodeBasedRedistributor {
 	template<class T> using vector = std::vector<T>;
 	public:
-		ParallelMeshReDistributor(std::shared_ptr<ParallelMesh> mesh, std::vector<int> &part);
+		NodeBasedRedistributor(std::shared_ptr<ParallelMesh> mesh, std::vector<int> &part);
 
 		std::shared_ptr<ParallelMesh> redistribute();
 	private:

@@ -54,7 +54,7 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         SelfSend_test.cpp
         ../serial_tests/StreamTests.cpp
         PreProcessor/ParallelNodeToNodeTests.cpp
-        PreProcessor/NodeCenteredRedistributorTests.cpp
+        PreProcessor/NodeBasedRedistributorTests.cpp
         PreProcessor/PreProcessorTests.cpp
         PreProcessor/ParallelMeshReaderTests.cpp
 )
