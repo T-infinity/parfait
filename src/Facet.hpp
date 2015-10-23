@@ -234,25 +234,25 @@ inline Parfait::Point<double> Parfait::Facet::GetClosestPoint(Point<double> safe
     double det = fabs(a00*a11 - a01*a01);
     double s   = a01*b1 - a11*b0;
     double t   = a01*b0 - a00*b1;
-    //double sqrDistance = 1.0e20;
-    //  \     |
-    //   \reg2|
-    //    \   |
-    //     \  |
-    //      \ |
-    //       \|
-    //        *points[1]
-    //        |\
-    //        | \
-    //  reg3  |  \ reg1
-    //        |   \
-    //        |reg0\
-    //        |     \
-    //        |      \ points[0]
-    // -------*-------*------->s
-    //        |P0      \
-    //  reg4  | reg5    \ reg6
-
+    /*
+      \     |
+       \reg2|
+        \   |
+         \  |
+          \ |
+           \|
+            *points[1]
+            |\
+            | \
+      reg3  |  \ reg1
+            |   \
+            |reg0\
+            |     \
+            |      \ points[0]
+     -------*-------*------->s
+            |P0      \
+      reg4  | reg5    \ reg6
+    */
     if (s + t <= det)
     {
         if (s < (double)0)

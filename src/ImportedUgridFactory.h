@@ -161,13 +161,13 @@ inline ImportedUgrid ImportedUgridFactory::readUgrid(std::vector<std::string> &f
             );
         }
 
-        for (int triId = 0; triId < triangles.size() / 3; triId++) {
+        for (unsigned int triId = 0; triId < triangles.size() / 3; triId++) {
             for (int i = 0; i < 3; i++) {
                 fscanf(fp, "%d", &triangles[3 * triId + i]);
                 triangles[3 * triId + i]--;
             }
         }
-        for (int quadId = 0; quadId < quads.size() / 4; quadId++) {
+        for (unsigned int quadId = 0; quadId < quads.size() / 4; quadId++) {
             for (int i = 0; i < 4; i++) {
                 fscanf(fp, "%d", &quads[4 * quadId + i]);
                 quads[4 * quadId + i]--;
@@ -175,36 +175,36 @@ inline ImportedUgrid ImportedUgridFactory::readUgrid(std::vector<std::string> &f
         }
 
 
-        for (int triId = 0; triId < triangles.size() / 3; triId++) {
+        for (unsigned int triId = 0; triId < triangles.size() / 3; triId++) {
             fscanf(fp, "%d", &triangleTags[triId]);
         }
-        for (int quadId = 0; quadId < quads.size() / 4; quadId++) {
+        for (unsigned int quadId = 0; quadId < quads.size() / 4; quadId++) {
             fscanf(fp, "%d", &quadTags[quadId]);
         }
 
 
-        for (int elem = 0; elem < tets.size() / 4; elem++) {
+        for (unsigned int elem = 0; elem < tets.size() / 4; elem++) {
             for (int i = 0; i < 4; i++) {
                 fscanf(fp, "%d", &tets[4 * elem + i]);
                 tets[4 * elem + i]--;
             }
         }
 
-        for (int elem = 0; elem < pyramids.size() / 5; elem++) {
+        for (unsigned int elem = 0; elem < pyramids.size() / 5; elem++) {
             for (int i = 0; i < 5; i++) {
                 fscanf(fp, "%d", &pyramids[5 * elem + i]);
                 pyramids[5 * elem + i]--;
             }
         }
 
-        for (int elem = 0; elem < prisms.size() / 6; elem++) {
+        for (unsigned int elem = 0; elem < prisms.size() / 6; elem++) {
             for (int i = 0; i < 6; i++) {
                 fscanf(fp, "%d", &prisms[6 * elem + i]);
                 prisms[6 * elem + i]--;
             }
         }
 
-        for (int elem = 0; elem < hexs.size() / 8; elem++) {
+        for (unsigned int elem = 0; elem < hexs.size() / 8; elem++) {
             for (int i = 0; i < 8; i++) {
                 fscanf(fp, "%d", &hexs[8 * elem + i]);
                 hexs[8 * elem + i]--;

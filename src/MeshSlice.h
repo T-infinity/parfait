@@ -55,14 +55,14 @@ namespace Parfait {
             localToGlobal_cellId.resize(num_cells, -1);
             localToGlobal_nodeId.resize(num_nodes, -1);
 
-            for (int index = 0; index < globalToLocal_cellId.size(); index++) {
+            for (unsigned int index = 0; index < globalToLocal_cellId.size(); index++) {
                 int localId = globalToLocal_cellId[index];
                 if (localId != -1) {
                     localToGlobal_cellId[localId] = index;
                 }
             }
 
-            for (int index = 0; index < globalToLocal_nodeId.size(); index++) {
+            for (unsigned int index = 0; index < globalToLocal_nodeId.size(); index++) {
                 int localId = globalToLocal_nodeId[index];
                 if (localId != -1) {
                     localToGlobal_nodeId[localId] = index;
@@ -171,14 +171,14 @@ namespace Parfait {
         localToGlobal_cellId.resize(num_cells, -1);
         localToGlobal_nodeId.resize(num_nodes, -1);
 
-        for (int index = 0; index < globalToLocal_cellId.size(); index++) {
+        for (int index = 0; index < (int)globalToLocal_cellId.size(); index++) {
             int localId = globalToLocal_cellId[index];
             if (localId != -1) {
                 localToGlobal_cellId[localId] = index;
             }
         }
 
-        for (int index = 0; index < globalToLocal_nodeId.size(); index++) {
+        for (unsigned int index = 0; index < globalToLocal_nodeId.size(); index++) {
             int localId = globalToLocal_nodeId[index];
             if (localId != -1) {
                 localToGlobal_nodeId[localId] = index;

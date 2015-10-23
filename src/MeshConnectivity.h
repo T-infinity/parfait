@@ -1,6 +1,8 @@
 #ifndef PARFAIT_MESHDATA_H
 #define PARFAIT_MESHDATA_H
 #include <vector>
+#include <stdexcept>
+
 namespace Parfait{
     class MeshConnectivity {
     public:
@@ -48,6 +50,7 @@ namespace Parfait{
                 case 6: return &prisms[6*convertToInternalId(id)];
                 case 8: return &hexes[8*convertToInternalId(id)];
             }
+            throw std::logic_error("invalid cell size");
         }
         int* getFacePtr(int id){
             if(sizeOfFace(id) == 3)

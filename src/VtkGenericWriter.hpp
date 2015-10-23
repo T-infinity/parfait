@@ -192,7 +192,7 @@ namespace Parfait {
       for (auto cell:mesh.cells()) {
           fprintf(f, "         ");
           auto vertices = cell.getNodes();
-          for (int i = 0; i < vertices.size(); i++)
+          for (unsigned int i = 0; i < vertices.size(); i++)
               fprintf(f, "%i ", vertices[i]);
           fprintf(f, "\n");
       }

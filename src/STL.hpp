@@ -128,7 +128,7 @@ namespace Parfait {
             Extent extent{point - offset, point + offset};
 
             auto inside = adt.retrieve(extent);
-            for (int index = 0; index < inside.size(); index++) {
+            for (unsigned int index = 0; index < inside.size(); index++) {
                 auto facetIndex = inside[index];
                 auto &facet = stl.facets[facetIndex];
                 double distanceToFacet;
@@ -181,7 +181,7 @@ namespace Parfait {
 
     inline SearchSTL::SearchSTL(const STL &stl_in) : stl(stl_in), adt(stl_in.findDomain()) {
 #pragma omp parallel for
-        for (int facetId = 0; facetId < stl.facets.size(); facetId++) {
+        for (unsigned int facetId = 0; facetId < stl.facets.size(); facetId++) {
             auto &facet = stl.facets[facetId];
             adt.store(facetId, ExtentBuilder::build(facet));
         }

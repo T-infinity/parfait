@@ -86,7 +86,7 @@ namespace Parfait {
         // loop over boundary faces and set their nodes to true
         for (int i:range(nfaces)) {
             auto face = mesh.getNodesInBoundaryFace(i);
-            for (int j = 0; j < face.size(); j++) {
+            for (unsigned int j = 0; j < face.size(); j++) {
                 isBoundNode[face[j]] = true;
             }
         }
@@ -253,7 +253,7 @@ namespace Parfait {
         for (int i:range(mesh.numberOfBoundaryFaces())) {
             auto face = mesh.getNodesInBoundaryFace(i);
             fprintf(f, "					");
-            for (int j = 0; j < face.size(); j++) {
+            for (unsigned   int j = 0; j < face.size(); j++) {
                 fprintf(f, "%i ", boundaryNodeIdMap[face[j]]);
             }
             // newline after each cell

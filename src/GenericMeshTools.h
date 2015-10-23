@@ -24,27 +24,27 @@
 namespace Parfait {
   namespace GenericMeshTools {
 
-/// Computes the volume of a tet given the xyz coords of its
-//  vertices.  It returns the signed volume, so in order for it
-//  to be positive, the nodes have to be in the expected order
-//  (matching ugrid format).
-// 
-//          D 
-//         /|\
-//        / | \
-//       /  |  \
-//      /   |   \
-//     /    |    \
-//  A /     |     \ C 
-//    \` ` `|` ` `/ 
-//     \    |    /
-//      \   |   /
-//       \  |  /
-//        \ | /
-//         \|/
-//          B                  
-//           
-//
+/*  Computes the volume of a tet given the xyz coords of its
+  vertices.  It returns the signed volume, so in order for it
+  to be positive, the nodes have to be in the expected order
+  (matching ugrid format).
+
+          D
+         /|\
+        / | \
+       /  |  \
+      /   |   \
+     /    |    \
+  A /     |     \ C
+    \` ` `|` ` `/
+     \    |    /
+      \   |   /
+       \  |  /
+        \ | /
+         \|/
+          B
+
+*/
     inline double CompTetVolume(const Point<double> &a,
                                 const Point<double> &b,
                                 const Point<double> &c,
@@ -116,7 +116,7 @@ namespace Parfait {
       for (auto cell : mesh.cells()) {
         for (auto face : cell) {
           auto nodes = face.getNodes();
-          for (int index = 0; index < nodes.size(); index++) {
+          for (unsigned int index = 0; index < nodes.size(); index++) {
             int node1 = nodes[index];
             int node2 = nodes[(index + 1) % nodes.size()];
 

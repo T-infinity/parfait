@@ -25,8 +25,7 @@ namespace Parfait {
         const T *getBlock(int id);
 
         inline int Type() {
-            T t;
-            return Type(t);
+            return Type(T());
         }
 
         std::string name();
@@ -37,10 +36,10 @@ namespace Parfait {
     private:
         bool nodeBased;
         std::string fieldName;
-        std::vector<int> localIds;
         int blockSize;
         int nBlocks;
         const T *data;
+        std::vector<int> localIds;
 
         inline int Type(int x) { return INT32_FIELD; }
 
