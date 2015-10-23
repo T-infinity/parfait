@@ -4,6 +4,7 @@
 
 
 TEST_CASE("STLReader, Exists"){
+    // TODO: add stl to repo.
 #if 0
     Parfait::STL::Reader reader("TEST.stl");
     REQUIRE(12 == reader.numberOfFacets());
