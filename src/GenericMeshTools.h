@@ -112,8 +112,6 @@ namespace Parfait {
 
       Mesh<MeshType> mesh(mesh_in);
 
-      typedef std::pair<int, int> Edge;
-
       std::set<std::pair<int, int>> edgeSet;
       for (auto cell : mesh.cells()) {
         for (auto face : cell) {

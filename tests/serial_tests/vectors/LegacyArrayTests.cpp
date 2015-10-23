@@ -7,8 +7,8 @@ TEST_CASE("LegacyArrayTests,Exists") {
 	LegacyArray<int> b(a,6);
 
 	REQUIRE(6 == b.size());
-	auto beginIterator = b.begin();
-	auto endIterator   = b.end();
+	//auto beginIterator = b.begin();
+	//auto endIterator   = b.end();
 
 	for(int i:range(b))
 		REQUIRE(a[i] == b[i]);

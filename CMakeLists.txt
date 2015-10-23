@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 project(parfait)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wunused -Werror")
 link_directories(
     ${CMAKE_LIBRARY_PATH}
     )

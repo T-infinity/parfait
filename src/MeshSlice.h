@@ -34,7 +34,6 @@ namespace Parfait {
 
             int cellId = 0;
             for (auto cell : genMesh.cells()) {
-                Extent<double> cellExtent = ExtentBuilder::build(cell);
                 T item = data[blocksize * cell.Id() + offset];
                 if (item > lo && item < hi) {
                     globalToLocal_cellId[cell.Id()] = cellId++;

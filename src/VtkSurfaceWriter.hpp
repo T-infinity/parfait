@@ -237,7 +237,7 @@ namespace Parfait {
         assert(f != NULL);
         // set cell type VTK_POLYGON (=7)
         fprintf(f, "     <DataArray type=\"Int32\" Name=\"types\" format=\"ascii\">\n");
-        for (int i:range(mesh.numberOfBoundaryFaces()))
+        for (int i=0;i<mesh.numberOfBoundaryFaces();i++)
             fprintf(f, "          7\n");
         fprintf(f, "     </DataArray>\n");
         fclose(f);

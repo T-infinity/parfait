@@ -65,9 +65,9 @@ TEST_CASE("ImportedUgridTests,FaceTests")
 
 	auto faceNodes = face.getNodes();
 
-	CellFace<ImportedUgrid>::Iterator faceIterator(face,0);
-	CellFace<ImportedUgrid>::Iterator beginIterator = face.begin();
-	CellFace<ImportedUgrid>::Iterator endIterator = face.end();
+	//CellFace<ImportedUgrid>::Iterator faceIterator(face,0);
+	//CellFace<ImportedUgrid>::Iterator beginIterator = face.begin();
+	//CellFace<ImportedUgrid>::Iterator endIterator = face.end();
 }
 
 TEST_CASE("ImportedUgridTests,CellTests")
@@ -199,11 +199,11 @@ TEST_CASE("ImportedUgridTests, DirectFaceAccess")
 template <class MeshType>
 void constFunction(const MeshType &mesh)
 {
-    for(auto cell : mesh.cells()){
-        for(auto face : cell){
+    //for(auto cell : mesh.cells()){
+    //    for(auto face : cell){
 
-        }
-    }
+    //    }
+    //}
 }
 TEST_CASE("ImportedUgridTests, constCheck")
 {
