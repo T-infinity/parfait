@@ -41,6 +41,7 @@ set(SERIAL_TESTS_SOURCES
         VtkFieldTests/VtkFieldTests.cpp
         VtkSliceWriterTests.cpp
         VtkToCGNSTests.cpp
+        generic_mesh_tools/GenericMeshToolsTests.cpp
         MeshConnectivityTests.cpp
         MeshMetaDataTests.cpp)
 
