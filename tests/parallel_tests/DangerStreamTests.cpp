@@ -37,11 +37,11 @@ public:
 };
 
 MessagePasser::DangerStream & operator<<(MessagePasser::DangerStream &stream, const MyClass& myClass){
-    stream << myClass.a << myClass.vec << myClass.d;
+    return stream << myClass.a << myClass.vec << myClass.d;
 }
 
 MessagePasser::DangerStream & operator>>(MessagePasser::DangerStream &stream, MyClass& myClass){
-    stream >> myClass.a >> myClass.vec >> myClass.d;
+    return stream >> myClass.a >> myClass.vec >> myClass.d;
 }
 
 TEST_CASE("DangerStream user defined class"){

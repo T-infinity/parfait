@@ -10,7 +10,7 @@ namespace Parfait {
         buildGlobalToLocalMap();
     }
     inline void NodePairCreator::buildGlobalToLocalMap() {
-        for(int local = 0; local < mesh->metaData->globalNodeIds.size(); local++){
+        for(unsigned int local = 0; local < mesh->metaData->globalNodeIds.size(); local++){
             auto & global = mesh->metaData->globalNodeIds[local];
             global_to_local[global] = local;
         }
@@ -55,7 +55,7 @@ namespace Parfait {
     }
     inline std::vector<long> NodePairCreator::getOwnedNodeGlobalIds() {
         std::vector<long> owned_global_nodes;
-        for(int localId = 0; localId < mesh->metaData->globalNodeIds.size(); localId++){
+        for(unsigned int localId = 0; localId < mesh->metaData->globalNodeIds.size(); localId++){
             if(mesh->metaData->nodeOwnershipDegree[localId] == 0) {
                 auto global_id = mesh->metaData->globalNodeIds[localId];
                 owned_global_nodes.push_back(global_id);
@@ -65,7 +65,7 @@ namespace Parfait {
     }
     inline std::vector<long> NodePairCreator::findNeededNodes() {
         std::vector<long> needed_nodes;
-        for(int localId = 0; localId < mesh->metaData->globalNodeIds.size(); localId++) {
+        for(unsigned int localId = 0; localId < mesh->metaData->globalNodeIds.size(); localId++) {
             if (mesh->metaData->nodeOwnershipDegree[localId] != 0) {
                 auto global_id = mesh->metaData->globalNodeIds[localId];
                 needed_nodes.push_back(global_id);
@@ -77,7 +77,7 @@ namespace Parfait {
     inline std::vector<long> NodePairCreator::doNeedRemoteNodes(const std::vector<long> &needed_nodes,
                                                                 std::vector<long> &remote_nodes) {
         std::vector<long> respond(remote_nodes.size());
-        for(int index = 0; index < remote_nodes.size(); index++){
+        for(unsigned int index = 0; index < remote_nodes.size(); index++){
             auto& global_id = remote_nodes[index];
             if(std::binary_search(needed_nodes.begin(), needed_nodes.end(), global_id))
                 respond[index] = global_id;

@@ -8,12 +8,12 @@ namespace MessagePasser {
   // broadcast a vector of KNOWN size
   template<typename T>
   void Broadcast(std::vector<T> &vec, int vecLength, int rootId) {
-	  if (vec.size() != vecLength) {
+	  if ((int)vec.size() != vecLength) {
 		  if (Rank() == rootId) {
 			  fprintf(stderr, "MessagePasser::Broadcast: Root is trying to ");
 			  fprintf(stderr, "send a vector of the wrong length\n");
 			  fprintf(stderr, "-----------Rank: %i   Vector length: %i   Message size: %i\n",
-					  Rank(), vec.size(), vecLength);
+					  Rank(), (int)vec.size(), vecLength);
                           std::exit(0);
 		  }
 		  else

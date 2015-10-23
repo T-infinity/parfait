@@ -22,7 +22,7 @@ namespace Parfait{
       NodeToNodeBuilder<decltype(mesh)> nodeBuilder(mesh);
       auto local_node_to_node = nodeBuilder.buildNodeToNodeConnectivity();
       int index = 0;
-      for(int localId = 0; localId < local_node_to_node.size(); localId++){
+      for(unsigned int localId = 0; localId < local_node_to_node.size(); localId++){
           if(not mesh.doOwnLocalId(localId)) continue;
           global_node_ids.push_back(mesh.getGlobalNodeId(localId));
           node_to_node.push_back({});

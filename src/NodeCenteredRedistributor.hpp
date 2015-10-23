@@ -16,7 +16,7 @@ namespace Parfait {
       nodeMap.assign(nproc, 0);
       MessagePasser::AllGather(mesh->countNodesAtDegree(0), nodeMap);
       nodeMap.insert(nodeMap.begin(), 0);
-      for (int i = 2; i < nodeMap.size(); i++)
+      for (unsigned int i = 2; i < nodeMap.size(); i++)
           nodeMap[i] += nodeMap[i - 1];
 
       redistributeNodeIds();
@@ -36,7 +36,7 @@ namespace Parfait {
       std::fill(ownership_degree.begin() + recvNodeIds.size(), ownership_degree.end(), 1);
 
       std::map<long, int> global_to_local;
-      for (int i = 0; i < mesh->metaData->globalNodeIds.size(); i++)
+      for (unsigned int i = 0; i < mesh->metaData->globalNodeIds.size(); i++)
           global_to_local.insert(std::make_pair(mesh->metaData->globalNodeIds[i], i));
 
       mesh->connectivity->triangles = convertToLocalIds(global_to_local, recvTriangles);
@@ -64,7 +64,7 @@ namespace Parfait {
           vector<double> sendNodes;
           sendIds.reserve(count);
           sendNodes.reserve(3 * count);
-          for (int localNodeId = 0; localNodeId < part.size(); localNodeId++) {
+          for (unsigned int localNodeId = 0; localNodeId < part.size(); localNodeId++) {
               if (part[localNodeId] == proc) {
                   auto globalNodeId = mesh->metaData->globalNodeIds[localNodeId];
                   sendIds.push_back(globalNodeId);
@@ -77,7 +77,7 @@ namespace Parfait {
 
   inline void NodeBasedRedistributor::redistributeNodeMetaData() {
       std::map<long, int> global_to_local;
-      for (int i = 0; i < mesh->metaData->globalNodeIds.size(); i++)
+      for (unsigned int i = 0; i < mesh->metaData->globalNodeIds.size(); i++)
           global_to_local.insert(std::make_pair(mesh->metaData->globalNodeIds[i], i));
       for (int proc:range(nproc)) {
           vector<long> neededXYZ;
@@ -110,7 +110,7 @@ namespace Parfait {
           if (MessagePasser::Rank() == proc) {
               recvXYZ.resize(3 * just_recv_xyz_global_node_ids.size());
               recvAssociatedComponentIds.resize(just_recv_associated_component_ids.size());
-              for (int index = 0; index < just_recv_xyz_global_node_ids.size(); index++) {
+              for (unsigned int index = 0; index < just_recv_xyz_global_node_ids.size(); index++) {
                   auto globalNodeId = just_recv_xyz_global_node_ids[index];
                   int localId = getLocalNodeId(globalNodeId);
                   for (int i = 0; i < 3; i++)
@@ -128,7 +128,7 @@ namespace Parfait {
           if (MessagePasser::Rank() == proc)
               neededNodeIds = recvNodeIds;
           MessagePasser::Broadcast(neededNodeIds, proc);
-          for (int localCellId = 0; localCellId < mesh->connectivity->triangles.size() / 3; localCellId++) {
+          for (unsigned int localCellId = 0; localCellId < mesh->connectivity->triangles.size() / 3; localCellId++) {
               for (int j:range(3)) {
                   int localNodeId = mesh->connectivity->triangles[3 * localCellId + j];
                   auto globalId = mesh->metaData->globalNodeIds[localNodeId];
@@ -161,7 +161,7 @@ namespace Parfait {
           if (MessagePasser::Rank() == proc)
               neededNodeIds = recvNodeIds;
           MessagePasser::Broadcast(neededNodeIds, proc);
-          for (int localCellId = 0; localCellId < mesh->connectivity->quads.size() / 4; localCellId++) {
+          for (unsigned int localCellId = 0; localCellId < mesh->connectivity->quads.size() / 4; localCellId++) {
               for (int j:range(4)) {
                   int localNodeId = mesh->connectivity->quads[4 * localCellId + j];
                   auto globalNodeId = mesh->metaData->globalNodeIds[localNodeId];
@@ -195,7 +195,7 @@ namespace Parfait {
           if (MessagePasser::Rank() == proc)
               neededNodeIds = recvNodeIds;
           MessagePasser::Broadcast(neededNodeIds, proc);
-          for (int i = 0; i < mesh->connectivity->tets.size() / 4; i++) {
+          for (unsigned int i = 0; i < mesh->connectivity->tets.size() / 4; i++) {
               for (int j = 0; j < 4; j++) {
                   long globalId = mesh->metaData->globalNodeIds[mesh->connectivity->tets[4 * i + j]];
                   if (binary_search(neededNodeIds.begin(), neededNodeIds.end(), globalId)) {
@@ -222,7 +222,7 @@ namespace Parfait {
           if (MessagePasser::Rank() == proc)
               neededNodeIds = recvNodeIds;
           MessagePasser::Broadcast(neededNodeIds, proc);
-          for (int i = 0; i < mesh->connectivity->pyramids.size() / 5; i++) {
+          for (unsigned int i = 0; i < mesh->connectivity->pyramids.size() / 5; i++) {
               for (int j:range(5)) {
                   long globalId = mesh->metaData->globalNodeIds[mesh->connectivity->pyramids[5 * i + j]];
                   if (binary_search(neededNodeIds.begin(), neededNodeIds.end(), globalId)) {
@@ -249,7 +249,7 @@ namespace Parfait {
           if (MessagePasser::Rank() == proc)
               neededNodeIds = recvNodeIds;
           MessagePasser::Broadcast(neededNodeIds, proc);
-          for (int i = 0; i < mesh->connectivity->prisms.size() / 6; i++) {
+          for (unsigned int i = 0; i < mesh->connectivity->prisms.size() / 6; i++) {
               for (int j:range(6)) {
                   long globalId = mesh->metaData->globalNodeIds[mesh->connectivity->prisms[6 * i + j]];
                   if (binary_search(neededNodeIds.begin(), neededNodeIds.end(), globalId)) {
@@ -276,7 +276,7 @@ namespace Parfait {
           if (MessagePasser::Rank() == proc)
               neededNodeIds = recvNodeIds;
           MessagePasser::Broadcast(neededNodeIds, proc);
-          for (int i = 0; i < mesh->connectivity->hexes.size() / 8; i++) {
+          for (unsigned int i = 0; i < mesh->connectivity->hexes.size() / 8; i++) {
               for (int j:range(8)) {
                   long globalId = mesh->metaData->globalNodeIds[mesh->connectivity->hexes[8 * i + j]];
                   if (binary_search(neededNodeIds.begin(), neededNodeIds.end(), globalId)) {
