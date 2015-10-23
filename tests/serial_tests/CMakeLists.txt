@@ -45,6 +45,7 @@ set(SERIAL_TESTS_SOURCES
         Geometry/facet_test.cpp
         Geometry/stl_test.cpp
         Geometry/STLReader_test.cpp
+        mesh_interfaces/imported_ugrid_tests.cpp
         MeshConnectivityTests.cpp
         MeshMetaDataTests.cpp)
 

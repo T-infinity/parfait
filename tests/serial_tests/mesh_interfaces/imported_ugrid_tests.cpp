@@ -3,15 +3,14 @@
 #include <vector>
 #include "GenericMesh.h"
 #include "GenericSurfaceMesh.h"
-#include "CppUTest/CommandLineTestRunner.h"
+#include <catch.hpp>
 
 using std::vector;
 using namespace Parfait;
 
 template <class MeshType> void constFunction(const MeshType &mesh);
 
-TEST_GROUP(ImportedUgridTests)
-{
+namespace ImportedUgridTests{
 	vector<double> nodes;
 	vector<int> triangles;
 	vector<int> quads;
@@ -37,31 +36,32 @@ TEST_GROUP(ImportedUgridTests)
 		tets = {0,1,2,3};
 		triangleBoundaryConditions = {5050,5050,5050,5050};
 	}
-	void teardown()
-	{
-	}
 };
 
-TEST(ImportedUgridTests,Exists)
+TEST_CASE("ImportedUgridTests,Exists")
 {
+	using namespace ImportedUgridTests;
+	setup();
 	ImportedUgrid ugrid(nodes,triangles,quads,
 			tets,pyramids,prisms,hexs, triangleTags, quadTags);
 
-	LONGS_EQUAL(4,ugrid.numberOfNodes());
-	LONGS_EQUAL(1,ugrid.numberOfCells());
-	LONGS_EQUAL(4,ugrid.numberOfBoundaryFaces());
-	LONGS_EQUAL(4,ugrid.numberOfFacesInCell(0));
-	LONGS_EQUAL(3,ugrid.numberOfNodesInCellFace(0,0));
+	REQUIRE(4 == ugrid.numberOfNodes());
+	REQUIRE(1 == ugrid.numberOfCells());
+	REQUIRE(4 == ugrid.numberOfBoundaryFaces());
+	REQUIRE(4 == ugrid.numberOfFacesInCell(0));
+	REQUIRE(3 == ugrid.numberOfNodesInCellFace(0,0));
 	
 }
 
-TEST(ImportedUgridTests,FaceTests)
+TEST_CASE("ImportedUgridTests,FaceTests")
 {
+	using namespace ImportedUgridTests;
+	setup();
 	ImportedUgrid ugrid(nodes,triangles,quads,
 			tets,pyramids,prisms,hexs, triangleTags, quadTags);
 	// create face object from first face of first cell in mesh	
 	CellFace<ImportedUgrid> face(ugrid,0,0);
-	LONGS_EQUAL(3,face.numberOfNodes());
+	REQUIRE(3 == face.numberOfNodes());
 
 	auto faceNodes = face.getNodes();
 
@@ -70,19 +70,21 @@ TEST(ImportedUgridTests,FaceTests)
 	CellFace<ImportedUgrid>::Iterator endIterator = face.end();
 }
 
-TEST(ImportedUgridTests,CellTests)
+TEST_CASE("ImportedUgridTests,CellTests")
 {
+	using namespace ImportedUgridTests;
+	setup();
 	ImportedUgrid ugrid(nodes,triangles,quads,
 			tets,pyramids,prisms,hexs, triangleTags, quadTags);
 	// create face object from first face of first cell in mesh	
 	Cell<ImportedUgrid> cell(ugrid,0);
-	LONGS_EQUAL(4,cell.numberOfNodes());
+	REQUIRE(4 == cell.numberOfNodes());
 	// get nodes and check that they are 0--3
 	auto cellNodes = cell.getNodes();
 	for(int i=0;i<4;i++)
-		LONGS_EQUAL(i,cellNodes[i]);
+		REQUIRE(i == cellNodes[i]);
 
-	LONGS_EQUAL(4,cell.numberOfFaces());
+	REQUIRE(4 == cell.numberOfFaces());
 
 	Cell<ImportedUgrid>::Iterator cellIterator(cell,0);
 
@@ -100,27 +102,29 @@ TEST(ImportedUgridTests,CellTests)
 #endif
 }
 
-TEST(ImportedUgridTests,CellCollectionTests)
+TEST_CASE("ImportedUgridTests,CellCollectionTests")
 {
+	using namespace ImportedUgridTests;
+	setup();
 	ImportedUgrid ugrid(nodes,triangles,quads,
 			tets,pyramids,prisms,hexs, triangleTags, quadTags);
 	Mesh<ImportedUgrid> mesh(ugrid);	
 	
-	LONGS_EQUAL(4,mesh.numberOfNodes());
-	LONGS_EQUAL(1,mesh.numberOfCells());
-	LONGS_EQUAL(4,mesh.numberOfFacesInCell(0));
-	LONGS_EQUAL(3,ugrid.numberOfNodesInCellFace(0,0));
+	REQUIRE(4 == mesh.numberOfNodes());
+	REQUIRE(1 == mesh.numberOfCells());
+	REQUIRE(4 == mesh.numberOfFacesInCell(0));
+	REQUIRE(3 == ugrid.numberOfNodesInCellFace(0,0));
 
 	//printf("looping over cells in mesh....\n");
     int cellId = 0;
 	for(auto cell:mesh.cells())
 	{
-        LONGS_EQUAL(cellId++, cell.Id());
+        REQUIRE(cellId++ == cell.Id());
 		//printf("looping over faces in cell.....\n");
         int faceId = 0;
 		for(auto face:cell)
 		{
-            LONGS_EQUAL(faceId++, face.Id());
+            REQUIRE(faceId++ == face.Id());
 			//printf("looping over nodes in face...\n");
 			for(int node:face)
 			{
@@ -134,56 +138,62 @@ TEST(ImportedUgridTests,CellCollectionTests)
 	Node<ImportedUgrid> node(ugrid,0);
 }
 
-TEST(ImportedUgridTests,BoundaryFaceTests)
+TEST_CASE("ImportedUgridTests,BoundaryFaceTests")
 {
+	using namespace ImportedUgridTests;
+	setup();
 	ImportedUgrid ugrid(nodes,triangles,quads,
 			tets,pyramids,prisms,hexs, triangleTags, quadTags);
 
     SurfaceMesh<ImportedUgrid> mesh(ugrid);
-    LONGS_EQUAL(4, mesh.numberOfBoundaryFaces());
+    REQUIRE(4 == mesh.numberOfBoundaryFaces());
     for(auto id : range(mesh.numberOfBoundaryFaces())){
-        LONGS_EQUAL(3, mesh.numberOfNodesInBoundaryFace(id));
+        REQUIRE(3 == mesh.numberOfNodesInBoundaryFace(id));
     }
 
     std::vector<int> nodes = mesh.getNodesInBoundaryFace(0);
-    LONGS_EQUAL(0, nodes[0]);
-    LONGS_EQUAL(1, nodes[1]);
-    LONGS_EQUAL(2, nodes[2]);
+    REQUIRE(0 == nodes[0]);
+    REQUIRE(1 == nodes[1]);
+    REQUIRE(2 == nodes[2]);
 
     nodes = mesh.getNodesInBoundaryFace(1);
-    LONGS_EQUAL(0, nodes[0]);
-    LONGS_EQUAL(1, nodes[1]);
-    LONGS_EQUAL(3, nodes[2]);
+    REQUIRE(0 == nodes[0]);
+    REQUIRE(1 == nodes[1]);
+    REQUIRE(3 == nodes[2]);
 
     nodes = mesh.getNodesInBoundaryFace(2);
-    LONGS_EQUAL(0, nodes[0]);
-    LONGS_EQUAL(3, nodes[1]);
-    LONGS_EQUAL(2, nodes[2]);
+    REQUIRE(0 == nodes[0]);
+    REQUIRE(3 == nodes[1]);
+    REQUIRE(2 == nodes[2]);
 
     nodes = mesh.getNodesInBoundaryFace(3);
-    LONGS_EQUAL(2, nodes[0]);
-    LONGS_EQUAL(3, nodes[1]);
-    LONGS_EQUAL(1, nodes[2]);
+    REQUIRE(2 == nodes[0]);
+    REQUIRE(3 == nodes[1]);
+    REQUIRE(1 == nodes[2]);
 }
 
-TEST(ImportedUgridTests, DirectCellAccess)
+TEST_CASE("ImportedUgridTests, DirectCellAccess")
 {
+	using namespace ImportedUgridTests;
+	setup();
 	ImportedUgrid ugrid(nodes,triangles,quads,
 			tets,pyramids,prisms,hexs, triangleTags, quadTags);
 	Mesh<ImportedUgrid> mesh(ugrid);	
 
     auto cell = mesh.cell(0);
-    LONGS_EQUAL(4, cell.numberOfNodes());
+    REQUIRE(4 == cell.numberOfNodes());
 }
 
-TEST(ImportedUgridTests, DirectFaceAccess)
+TEST_CASE("ImportedUgridTests, DirectFaceAccess")
 {
+	using namespace ImportedUgridTests;
+	setup();
 	ImportedUgrid ugrid(nodes,triangles,quads,
 			tets,pyramids,prisms,hexs, triangleTags, quadTags);
 	Mesh<ImportedUgrid> mesh(ugrid);	
     auto cell = mesh.cell(0);
     auto face = cell.getFace(0);
-    LONGS_EQUAL(3, face.numberOfNodes());
+    REQUIRE(3 == face.numberOfNodes());
 }
 
 template <class MeshType>
@@ -195,8 +205,10 @@ void constFunction(const MeshType &mesh)
         }
     }
 }
-TEST(ImportedUgridTests, constCheck)
+TEST_CASE("ImportedUgridTests, constCheck")
 {
+	using namespace ImportedUgridTests;
+	setup();
 	ImportedUgrid ugrid(nodes,triangles,quads,
 			tets,pyramids,prisms,hexs, triangleTags, quadTags);
     Mesh<ImportedUgrid> mesh(ugrid);
