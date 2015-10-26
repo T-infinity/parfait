@@ -59,6 +59,15 @@ namespace Parfait {
     bool Range<T>::owns(T id) const {
         return id >= start and id < end;
     }
+
+    inline std::vector<long> getOwnersOfEveryWorkItem(long num_work_items, long num_workers){
+        std::vector<long> ranges(num_workers+1);
+        for(int proc = 0; proc < num_workers; proc++){
+            ranges[proc] = Parfait::LinearPartitioner::getRangeForWorker(proc, num_work_items, num_workers).start;
+        }
+        ranges.back() = Parfait::LinearPartitioner::getRangeForWorker(num_workers-1, num_work_items, num_workers).end;
+        return ranges;
+    }
   }
 }
 #endif 

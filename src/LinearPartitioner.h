@@ -27,6 +27,8 @@ namespace Parfait {
     OwnerLocalIdPair getOwnerLocalIdPairOfGlobalItem(long globalItemId, long numWorkItems, long numWorkers);
     long getLocalIdOfItemOnWorker(long globalItemId, long workerId, long numWorkItems, long numWorkers);
 
+    std::vector<long> getOwnersOfEveryWorkItem(long num_work_items, long num_workers);
+
   }
 }
 
