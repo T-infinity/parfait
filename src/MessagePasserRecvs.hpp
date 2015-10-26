@@ -18,7 +18,7 @@ namespace MessagePasser {
       MPI_Probe(source, 0, MPI_COMM_WORLD, &status);
       MPI_Get_count(&status, MPI_CHAR, &n);
       vec.resize(n/sizeof(T));
-      MPI_Recv(vec.data(), n*sizeof(T), MPI_CHAR, source, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+      MPI_Recv(vec.data(), n, MPI_CHAR, source, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
   }
 
   template<typename T>
