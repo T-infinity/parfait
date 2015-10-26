@@ -28,4 +28,6 @@ TEST_CASE("Read in grid based on xml file (on one proc)") {
             REQUIRE(0 == mesh->metaData->nodeOwnershipDegree[i]);
         }
     }
+
+    BoundaryConditionMap boundaryConditionMap = config.getMapbcObject(0);
 }

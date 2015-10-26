@@ -19,7 +19,7 @@ namespace Parfait {
         Configuration(int number_of_grids,
                       std::shared_ptr<std::vector<std::string>> grid_filenames,
                       std::shared_ptr<std::vector<bool>> is_big_endian,
-                      std::shared_ptr<std::vector<Parfait::MapbcReader>> map_bcs,
+                      std::shared_ptr<std::vector<Parfait::BoundaryConditionMap>> map_bcs,
                       std::shared_ptr<std::vector<Parfait::MotionMatrix>> motion_matrices);
 
         int numberOfGrids();
@@ -27,13 +27,13 @@ namespace Parfait {
 		bool isBigEndian(int gridId);
 		Parfait::MotionMatrix getMotionMatrix(int gridId);
 		int getBoundaryCondition(int gridId, int tag);
-		Parfait::MapbcReader getMapbcObject(int gridId);
+		Parfait::BoundaryConditionMap getMapbcObject(int gridId);
 		void print();
 	private:
 		int ngrids;
 		std::shared_ptr<std::vector<std::string>> gridFilenames;
 		std::shared_ptr<std::vector<bool>> bigEndian;
-		std::shared_ptr<std::vector<Parfait::MapbcReader>> mapbcVector;
+		std::shared_ptr<std::vector<Parfait::BoundaryConditionMap>> mapbcVector;
 		std::shared_ptr<std::vector<Parfait::MotionMatrix>> motionMatrices;
 	};
 }

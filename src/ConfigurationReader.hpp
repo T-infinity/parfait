@@ -4,7 +4,7 @@ namespace Parfait {
             : filename(xmlFile),
               gridFilenames(std::make_shared<std::vector<std::string>>()),
               bigEndian(std::make_shared<std::vector<bool>>()),
-              mapbcVector(std::make_shared<std::vector<MapbcReader>>()),
+              mapbcVector(std::make_shared<std::vector<BoundaryConditionMap>>()),
               motionMatrices(std::make_shared<std::vector<Parfait::MotionMatrix>>())
     {
 		load();
@@ -16,8 +16,10 @@ namespace Parfait {
     }
 
 	inline void ConfigurationReader::readMapbcFiles() {
-		for (auto filename:*gridFilenames)
-			mapbcVector->push_back(filename.substr(0, filename.length() - 5).append("mapbc"));
+		for (auto filename:*gridFilenames) {
+            auto reader = MapbcReader(MapbcReader(filename.substr(0, filename.length() - 5).append("mapbc")));
+            mapbcVector->push_back(reader.getMap());
+        }
 	}
 
 	inline void ConfigurationReader::load() {
