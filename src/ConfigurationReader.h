@@ -23,7 +23,7 @@ namespace Parfait {
 		std::string filename;
 		std::shared_ptr<std::vector<std::string>> gridFilenames;
 		std::shared_ptr<std::vector<bool>> bigEndian;
-		std::shared_ptr<std::vector<Parfait::MapbcReader>> mapbcVector;
+		std::shared_ptr<std::vector<Parfait::BoundaryConditionMap>> mapbcVector;
 		std::shared_ptr<std::vector<Parfait::MotionMatrix>> motionMatrices;
 		void load();
 		void readMapbcFiles();

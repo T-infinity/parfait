@@ -4,6 +4,9 @@
 #include <map>
 
 namespace Parfait {
+   
+    typedef std::map<int, std::pair<int,std::string>> BoundaryConditionMap;
+    
     class MapbcReader {
     public:
         MapbcReader(std::string filename);
@@ -11,13 +14,13 @@ namespace Parfait {
 
         int numberOfTags() { return bcMap.size(); }
 
-        std::map<int, std::pair<int, std::string>> getMap() { return bcMap; }
+        BoundaryConditionMap getMap() { return bcMap; }
 
         void print();
     private:
         bool failedToOpenMapbc;
         std::string filename;
-        std::map<int, std::pair<int, std::string>> bcMap;
+        BoundaryConditionMap bcMap;
     };
 }
 

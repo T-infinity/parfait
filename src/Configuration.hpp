@@ -2,7 +2,7 @@
 namespace Parfait {
     inline Configuration::Configuration(int number_of_grids, std::shared_ptr<std::vector<std::string>> grid_filenames,
                                  std::shared_ptr<std::vector<bool>> is_big_endian,
-                                        std::shared_ptr<std::vector<Parfait::MapbcReader>> map_bcs,
+                                        std::shared_ptr<std::vector<Parfait::BoundaryConditionMap>> map_bcs,
                                         std::shared_ptr<std::vector<Parfait::MotionMatrix>> motion_matrices)
             :ngrids(number_of_grids),
              gridFilenames(grid_filenames),
@@ -20,12 +20,12 @@ namespace Parfait {
 
     inline Parfait::MotionMatrix Configuration::getMotionMatrix(int gridId) { return motionMatrices->at(gridId); }
 
-    inline Parfait::MapbcReader Configuration::getMapbcObject(int gridId) {
+    inline Parfait::BoundaryConditionMap Configuration::getMapbcObject(int gridId) {
         return mapbcVector->at(gridId);
     }
 
     inline int Configuration::getBoundaryCondition(int gridId, int tag) {
-        return mapbcVector->at(gridId).boundaryCondition(tag);
+        return mapbcVector->at(gridId)[gridId].first;
     }
 
     inline void Configuration::print() {
