@@ -137,7 +137,7 @@ TEST_CASE("TestGatheringAsVectorOfVectors"){
     for(int i=0;i<NumberOfProcesses();i++) {
       int counter = 0;
       REQUIRE((i%2==0?2:3) == result[i].size());
-      for(int j=0;j< result[i].size();j++) {
+      for(unsigned int j=0;j< result[i].size();j++) {
         REQUIRE((junk+(double)(i+counter)) == Approx(result[i][j]));
         ++counter;
       }

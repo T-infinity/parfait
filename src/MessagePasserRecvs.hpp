@@ -29,7 +29,7 @@ namespace MessagePasser {
       Recv(recvBuffer, source);
       vec.assign(recvBufferMap.size() - 1, std::vector<T>());
       // use map to unpack buffer into vector of vectors
-      for (int i = 0; i < recvBufferMap.size() - 1; i++)
+      for (unsigned int i = 0; i < recvBufferMap.size() - 1; i++)
           for (int j = recvBufferMap[i]; j < recvBufferMap[i + 1]; j++)
               vec[i].push_back(recvBuffer[j]);
   }

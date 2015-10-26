@@ -51,7 +51,7 @@ namespace Parfait {
 
         intFields.push_back(std::vector<int>(slice.numberOfNodes()));
         std::vector<int> &field = intFields[intFields.size() - 1];
-        for (int globalId = 0; globalId < slice.globalToLocal_nodeId.size(); globalId++) {
+        for (unsigned int globalId = 0; globalId < slice.globalToLocal_nodeId.size(); globalId++) {
             int localId = slice.globalToLocal_nodeId[globalId];
             if (localId == -1) continue;
             for (int i = 0; i < blockSize; i++) {
@@ -67,7 +67,7 @@ namespace Parfait {
 
         intFields.push_back(std::vector<int>(slice.numberOfCells()));
         std::vector<int> &field = intFields[intFields.size() - 1];
-        for (int globalCellId = 0; globalCellId < slice.globalToLocal_cellId.size();
+        for (unsigned int globalCellId = 0; globalCellId < slice.globalToLocal_cellId.size();
              globalCellId++) {
 
             int localCellId = slice.globalToLocal_cellId[globalCellId];
@@ -88,7 +88,7 @@ namespace Parfait {
 
         doubleFields.push_back(std::vector<double>(slice.numberOfNodes()));
         std::vector<double> &field = doubleFields[doubleFields.size() - 1];
-        for (int globalId = 0; globalId < slice.globalToLocal_nodeId.size(); globalId++) {
+        for (unsigned int globalId = 0; globalId < slice.globalToLocal_nodeId.size(); globalId++) {
             int localId = slice.globalToLocal_nodeId[globalId];
             if (localId == -1) continue;
             for (int i = 0; i < blockSize; i++) {
@@ -104,7 +104,7 @@ namespace Parfait {
 
         floatFields.push_back(std::vector<float>(slice.numberOfNodes()));
         std::vector<float> &field = floatFields[floatFields.size() - 1];
-        for (int globalId = 0; globalId < slice.globalToLocal_nodeId.size(); globalId++) {
+        for (unsigned int globalId = 0; globalId < slice.globalToLocal_nodeId.size(); globalId++) {
             int localId = slice.globalToLocal_nodeId[globalId];
             if (localId == -1) continue;
             for (int i = 0; i < blockSize; i++) {
@@ -121,7 +121,7 @@ namespace Parfait {
 
         doubleFields.push_back(std::vector<double>(slice.numberOfCells()));
         std::vector<double> &field = doubleFields[doubleFields.size() - 1];
-        for (int globalCellId = 0; globalCellId < slice.globalToLocal_cellId.size();
+        for (unsigned int globalCellId = 0; globalCellId < slice.globalToLocal_cellId.size();
              globalCellId++) {
 
             int localCellId = slice.globalToLocal_cellId[globalCellId];
@@ -142,7 +142,7 @@ namespace Parfait {
 
         floatFields.push_back(std::vector<float>(slice.numberOfCells()));
         std::vector<float> &field = floatFields[floatFields.size() - 1];
-        for (int globalCellId = 0; globalCellId < slice.globalToLocal_cellId.size();
+        for (unsigned int globalCellId = 0; globalCellId < slice.globalToLocal_cellId.size();
              globalCellId++) {
 
             int localCellId = slice.globalToLocal_cellId[globalCellId];

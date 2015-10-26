@@ -25,7 +25,6 @@ TEST_CASE("CGNSToFun3D, pyramidsDontChange") {
 
 TEST_CASE("CGNSToFun3D, prismsDoChange") {
     std::array<int,6> prism {9,11,13,17,21,6};
-    auto original = prism;
     auto converter = CGNSToFun3D();
     converter.convertPrism(prism.data());
 
@@ -39,7 +38,6 @@ TEST_CASE("CGNSToFun3D, prismsDoChange") {
 
 TEST_CASE("CGNSToFun3D, hexsDoChange") {
     std::array<int,8> hex {9,6,5,12,3,1,14,7};
-    auto original = hex;
     auto converter = CGNSToFun3D();
     converter.convertHex(hex.data());
 

@@ -3,12 +3,12 @@
 #include "MessagePasser.h"
 #include <vector>
 #include <string>
-#include "CppUTest/CommandLineTestRunner.h"
+#include <catch.hpp>
 
 using std::vector;
 using namespace Parfait;
 
-TEST_GROUP(VtkSurfaceTests)
+namespace VtkSurfaceTests
 {
 	vector<double> nodes;
 	vector<int> triangles;
@@ -35,12 +35,13 @@ TEST_GROUP(VtkSurfaceTests)
 		tets = {0,1,2,3};
 		triangleBoundaryConditions = {5050,5050,5050,5050};
 	}
-	void teardown()
-	{
-	}
-};
-TEST(VtkSurfaceTests,Exists)
+}
+
+using namespace VtkSurfaceTests;
+
+TEST_CASE("VtkSurfaceTests,Exists")
 {
+	setup();
 	// shift each tet so they don't overlap
 	for(double &vertex:nodes)
 		vertex += (double)Rank();

@@ -21,8 +21,8 @@ namespace Parfait {
         void addVectorField(bool isNodeData, std::string fieldName, int blockSize, double *data);
 
     private:
-        std::string filename;
         Mesh &mesh;
+        std::string filename;
         int numberOfSurfaceNodes;
         std::vector<int> boundaryNodeIdMap;
         std::vector<VtkField<int> > intFields;

@@ -1,10 +1,9 @@
 #include "Facet.h"
-#include <CppUTest/CommandLineTestRunner.h>
+#include <catch.hpp>
 
 using namespace Parfait;
-TEST_GROUP(Facet){};
 
-TEST(Facet, Exists){
+TEST_CASE("Facet, Exists"){
 
     Facet f;
     Point<double> a{0,1,2};
@@ -13,16 +12,16 @@ TEST(Facet, Exists){
 
     Facet g(a, b, c);
 
-    CHECK( a[0] == g.GetXMin());
-    CHECK( a[1] == g.GetYMin());
-    CHECK( a[2] == g.GetZMin());
+    REQUIRE( a[0] == g.GetXMin());
+    REQUIRE( a[1] == g.GetYMin());
+    REQUIRE( a[2] == g.GetZMin());
 
-    CHECK( c[0] == g.GetXMax());
-    CHECK( c[1] == g.GetYMax());
-    CHECK( c[2] == g.GetZMax());
+    REQUIRE( c[0] == g.GetXMax());
+    REQUIRE( c[1] == g.GetYMax());
+    REQUIRE( c[2] == g.GetZMax());
 }
 
-TEST(Facet, FacetRayIntersection){
+TEST_CASE("Facet, FacetRayIntersection"){
 
     Facet f({0,0,0},
             {.5,0,0},
@@ -32,20 +31,20 @@ TEST(Facet, FacetRayIntersection){
     Point<double> hi{0.25, 0.25, -1};
 
     Point<double> intersect;
-    CHECK(f.WhereDoesEdgeIntersect(lo, hi, intersect));
+    REQUIRE(f.WhereDoesEdgeIntersect(lo, hi, intersect));
 
-    CHECK(0.25 == intersect[0]);
-    CHECK(0.25 == intersect[1]);
-    CHECK(0.00 == intersect[2]);
+    REQUIRE(0.25 == intersect[0]);
+    REQUIRE(0.25 == intersect[1]);
+    REQUIRE(0.00 == intersect[2]);
 }
 
-TEST(Facet, NormalVector){
+TEST_CASE("Facet, NormalVector"){
     Facet f({0,0,0},
     {.5,0,0},
     {0,.5,0});
 
     auto normal = f.computeNormal();
-    CHECK(0  == normal[0]);
-    CHECK(0  == normal[1]);
-    CHECK(1  == normal[2]);
+    REQUIRE(0  == normal[0]);
+    REQUIRE(0  == normal[1]);
+    REQUIRE(1  == normal[2]);
 }

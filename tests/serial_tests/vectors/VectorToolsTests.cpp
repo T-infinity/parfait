@@ -19,7 +19,7 @@ TEST_CASE("VectorToolsTests,TestWithIntegers") {
 	for(int i=9;i>0;i--)
 		insertUnique(vec,i);
 	REQUIRE(10 == (int)vec.size());
-	for(int i=0;i<vec.size()-1;i++)
+	for(unsigned int i=0;i<vec.size()-1;i++)
 		CHECK(vec[i] < vec[i+1]);
 	for(int i=5;i<12;i++)
 		insertUnique(vec,i);

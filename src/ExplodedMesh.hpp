@@ -42,14 +42,14 @@ namespace Parfait{
               newNodeIdToOldNodeId[newNodeId] = old;
               newNodeId++;
           }
-          for(int face = 0; face < cells[cellId].size(); face++){
+          for(int face = 0; face < (int)cells[cellId].size(); face++){
               for(auto &newNode : cells[cellId][face]){
                   newNode = oldToNew[newNode];
               }
           }
       }
 
-      for(int node = 0; node < points.size(); node++){
+      for(unsigned int node = 0; node < points.size(); node++){
           int oldId = newNodeIdToOldNodeId[node];
           points[node] = mesh.getNode(oldId);
       }
@@ -70,7 +70,7 @@ namespace Parfait{
 
   std::vector<int> ExplodedMesh::getNodesInCell(int cellId) const{
       std::vector<int> nodes;
-      for(int face = 0; face < cells[cellId].size(); face++){
+      for(unsigned int face = 0; face < cells[cellId].size(); face++){
           for(int n : cells[cellId][face]){
               insertUnique(nodes, n);
           }
@@ -92,7 +92,7 @@ namespace Parfait{
       return cells[cellId][faceId];
   }
   void ExplodedMesh::shrinkPoints(double scale){
-      for(int cellId = 0; cellId < cells.size(); cellId++){
+      for(int cellId = 0; cellId < (int)cells.size(); cellId++){
           auto center = GenericMeshTools::cellCenter(*this, cellId);
           for(int n : getNodesInCell(cellId)){
               auto p = points[n];

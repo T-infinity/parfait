@@ -41,26 +41,18 @@ set(SERIAL_TESTS_SOURCES
         VtkFieldTests/VtkFieldTests.cpp
         VtkSliceWriterTests.cpp
         VtkToCGNSTests.cpp
+        generic_mesh_tools/GenericMeshToolsTests.cpp
+        Geometry/facet_test.cpp
+        Geometry/stl_test.cpp
+        Geometry/STLReader_test.cpp
+        mesh_interfaces/imported_ugrid_tests.cpp
+        ugrid_factory/ugrid_factory_tests.cpp
+        ugridWriterTests/ugridWriterTests.cpp
+        VtkGenericTests/VtkGenericTests.cpp
+        VtkSurfaceTests/VtkSurfaceTests.cpp
         MeshConnectivityTests.cpp
         MeshMetaDataTests.cpp)
 
-set(LEGACY_SERIAL_TESTS_SOURCES
-        AllTests.cpp  
-        VtkGenericTests/VtkGenericTests.cpp
-        VtkSurfaceTests/VtkSurfaceTests.cpp
-        generic_mesh_tools/GenericMeshToolsTests.cpp
-        #Geometry/stl_test.cpp
-        #Geometry/facet_test.cpp
-        #Geometry/STLReader_test.cpp
-        mesh_interfaces/imported_ugrid_tests.cpp
-        ugridWriterTests/ugridWriterTests.cpp
-        ugrid_factory/ugrid_factory_tests.cpp
-       )
-
-add_executable(LegacySerialTests ${LEGACY_SERIAL_TESTS_SOURCES} ${HEADERS})
-include_directories(../../tinyxml/src ../)
-target_link_libraries(LegacySerialTests
-        CppUTest
-        tinyxml)
+include_directories(../)
 
 add_executable(ParfaitSerialTests ${SERIAL_TESTS_SOURCES} ${HEADERS} ../catch.hpp)

@@ -135,13 +135,9 @@ TEST_CASE("CartBlockTestsLegacyTests"){
 	extent[5] = p2[2];
 
 	int ncells_x,ncells_y,ncells_z;
-	int nnodes_x,nnodes_y,nnodes_z;
 	ncells_x = 5;
 	ncells_y = 6;
 	ncells_z = 7;
-	nnodes_x = ncells_x+1;
-	nnodes_y = ncells_y+1;
-	nnodes_z = ncells_z+1;
 	CartBlock c(p1,p2,ncells_x,ncells_y,ncells_z);
 	CartBlock d(extent,ncells_x,ncells_y,ncells_z);
 

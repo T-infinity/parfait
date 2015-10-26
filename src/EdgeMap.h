@@ -50,7 +50,7 @@ namespace Parfait{
     std::vector<std::vector<int>> EdgeMap<MeshType>::buildNodeToEdge() {
 
         std::vector<std::vector<int>> nodeToEdge(mesh.numberOfNodes());
-        for (int edgeId = 0; edgeId < edges.size(); edgeId++) {
+        for (int edgeId = 0; edgeId < (int)edges.size(); edgeId++) {
             auto &edge = edges[edgeId];
             insertUnique(nodeToEdge[edge[0]], edgeId);
             insertUnique(nodeToEdge[edge[1]], edgeId);

@@ -77,7 +77,7 @@ void MessagePasser::AllGatherv(const std::vector<T>& send_vec,
 	std::vector<int> m;
 	std::vector<T> recv_vec;
 	AllGatherv(send_vec,recv_vec,m);
-	for(int i=0;i<m.size()-1;i++){
+	for(unsigned int i=0;i<m.size()-1;i++){
 		int n = m[i+1] - m[i];
 		vec_of_vec_output.push_back(std::vector<T>(n,0));
 		for(int j=0;j<n;j++){

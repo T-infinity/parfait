@@ -5,10 +5,10 @@ namespace Parfait {
                                         std::shared_ptr<std::vector<Parfait::MapbcReader>> map_bcs,
                                         std::shared_ptr<std::vector<Parfait::MotionMatrix>> motion_matrices)
             :ngrids(number_of_grids),
+             gridFilenames(grid_filenames),
              bigEndian(is_big_endian),
              mapbcVector(map_bcs),
-             motionMatrices(motion_matrices),
-             gridFilenames(grid_filenames)
+            motionMatrices(motion_matrices)
     {
     }
 
@@ -30,7 +30,7 @@ namespace Parfait {
 
     inline void Configuration::print() {
         if (0 == MessagePasser::Rank()) {
-            for (int i = 0; i < gridFilenames->size(); i++) {
+            for (unsigned int i = 0; i < gridFilenames->size(); i++) {
                 printf("Grid %i:\n", i);
                 printf("  -file        %s\n", gridFilenames->at(i).c_str());
                 if (bigEndian->at(i))

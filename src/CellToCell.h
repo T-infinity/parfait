@@ -70,7 +70,7 @@ std::vector<std::vector<int>> buildNodeToCell(MeshType &mesh_i){
         auto nodeToCell = buildNodeToCell(mesh_in);
         std::vector<std::vector<int>> e2c(edges.size());
 
-        for (int edgeId = 0; edgeId < edges.size(); edgeId++) {
+        for (unsigned int edgeId = 0; edgeId < edges.size(); edgeId++) {
             std::array<int, 2> edge = edges[edgeId];
             auto sharedCells = getSharedCells(edge[0], edge[1], nodeToCell);
             e2c[edgeId] = sharedCells;
@@ -150,7 +150,7 @@ std::vector<std::vector<int>> buildNodeToCell(MeshType &mesh_i){
     inline void plotConnectivityBandwidth(std::string filename, const std::vector<std::vector<int>> &e2e) {
         FILE *fp = fopen(filename.c_str(), "w");
 
-        for (int entity1 = 0; entity1 < e2e.size(); entity1++) {
+        for (int entity1 = 0; entity1 < (int)e2e.size(); entity1++) {
             fprintf(fp, "%d %d\n", entity1, entity1);
             for (int entity2 : e2e[entity1]) {
                 fprintf(fp, "%d %d\n", entity1, entity2);

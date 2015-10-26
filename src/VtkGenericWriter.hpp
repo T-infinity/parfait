@@ -192,7 +192,7 @@ namespace Parfait {
       for (auto cell:mesh.cells()) {
           fprintf(f, "         ");
           auto vertices = cell.getNodes();
-          for (int i = 0; i < vertices.size(); i++)
+          for (unsigned int i = 0; i < vertices.size(); i++)
               fprintf(f, "%i ", vertices[i]);
           fprintf(f, "\n");
       }
@@ -219,7 +219,7 @@ namespace Parfait {
       FILE *f = fopen(filename.c_str(), "a");
       assert(f != NULL);
       fprintf(f, "     <DataArray type=\"Int32\" Name=\"types\" format=\"ascii\">\n");
-      for (auto cell:mesh.cells())
+      for (int i=0;i<mesh.numberOfCells();i++)
           fprintf(f, "          42\n");
       fprintf(f, "     </DataArray>\n");
       fclose(f);

@@ -32,9 +32,9 @@ inline std::shared_ptr<ParallelMesh> Parfait::ParallelMeshReader::readDistribute
 inline Parfait::ParallelMeshReader::ParallelMeshReader(std::vector<std::string> gridFiles_in,
                                                        std::vector<bool> isBigEndian_in)
         : isBigEndian(isBigEndian_in), 
-          mesh(std::make_shared<ParallelMesh>()),
-          gridFiles(gridFiles_in){
-
+          gridFiles(gridFiles_in),
+          mesh(std::make_shared<ParallelMesh>())
+{
     int ngrid = (int) gridFiles.size();
     gridNodeMap.reserve(ngrid);
     gridTriangleMap.reserve(ngrid);
@@ -73,13 +73,13 @@ inline Parfait::ParallelMeshReader::ParallelMeshReader(std::vector<std::string> 
     }
     if (MessagePasser::Rank() == 0) {
         printf("Composite rootDomain has:\n");
-        printf("--nnodes        %i\n", gridNodeMap.back());
-        printf("--triangles     %i\n", gridTriangleMap.back());
-        printf("--quads         %i\n", gridQuadMap.back());
-        printf("--tets          %i\n", gridTetMap.back());
-        printf("--pyramids      %i\n", gridPyramidMap.back());
-        printf("--prisms        %i\n", gridPrismMap.back());
-        printf("--hexs          %i\n", gridHexMap.back());
+        printf("--nnodes        %lu\n", gridNodeMap.back());
+        printf("--triangles     %lu\n", gridTriangleMap.back());
+        printf("--quads         %lu\n", gridQuadMap.back());
+        printf("--tets          %lu\n", gridTetMap.back());
+        printf("--pyramids      %lu\n", gridPyramidMap.back());
+        printf("--prisms        %lu\n", gridPrismMap.back());
+        printf("--hexs          %lu\n", gridHexMap.back());
     }
 }
 
@@ -172,7 +172,7 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
 }
 inline void ParallelMeshReader::createNodeComponentIds() {
     mesh->metaData->nodeComponentIds = std::vector<int>(localToGlobalId.size());
-    for(int localId = 0; localId < localToGlobalId.size(); localId++){
+    for(unsigned int localId = 0; localId < localToGlobalId.size(); localId++){
         auto globalId = mesh->metaData->globalNodeIds[localId];
         auto componentId = getOwningGridOfNode(globalId);
         mesh->metaData->nodeComponentIds[localId] = componentId;
@@ -180,7 +180,7 @@ inline void ParallelMeshReader::createNodeComponentIds() {
 }
 inline void ParallelMeshReader::createNodeOwnerships() {
     mesh->metaData->nodeOwnershipDegree = std::vector<int>(mesh->metaData->globalNodeIds.size());
-    for(int localId = 0; localId < localToGlobalId.size(); localId++){
+    for(unsigned int localId = 0; localId < localToGlobalId.size(); localId++){
         if(localId < mesh->metaData->xyz.size() / 3)
             mesh->metaData->nodeOwnershipDegree[localId] = 0;
         else
@@ -300,7 +300,7 @@ template<typename CellSaver>
 void Parfait::ParallelMeshReader::nonRootRecvSurfaceCells(int cellLength, CellSaver cellSaver) {
     MessageBuilder<long> builder;
     auto cells = builder.recvItemsFrom(0);
-    for(int index = 0; index < cells.size() / (cellLength+1); index++){
+    for(unsigned int index = 0; index < cells.size() / (cellLength+1); index++){
         std::vector<long> cell;
         int cellId = index * (cellLength+1);
         for(int i = 0; i < cellLength+1; i++){
@@ -314,7 +314,7 @@ template<typename CellSaver>
 void Parfait::ParallelMeshReader::nonRootRecvCells(int cellLength, CellSaver cellSaver) {
     MessageBuilder<long> builder;
     auto cells = builder.recvItemsFrom(0);
-    for(int index = 0; index < cells.size() / cellLength; index++){
+    for(unsigned int index = 0; index < cells.size() / cellLength; index++){
         std::vector<long> cell;
         int cellId = index * cellLength;
         for(int i = 0; i < cellLength; i++){
@@ -432,7 +432,7 @@ inline int Parfait::ParallelMeshReader::getOwningGridOfNode(long globalId){
 }
 
 inline int Parfait::ParallelMeshReader::getOwningGridOfEntity(std::vector<long> &gridCellMap, long globalId){
-    for(int gridId = 0; gridId < gridCellMap.size() - 1; gridId++){
+    for(unsigned int gridId = 0; gridId < gridCellMap.size() - 1; gridId++){
         auto start = gridCellMap[gridId];
         auto end = gridCellMap[gridId+1];
         if(globalId >= start and globalId < end)
@@ -867,7 +867,7 @@ inline int Parfait::ParallelMeshReader::numberOfGrids() const{
 }
 
 inline void ParallelMeshReader::createLocalToGlobalNodeIdMap() {
-    for(long localId = 0; localId < localToGlobalId.size(); localId++){
+    for(unsigned long localId = 0; localId < localToGlobalId.size(); localId++){
         mesh->metaData->globalNodeIds.push_back(localToGlobalId[localId]);
     }
 }

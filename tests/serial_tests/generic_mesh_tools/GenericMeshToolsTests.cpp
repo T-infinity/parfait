@@ -1,22 +1,10 @@
 #include "GenericMesh.h"
 #include "CartMesh.h"
 #include "GenericMeshTools.h"
-#include "CppUTest/CommandLineTestRunner.h"
+#include <catch.hpp>
 using namespace Parfait;
 
-TEST_GROUP(GenericMeshToolsTests)
-{
-    double tol;
-	void setup()
-	{
-        tol = 1.0e-14;
-	}
-	void teardown()
-	{
-	}
-};
-
-TEST(GenericMeshToolsTests,CellCenter)
+TEST_CASE("GenericMeshToolsTests,CellCenter")
 {
     CartMesh cartMesh({0,0,2}, {1,2,3}, 1, 1, 1);
 
@@ -24,12 +12,12 @@ TEST(GenericMeshToolsTests,CellCenter)
 
     auto cell = mesh.cell(0);
     auto center = GenericMeshTools::cellCenter(mesh, cell);
-    DOUBLES_EQUAL(0.5, center[0], tol);
-    DOUBLES_EQUAL(1.0, center[1], tol);
-    DOUBLES_EQUAL(2.5, center[2], tol);
+    REQUIRE(0.5 == Approx(center[0]));
+    REQUIRE(1.0 == Approx(center[1]));
+    REQUIRE(2.5 == Approx(center[2]));
 }
 
-TEST(GenericMeshToolsTests,CellVolume)
+TEST_CASE("GenericMeshToolsTests,CellVolume")
 {
     CartMesh cartMesh({0,0,2}, {1,1,3}, 2, 2, 2);
 
@@ -37,10 +25,10 @@ TEST(GenericMeshToolsTests,CellVolume)
 
     auto cell = mesh.cell(0);
     double volume = GenericMeshTools::computeCellVolume(mesh, cell);
-    DOUBLES_EQUAL(0.125, volume, tol);
+    REQUIRE(0.125 == Approx(volume));
 }
 
-TEST(GenericMeshToolsTests, FaceCenter)
+TEST_CASE("GenericMeshToolsTests, FaceCenter")
 {
     CartMesh cartMesh({0,0,0}, {1,1,1}, 2, 2, 2);
     Mesh<CartMesh> mesh(cartMesh);
@@ -48,12 +36,12 @@ TEST(GenericMeshToolsTests, FaceCenter)
     auto cell = mesh.cell(0);
     auto face = cell.getFace(0);
     auto faceCenter = GenericMeshTools::faceCenter(mesh, face);
-    DOUBLES_EQUAL(0.25, faceCenter[0], tol);
-    DOUBLES_EQUAL(0.25, faceCenter[1], tol);
-    DOUBLES_EQUAL(   0, faceCenter[2], tol);
+    REQUIRE(0.25 == Approx(faceCenter[0]));
+    REQUIRE(0.25 == Approx(faceCenter[1]));
+    REQUIRE(   0 == Approx(faceCenter[2]));
 }
 
-TEST(GenericMeshToolsTests, FaceArea)
+TEST_CASE("GenericMeshToolsTests, FaceArea")
 {
     CartMesh cartMesh({0,0,0}, {1,1,1}, 2, 2, 2);
     Mesh<CartMesh> mesh(cartMesh);
@@ -61,57 +49,57 @@ TEST(GenericMeshToolsTests, FaceArea)
     auto cell = mesh.cell(0);
     auto face = cell.getFace(0);
     auto areaVector = GenericMeshTools::getFaceArea(mesh, face);
-    DOUBLES_EQUAL(0,    areaVector[0], tol);
-    DOUBLES_EQUAL(0,    areaVector[1], tol);
-    DOUBLES_EQUAL(-.25, areaVector[2], tol);
+    REQUIRE(0 ==    Approx(areaVector[0]));
+    REQUIRE(0 ==    Approx(areaVector[1]));
+    REQUIRE(-.25 == Approx(areaVector[2]));
 }
 
-TEST(GenericMeshToolsTests, node2Cell)
+TEST_CASE("GenericMeshToolsTests, node2Cell")
 {
     CartMesh cartMesh({0,0,0}, {1,1,1}, 2, 2, 2);
 
     auto node2Cell = GenericMeshTools::buildNode2Cell(cartMesh);
 
-    LONGS_EQUAL(27, node2Cell.size());
+    REQUIRE(27 == node2Cell.size());
     //--- bottom face nodes
-    LONGS_EQUAL(1, node2Cell[0].size());
-    LONGS_EQUAL(2, node2Cell[1].size());
-    LONGS_EQUAL(1, node2Cell[2].size());
-    LONGS_EQUAL(2, node2Cell[3].size());
-    LONGS_EQUAL(4, node2Cell[4].size());
-    LONGS_EQUAL(2, node2Cell[5].size());
-    LONGS_EQUAL(1, node2Cell[6].size());
-    LONGS_EQUAL(2, node2Cell[7].size());
-    LONGS_EQUAL(1, node2Cell[8].size());
+    REQUIRE(1 == node2Cell[0].size());
+    REQUIRE(2 == node2Cell[1].size());
+    REQUIRE(1 == node2Cell[2].size());
+    REQUIRE(2 == node2Cell[3].size());
+    REQUIRE(4 == node2Cell[4].size());
+    REQUIRE(2 == node2Cell[5].size());
+    REQUIRE(1 == node2Cell[6].size());
+    REQUIRE(2 == node2Cell[7].size());
+    REQUIRE(1 == node2Cell[8].size());
 
     //--- middle face nodes
-    LONGS_EQUAL(2, node2Cell[ 9].size());
-    LONGS_EQUAL(4, node2Cell[10].size());
-    LONGS_EQUAL(2, node2Cell[11].size());
-    LONGS_EQUAL(4, node2Cell[12].size());
-    LONGS_EQUAL(8, node2Cell[13].size());
-    LONGS_EQUAL(4, node2Cell[14].size());
-    LONGS_EQUAL(2, node2Cell[15].size());
-    LONGS_EQUAL(4, node2Cell[16].size());
-    LONGS_EQUAL(2, node2Cell[17].size());
+    REQUIRE(2 == node2Cell[ 9].size());
+    REQUIRE(4 == node2Cell[10].size());
+    REQUIRE(2 == node2Cell[11].size());
+    REQUIRE(4 == node2Cell[12].size());
+    REQUIRE(8 == node2Cell[13].size());
+    REQUIRE(4 == node2Cell[14].size());
+    REQUIRE(2 == node2Cell[15].size());
+    REQUIRE(4 == node2Cell[16].size());
+    REQUIRE(2 == node2Cell[17].size());
 
     //--- top face nodes
-    LONGS_EQUAL(1, node2Cell[18].size());
-    LONGS_EQUAL(2, node2Cell[19].size());
-    LONGS_EQUAL(1, node2Cell[20].size());
-    LONGS_EQUAL(2, node2Cell[21].size());
-    LONGS_EQUAL(4, node2Cell[22].size());
-    LONGS_EQUAL(2, node2Cell[23].size());
-    LONGS_EQUAL(1, node2Cell[24].size());
-    LONGS_EQUAL(2, node2Cell[25].size());
-    LONGS_EQUAL(1, node2Cell[26].size());
+    REQUIRE(1 == node2Cell[18].size());
+    REQUIRE(2 == node2Cell[19].size());
+    REQUIRE(1 == node2Cell[20].size());
+    REQUIRE(2 == node2Cell[21].size());
+    REQUIRE(4 == node2Cell[22].size());
+    REQUIRE(2 == node2Cell[23].size());
+    REQUIRE(1 == node2Cell[24].size());
+    REQUIRE(2 == node2Cell[25].size());
+    REQUIRE(1 == node2Cell[26].size());
 }
 
-TEST(GenericMeshToolsTests, UniqueEdges){
+TEST_CASE("GenericMeshToolsTests, UniqueEdges"){
 
     CartMesh cartMesh({0,0,0}, {1,1,1}, 1,1,1);
     auto edges = GenericMeshTools::getUniqueEdges(cartMesh);
-    LONGS_EQUAL(12, edges.size());
+    REQUIRE(12 == edges.size());
 
     std::vector<std::array<int,2>> validEdges(12);
     validEdges[0]  = std::array<int, 2>{0,1};
@@ -129,6 +117,6 @@ TEST(GenericMeshToolsTests, UniqueEdges){
 
     int index = 0;
     for(auto edge : edges){
-        CHECK(validEdges[index++] == edge);
+        REQUIRE(validEdges[index++] == edge);
     }
 };

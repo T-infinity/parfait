@@ -5,12 +5,12 @@
 #include <vector>
 #include <string>
 #include "Extent.h"
-#include "CppUTest/CommandLineTestRunner.h"
+#include <catch.hpp>
 
 using std::vector;
 using namespace Parfait;
 
-TEST_GROUP(VtkGenericTests)
+namespace VtkGenericTests
 {
 	vector<double> nodes;
 	vector<int> triangles;
@@ -37,14 +37,12 @@ TEST_GROUP(VtkGenericTests)
 		triangleBoundaryConditions = {5050,5050,5050,5050};
 		tets = {0,1,2,3};
 	}
-	void teardown()
-	{
-	}
-};
+}
 
-TEST(VtkGenericTests,Exists)
+TEST_CASE("VtkGenericTests,Exists")
 {
 	using namespace MessagePasser;
+	using namespace VtkGenericTests;
 	// shift each tet so they don't overlap
 	for(double &vertex:nodes)
 		vertex += (double)Rank();
@@ -76,7 +74,7 @@ TEST(VtkGenericTests,Exists)
 	writer.writeAscii();
 }
 
-TEST(VtkGenericTests, ExtentWriter)
+TEST_CASE("VtkGenericTests, ExtentWriter")
 {
     VtkExtentWriter writer("binary_extent_writer");
     Extent<double> e({0,0,0}, {1,1,1});

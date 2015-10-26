@@ -26,7 +26,7 @@
       !defined(NO_BYTE_SWAP) )
 #define IO_ENDIANSWAP(size_,x)             \
 {                                          \
-  register int  ii_,sz_=size_-1;           \
+  register unsigned int  ii_,sz_=size_-1;           \
   register char *c_=(char *)(x);           \
   if( size_ > 1 )                          \
   {	   									   \
@@ -43,7 +43,7 @@
 namespace Parfait {
 // ----------------------------------------------------------------------------
     inline size_t private_fread(void *ptr, size_t size, size_t nmemb, FILE *stream) {
-        int i;
+        unsigned int i;
         size_t ret;
         char *tmp = (char *) ptr;
 
@@ -60,7 +60,7 @@ namespace Parfait {
 
 // ----------------------------------------------------------------------------
     inline size_t private_fwrite(void *ptr, size_t size, size_t nmemb, FILE *stream) {
-        int i;
+        unsigned int i;
         size_t ret;
         char *tmp;
 

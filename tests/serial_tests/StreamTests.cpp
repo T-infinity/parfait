@@ -38,11 +38,11 @@ public:
 };
 
 MessagePasser::Stream & operator<<(MessagePasser::Stream &stream, const MyClass& myClass){
-    stream << myClass.a << myClass.vec << myClass.d;
+    return stream << myClass.a << myClass.vec << myClass.d;
 }
 
 MessagePasser::Stream & operator>>(MessagePasser::Stream &stream, MyClass& myClass){
-    stream >> myClass.a >> myClass.vec >> myClass.d;
+    return stream >> myClass.a >> myClass.vec >> myClass.d;
 }
 
 TEST_CASE("Stream user defined class"){

@@ -4,8 +4,8 @@ namespace Parfait {
             : filename(xmlFile),
               gridFilenames(std::make_shared<std::vector<std::string>>()),
               bigEndian(std::make_shared<std::vector<bool>>()),
-              motionMatrices(std::make_shared<std::vector<Parfait::MotionMatrix>>()),
-              mapbcVector(std::make_shared<std::vector<MapbcReader>>())
+              mapbcVector(std::make_shared<std::vector<MapbcReader>>()),
+              motionMatrices(std::make_shared<std::vector<Parfait::MotionMatrix>>())
     {
 		load();
 		readMapbcFiles();
