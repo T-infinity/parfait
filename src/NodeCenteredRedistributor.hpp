@@ -36,8 +36,8 @@ namespace Parfait {
       std::fill(ownership_degree.begin() + recvNodeIds.size(), ownership_degree.end(), 1);
 
       std::map<long, int> global_to_local;
-      for (unsigned int i = 0; i < mesh->metaData->globalNodeIds.size(); i++)
-          global_to_local.insert(std::make_pair(mesh->metaData->globalNodeIds[i], i));
+      for (unsigned int i = 0; i <globalNodeIds.size(); i++)
+          global_to_local.insert(std::make_pair(globalNodeIds[i], i));
 
       mesh->connectivity->triangles = convertToLocalIds(global_to_local, recvTriangles);
       mesh->connectivity->quads = convertToLocalIds(global_to_local, recvQuads);
