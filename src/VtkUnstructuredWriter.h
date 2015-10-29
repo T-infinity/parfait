@@ -1,8 +1,8 @@
 #ifndef VTK_VOLUME_WRITER_H
 #define VTK_VOLUME_WRITER_H
 
-#ifdef PARFAIT_WITH_VTK
 
+#ifdef PARFAIT_WITH_VTK
 #include <string>
 #include <vector>
 #include <vtkSmartPointer.h>
@@ -20,7 +20,6 @@
 #include <stdio.h>
 #include <vtkXMLUnstructuredGridWriter.h>
 #include <vtkXMLPUnstructuredGridWriter.h>
-#include <MessagePasser.h>
 
 namespace Parfait {
     class VtkUnstructuredWriter {
@@ -29,6 +28,7 @@ namespace Parfait {
         VtkUnstructuredWriter(std::string name, MeshType &mesh);
 
         void writeBinary();
+        void writeBinary(int rank,int nproc);
 
         template<typename T>
         void addNodeData(std::string name, T *data, int number_of_components);
@@ -58,6 +58,8 @@ namespace Parfait {
         vtkSmartPointer<vtkDoubleArray> createVtkArrayPointer(double *data) {
             return vtkSmartPointer<vtkDoubleArray>::New();
         }
+
+        void writeLocalFile(std::string filename);
     };
 }
 
