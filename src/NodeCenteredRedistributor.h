@@ -30,7 +30,9 @@ namespace Parfait {
                                            std::vector<long>& recvPyramids,
                                            std::vector<long>& recvPrisms,
                                            std::vector<long>& recvHexs);
-      void redistributeNodeMetaData(std::vector<long>& my_all_ids,std::vector<long>& my_ghost_ids);
+      void redistributeNodeMetaData(std::vector<long>& my_all_ids,
+                                    std::vector<long>&my_non_ghost_ids,
+      std::vector<long>& my_ghost_ids);
       int nproc;
       std::shared_ptr<ParallelMesh> mesh;
       std::vector<int> part;
@@ -41,7 +43,8 @@ namespace Parfait {
       std::vector<int> recvTriangleTags;
       std::vector<int> recvQuadTags;
 
-      int getLocalNodeId(long globalNodeId,std::vector<long>&my_non_ghost_ids);
+      int getLocalNodeId(long globalNodeId,std::vector<long>&my_non_ghost_ids,
+      std::vector<long>& my_ghost_ids);
 
       std::map<long,int> global_to_local_map;
 
