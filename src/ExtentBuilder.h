@@ -62,7 +62,8 @@ namespace Parfait {
         template<typename MeshType>
         Extent<double> buildExtentForBoundaryFaceInMesh(const MeshType& mesh,int face_id){
             Extent<double> e{{1e20,1e20,1e20},{-1e20,-1e20,-1e20}};
-            for(int node_id:mesh.getNodesInBoundaryFace(face_id)){
+            auto face = mesh.getNodesInBoundaryFace(face_id);
+            for(int node_id:face){
                 auto xyz = mesh.getNode(node_id);
                 addPointToExtent(e,Point<double>(xyz[0],xyz[1],xyz[2]));
             }
