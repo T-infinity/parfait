@@ -19,25 +19,25 @@ namespace Parfait {
       for (unsigned int i = 2; i < nodeMap.size(); i++)
           nodeMap[i] += nodeMap[i - 1];
 
-      auto myGlobalNodeIds = redistributeNodeIds();
-      auto recvTriangles = redistributeTriangles(myGlobalNodeIds);
-      auto recvQuads  = redistributeQuads(myGlobalNodeIds);
-      auto recvTets = redistributeTets(myGlobalNodeIds);
-      auto recvPyramids = redistributePyramids(myGlobalNodeIds);
-      auto recvPrisms = redistributePrisms(myGlobalNodeIds);
-      auto recvHexs = redistributeHexes(myGlobalNodeIds);
+      auto my_non_ghost_ids = redistributeNodeIds();
+      auto recvTriangles = redistributeTriangles(my_non_ghost_ids);
+      auto recvQuads  = redistributeQuads(my_non_ghost_ids);
+      auto recvTets = redistributeTets(my_non_ghost_ids);
+      auto recvPyramids = redistributePyramids(my_non_ghost_ids);
+      auto recvPrisms = redistributePrisms(my_non_ghost_ids);
+      auto recvHexs = redistributeHexes(my_non_ghost_ids);
 
-      ghostNodeIds = identifyGhostNodes(myGlobalNodeIds,recvTets,recvPyramids,recvPrisms,recvHexs);
-      buildGlobalNodeIds(myGlobalNodeIds);
-      redistributeNodeMetaData(myGlobalNodeIds);
+      my_ghost_ids = identifyGhostNodes(my_non_ghost_ids, recvTets, recvPyramids, recvPrisms, recvHexs);
+      buildGlobalNodeIds(my_non_ghost_ids);
+      redistributeNodeMetaData(my_non_ghost_ids, my_ghost_ids);
 
-      std::vector<int> ownership_degree(globalNodeIds.size(), 0);
+      std::vector<int> ownership_degree(allMyNodeIds.size(), 0);
 
-      std::fill(ownership_degree.begin() + myGlobalNodeIds.size(), ownership_degree.end(), 1);
+      std::fill(ownership_degree.begin() + my_non_ghost_ids.size(), ownership_degree.end(), 1);
 
       std::map<long, int> global_to_local;
-      for (unsigned int i = 0; i <globalNodeIds.size(); i++)
-          global_to_local.insert(std::make_pair(globalNodeIds[i], i));
+      for (unsigned int i = 0; i < allMyNodeIds.size(); i++)
+          global_to_local.insert(std::make_pair(allMyNodeIds[i], i));
 
       mesh->connectivity->triangles = convertToLocalIds(global_to_local, recvTriangles);
       mesh->connectivity->quads = convertToLocalIds(global_to_local, recvQuads);
@@ -49,7 +49,7 @@ namespace Parfait {
       mesh->metaData->nodeComponentIds = recvAssociatedComponentIds;
       mesh->metaData->triangleTags = recvTriangleTags;
       mesh->metaData->quadTags = recvQuadTags;
-      mesh->metaData->globalNodeIds = globalNodeIds;
+      mesh->metaData->globalNodeIds = allMyNodeIds;
       mesh->metaData->nodeOwnershipDegree = ownership_degree;
       return mesh;
   }
@@ -77,14 +77,14 @@ namespace Parfait {
     return recvNodeIds;
   }
 
-  inline void NodeBasedRedistributor::redistributeNodeMetaData(std::vector<long>& my_ghost_ids) {
+  inline void NodeBasedRedistributor::redistributeNodeMetaData(std::vector<long>& my_non_ghost_ids,std::vector<long>& my_ghost_ids) {
       std::map<long, int> global_to_local;
       for (unsigned int i = 0; i < mesh->metaData->globalNodeIds.size(); i++)
           global_to_local.insert(std::make_pair(mesh->metaData->globalNodeIds[i], i));
       for (int proc:range(nproc)) {
           vector<long> neededXYZ;
           if (MessagePasser::Rank() == proc)
-              neededXYZ = globalNodeIds;
+              neededXYZ = allMyNodeIds;
           MessagePasser::Broadcast(neededXYZ, proc);
           vector<double> sendXYZ;
           vector<long> sendGlobalNodeId;
@@ -114,7 +114,7 @@ namespace Parfait {
               recvAssociatedComponentIds.resize(just_recv_associated_component_ids.size());
               for (unsigned int index = 0; index < just_recv_xyz_global_node_ids.size(); index++) {
                   auto globalNodeId = just_recv_xyz_global_node_ids[index];
-                  int localId = getLocalNodeId(globalNodeId,my_ghost_ids);
+                  int localId = getLocalNodeId(globalNodeId,my_non_ghost_ids,my_ghost_ids);
                   for (int i = 0; i < 3; i++)
                       recvXYZ[3 * localId + i] = just_recv_xyz[3 * index + i];
                   recvAssociatedComponentIds[localId] = just_recv_associated_component_ids[index];
@@ -331,8 +331,8 @@ namespace Parfait {
   }
 
   inline void NodeBasedRedistributor::buildGlobalNodeIds(std::vector<long>& my_ghost_ids) {
-      globalNodeIds = my_ghost_ids;
-      globalNodeIds.insert(globalNodeIds.end(), ghostNodeIds.begin(), ghostNodeIds.end());
+      allMyNodeIds = my_ghost_ids;
+      allMyNodeIds.insert(allMyNodeIds.end(), my_ghost_ids.begin(), my_ghost_ids.end());
   }
 
   inline std::vector<int> NodeBasedRedistributor::convertToLocalIds(std::map<long, int> global_to_local_map,
@@ -343,16 +343,16 @@ namespace Parfait {
       return local_ids;
   }
 
-  inline int NodeBasedRedistributor::getLocalNodeId(long globalNodeId,std::vector<long>& my_ghost_ids) {
-      auto it = std::lower_bound(my_ghost_ids.begin(), my_ghost_ids.end(), globalNodeId);
-      if (it == my_ghost_ids.end()) {
-          it = std::lower_bound(ghostNodeIds.begin(), ghostNodeIds.end(), globalNodeId);
-          if (it != ghostNodeIds.end())
-              return std::distance(ghostNodeIds.begin(), it) + my_ghost_ids.size();
+  inline int NodeBasedRedistributor::getLocalNodeId(long globalNodeId,std::vector<long>& my_non_ghost_ids,std::vector<long>& my_ghost_ids) {
+      auto it = std::lower_bound(my_non_ghost_ids.begin(), my_non_ghost_ids.end(), globalNodeId);
+      if (it == my_non_ghost_ids.end()) {
+          it = std::lower_bound(my_ghost_ids.begin(), my_ghost_ids.end(), globalNodeId);
+          if (it != my_ghost_ids.end())
+              return (int)std::distance(my_ghost_ids.begin(), it) + (int)my_non_ghost_ids.size();
           else
               throw std::logic_error("saldfjsdf");
       }
-      return std::distance(my_ghost_ids.begin(), it);
+      return (int)std::distance(my_non_ghost_ids.begin(), it);
   }
 }
 #endif
