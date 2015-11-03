@@ -29,7 +29,9 @@ namespace Parfait {
 
       myGhostIds = identifyGhostNodes(myNonGhostIds, recvTets, recvPyramids, recvPrisms, recvHexs);
     concatinateGhostAndNonGhostIds(myNonGhostIds, myGhostIds);
-      redistributeNodeMetaData(myAllIds,myNonGhostIds);
+      auto my_all_ids = myNonGhostIds;
+    my_all_ids.insert(my_all_ids.end(),myGhostIds.begin(),myGhostIds.end());
+      redistributeNodeMetaData(my_all_ids,myNonGhostIds);
 
       std::vector<int> ownership_degree(myAllIds.size(), 0);
 
