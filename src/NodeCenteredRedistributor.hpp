@@ -6,8 +6,8 @@
 namespace Parfait {
   inline NodeBasedRedistributor::NodeBasedRedistributor(std::shared_ptr<ParallelMesh> mesh_in,
                                                         vector<int> &part_in)
-      : mesh(mesh_in),
-        part(part_in)
+          : mesh(mesh_in),
+            part(part_in)
   { }
 
   inline std::shared_ptr<ParallelMesh> NodeBasedRedistributor::redistribute() {
@@ -19,7 +19,7 @@ namespace Parfait {
       for (unsigned int i = 2; i < nodeMap.size(); i++)
           nodeMap[i] += nodeMap[i - 1];
 
-      globalNodeIds = redistributeNodeIds();
+      redistributeNodeIds();
       redistributeTriangles();
       redistributeQuads();
       redistributeTets();
@@ -27,12 +27,13 @@ namespace Parfait {
       redistributePrisms();
       redistributeHexes();
 
-      ghostNodeIds = identifyGhostNodes();
+      identifyGhostNodes();
+      buildGlobalNodeIds();
       redistributeNodeMetaData();
 
-      std::vector<int> ownership_degree(globalNodeIds.size() + ghostNodeIds.size(), 0);
+      std::vector<int> ownership_degree(globalNodeIds.size(), 0);
 
-      std::fill(ownership_degree.begin() + globalNodeIds.size(), ownership_degree.end(), 1);
+      std::fill(ownership_degree.begin() + recvNodeIds.size(), ownership_degree.end(), 1);
 
       std::map<long, int> global_to_local;
       for (unsigned int i = 0; i <globalNodeIds.size(); i++)
@@ -53,8 +54,7 @@ namespace Parfait {
       return mesh;
   }
 
-  inline std::vector<long> NodeBasedRedistributor::redistributeNodeIds() {
-      std::vector<long> recvNodeIds;
+  inline void NodeBasedRedistributor::redistributeNodeIds() {
       for (int proc:range(nproc)) {
           int count = 0;
           for (int owner:part)
@@ -73,7 +73,6 @@ namespace Parfait {
           MessagePasser::Gatherv(sendIds, recvNodeIds, proc);
       }
       std::sort(recvNodeIds.begin(), recvNodeIds.end());
-      return recvNodeIds;
   }
 
   inline void NodeBasedRedistributor::redistributeNodeMetaData() {
@@ -127,7 +126,7 @@ namespace Parfait {
           vector<long> sendTriangleIds;
           vector<long> neededNodeIds;
           if (MessagePasser::Rank() == proc)
-              neededNodeIds = globalNodeIds;
+              neededNodeIds = recvNodeIds;
           MessagePasser::Broadcast(neededNodeIds, proc);
           for (unsigned int localCellId = 0; localCellId < mesh->connectivity->triangles.size() / 3; localCellId++) {
               for (int j:range(3)) {
@@ -160,7 +159,7 @@ namespace Parfait {
           vector<long> sendQuadIds;
           vector<long> neededNodeIds;
           if (MessagePasser::Rank() == proc)
-              neededNodeIds = globalNodeIds;
+              neededNodeIds = recvNodeIds;
           MessagePasser::Broadcast(neededNodeIds, proc);
           for (unsigned int localCellId = 0; localCellId < mesh->connectivity->quads.size() / 4; localCellId++) {
               for (int j:range(4)) {
@@ -194,7 +193,7 @@ namespace Parfait {
           sendTetIds.clear();
           vector<long> neededNodeIds;
           if (MessagePasser::Rank() == proc)
-              neededNodeIds = globalNodeIds;
+              neededNodeIds = recvNodeIds;
           MessagePasser::Broadcast(neededNodeIds, proc);
           for (unsigned int i = 0; i < mesh->connectivity->tets.size() / 4; i++) {
               for (int j = 0; j < 4; j++) {
@@ -221,7 +220,7 @@ namespace Parfait {
           sendPyramidIds.clear();
           vector<long> neededNodeIds;
           if (MessagePasser::Rank() == proc)
-              neededNodeIds = globalNodeIds;
+              neededNodeIds = recvNodeIds;
           MessagePasser::Broadcast(neededNodeIds, proc);
           for (unsigned int i = 0; i < mesh->connectivity->pyramids.size() / 5; i++) {
               for (int j:range(5)) {
@@ -248,7 +247,7 @@ namespace Parfait {
           sendPrismIds.clear();
           vector<long> neededNodeIds;
           if (MessagePasser::Rank() == proc)
-              neededNodeIds = globalNodeIds;
+              neededNodeIds = recvNodeIds;
           MessagePasser::Broadcast(neededNodeIds, proc);
           for (unsigned int i = 0; i < mesh->connectivity->prisms.size() / 6; i++) {
               for (int j:range(6)) {
@@ -275,7 +274,7 @@ namespace Parfait {
           sendHexIds.clear();
           vector<long> neededNodeIds;
           if (MessagePasser::Rank() == proc)
-              neededNodeIds = globalNodeIds;
+              neededNodeIds = recvNodeIds;
           MessagePasser::Broadcast(neededNodeIds, proc);
           for (unsigned int i = 0; i < mesh->connectivity->hexes.size() / 8; i++) {
               for (int j:range(8)) {
@@ -295,26 +294,30 @@ namespace Parfait {
       }
   }
 
-  inline std::vector<long> NodeBasedRedistributor::identifyGhostNodes() {
+  inline void NodeBasedRedistributor::identifyGhostNodes() {
       std::set<long> uniqueGhostNodeIds;
-      if (!std::is_sorted(globalNodeIds.begin(), globalNodeIds.end()))
+      if (!std::is_sorted(recvNodeIds.begin(), recvNodeIds.end()))
           throw std::logic_error("Recv node Ids expected in order.");
       for (auto id:recvTets)
-          if (!std::binary_search(globalNodeIds.begin(), globalNodeIds.end(), id))
+          if (!std::binary_search(recvNodeIds.begin(), recvNodeIds.end(), id))
               uniqueGhostNodeIds.insert(id);
       for (auto id:recvPyramids)
-          if (!std::binary_search(globalNodeIds.begin(), globalNodeIds.end(), id))
+          if (!std::binary_search(recvNodeIds.begin(), recvNodeIds.end(), id))
               uniqueGhostNodeIds.insert(id);
       for (auto id:recvPrisms)
-          if (!std::binary_search(globalNodeIds.begin(), globalNodeIds.end(), id))
+          if (!std::binary_search(recvNodeIds.begin(), recvNodeIds.end(), id))
               uniqueGhostNodeIds.insert(id);
       for (auto id:recvHexs)
-          if (!std::binary_search(globalNodeIds.begin(), globalNodeIds.end(), id))
+          if (!std::binary_search(recvNodeIds.begin(), recvNodeIds.end(), id))
               uniqueGhostNodeIds.insert(id);
 
-      return std::vector<long>(uniqueGhostNodeIds.begin(), uniqueGhostNodeIds.end());
+      recvGhostNodeIds = std::vector<long>(uniqueGhostNodeIds.begin(), uniqueGhostNodeIds.end());
   }
 
+  inline void NodeBasedRedistributor::buildGlobalNodeIds() {
+      globalNodeIds = recvNodeIds;
+      globalNodeIds.insert(globalNodeIds.end(), recvGhostNodeIds.begin(), recvGhostNodeIds.end());
+  }
 
   inline std::vector<int> NodeBasedRedistributor::convertToLocalIds(std::map<long, int> global_to_local_map,
                                                                     const std::vector<long> &ids) {
@@ -325,15 +328,15 @@ namespace Parfait {
   }
 
   inline int NodeBasedRedistributor::getLocalNodeId(long globalNodeId) {
-      auto it = std::lower_bound(globalNodeIds.begin(), globalNodeIds.end(), globalNodeId);
-      if (it == globalNodeIds.end()) {
-          it = std::lower_bound(ghostNodeIds.begin(), ghostNodeIds.end(), globalNodeId);
-          if (it != ghostNodeIds.end())
-              return std::distance(ghostNodeIds.begin(), it) + globalNodeIds.size();
+      auto it = std::lower_bound(recvNodeIds.begin(), recvNodeIds.end(), globalNodeId);
+      if (it == recvNodeIds.end()) {
+          it = std::lower_bound(recvGhostNodeIds.begin(), recvGhostNodeIds.end(), globalNodeId);
+          if (it != recvGhostNodeIds.end())
+              return std::distance(recvGhostNodeIds.begin(), it) + recvNodeIds.size();
           else
               throw std::logic_error("saldfjsdf");
       }
-      return std::distance(globalNodeIds.begin(), it);
+      return std::distance(recvNodeIds.begin(), it);
   }
 }
 #endif
