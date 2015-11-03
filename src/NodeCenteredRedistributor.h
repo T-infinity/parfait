@@ -32,7 +32,7 @@ namespace Parfait {
                                            std::vector<long>& recvHexs);
       void concatinateGhostAndNonGhostIds(std::vector<long> &my_non_ghost_ids, std::vector<long> &my_ghost_ids);
 
-      void redistributeNodeMetaData(std::vector<long>& my_ghost_ids);
+      void redistributeNodeMetaData(std::vector<long>& my_all_ids,std::vector<long>& my_ghost_ids);
       int nproc;
       std::shared_ptr<ParallelMesh> mesh;
       std::vector<int> part;

@@ -29,7 +29,7 @@ namespace Parfait {
 
       myGhostIds = identifyGhostNodes(myNonGhostIds, recvTets, recvPyramids, recvPrisms, recvHexs);
     concatinateGhostAndNonGhostIds(myNonGhostIds, myGhostIds);
-      redistributeNodeMetaData(myNonGhostIds);
+      redistributeNodeMetaData(myAllIds,myNonGhostIds);
 
       std::vector<int> ownership_degree(myAllIds.size(), 0);
 
@@ -77,14 +77,14 @@ namespace Parfait {
     return recvNodeIds;
   }
 
-  inline void NodeBasedRedistributor::redistributeNodeMetaData(std::vector<long>& my_ghost_ids) {
+  inline void NodeBasedRedistributor::redistributeNodeMetaData(std::vector<long>& my_all_ids,std::vector<long>& my_ghost_ids) {
       std::map<long, int> global_to_local;
       for (unsigned int i = 0; i < mesh->metaData->globalNodeIds.size(); i++)
           global_to_local.insert(std::make_pair(mesh->metaData->globalNodeIds[i], i));
       for (int proc:range(nproc)) {
           vector<long> neededXYZ;
           if (MessagePasser::Rank() == proc)
-              neededXYZ = myAllIds;
+              neededXYZ = my_all_ids;
           MessagePasser::Broadcast(neededXYZ, proc);
           vector<double> sendXYZ;
           vector<long> sendGlobalNodeId;
