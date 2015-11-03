@@ -30,7 +30,7 @@ namespace Parfait {
                                            std::vector<long>& recvPyramids,
                                            std::vector<long>& recvPrisms,
                                            std::vector<long>& recvHexs);
-      std::vector<long> buildGlobalNodeIds(std::vector<long>& my_ghost_ids);
+      void buildGlobalNodeIds(std::vector<long>& my_ghost_ids);
 
       void redistributeNodeMetaData(std::vector<long>& my_ghost_ids);
       int nproc;
