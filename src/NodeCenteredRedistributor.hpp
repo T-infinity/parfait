@@ -22,12 +22,12 @@ namespace Parfait {
       auto myGlobalNodeIds = redistributeNodeIds();
       auto recvTriangles = redistributeTriangles(myGlobalNodeIds);
       auto recvQuads  = redistributeQuads(myGlobalNodeIds);
-      redistributeTets(myGlobalNodeIds);
-      redistributePyramids(myGlobalNodeIds);
-      redistributePrisms(myGlobalNodeIds);
-      redistributeHexes(myGlobalNodeIds);
+      auto recvTets = redistributeTets(myGlobalNodeIds);
+      auto recvPyramids = redistributePyramids(myGlobalNodeIds);
+      auto recvPrisms = redistributePrisms(myGlobalNodeIds);
+      auto recvHexs = redistributeHexes(myGlobalNodeIds);
 
-      ghostNodeIds = identifyGhostNodes(myGlobalNodeIds);
+      ghostNodeIds = identifyGhostNodes(myGlobalNodeIds,recvTets,recvPyramids,recvPrisms,recvHexs);
       buildGlobalNodeIds(myGlobalNodeIds);
       redistributeNodeMetaData(myGlobalNodeIds);
 
@@ -192,8 +192,9 @@ namespace Parfait {
     return recvQuads;
   }
 
-  inline void NodeBasedRedistributor::redistributeTets(std::vector<long>& my_ghost_ids) {
+  inline std::vector<long> NodeBasedRedistributor::redistributeTets(std::vector<long>& my_ghost_ids) {
       vector<long> sendTetIds;
+    vector<long> recvTets;
       sendTetIds.reserve(4 * mesh->connectivity->tets.size());
       for (int proc = 0; proc < nproc; proc++) {
           sendTetIds.clear();
@@ -217,10 +218,12 @@ namespace Parfait {
                   sendTets.push_back(mesh->metaData->globalNodeIds[mesh->connectivity->tets[4 * id + j]]);
           MessagePasser::Gatherv(sendTets, recvTets, proc);
       }
+    return recvTets;
   }
 
-  inline void NodeBasedRedistributor::redistributePyramids(std::vector<long>& my_ghost_ids) {
-      vector<long> sendPyramidIds;
+  inline std::vector<long> NodeBasedRedistributor::redistributePyramids(std::vector<long>& my_ghost_ids) {
+    std::vector<long> sendPyramidIds;
+    std::vector<long> recvPyramids;
       sendPyramidIds.reserve(5 * mesh->connectivity->pyramids.size());
       for (int proc:range(nproc)) {
           sendPyramidIds.clear();
@@ -244,10 +247,12 @@ namespace Parfait {
                   sendPyramids.push_back(mesh->metaData->globalNodeIds[mesh->connectivity->pyramids[5 * id + j]]);
           MessagePasser::Gatherv(sendPyramids, recvPyramids, proc);
       }
+    return recvPyramids;
   }
 
-  inline void NodeBasedRedistributor::redistributePrisms(std::vector<long>& my_ghost_ids) {
-      vector<long> sendPrismIds;
+  inline std::vector<long> NodeBasedRedistributor::redistributePrisms(std::vector<long>& my_ghost_ids) {
+    std::vector<long> sendPrismIds;
+    std::vector<long> recvPrisms;
       sendPrismIds.reserve(6 * mesh->connectivity->prisms.size());
       for (int proc:range(nproc)) {
           sendPrismIds.clear();
@@ -271,10 +276,12 @@ namespace Parfait {
                   sendPrisms.push_back(mesh->metaData->globalNodeIds[mesh->connectivity->prisms[6 * id + j]]);
           MessagePasser::Gatherv(sendPrisms, recvPrisms, proc);
       }
+    return recvPrisms;
   }
 
-  inline void NodeBasedRedistributor::redistributeHexes(std::vector<long>& my_ghost_ids) {
+  inline std::vector<long> NodeBasedRedistributor::redistributeHexes(std::vector<long>& my_ghost_ids) {
       vector<long> sendHexIds;
+    std::vector<long> recvHexs;
       sendHexIds.reserve(8 * mesh->connectivity->hexes.size());
       for (int proc:range(nproc)) {
           sendHexIds.clear();
@@ -298,9 +305,12 @@ namespace Parfait {
                   sendHexs.push_back(mesh->metaData->globalNodeIds[mesh->connectivity->hexes[8 * id + j]]);
           MessagePasser::Gatherv(sendHexs, recvHexs, proc);
       }
+    return recvHexs;
   }
 
-  inline std::vector<long> NodeBasedRedistributor::identifyGhostNodes(std::vector<long>& my_ghost_ids) {
+  inline std::vector<long> NodeBasedRedistributor::identifyGhostNodes(std::vector<long>& my_ghost_ids,
+        std::vector<long>& recvTets,std::vector<long>& recvPyramids,
+        std::vector<long>& recvPrisms, std::vector<long>& recvHexs) {
       std::set<long> uniqueGhostNodeIds;
       if (!std::is_sorted(my_ghost_ids.begin(), my_ghost_ids.end()))
           throw std::logic_error("Recv node Ids expected in order.");

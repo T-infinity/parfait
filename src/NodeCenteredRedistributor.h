@@ -19,12 +19,16 @@ namespace Parfait {
       std::vector<long> redistributeNodeIds();
       std::vector<long> redistributeTriangles(std::vector<long>& my_ghost_ids);
       std::vector<long> redistributeQuads(std::vector<long>& my_ghost_ids);
-      void redistributeTets(std::vector<long>& my_ghost_ids);
-      void redistributePyramids(std::vector<long>& my_ghost_ids);
-      void redistributePrisms(std::vector<long>& my_ghost_ids);
-      void redistributeHexes(std::vector<long>& my_ghost_ids);
+      std::vector<long> redistributeTets(std::vector<long>& my_ghost_ids);
+      std::vector<long> redistributePyramids(std::vector<long>& my_ghost_ids);
+      std::vector<long> redistributePrisms(std::vector<long>& my_ghost_ids);
+      std::vector<long> redistributeHexes(std::vector<long>& my_ghost_ids);
 
-      std::vector<long> identifyGhostNodes(std::vector<long>& my_ghost_ids);
+      std::vector<long> identifyGhostNodes(std::vector<long>& my_ghost_ids,
+                std::vector<long>& recvTets,
+      std::vector<long>& recvPyramids,
+      std::vector<long>& recvPrisms,
+      std::vector<long>& recvHexs);
       void buildGlobalNodeIds(std::vector<long>& my_ghost_ids);
 
       void redistributeNodeMetaData(std::vector<long>& my_ghost_ids);
@@ -38,10 +42,6 @@ namespace Parfait {
       std::vector<double> recvXYZ;
       std::vector<int> recvTriangleTags;
       std::vector<int> recvQuadTags;
-      std::vector<long> recvTets;
-      std::vector<long> recvPyramids;
-      std::vector<long> recvPrisms;
-      std::vector<long> recvHexs;
 
       int getLocalNodeId(long globalNodeId,std::vector<long>& my_ghost_ids);
 
