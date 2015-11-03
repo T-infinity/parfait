@@ -28,7 +28,7 @@ namespace Parfait {
       auto recvHexs = redistributeHexes(myNonGhostIds);
 
       myGhostIds = identifyGhostNodes(myNonGhostIds, recvTets, recvPyramids, recvPrisms, recvHexs);
-      myAllIds = buildGlobalNodeIds(myNonGhostIds);
+      buildGlobalNodeIds(myNonGhostIds);
       redistributeNodeMetaData(myNonGhostIds);
 
       std::vector<int> ownership_degree(myAllIds.size(), 0);
@@ -330,10 +330,10 @@ namespace Parfait {
       return std::vector<long>(uniqueGhostNodeIds.begin(), uniqueGhostNodeIds.end());
   }
 
-  inline std::vector<long> NodeBasedRedistributor::buildGlobalNodeIds(std::vector<long>& my_ghost_ids) {
-      auto tmp = my_ghost_ids;
-    tmp.insert(myAllIds.end(), myGhostIds.begin(), myGhostIds.end());
-    return tmp;
+  inline void NodeBasedRedistributor::buildGlobalNodeIds(std::vector<long>& my_ghost_ids) {
+      myAllIds = my_ghost_ids;
+    // this function is stupid
+      myAllIds.insert(myAllIds.end(), myGhostIds.begin(), myGhostIds.end());
   }
 
   inline std::vector<int> NodeBasedRedistributor::convertToLocalIds(std::map<long, int> global_to_local_map,
