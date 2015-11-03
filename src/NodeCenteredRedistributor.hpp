@@ -21,7 +21,7 @@ namespace Parfait {
 
       auto myGlobalNodeIds = redistributeNodeIds();
       auto recvTriangles = redistributeTriangles(myGlobalNodeIds);
-      redistributeQuads(myGlobalNodeIds);
+      auto recvQuads  = redistributeQuads(myGlobalNodeIds);
       redistributeTets(myGlobalNodeIds);
       redistributePyramids(myGlobalNodeIds);
       redistributePrisms(myGlobalNodeIds);
@@ -158,7 +158,8 @@ namespace Parfait {
     return recvTriangles;
   }
 
-  inline void NodeBasedRedistributor::redistributeQuads(std::vector<long>& my_ghost_ids) {
+  inline std::vector<long> NodeBasedRedistributor::redistributeQuads(std::vector<long>& my_ghost_ids) {
+    std::vector<long> recvQuads;
       for (int proc:range(nproc)) {
           vector<long> sendQuadIds;
           vector<long> neededNodeIds;
@@ -188,6 +189,7 @@ namespace Parfait {
           MessagePasser::Gatherv(sendQuads, recvQuads, proc);
           MessagePasser::Gatherv(sendQuadTags, recvQuadTags, proc);
       }
+    return recvQuads;
   }
 
   inline void NodeBasedRedistributor::redistributeTets(std::vector<long>& my_ghost_ids) {

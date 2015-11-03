@@ -18,7 +18,7 @@ namespace Parfait {
   private:
       std::vector<long> redistributeNodeIds();
       std::vector<long> redistributeTriangles(std::vector<long>& my_ghost_ids);
-      void redistributeQuads(std::vector<long>& my_ghost_ids);
+      std::vector<long> redistributeQuads(std::vector<long>& my_ghost_ids);
       void redistributeTets(std::vector<long>& my_ghost_ids);
       void redistributePyramids(std::vector<long>& my_ghost_ids);
       void redistributePrisms(std::vector<long>& my_ghost_ids);
@@ -37,7 +37,6 @@ namespace Parfait {
       std::vector<int> recvAssociatedComponentIds;
       std::vector<double> recvXYZ;
       std::vector<int> recvTriangleTags;
-      std::vector<long> recvQuads;
       std::vector<int> recvQuadTags;
       std::vector<long> recvTets;
       std::vector<long> recvPyramids;
