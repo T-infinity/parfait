@@ -19,21 +19,21 @@ namespace Parfait {
       for (unsigned int i = 2; i < nodeMap.size(); i++)
           nodeMap[i] += nodeMap[i - 1];
 
-      auto recvNodeIds = redistributeNodeIds();
-      redistributeTriangles(recvNodeIds);
-      redistributeQuads(recvNodeIds);
-      redistributeTets(recvNodeIds);
-      redistributePyramids(recvNodeIds);
-      redistributePrisms(recvNodeIds);
-      redistributeHexes(recvNodeIds);
+      auto myGlobalNodeIds = redistributeNodeIds();
+      auto recvTriangles = redistributeTriangles(myGlobalNodeIds);
+      redistributeQuads(myGlobalNodeIds);
+      redistributeTets(myGlobalNodeIds);
+      redistributePyramids(myGlobalNodeIds);
+      redistributePrisms(myGlobalNodeIds);
+      redistributeHexes(myGlobalNodeIds);
 
-      ghostNodeIds = identifyGhostNodes(recvNodeIds);
-      buildGlobalNodeIds(recvNodeIds);
-      redistributeNodeMetaData(recvNodeIds);
+      ghostNodeIds = identifyGhostNodes(myGlobalNodeIds);
+      buildGlobalNodeIds(myGlobalNodeIds);
+      redistributeNodeMetaData(myGlobalNodeIds);
 
       std::vector<int> ownership_degree(globalNodeIds.size(), 0);
 
-      std::fill(ownership_degree.begin() + recvNodeIds.size(), ownership_degree.end(), 1);
+      std::fill(ownership_degree.begin() + myGlobalNodeIds.size(), ownership_degree.end(), 1);
 
       std::map<long, int> global_to_local;
       for (unsigned int i = 0; i <globalNodeIds.size(); i++)
@@ -123,7 +123,8 @@ namespace Parfait {
       }
   }
 
-  inline void NodeBasedRedistributor::redistributeTriangles(std::vector<long>& my_ghost_ids) {
+  inline std::vector<long> NodeBasedRedistributor::redistributeTriangles(std::vector<long>& my_ghost_ids) {
+    std::vector<long> recvTriangles;
       for (int proc:range(nproc)) {
           vector<long> sendTriangleIds;
           vector<long> neededNodeIds;
@@ -154,6 +155,7 @@ namespace Parfait {
           MessagePasser::Gatherv(sendTriangles, recvTriangles, tmpMap, proc);
           MessagePasser::Gatherv(sendTriangleTags, recvTriangleTags, tmpMap, proc);
       }
+    return recvTriangles;
   }
 
   inline void NodeBasedRedistributor::redistributeQuads(std::vector<long>& my_ghost_ids) {
