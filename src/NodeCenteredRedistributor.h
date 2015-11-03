@@ -16,24 +16,23 @@ namespace Parfait {
 
 		std::shared_ptr<ParallelMesh> redistribute();
 	private:
-		void redistributeNodeIds();
-		void redistributeTriangles();
-		void redistributeQuads();
-		void redistributeTets();
-		void redistributePyramids();
-		void redistributePrisms();
-		void redistributeHexes();
+		std::vector<long> redistributeNodeIds();
+		void redistributeTriangles(std::vector<long>& my_ghost_ids);
+		void redistributeQuads(std::vector<long>& my_ghost_ids);
+		void redistributeTets(std::vector<long>& my_ghost_ids);
+		void redistributePyramids(std::vector<long>& my_ghost_ids);
+		void redistributePrisms(std::vector<long>& my_ghost_ids);
+		void redistributeHexes(std::vector<long>& my_ghost_ids);
 
-		void identifyGhostNodes();
-		void buildGlobalNodeIds();
+		void identifyGhostNodes(std::vector<long>& my_ghost_ids);
+		void buildGlobalNodeIds(std::vector<long>& my_ghost_ids);
 
-		void redistributeNodeMetaData();
+		void redistributeNodeMetaData(std::vector<long>& my_ghost_ids);
 		int nproc;
 		std::shared_ptr<ParallelMesh> mesh;
 		std::vector<int> part;
 		std::vector<int> nodeMap;
 
-		std::vector<long> recvNodeIds;
 		std::vector<long> recvGhostNodeIds;
 		std::vector<int> recvAssociatedComponentIds;
 		std::vector<double> recvXYZ;
@@ -47,7 +46,7 @@ namespace Parfait {
 		std::vector<long> recvHexs;
 
 		std::vector<long> globalNodeIds;
-		int getLocalNodeId(long globalNodeId);
+		int getLocalNodeId(long globalNodeId,std::vector<long>& my_ghost_ids);
 
         std::map<long,int> global_to_local_map;
 
