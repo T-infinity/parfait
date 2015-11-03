@@ -37,7 +37,6 @@ namespace Parfait {
       std::shared_ptr<ParallelMesh> mesh;
       std::vector<int> part;
       std::vector<int> nodeMap;
-      std::vector<long> myGhostIds;
       std::vector<int> recvAssociatedComponentIds;
       std::vector<double> recvXYZ;
       std::vector<int> recvTriangleTags;

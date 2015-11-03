@@ -27,7 +27,7 @@ namespace Parfait {
       auto recvPrisms = redistributePrisms(myNonGhostIds);
       auto recvHexs = redistributeHexes(myNonGhostIds);
 
-      myGhostIds = identifyGhostNodes(myNonGhostIds, recvTets, recvPyramids, recvPrisms, recvHexs);
+      auto myGhostIds = identifyGhostNodes(myNonGhostIds, recvTets, recvPyramids, recvPrisms, recvHexs);
       auto my_all_ids = myNonGhostIds;
       my_all_ids.insert(my_all_ids.end(),myGhostIds.begin(),myGhostIds.end());
       redistributeNodeMetaData(my_all_ids,myNonGhostIds,myGhostIds);
