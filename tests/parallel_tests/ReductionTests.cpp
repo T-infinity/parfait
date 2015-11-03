@@ -59,3 +59,12 @@ TEST_CASE("Parallel sum of an integer"){
     REQUIRE(MessagePasser::NumberOfProcesses() == sum);
 }
 
+TEST_CASE("Elemental max"){
+    std::vector<int> vec(NumberOfProcesses(),0);
+    vec[Rank()] = Rank();
+    auto result = AllElementalMax(vec);
+    REQUIRE(NumberOfProcesses() == result.size());
+    for(int i=0;i<NumberOfProcesses();++i){
+        REQUIRE(i == result[i]);
+    }
+}

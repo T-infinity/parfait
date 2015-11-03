@@ -1,3 +1,4 @@
+#include <limits>
 namespace MessagePasser {
   template<typename T>
   T ParallelSum(T value, int rootId) {
@@ -62,4 +63,27 @@ namespace MessagePasser {
 	  Broadcast(sum, 0);
 	  return sum;
   }
+
+	template<typename T>
+	std::vector<T> ElementalMax(std::vector<T>& vec,int root){
+		auto result = vec;
+		 recv_vec(vec.size());
+		NonBlockingSend(vec,vec.size(),root);
+		if(Rank() == root){
+			for(int i=0;i<NumberOfProcesses();++i){
+				Recv(recv_vec,int(vec.size()),i);
+				for(auto j=0u;j<vec.size();++j)
+					result[j] = std::max(recv_vec[j],result[j]);
+			}
+		}
+		Barrier();
+		return result;
+	}
+
+	template<typename T>
+	std::vector<T> AllElementalMax(std::vector<T>& vec){
+		auto result = ElementalMax(vec,0);
+		Broadcast(result,0);
+		return result;
+	}
 }
