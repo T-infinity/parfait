@@ -67,7 +67,7 @@ namespace MessagePasser {
 	template<typename T>
 	std::vector<T> ElementalMax(std::vector<T>& vec,int root){
 		auto result = vec;
-		 recv_vec(vec.size());
+		std::vector<T> recv_vec(vec.size());
 		NonBlockingSend(vec,vec.size(),root);
 		if(Rank() == root){
 			for(int i=0;i<NumberOfProcesses();++i){
