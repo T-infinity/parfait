@@ -332,7 +332,7 @@ namespace Parfait {
 
   inline std::vector<long> NodeBasedRedistributor::concatinateGhostAndNonGhostIds(std::vector<long> &my_non_ghost_ids,
                                                                      std::vector<long> &my_ghost_ids) {
-     auto tmp = my_non_ghost_ids;
+    std::vector<long> tmp = my_non_ghost_ids;
      tmp.insert(myAllIds.end(), my_ghost_ids.begin(), my_ghost_ids.end());
     return tmp;
   }
