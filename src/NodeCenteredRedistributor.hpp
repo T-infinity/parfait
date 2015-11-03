@@ -104,6 +104,9 @@ namespace Parfait {
                       sendAssociatedComponentId.push_back(mesh->metaData->nodeComponentIds[localNodeId]);
                   }
               }
+            else{
+                throw std::domain_error("Failed to find global id");
+              }
           }
 
           std::vector<double> just_recv_xyz;
@@ -113,8 +116,8 @@ namespace Parfait {
           std::vector<int> just_recv_associated_component_ids;
           MessagePasser::Gatherv(sendAssociatedComponentId, just_recv_associated_component_ids, proc);
           if (MessagePasser::Rank() == proc) {
-              recvXYZ.resize(3 * just_recv_xyz_global_node_ids.size());
-              recvAssociatedComponentIds.resize(just_recv_associated_component_ids.size());
+              recvXYZ.assign(just_recv_xyz.size(),0);
+              recvAssociatedComponentIds.assign(just_recv_associated_component_ids.size(),-1);
               for (unsigned int index = 0; index < just_recv_xyz_global_node_ids.size(); index++) {
                   auto globalNodeId = just_recv_xyz_global_node_ids[index];
                   int localId = getLocalNodeId(globalNodeId, my_non_ghost_ids,my_ghost_ids);
