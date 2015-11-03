@@ -30,14 +30,11 @@ namespace Parfait {
                                            std::vector<long>& recvPyramids,
                                            std::vector<long>& recvPrisms,
                                            std::vector<long>& recvHexs);
-      void concatinateGhostAndNonGhostIds(std::vector<long> &my_non_ghost_ids, std::vector<long> &my_ghost_ids);
-
       void redistributeNodeMetaData(std::vector<long>& my_all_ids,std::vector<long>& my_ghost_ids);
       int nproc;
       std::shared_ptr<ParallelMesh> mesh;
       std::vector<int> part;
       std::vector<int> nodeMap;
-      std::vector<long> myAllIds;
       std::vector<long> myGhostIds;
       std::vector<int> recvAssociatedComponentIds;
       std::vector<double> recvXYZ;
