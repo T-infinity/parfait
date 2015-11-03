@@ -24,7 +24,7 @@ namespace Parfait {
 			void redistributePrisms();
 			void redistributeHexes();
 
-			void identifyGhostNodes();
+			std::vector<long> identifyGhostNodes();
 
 			void redistributeNodeMetaData();
 			int nproc;
@@ -32,7 +32,6 @@ namespace Parfait {
 			std::vector<int> part;
 			std::vector<int> nodeMap;
 
-			std::vector<long> recvGhostNodeIds;
 			std::vector<int> recvAssociatedComponentIds;
 			std::vector<double> recvXYZ;
 			std::vector<long> recvTriangles;
@@ -45,6 +44,7 @@ namespace Parfait {
 			std::vector<long> recvHexs;
 
 			std::vector<long> globalNodeIds;
+			std::vector<long> ghostNodeIds;
 			int getLocalNodeId(long globalNodeId);
 
 			std::map<long,int> global_to_local_map;
