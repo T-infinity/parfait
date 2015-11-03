@@ -26,11 +26,11 @@ namespace Parfait {
       std::vector<long> redistributeHexes(std::vector<long>& my_ghost_ids);
 
       std::vector<long> identifyGhostNodes(std::vector<long>& my_ghost_ids,
-                std::vector<long>& recvTets,
-      std::vector<long>& recvPyramids,
-      std::vector<long>& recvPrisms,
-      std::vector<long>& recvHexs);
-      void buildGlobalNodeIds(std::vector<long>& my_ghost_ids);
+                                           std::vector<long>& recvTets,
+                                           std::vector<long>& recvPyramids,
+                                           std::vector<long>& recvPrisms,
+                                           std::vector<long>& recvHexs);
+      std::vector<long> buildGlobalNodeIds(std::vector<long>& my_ghost_ids);
 
       void redistributeNodeMetaData(std::vector<long>& my_ghost_ids);
       int nproc;
