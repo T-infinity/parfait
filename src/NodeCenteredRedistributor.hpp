@@ -29,7 +29,7 @@ namespace Parfait {
 
       myGhostIds = identifyGhostNodes(myNonGhostIds, recvTets, recvPyramids, recvPrisms, recvHexs);
       auto my_all_ids = myNonGhostIds;
-    my_all_ids.insert(my_all_ids.end(),myGhostIds.begin(),myGhostIds.end());
+      my_all_ids.insert(my_all_ids.end(),myGhostIds.begin(),myGhostIds.end());
       redistributeNodeMetaData(my_all_ids,myNonGhostIds);
 
       std::vector<int> ownership_degree(my_all_ids.size(), 0);
@@ -339,16 +339,16 @@ namespace Parfait {
       return local_ids;
   }
 
-  inline int NodeBasedRedistributor::getLocalNodeId(long globalNodeId,std::vector<long>& my_ghost_ids) {
-      auto it = std::lower_bound(my_ghost_ids.begin(), my_ghost_ids.end(), globalNodeId);
-      if (it == my_ghost_ids.end()) {
+  inline int NodeBasedRedistributor::getLocalNodeId(long globalNodeId,std::vector<long>&my_non_ghost_ids) {
+      auto it = std::lower_bound(my_non_ghost_ids.begin(), my_non_ghost_ids.end(), globalNodeId);
+      if (it == my_non_ghost_ids.end()) {
           it = std::lower_bound(myGhostIds.begin(), myGhostIds.end(), globalNodeId);
           if (it != myGhostIds.end())
-              return std::distance(myGhostIds.begin(), it) + my_ghost_ids.size();
+              return std::distance(myGhostIds.begin(), it) + my_non_ghost_ids.size();
           else
               throw std::logic_error("saldfjsdf");
       }
-      return std::distance(my_ghost_ids.begin(), it);
+      return std::distance(my_non_ghost_ids.begin(), it);
   }
 }
 #endif

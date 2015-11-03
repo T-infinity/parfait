@@ -41,7 +41,7 @@ namespace Parfait {
       std::vector<int> recvTriangleTags;
       std::vector<int> recvQuadTags;
 
-      int getLocalNodeId(long globalNodeId,std::vector<long>& my_ghost_ids);
+      int getLocalNodeId(long globalNodeId,std::vector<long>&my_non_ghost_ids);
 
       std::map<long,int> global_to_local_map;
 
