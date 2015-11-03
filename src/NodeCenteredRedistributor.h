@@ -24,7 +24,7 @@ namespace Parfait {
 		void redistributePrisms(std::vector<long>& my_ghost_ids);
 		void redistributeHexes(std::vector<long>& my_ghost_ids);
 
-		void identifyGhostNodes(std::vector<long>& my_ghost_ids);
+		std::vector<long> identifyGhostNodes(std::vector<long>& my_ghost_ids);
 		void buildGlobalNodeIds(std::vector<long>& my_ghost_ids);
 
 		void redistributeNodeMetaData(std::vector<long>& my_ghost_ids);
@@ -33,7 +33,7 @@ namespace Parfait {
 		std::vector<int> part;
 		std::vector<int> nodeMap;
 
-		std::vector<long> recvGhostNodeIds;
+		std::vector<long> ghostNodeIds;
 		std::vector<int> recvAssociatedComponentIds;
 		std::vector<double> recvXYZ;
 		std::vector<long> recvTriangles;

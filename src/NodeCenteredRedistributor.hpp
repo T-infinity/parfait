@@ -27,7 +27,7 @@ namespace Parfait {
       redistributePrisms(recvNodeIds);
       redistributeHexes(recvNodeIds);
 
-      identifyGhostNodes(recvNodeIds);
+      ghostNodeIds = identifyGhostNodes(recvNodeIds);
       buildGlobalNodeIds(recvNodeIds);
       redistributeNodeMetaData(recvNodeIds);
 
@@ -296,7 +296,7 @@ namespace Parfait {
       }
   }
 
-  inline void NodeBasedRedistributor::identifyGhostNodes(std::vector<long>& my_ghost_ids) {
+  inline std::vector<long> NodeBasedRedistributor::identifyGhostNodes(std::vector<long>& my_ghost_ids) {
       std::set<long> uniqueGhostNodeIds;
       if (!std::is_sorted(my_ghost_ids.begin(), my_ghost_ids.end()))
           throw std::logic_error("Recv node Ids expected in order.");
@@ -313,12 +313,12 @@ namespace Parfait {
           if (!std::binary_search(my_ghost_ids.begin(), my_ghost_ids.end(), id))
               uniqueGhostNodeIds.insert(id);
 
-      recvGhostNodeIds = std::vector<long>(uniqueGhostNodeIds.begin(), uniqueGhostNodeIds.end());
+      return std::vector<long>(uniqueGhostNodeIds.begin(), uniqueGhostNodeIds.end());
   }
 
   inline void NodeBasedRedistributor::buildGlobalNodeIds(std::vector<long>& my_ghost_ids) {
       globalNodeIds = my_ghost_ids;
-      globalNodeIds.insert(globalNodeIds.end(), recvGhostNodeIds.begin(), recvGhostNodeIds.end());
+      globalNodeIds.insert(globalNodeIds.end(), ghostNodeIds.begin(), ghostNodeIds.end());
   }
 
   inline std::vector<int> NodeBasedRedistributor::convertToLocalIds(std::map<long, int> global_to_local_map,
@@ -332,9 +332,9 @@ namespace Parfait {
   inline int NodeBasedRedistributor::getLocalNodeId(long globalNodeId,std::vector<long>& my_ghost_ids) {
       auto it = std::lower_bound(my_ghost_ids.begin(), my_ghost_ids.end(), globalNodeId);
       if (it == my_ghost_ids.end()) {
-          it = std::lower_bound(recvGhostNodeIds.begin(), recvGhostNodeIds.end(), globalNodeId);
-          if (it != recvGhostNodeIds.end())
-              return std::distance(recvGhostNodeIds.begin(), it) + my_ghost_ids.size();
+          it = std::lower_bound(ghostNodeIds.begin(), ghostNodeIds.end(), globalNodeId);
+          if (it != ghostNodeIds.end())
+              return std::distance(ghostNodeIds.begin(), it) + my_ghost_ids.size();
           else
               throw std::logic_error("saldfjsdf");
       }
