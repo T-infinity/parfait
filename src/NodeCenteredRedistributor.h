@@ -16,6 +16,7 @@ namespace Parfait {
 
       std::shared_ptr<ParallelMesh> redistribute();
   private:
+
       std::vector<long> redistributeNodeIds();
       std::vector<long> redistributeTriangles(std::vector<long>& my_ghost_ids);
       std::vector<long> redistributeQuads(std::vector<long>& my_ghost_ids);
