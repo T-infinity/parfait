@@ -332,8 +332,7 @@ namespace Parfait {
 
   inline void NodeBasedRedistributor::buildGlobalNodeIds(std::vector<long>& my_non_ghost_ids,std::vector<long>& my_ghost_ids) {
       myAllIds = my_non_ghost_ids;
-    // this function is stupid
-      myAllIds.insert(myAllIds.end(), myGhostIds.begin(), myGhostIds.end());
+      myAllIds.insert(myAllIds.end(), my_ghost_ids.begin(), my_ghost_ids.end());
   }
 
   inline std::vector<int> NodeBasedRedistributor::convertToLocalIds(std::map<long, int> global_to_local_map,
