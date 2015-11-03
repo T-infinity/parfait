@@ -33,13 +33,13 @@ namespace Parfait {
     my_all_ids.insert(my_all_ids.end(),myGhostIds.begin(),myGhostIds.end());
       redistributeNodeMetaData(my_all_ids,myNonGhostIds);
 
-      std::vector<int> ownership_degree(myAllIds.size(), 0);
+      std::vector<int> ownership_degree(my_all_ids.size(), 0);
 
       std::fill(ownership_degree.begin() + myNonGhostIds.size(), ownership_degree.end(), 1);
 
       std::map<long, int> global_to_local;
-      for (unsigned int i = 0; i < myAllIds.size(); i++)
-          global_to_local.insert(std::make_pair(myAllIds[i], i));
+      for (unsigned int i = 0; i < my_all_ids.size(); i++)
+          global_to_local.insert(std::make_pair(my_all_ids[i], i));
 
       mesh->connectivity->triangles = convertToLocalIds(global_to_local, recvTriangles);
       mesh->connectivity->quads = convertToLocalIds(global_to_local, recvQuads);
@@ -51,7 +51,7 @@ namespace Parfait {
       mesh->metaData->nodeComponentIds = recvAssociatedComponentIds;
       mesh->metaData->triangleTags = recvTriangleTags;
       mesh->metaData->quadTags = recvQuadTags;
-      mesh->metaData->globalNodeIds = myAllIds;
+      mesh->metaData->globalNodeIds = my_all_ids;
       mesh->metaData->nodeOwnershipDegree = ownership_degree;
       return mesh;
   }
