@@ -167,6 +167,12 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
     createNodeOwnerships();
     createNodeComponentIds();
 
+    if(MessagePasser::Rank() == 0)
+        printf("Distributing ghost xyz\n");
+    int nregular = mesh->countNodesAtDegree(0);
+    std::vector<long> ghostIds(mesh->metaData->globalNodeIds.begin()+nregular,mesh->metaData->globalNodeIds.end());
+    auto ghostXyz = getXyzForGhostNodes(ghostIds);
+    mesh->metaData->xyz.insert(mesh->metaData->xyz.end(),ghostXyz.begin(),ghostXyz.end());
     if (MessagePasser::Rank() == 0)
         printf("Done Distributing ...\n");
 }
@@ -870,4 +876,39 @@ inline void ParallelMeshReader::createLocalToGlobalNodeIdMap() {
     for(unsigned long localId = 0; localId < localToGlobalId.size(); localId++){
         mesh->metaData->globalNodeIds.push_back(localToGlobalId[localId]);
     }
+}
+
+inline std::vector<double> ParallelMeshReader::getXyzForGhostNodes(std::vector<long>& ghostIds){
+    std::vector<long> gatheredIds;
+    std::vector<double> gatheredXyz;
+    for(int proc=0;proc<MessagePasser::NumberOfProcesses();++proc){
+        std::vector<long> requestedIds;
+        if(MessagePasser::Rank() == proc)
+            requestedIds = ghostIds;
+        MessagePasser::Broadcast(requestedIds,proc);
+        std::vector<long> responseIds;
+        std::vector<double> responseXyz;
+        for(long id:requestedIds){
+            if(globalToLocalId.count(id) == 0){
+                responseIds.push_back(id);
+                int localId = globalToLocalId[id];
+                responseXyz.push_back(mesh->metaData->xyz[3*localId+0]);
+                responseXyz.push_back(mesh->metaData->xyz[3*localId+1]);
+                responseXyz.push_back(mesh->metaData->xyz[3*localId+2]);
+            }
+        }
+        MessagePasser::Gatherv(responseIds,gatheredIds,proc);
+        MessagePasser::Gatherv(responseXyz,gatheredXyz,proc);
+    }
+    std::map<long,int> tmp_map;
+    for(unsigned int i=0;i<ghostIds.size();++i)
+        tmp_map.insert(std::make_pair(ghostIds[i],i));
+    std::vector<double> ghostxyz(3*ghostIds.size(),0.0);
+    for(unsigned int i=0;i<ghostIds.size();++i){
+        int localId = tmp_map[ghostIds[i]];
+        ghostxyz[3*localId+0] = gatheredXyz[3*i+0];
+        ghostxyz[3*localId+1] = gatheredXyz[3*i+1];
+        ghostxyz[3*localId+2] = gatheredXyz[3*i+2];
+    }
+    return ghostxyz;
 }

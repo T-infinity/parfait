@@ -68,6 +68,7 @@ namespace Parfait {
       void distributeHexs();
       void distributeUgrid();
       void mapNodesToLocalSpace();
+
       std::vector<double> getNodes(long begin, long end);
       std::vector<long> getTriangles(long begin, long end);
       std::vector<int> getTriangleTags(long begin, long end);
@@ -100,6 +101,7 @@ namespace Parfait {
       void createLocalToGlobalNodeIdMap();
       void createNodeOwnerships();
       void createNodeComponentIds();
+      std::vector<double> getXyzForGhostNodes(std::vector<long>& ghostIds);
 
       std::set<int> getTargetProcessors(const vector<long> &transmitCell);
       std::vector<long> getCell(int cellLength, const vector<long> &cells, int cellId) const;
