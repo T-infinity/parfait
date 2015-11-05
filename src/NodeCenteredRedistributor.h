@@ -18,36 +18,32 @@ namespace Parfait {
   private:
 
       std::vector<long> redistributeNodeIds();
-      std::vector<long> redistributeTriangles(std::vector<long>& my_ghost_ids);
-      std::vector<long> redistributeQuads(std::vector<long>& my_ghost_ids);
-      std::vector<long> redistributeTets(std::vector<long>& my_ghost_ids);
-      std::vector<long> redistributePyramids(std::vector<long>& my_ghost_ids);
-      std::vector<long> redistributePrisms(std::vector<long>& my_ghost_ids);
-      std::vector<long> redistributeHexes(std::vector<long>& my_ghost_ids);
+      std::vector<int> redistributeTags(std::vector<long> &my_non_ghost_ids,
+                                        std::vector<int> &cells, std::vector<int> &tags, int cellSize);
+      std::vector<long> redistributeCells(std::vector<long> &my_non_ghost_ids,
+                                          std::vector<int> &cells, int cellSize);
 
-      std::vector<long> identifyGhostNodes(std::vector<long>& my_ghost_ids,
+      std::vector<long> identifyGhostNodes(std::vector<long>&my_non_ghost_ids,
                                            std::vector<long>& recvTets,
                                            std::vector<long>& recvPyramids,
                                            std::vector<long>& recvPrisms,
                                            std::vector<long>& recvHexs);
-      void redistributeNodeMetaData(std::vector<long>& my_all_ids,
-                                    std::vector<long>&my_non_ghost_ids,
-      std::vector<long>& my_ghost_ids);
-      int nproc;
+      void redistributeNodeMetaData(std::vector<long>&my_non_ghost_ids,
+                                    std::vector<long>& my_ghost_ids);
       std::shared_ptr<ParallelMesh> mesh;
       std::vector<int> part;
       std::vector<int> nodeMap;
       std::vector<int> recvAssociatedComponentIds;
       std::vector<double> recvXYZ;
-      std::vector<int> recvTriangleTags;
-      std::vector<int> recvQuadTags;
+
 
       int getLocalNodeId(long globalNodeId,std::vector<long>&my_non_ghost_ids,
-      std::vector<long>& my_ghost_ids);
+                         std::vector<long>& my_ghost_ids);
 
-      std::map<long,int> global_to_local_map;
 
-      std::vector<int> convertToLocalIds(std::map<long,int> global_to_local_map,const std::vector<long>& ids);
+      std::vector<int> convertToLocalIds(std::map<long,int> global_to_local_map,const std::vector<long>& ids) const;
+      bool amItheOwnerOfThisNode(long globalId, std::map<long, int> globalToLocal);
+      bool iShouldSendThisCell(int* cell, int cellSize, std::vector<long>& neededNodeIds);
   };
 
 

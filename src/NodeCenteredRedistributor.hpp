@@ -10,9 +10,14 @@ namespace Parfait {
             part(part_in)
   { }
 
+
   inline std::shared_ptr<ParallelMesh> NodeBasedRedistributor::redistribute() {
 
-      nproc = MessagePasser::NumberOfProcesses();
+      for(unsigned int i=0;i<part.size();++i){
+          printf("Rank %i: part[%i] = %li, gid %i\n",MessagePasser::Rank(),i,part[i],mesh->metaData->globalNodeIds[i]);
+      }
+
+      int nproc = MessagePasser::NumberOfProcesses();
       nodeMap.assign(nproc, 0);
       MessagePasser::AllGather(mesh->countNodesAtDegree(0), nodeMap);
       nodeMap.insert(nodeMap.begin(), 0);
@@ -20,25 +25,53 @@ namespace Parfait {
           nodeMap[i] += nodeMap[i - 1];
 
       auto myNonGhostIds = redistributeNodeIds();
-      auto recvTriangles = redistributeTriangles(myNonGhostIds);
-      auto recvQuads  = redistributeQuads(myNonGhostIds);
-      auto recvTets = redistributeTets(myNonGhostIds);
-      auto recvPyramids = redistributePyramids(myNonGhostIds);
-      auto recvPrisms = redistributePrisms(myNonGhostIds);
-      auto recvHexs = redistributeHexes(myNonGhostIds);
+      //for(auto x:myNonGhostIds)
+      //    printf("Rank %i: %i\n",MessagePasser::Rank(),x);
+      auto recvTets = redistributeCells(myNonGhostIds, mesh->connectivity->tets, 4);
+      auto recvPyramids = redistributeCells(myNonGhostIds,mesh->connectivity->pyramids,5);
+      auto recvPrisms = redistributeCells(myNonGhostIds,mesh->connectivity->prisms,6);
+      auto recvHexs = redistributeCells(myNonGhostIds,mesh->connectivity->hexes,8);
+
+      for(int i=0;i<recvPrisms.size()/6;++i){
+          long *p = &recvPrisms[6*i];
+          printf("Rank %i: prism %i (%i %i %i %i %i %i)\n",MessagePasser::Rank(),i,p[0],p[1],p[2],p[3],p[4],p[5]);
+      }
+
 
       auto myGhostIds = identifyGhostNodes(myNonGhostIds, recvTets, recvPyramids, recvPrisms, recvHexs);
-      auto my_all_ids = myNonGhostIds;
-      my_all_ids.insert(my_all_ids.end(),myGhostIds.begin(),myGhostIds.end());
-      redistributeNodeMetaData(my_all_ids,myNonGhostIds,myGhostIds);
+      for(auto x:myGhostIds)
+          printf("Rank %i: ghostid %i\n",MessagePasser::Rank(),x);
+      auto my_all_node_ids = myNonGhostIds;
+      my_all_node_ids.insert(my_all_node_ids.end(),myGhostIds.begin(),myGhostIds.end());
+      std::sort(my_all_node_ids.begin(),my_all_node_ids.end());
+      auto recvTriangles = redistributeCells(my_all_node_ids,mesh->connectivity->triangles,3);
+      auto recvTriangleTags = redistributeTags(my_all_node_ids, mesh->connectivity->triangles,
+                                               mesh->metaData->triangleTags, 3);
+      auto recvQuads  = redistributeCells(my_all_node_ids,mesh->connectivity->quads,4);
+      auto recvQuadTags = redistributeTags(my_all_node_ids, mesh->connectivity->quads,
+                                           mesh->metaData->quadTags, 4);
+      //for(int i=0;i<recvTriangles.size()/3;++i){
+      //    long *p = &recvTriangles[3*i];
+      //    printf("Rank %i: triangles %i (%i %i %i)\n",MessagePasser::Rank(),i,p[0],p[1],p[2]);
+      //}
+      redistributeNodeMetaData(myNonGhostIds,myGhostIds);
 
-      std::vector<int> ownership_degree(my_all_ids.size(), 0);
+      for(int i=0;i<recvTriangles.size()/3;++i){
+          long *p = &recvTriangles[3*i];
+          printf("Rank %i: triangles %i (%i %i %i)\n",MessagePasser::Rank(),i,p[0],p[1],p[2]);
+      }
+      int numberOfNonGhosts = myNonGhostIds.size();
+      int numberOfGhosts = myGhostIds.size();
+
+      std::vector<int> ownership_degree(numberOfGhosts+numberOfNonGhosts, 0);
 
       std::fill(ownership_degree.begin() + myNonGhostIds.size(), ownership_degree.end(), 1);
 
       std::map<long, int> global_to_local;
-      for (unsigned int i = 0; i < my_all_ids.size(); i++)
-          global_to_local.insert(std::make_pair(my_all_ids[i], i));
+      for (int i = 0; i < numberOfGhosts; i++)
+          global_to_local[myGhostIds[i]] = i+numberOfNonGhosts;
+      for (int i = 0; i < numberOfNonGhosts; i++)
+          global_to_local[myNonGhostIds[i]] = i;
 
       mesh->connectivity->triangles = convertToLocalIds(global_to_local, recvTriangles);
       mesh->connectivity->quads = convertToLocalIds(global_to_local, recvQuads);
@@ -50,14 +83,22 @@ namespace Parfait {
       mesh->metaData->nodeComponentIds = recvAssociatedComponentIds;
       mesh->metaData->triangleTags = recvTriangleTags;
       mesh->metaData->quadTags = recvQuadTags;
-      mesh->metaData->globalNodeIds = my_all_ids;
+      mesh->metaData->globalNodeIds = myNonGhostIds;
+      mesh->metaData->globalNodeIds.insert(mesh->metaData->globalNodeIds.end(),myGhostIds.begin(),myGhostIds.end());
       mesh->metaData->nodeOwnershipDegree = ownership_degree;
+
+      for(int i=0;i<myNonGhostIds.size();++i)
+          printf("Rank %i: nonGhostIds[%i] (%f %f %f) gid %i\n",MessagePasser::Rank(),i,recvXYZ[3*i+0],recvXYZ[3*i+1],recvXYZ[3*i+2],myNonGhostIds[i]);
+      for(int i=0;i<myGhostIds.size();++i)
+          printf("Rank %i: GhostIds[%i] (%f %f %f)  gid %i\n",MessagePasser::Rank(),i,recvXYZ[3*(numberOfNonGhosts+i)+0],
+                 recvXYZ[3*(numberOfNonGhosts+i)+1],recvXYZ[3*(numberOfNonGhosts+i)+2],myGhostIds[i]);
+
       return mesh;
   }
 
   inline std::vector<long> NodeBasedRedistributor::redistributeNodeIds() {
     std::vector<long> recvNodeIds;
-      for (int proc:range(nproc)) {
+      for (int proc:range(MessagePasser::NumberOfProcesses())) {
           int count = 0;
           for (int owner:part)
               if (owner == proc)
@@ -78,266 +119,153 @@ namespace Parfait {
     return recvNodeIds;
   }
 
-  inline void NodeBasedRedistributor::redistributeNodeMetaData(std::vector<long>& my_all_ids,
-                                                               std::vector<long>&my_non_ghost_ids,
-  std::vector<long>& my_ghost_ids) {
-      std::map<long, int> global_to_local;
-      for (unsigned int i = 0; i < mesh->metaData->globalNodeIds.size(); i++)
-          global_to_local.insert(std::make_pair(mesh->metaData->globalNodeIds[i], i));
-      for (int proc:range(nproc)) {
-          vector<long> neededXYZ;
-          if (MessagePasser::Rank() == proc)
-              neededXYZ = my_all_ids;
-          MessagePasser::Broadcast(neededXYZ, proc);
-          vector<double> sendXYZ;
-          vector<long> sendGlobalNodeId;
-          vector<int> sendAssociatedComponentId;
-          for (auto globalNodeId : neededXYZ) {
-              auto it = global_to_local.find(globalNodeId);
-              if (not (it == global_to_local.end())) {
-                  auto localNodeId = it->second;
-                  if(mesh->metaData->nodeOwnershipDegree[localNodeId] == 0) {
-                      sendXYZ.push_back(mesh->metaData->xyz[3 * localNodeId + 0]);
-                      sendXYZ.push_back(mesh->metaData->xyz[3 * localNodeId + 1]);
-                      sendXYZ.push_back(mesh->metaData->xyz[3 * localNodeId + 2]);
-                      sendGlobalNodeId.push_back(globalNodeId);
-                      sendAssociatedComponentId.push_back(mesh->metaData->nodeComponentIds[localNodeId]);
-                  }
-              }
-            else{
-                throw std::domain_error("Failed to find global id");
-              }
-          }
+    inline void NodeBasedRedistributor::redistributeNodeMetaData(std::vector<long>&my_non_ghost_ids,
+                                                                 std::vector<long>& my_ghost_ids) {
+        std::map<long, int> global_to_local;
+        for (unsigned int i = 0; i < mesh->metaData->globalNodeIds.size(); i++)
+            global_to_local[mesh->metaData->globalNodeIds[i]] = i;
+        for (int proc=0;proc<MessagePasser::NumberOfProcesses();++proc) {
+            vector<long> idsOfXyxsINeed;
+            if (MessagePasser::Rank() == proc) {
+                idsOfXyxsINeed = my_non_ghost_ids;
+                idsOfXyxsINeed.insert(idsOfXyxsINeed.end(), my_ghost_ids.begin(), my_ghost_ids.end());
+            }
+            MessagePasser::Broadcast(idsOfXyxsINeed, proc);
+            vector<double> sendXYZ;
+            vector<long> sendGlobalNodeId;
+            vector<int> sendAssociatedComponentId;
+            for (auto globalNodeId : idsOfXyxsINeed) {
+                if(amItheOwnerOfThisNode(globalNodeId, global_to_local)) {
+                    int localNodeId = global_to_local[globalNodeId];
+                    //printf("Rank %i owns gid %i (%f %f %f) (local id %i)\n",MessagePasser::Rank(),globalNodeId,mesh->metaData->xyz[3*localNodeId+0],
+                    //mesh->metaData->xyz[3*localNodeId+1], mesh->metaData->xyz[3*localNodeId+2],localNodeId);
+                    sendXYZ.push_back(mesh->metaData->xyz[3 * localNodeId + 0]);
+                    sendXYZ.push_back(mesh->metaData->xyz[3 * localNodeId + 1]);
+                    sendXYZ.push_back(mesh->metaData->xyz[3 * localNodeId + 2]);
+                    sendGlobalNodeId.push_back(globalNodeId);
+                    sendAssociatedComponentId.push_back(mesh->metaData->nodeComponentIds[localNodeId]);
+                }
+            }
 
-          std::vector<double> just_recv_xyz;
-          MessagePasser::Gatherv(sendXYZ, just_recv_xyz, proc);
-          std::vector<long> just_recv_xyz_global_node_ids;
-          MessagePasser::Gatherv(sendGlobalNodeId, just_recv_xyz_global_node_ids, proc);
-          std::vector<int> just_recv_associated_component_ids;
-          MessagePasser::Gatherv(sendAssociatedComponentId, just_recv_associated_component_ids, proc);
-          if (MessagePasser::Rank() == proc) {
-              recvXYZ.assign(just_recv_xyz.size(),0);
-              recvAssociatedComponentIds.assign(just_recv_associated_component_ids.size(),-1);
-              for (unsigned int index = 0; index < just_recv_xyz_global_node_ids.size(); index++) {
-                  auto globalNodeId = just_recv_xyz_global_node_ids[index];
-                  int localId = getLocalNodeId(globalNodeId, my_non_ghost_ids,my_ghost_ids);
-                  for (int i = 0; i < 3; i++)
-                      recvXYZ[3 * localId + i] = just_recv_xyz[3 * index + i];
-                  recvAssociatedComponentIds[localId] = just_recv_associated_component_ids[index];
-              }
-          }
-      }
-  }
+            std::vector<double> gatheredXyz;
+            MessagePasser::Gatherv(sendXYZ, gatheredXyz, proc);
+            std::vector<long> gatheredIds;
+            MessagePasser::Gatherv(sendGlobalNodeId, gatheredIds, proc);
+            std::vector<int> gatheredComponentIds;
+            MessagePasser::Gatherv(sendAssociatedComponentId, gatheredComponentIds, proc);
+            if (MessagePasser::Rank() == proc) {
+                recvXYZ.assign(gatheredXyz.size(),0);
+                recvAssociatedComponentIds.assign(gatheredComponentIds.size(),-1);
+                for (unsigned int index = 0; index < gatheredIds.size(); index++) {
+                    long globalNodeId = gatheredIds[index];
+                    int localId = getLocalNodeId(globalNodeId, my_non_ghost_ids,my_ghost_ids);
+                    for (int i = 0; i < 3; i++)
+                        recvXYZ[3 * localId + i] = gatheredXyz[3 * index + i];
+                    printf("Rank %i: recvd gid %i (%f %f %f) localId %i\n",MessagePasser::Rank(),
+                    globalNodeId,recvXYZ[3*localId+0],recvXYZ[3*localId+1],recvXYZ[3*localId+2],localId);
+                    recvAssociatedComponentIds[localId] = gatheredComponentIds[index];
+                }
+            }
+        }
+    }
 
-  inline std::vector<long> NodeBasedRedistributor::redistributeTriangles(std::vector<long>& my_ghost_ids) {
-    std::vector<long> recvTriangles;
-      for (int proc:range(nproc)) {
-          vector<long> sendTriangleIds;
+    inline bool NodeBasedRedistributor::amItheOwnerOfThisNode(long globalId, std::map<long, int> globalToLocal) {
+
+        if(globalToLocal.count(globalId) == 0)
+            return false;
+        int localId = globalToLocal[globalId];
+        if(mesh->metaData->nodeOwnershipDegree[localId] == 0)
+            return true;
+        return false;
+    }
+    inline std::vector<int> NodeBasedRedistributor::redistributeTags(std::vector<long> &my_ghost_ids,
+                                                                     std::vector<int> &cells,
+                                                                     std::vector<int> &tags,
+                                                                     int cellSize) {
+        std::vector<long> recvCells;
+        std::vector<int> recvCellTags;
+        for (int proc:range(MessagePasser::NumberOfProcesses())) {
+            vector<long> sendLocalCellIds;
+            vector<long> neededNodeIds;
+            vector<int> sendCellTags;
+            if (MessagePasser::Rank() == proc)
+                neededNodeIds = my_ghost_ids;
+            MessagePasser::Broadcast(neededNodeIds, proc);
+            for (unsigned int localCellId = 0; localCellId < cells.size() / cellSize; localCellId++) {
+                for (int j=0;j<cellSize;++j) {
+                    int localNodeId = cells[cellSize * localCellId + j];
+                    auto globalId = mesh->metaData->globalNodeIds[localNodeId];
+                    if (binary_search(neededNodeIds.begin(), neededNodeIds.end(), globalId)) {
+                        sendCellTags.push_back(tags[localCellId]);
+                        break;
+                    }
+                }
+            }
+            MessagePasser::Gatherv(sendCellTags, recvCellTags, proc);
+        }
+        return recvCellTags;
+    }
+
+  inline std::vector<long> NodeBasedRedistributor::redistributeCells(std::vector<long> &my_non_ghost_ids,
+                                                                     std::vector<int> &cells, int cellSize) {
+      vector<long> sendCellIds;
+    vector<long> recvCells;
+      sendCellIds.reserve(cells.size());
+      for (int proc = 0; proc < MessagePasser::NumberOfProcesses(); proc++) {
+          sendCellIds.clear();
           vector<long> neededNodeIds;
           if (MessagePasser::Rank() == proc)
-              neededNodeIds = my_ghost_ids;
+              neededNodeIds = my_non_ghost_ids;
           MessagePasser::Broadcast(neededNodeIds, proc);
-          for (unsigned int localCellId = 0; localCellId < mesh->connectivity->triangles.size() / 3; localCellId++) {
-              for (int j:range(3)) {
-                  int localNodeId = mesh->connectivity->triangles[3 * localCellId + j];
-                  auto globalId = mesh->metaData->globalNodeIds[localNodeId];
-                  if (binary_search(neededNodeIds.begin(), neededNodeIds.end(), globalId)) {
-                      sendTriangleIds.push_back(localCellId);
-                      break;
-                  }
-              }
+          for (unsigned int i = 0; i < cells.size() / cellSize; i++) {
+              if(iShouldSendThisCell(&cells[cellSize*i],cellSize,neededNodeIds))
+                      sendCellIds.push_back(i);
           }
-          vector<long> sendTriangles;
-          vector<int> sendTriangleTags;
-          for (auto &localCellId:sendTriangleIds) {
-              sendTriangleTags.push_back(mesh->metaData->triangleTags[localCellId]);
-              for (int j:range(3)) {
-                  int localNodeId = mesh->connectivity->triangles[3 * localCellId + j];
-                  auto globalId = mesh->metaData->globalNodeIds[localNodeId];
-                  sendTriangles.push_back(globalId);
-              }
-          }
-          vector<int> tmpMap;
-          MessagePasser::Gatherv(sendTriangles, recvTriangles, tmpMap, proc);
-          MessagePasser::Gatherv(sendTriangleTags, recvTriangleTags, tmpMap, proc);
+          vector<long> sendCells;
+          sendCells.reserve(sendCellIds.size());
+          for (auto id:sendCellIds)
+              for (int j:range(cellSize))
+                  sendCells.push_back(mesh->metaData->globalNodeIds[cells[cellSize * id + j]]);
+          MessagePasser::Gatherv(sendCells, recvCells, proc);
       }
-    return recvTriangles;
+    return recvCells;
   }
 
-  inline std::vector<long> NodeBasedRedistributor::redistributeQuads(std::vector<long>& my_ghost_ids) {
-    std::vector<long> recvQuads;
-      for (int proc:range(nproc)) {
-          vector<long> sendQuadIds;
-          vector<long> neededNodeIds;
-          if (MessagePasser::Rank() == proc)
-              neededNodeIds = my_ghost_ids;
-          MessagePasser::Broadcast(neededNodeIds, proc);
-          for (unsigned int localCellId = 0; localCellId < mesh->connectivity->quads.size() / 4; localCellId++) {
-              for (int j:range(4)) {
-                  int localNodeId = mesh->connectivity->quads[4 * localCellId + j];
-                  auto globalNodeId = mesh->metaData->globalNodeIds[localNodeId];
-                  if (binary_search(neededNodeIds.begin(), neededNodeIds.end(), globalNodeId)) {
-                      sendQuadIds.push_back(localCellId);
-                      break;
-                  }
-              }
-          }
-          vector<long> sendQuads;
-          vector<int> sendQuadTags;
-          for (const auto &localCellId :sendQuadIds) {
-              sendQuadTags.push_back(mesh->metaData->quadTags[localCellId]);
-              for (int j:range(4)) {
-                  int localNodeId = mesh->connectivity->quads[4 * localCellId + j];
-                  auto globalNodeId = mesh->metaData->globalNodeIds[localNodeId];
-                  sendQuads.push_back(globalNodeId);
-              }
-          }
-          MessagePasser::Gatherv(sendQuads, recvQuads, proc);
-          MessagePasser::Gatherv(sendQuadTags, recvQuadTags, proc);
-      }
-    return recvQuads;
-  }
+    inline bool NodeBasedRedistributor::iShouldSendThisCell(int* cell,int cellSize,std::vector<long>& neededNodeIds){
+        if(mesh->metaData->nodeOwnershipDegree[cell[0]] != 0) return false;
+        for(int i=0;i<cellSize;i++){
+            int localNodeId = cell[i];
+            long globalNodeId = mesh->metaData->globalNodeIds[localNodeId];
+            if(std::binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalNodeId))
+                return true;
+        }
+        return false;
+    }
 
-  inline std::vector<long> NodeBasedRedistributor::redistributeTets(std::vector<long>& my_ghost_ids) {
-      vector<long> sendTetIds;
-    vector<long> recvTets;
-      sendTetIds.reserve(4 * mesh->connectivity->tets.size());
-      for (int proc = 0; proc < nproc; proc++) {
-          sendTetIds.clear();
-          vector<long> neededNodeIds;
-          if (MessagePasser::Rank() == proc)
-              neededNodeIds = my_ghost_ids;
-          MessagePasser::Broadcast(neededNodeIds, proc);
-          for (unsigned int i = 0; i < mesh->connectivity->tets.size() / 4; i++) {
-              for (int j = 0; j < 4; j++) {
-                  long globalId = mesh->metaData->globalNodeIds[mesh->connectivity->tets[4 * i + j]];
-                  if (binary_search(neededNodeIds.begin(), neededNodeIds.end(), globalId)) {
-                      sendTetIds.push_back(i);
-                      break;
-                  }
-              }
-          }
-          vector<long> sendTets;
-          sendTets.reserve(4 * sendTetIds.size());
-          for (auto id:sendTetIds)
-              for (int j:range(4))
-                  sendTets.push_back(mesh->metaData->globalNodeIds[mesh->connectivity->tets[4 * id + j]]);
-          MessagePasser::Gatherv(sendTets, recvTets, proc);
-      }
-    return recvTets;
-  }
-
-  inline std::vector<long> NodeBasedRedistributor::redistributePyramids(std::vector<long>& my_ghost_ids) {
-    std::vector<long> sendPyramidIds;
-    std::vector<long> recvPyramids;
-      sendPyramidIds.reserve(5 * mesh->connectivity->pyramids.size());
-      for (int proc:range(nproc)) {
-          sendPyramidIds.clear();
-          vector<long> neededNodeIds;
-          if (MessagePasser::Rank() == proc)
-              neededNodeIds = my_ghost_ids;
-          MessagePasser::Broadcast(neededNodeIds, proc);
-          for (unsigned int i = 0; i < mesh->connectivity->pyramids.size() / 5; i++) {
-              for (int j:range(5)) {
-                  long globalId = mesh->metaData->globalNodeIds[mesh->connectivity->pyramids[5 * i + j]];
-                  if (binary_search(neededNodeIds.begin(), neededNodeIds.end(), globalId)) {
-                      sendPyramidIds.push_back(i);
-                      break;
-                  }
-              }
-          }
-          vector<long> sendPyramids;
-          sendPyramids.reserve(5 * sendPyramidIds.size());
-          for (auto id:sendPyramidIds)
-              for (int j:range(5))
-                  sendPyramids.push_back(mesh->metaData->globalNodeIds[mesh->connectivity->pyramids[5 * id + j]]);
-          MessagePasser::Gatherv(sendPyramids, recvPyramids, proc);
-      }
-    return recvPyramids;
-  }
-
-  inline std::vector<long> NodeBasedRedistributor::redistributePrisms(std::vector<long>& my_ghost_ids) {
-    std::vector<long> sendPrismIds;
-    std::vector<long> recvPrisms;
-      sendPrismIds.reserve(6 * mesh->connectivity->prisms.size());
-      for (int proc:range(nproc)) {
-          sendPrismIds.clear();
-          vector<long> neededNodeIds;
-          if (MessagePasser::Rank() == proc)
-              neededNodeIds = my_ghost_ids;
-          MessagePasser::Broadcast(neededNodeIds, proc);
-          for (unsigned int i = 0; i < mesh->connectivity->prisms.size() / 6; i++) {
-              for (int j:range(6)) {
-                  long globalId = mesh->metaData->globalNodeIds[mesh->connectivity->prisms[6 * i + j]];
-                  if (binary_search(neededNodeIds.begin(), neededNodeIds.end(), globalId)) {
-                      sendPrismIds.push_back(i);
-                      break;
-                  }
-              }
-          }
-          vector<long> sendPrisms;
-          sendPrisms.reserve(6 * sendPrismIds.size());
-          for (auto id:sendPrismIds)
-              for (int j:range(6))
-                  sendPrisms.push_back(mesh->metaData->globalNodeIds[mesh->connectivity->prisms[6 * id + j]]);
-          MessagePasser::Gatherv(sendPrisms, recvPrisms, proc);
-      }
-    return recvPrisms;
-  }
-
-  inline std::vector<long> NodeBasedRedistributor::redistributeHexes(std::vector<long>& my_ghost_ids) {
-      vector<long> sendHexIds;
-    std::vector<long> recvHexs;
-      sendHexIds.reserve(8 * mesh->connectivity->hexes.size());
-      for (int proc:range(nproc)) {
-          sendHexIds.clear();
-          vector<long> neededNodeIds;
-          if (MessagePasser::Rank() == proc)
-              neededNodeIds = my_ghost_ids;
-          MessagePasser::Broadcast(neededNodeIds, proc);
-          for (unsigned int i = 0; i < mesh->connectivity->hexes.size() / 8; i++) {
-              for (int j:range(8)) {
-                  long globalId = mesh->metaData->globalNodeIds[mesh->connectivity->hexes[8 * i + j]];
-                  if (binary_search(neededNodeIds.begin(), neededNodeIds.end(), globalId)) {
-                      sendHexIds.push_back(i);
-                      break;
-                  }
-              }
-          }
-          vector<long> sendHexs;
-          sendHexs.reserve(8 * sendHexIds.size());
-          for (auto id:sendHexIds)
-              for (int j:range(8))
-                  sendHexs.push_back(mesh->metaData->globalNodeIds[mesh->connectivity->hexes[8 * id + j]]);
-          MessagePasser::Gatherv(sendHexs, recvHexs, proc);
-      }
-    return recvHexs;
-  }
-
-  inline std::vector<long> NodeBasedRedistributor::identifyGhostNodes(std::vector<long>& my_ghost_ids,
+  inline std::vector<long> NodeBasedRedistributor::identifyGhostNodes(std::vector<long>&my_non_ghost_ids,
         std::vector<long>& recvTets,std::vector<long>& recvPyramids,
         std::vector<long>& recvPrisms, std::vector<long>& recvHexs) {
       std::set<long> uniqueGhostNodeIds;
-      if (!std::is_sorted(my_ghost_ids.begin(), my_ghost_ids.end()))
+      if (!std::is_sorted(my_non_ghost_ids.begin(), my_non_ghost_ids.end()))
           throw std::logic_error("Recv node Ids expected in order.");
       for (auto id:recvTets)
-          if (!std::binary_search(my_ghost_ids.begin(), my_ghost_ids.end(), id))
+          if (!std::binary_search(my_non_ghost_ids.begin(), my_non_ghost_ids.end(), id))
               uniqueGhostNodeIds.insert(id);
       for (auto id:recvPyramids)
-          if (!std::binary_search(my_ghost_ids.begin(), my_ghost_ids.end(), id))
+          if (!std::binary_search(my_non_ghost_ids.begin(), my_non_ghost_ids.end(), id))
               uniqueGhostNodeIds.insert(id);
       for (auto id:recvPrisms)
-          if (!std::binary_search(my_ghost_ids.begin(), my_ghost_ids.end(), id))
+          if (!std::binary_search(my_non_ghost_ids.begin(), my_non_ghost_ids.end(), id))
               uniqueGhostNodeIds.insert(id);
       for (auto id:recvHexs)
-          if (!std::binary_search(my_ghost_ids.begin(), my_ghost_ids.end(), id))
+          if (!std::binary_search(my_non_ghost_ids.begin(), my_non_ghost_ids.end(), id))
               uniqueGhostNodeIds.insert(id);
 
       return std::vector<long>(uniqueGhostNodeIds.begin(), uniqueGhostNodeIds.end());
   }
 
   inline std::vector<int> NodeBasedRedistributor::convertToLocalIds(std::map<long, int> global_to_local_map,
-                                                                    const std::vector<long> &ids) {
+                                                                    const std::vector<long> &ids) const {
       std::vector<int> local_ids;
       for (auto id:ids)
           local_ids.push_back(global_to_local_map[id]);
@@ -346,15 +274,13 @@ namespace Parfait {
 
   inline int NodeBasedRedistributor::getLocalNodeId(long globalNodeId,std::vector<long>&my_non_ghost_ids,
   std::vector<long>& my_ghost_ids) {
-      auto it = std::lower_bound(my_non_ghost_ids.begin(), my_non_ghost_ids.end(), globalNodeId);
-      if (it == my_non_ghost_ids.end()) {
-          it = std::lower_bound(my_ghost_ids.begin(), my_ghost_ids.end(), globalNodeId);
-          if (it != my_ghost_ids.end())
-              return std::distance(my_ghost_ids.begin(), it) + my_non_ghost_ids.size();
-          else
-              throw std::logic_error("saldfjsdf");
-      }
-      return std::distance(my_non_ghost_ids.begin(), it);
+      int numberOfStuffs = my_non_ghost_ids.size();
+      if(std::binary_search(my_non_ghost_ids.begin(),my_non_ghost_ids.end(),globalNodeId))
+          return std::distance(my_non_ghost_ids.begin(),std::lower_bound(my_non_ghost_ids.begin(),my_non_ghost_ids.end(),globalNodeId));
+      else if(std::binary_search(my_ghost_ids.begin(),my_ghost_ids.end(),globalNodeId))
+          return std::distance(my_ghost_ids.begin(),std::lower_bound(my_ghost_ids.begin(),my_ghost_ids.end(),globalNodeId))+numberOfStuffs;
+      else
+          throw std::domain_error("Didn't find the id...");
   }
 }
 #endif

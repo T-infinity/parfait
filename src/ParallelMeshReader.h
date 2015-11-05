@@ -43,6 +43,7 @@ namespace Parfait {
 
       void buildDistributionMaps();
       void distributeNodes();
+      void debug_printing();
 
       template<typename CellGetter, typename CellSaver>
       void rootDistributeCells(int cellLength, std::vector<long> &gridCellMap,

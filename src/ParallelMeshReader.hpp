@@ -92,7 +92,7 @@ inline std::vector<long> Parfait::ParallelMeshReader::getProcNodeMap() {
 }
 
 inline void Parfait::ParallelMeshReader::mapNodesToLocalSpace() {
-    long localNodeId = 0;
+    int localNodeId = 0;
     for(long globalNodeId = procNodeMap[MessagePasser::Rank()]; globalNodeId < procNodeMap[MessagePasser::Rank()+1]; globalNodeId++){
         globalToLocalId[globalNodeId] = localNodeId++;
     }
@@ -164,8 +164,13 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
 
     mapNodesToLocalSpace();
     createLocalToGlobalNodeIdMap();
+    debug_printing();
+
+
     createNodeOwnerships();
     createNodeComponentIds();
+
+
 
     if(MessagePasser::Rank() == 0)
         printf("Distributing ghost xyz\n");
@@ -176,6 +181,20 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
     if (MessagePasser::Rank() == 0)
         printf("Done Distributing ...\n");
 }
+
+inline void ParallelMeshReader::debug_printing(){
+    long nnodes_local = mesh->metaData->xyz.size()/3;
+    long nnodes = MessagePasser::ParallelSum(nnodes_local);
+    long real_total =0;
+    for(long i=0;i<nnodes;i++)
+        real_total += i;
+    long other_total = 0;
+    for(long i=0;i<nnodes_local;++i)
+        other_total += mesh->metaData->globalNodeIds[i];
+    other_total = MessagePasser::ParallelSum(other_total);
+    printf("total nodes in system %li, totals %li    %li\n",nnodes, real_total,other_total);
+}
+
 inline void ParallelMeshReader::createNodeComponentIds() {
     mesh->metaData->nodeComponentIds = std::vector<int>(localToGlobalId.size());
     for(unsigned int localId = 0; localId < localToGlobalId.size(); localId++){
@@ -403,6 +422,7 @@ inline void ParallelMeshReader::saveTriangle(std::vector<long> triangle){
 }
 
 inline void ParallelMeshReader::saveQuad(std::vector<long> quad){
+    //TODO: these saver routines write longs to ints in the connectivity.
     auto tag = quad.back();
     quad.pop_back();
     if(quad.size() != 4)
@@ -873,7 +893,7 @@ inline int Parfait::ParallelMeshReader::numberOfGrids() const{
 }
 
 inline void ParallelMeshReader::createLocalToGlobalNodeIdMap() {
-    for(unsigned long localId = 0; localId < localToGlobalId.size(); localId++){
+    for(unsigned int localId = 0; localId < localToGlobalId.size(); localId++){
         mesh->metaData->globalNodeIds.push_back(localToGlobalId[localId]);
     }
 }
@@ -889,12 +909,14 @@ inline std::vector<double> ParallelMeshReader::getXyzForGhostNodes(std::vector<l
         std::vector<long> responseIds;
         std::vector<double> responseXyz;
         for(long id:requestedIds){
-            if(globalToLocalId.count(id) == 0){
-                responseIds.push_back(id);
+            if(globalToLocalId.count(id) == 1){
                 int localId = globalToLocalId[id];
-                responseXyz.push_back(mesh->metaData->xyz[3*localId+0]);
-                responseXyz.push_back(mesh->metaData->xyz[3*localId+1]);
-                responseXyz.push_back(mesh->metaData->xyz[3*localId+2]);
+                if(mesh->metaData->nodeOwnershipDegree[localId]==0) {
+                    responseIds.push_back(id);
+                    responseXyz.push_back(mesh->metaData->xyz[3 * localId + 0]);
+                    responseXyz.push_back(mesh->metaData->xyz[3 * localId + 1]);
+                    responseXyz.push_back(mesh->metaData->xyz[3 * localId + 2]);
+                }
             }
         }
         MessagePasser::Gatherv(responseIds,gatheredIds,proc);
@@ -903,7 +925,7 @@ inline std::vector<double> ParallelMeshReader::getXyzForGhostNodes(std::vector<l
     std::map<long,int> tmp_map;
     for(unsigned int i=0;i<ghostIds.size();++i)
         tmp_map.insert(std::make_pair(ghostIds[i],i));
-    std::vector<double> ghostxyz(3*ghostIds.size(),0.0);
+    std::vector<double> ghostxyz(3*ghostIds.size(),99.0);
     for(unsigned int i=0;i<ghostIds.size();++i){
         int localId = tmp_map[ghostIds[i]];
         ghostxyz[3*localId+0] = gatheredXyz[3*i+0];
