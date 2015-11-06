@@ -167,7 +167,7 @@ namespace Parfait {
                 neededNodeIds = my_non_ghost_ids;
             MessagePasser::Broadcast(neededNodeIds, proc);
             for (unsigned int i = 0; i < cells.size() / cellSize; i++) {
-                if(iShouldSendThisCell(&cells[cellSize*i],cellSize,neededNodeIds))
+                if(iShouldSendThisSurfaceCell(&cells[cellSize*i],cellSize,neededNodeIds))
                     sendCellTags.push_back(tags[i]);
             }
             MessagePasser::Gatherv(sendCellTags, recvCellTags, proc);
