@@ -146,11 +146,11 @@ namespace Parfait {
         }
     }
 
-    inline bool NodeBasedRedistributor::amItheOwnerOfThisNode(long globalId, std::map<long, int> globalToLocal) {
-
-        if(globalToLocal.count(globalId) == 0)
+    inline bool NodeBasedRedistributor::amItheOwnerOfThisNode(long globalId, const std::map<long, int>& globalToLocal) {
+        auto it = globalToLocal.find(globalId);
+        if(globalToLocal.end() == it)
             return false;
-        int localId = globalToLocal[globalId];
+        int localId = it->second;
         if(mesh->metaData->nodeOwnershipDegree[localId] == 0)
             return true;
         return false;
@@ -208,7 +208,7 @@ namespace Parfait {
     return recvCells;
   }
 
-    inline bool NodeBasedRedistributor::iShouldSendThisCell(int* cell,int cellSize,std::vector<long>& neededNodeIds){
+    inline bool NodeBasedRedistributor::iShouldSendThisCell(int* cell,int cellSize,const std::vector<long>& neededNodeIds){
         if(mesh->metaData->nodeOwnershipDegree[cell[0]] != 0) return false;
         for(int i=0;i<cellSize;i++){
             int localNodeId = cell[i];

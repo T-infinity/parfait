@@ -42,8 +42,8 @@ namespace Parfait {
 
 
       std::vector<int> convertToLocalIds(std::map<long,int> global_to_local_map,const std::vector<long>& ids) const;
-      bool amItheOwnerOfThisNode(long globalId, std::map<long, int> globalToLocal);
-      bool iShouldSendThisCell(int* cell, int cellSize, std::vector<long>& neededNodeIds);
+      bool amItheOwnerOfThisNode(long globalId, const std::map<long, int>& globalToLocal);
+      bool iShouldSendThisCell(int* cell, int cellSize,const std::vector<long>& neededNodeIds);
   };
 
 
