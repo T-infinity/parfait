@@ -164,8 +164,6 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
 
     mapNodesToLocalSpace();
     createLocalToGlobalNodeIdMap();
-    debug_printing();
-
 
     createNodeOwnerships();
     createNodeComponentIds();
@@ -180,19 +178,6 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
     mesh->metaData->xyz.insert(mesh->metaData->xyz.end(),ghostXyz.begin(),ghostXyz.end());
     if (MessagePasser::Rank() == 0)
         printf("Done Distributing ...\n");
-}
-
-inline void ParallelMeshReader::debug_printing(){
-    long nnodes_local = mesh->metaData->xyz.size()/3;
-    long nnodes = MessagePasser::ParallelSum(nnodes_local);
-    long real_total =0;
-    for(long i=0;i<nnodes;i++)
-        real_total += i;
-    long other_total = 0;
-    for(long i=0;i<nnodes_local;++i)
-        other_total += mesh->metaData->globalNodeIds[i];
-    other_total = MessagePasser::ParallelSum(other_total);
-    printf("total nodes in system %li, totals %li    %li\n",nnodes, real_total,other_total);
 }
 
 inline void ParallelMeshReader::createNodeComponentIds() {
