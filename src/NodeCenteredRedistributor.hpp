@@ -13,10 +13,6 @@ namespace Parfait {
 
   inline std::shared_ptr<ParallelMesh> NodeBasedRedistributor::redistribute() {
 
-      for(unsigned int i=0;i<part.size();++i){
-          printf("Rank %i: part[%i] = %li, gid %i\n",MessagePasser::Rank(),i,part[i],mesh->metaData->globalNodeIds[i]);
-      }
-
       int nproc = MessagePasser::NumberOfProcesses();
       nodeMap.assign(nproc, 0);
       MessagePasser::AllGather(mesh->countNodesAtDegree(0), nodeMap);
@@ -32,15 +28,8 @@ namespace Parfait {
       auto recvPrisms = redistributeCells(myNonGhostIds,mesh->connectivity->prisms,6);
       auto recvHexs = redistributeCells(myNonGhostIds,mesh->connectivity->hexes,8);
 
-      for(int i=0;i<recvPrisms.size()/6;++i){
-          long *p = &recvPrisms[6*i];
-          printf("Rank %i: prism %i (%i %i %i %i %i %i)\n",MessagePasser::Rank(),i,p[0],p[1],p[2],p[3],p[4],p[5]);
-      }
-
 
       auto myGhostIds = identifyGhostNodes(myNonGhostIds, recvTets, recvPyramids, recvPrisms, recvHexs);
-      for(auto x:myGhostIds)
-          printf("Rank %i: ghostid %i\n",MessagePasser::Rank(),x);
       auto my_all_node_ids = myNonGhostIds;
       my_all_node_ids.insert(my_all_node_ids.end(),myGhostIds.begin(),myGhostIds.end());
       std::sort(my_all_node_ids.begin(),my_all_node_ids.end());
@@ -56,10 +45,6 @@ namespace Parfait {
       //}
       redistributeNodeMetaData(myNonGhostIds,myGhostIds);
 
-      for(int i=0;i<recvTriangles.size()/3;++i){
-          long *p = &recvTriangles[3*i];
-          printf("Rank %i: triangles %i (%i %i %i)\n",MessagePasser::Rank(),i,p[0],p[1],p[2]);
-      }
       int numberOfNonGhosts = myNonGhostIds.size();
       int numberOfGhosts = myGhostIds.size();
 
@@ -86,12 +71,6 @@ namespace Parfait {
       mesh->metaData->globalNodeIds = myNonGhostIds;
       mesh->metaData->globalNodeIds.insert(mesh->metaData->globalNodeIds.end(),myGhostIds.begin(),myGhostIds.end());
       mesh->metaData->nodeOwnershipDegree = ownership_degree;
-
-      for(int i=0;i<myNonGhostIds.size();++i)
-          printf("Rank %i: nonGhostIds[%i] (%f %f %f) gid %i\n",MessagePasser::Rank(),i,recvXYZ[3*i+0],recvXYZ[3*i+1],recvXYZ[3*i+2],myNonGhostIds[i]);
-      for(int i=0;i<myGhostIds.size();++i)
-          printf("Rank %i: GhostIds[%i] (%f %f %f)  gid %i\n",MessagePasser::Rank(),i,recvXYZ[3*(numberOfNonGhosts+i)+0],
-                 recvXYZ[3*(numberOfNonGhosts+i)+1],recvXYZ[3*(numberOfNonGhosts+i)+2],myGhostIds[i]);
 
       return mesh;
   }
@@ -161,8 +140,6 @@ namespace Parfait {
                     int localId = getLocalNodeId(globalNodeId, my_non_ghost_ids,my_ghost_ids);
                     for (int i = 0; i < 3; i++)
                         recvXYZ[3 * localId + i] = gatheredXyz[3 * index + i];
-                    printf("Rank %i: recvd gid %i (%f %f %f) localId %i\n",MessagePasser::Rank(),
-                    globalNodeId,recvXYZ[3*localId+0],recvXYZ[3*localId+1],recvXYZ[3*localId+2],localId);
                     recvAssociatedComponentIds[localId] = gatheredComponentIds[index];
                 }
             }
