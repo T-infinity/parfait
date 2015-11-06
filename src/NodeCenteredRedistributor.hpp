@@ -213,10 +213,10 @@ namespace Parfait {
         for(int i=0;i<cellSize;i++){
             int localNodeId = cell[i];
             long globalNodeId = mesh->metaData->globalNodeIds[localNodeId];
-            if(std::binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalNodeId))
-                return true;
+            if(not std::binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalNodeId))
+                return false;
         }
-        return false;
+        return true;
     }
 
   inline std::vector<long> NodeBasedRedistributor::identifyGhostNodes(std::vector<long>&my_non_ghost_ids,
