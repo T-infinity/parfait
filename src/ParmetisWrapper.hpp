@@ -76,6 +76,8 @@ inline void PartitionMesh(int rank,int nproc,
 		throw std::logic_error("Metis reported a failure");
 	for(int i=0;i<nnodes;i++)
 		part_vec[i] = part[i];
+    if(0 == rank)
+        printf("ParMETIS done...\n");
 }
 
 std::vector<real_t> getTpWeights(idx_t nparts) {
