@@ -45,7 +45,7 @@ namespace Parfait {
             return hexes.size() / 8;
         }
         const int* getTet(int cellId) const {
-            if(4*cellId >= (int)tets.size()-4 or cellId < 0) throw std::domain_error("Bad tet selection");
+            if(4*cellId > (int)tets.size()-4 or cellId < 0) throw std::domain_error("Bad tet selection");
             return &tets[4*cellId];
         }
         const int* getPyramid(int cellId) const {
