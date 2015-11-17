@@ -8,6 +8,8 @@ std::vector <std::vector<int>> Parfait::NodeToNodeBuilder<MeshType>::   buildNod
     for(int cellId = 0; cellId < mesh.numberOfTets(); cellId++){
         if(MessagePasser::Rank() == 0) {printf("--tet %i of %i\n",cellId,mesh.numberOfTets());fflush(stdout);}
         const int* ptr = mesh.getTet(cellId);
+        if(MessagePasser::Rank() == 0) {printf("--(after getting tet)\n");fflush(stdout);}
+        if(MessagePasser::Rank() == 0) {printf("--(%i)\n",ptr[0]);fflush(stdout);}
         if(MessagePasser::Rank() == 0) {printf("--(%i %i %i %i)\n",ptr[0],ptr[1],ptr[2],ptr[3]);fflush(stdout);}
         std::array<int,4> cell {ptr[0],ptr[1],ptr[2],ptr[3]};
         for(int edge = 0; edge < CGNS::Edges::Tet::numberOfEdges(); edge++){
