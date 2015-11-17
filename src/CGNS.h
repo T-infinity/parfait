@@ -1,5 +1,8 @@
 #ifndef PARFAIT_CGNS_H
 #define PARFAIT_CGNS_H
+
+#include "MessagePasser.h"
+
 namespace Parfait {
   namespace CGNS {
     namespace Edges {
@@ -20,7 +23,9 @@ namespace Parfait {
         };
         template <class Tet>
         std::array<int, 2> getEdge(const Tet& tet, int edge) {
+            if(MessagePasser::Rank() == 0){printf("Getting edge %i\n",edge);fflush(stdout);}
             auto e = getEdge(edge);
+            if(MessagePasser::Rank() == 0){printf("--(%i %i)\n",tet[e[0]],tet[e[1]]);fflush(stdout);}
             return {tet[e[0]], tet[e[1]]};
         }
       }
