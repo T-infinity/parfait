@@ -3,8 +3,9 @@
 #include "MessagePasser.h"
 
 template<typename MeshType>
-std::vector <std::vector<int>> Parfait::NodeToNodeBuilder<MeshType>::buildNodeToNodeConnectivity() {
+std::vector <std::vector<int>> Parfait::NodeToNodeBuilder<MeshType>::   buildNodeToNodeConnectivity() {
     if(MessagePasser::Rank() == 0) {printf("--tet edges\n");fflush(stdout);}
+
     for(int cellId = 0; cellId < mesh.numberOfTets(); cellId++){
         auto cell = mesh.getTet(cellId);
         if(MessagePasser::Rank() == 0 and cellId %1000 == 0) {printf("--tet %i of %i\n",cellId,mesh.numberOfTets());fflush(stdout);}
@@ -37,11 +38,16 @@ std::vector <std::vector<int>> Parfait::NodeToNodeBuilder<MeshType>::buildNodeTo
             addEdge(e[0], e[1]);
         }
     }
-    return node_to_node;
+    std::vector<std::vector<int>> n2n;
+    for(auto& row:node_to_node)
+        n2n.push_back(std::vector<int>(row.begin(),row.end()));
+    return n2n;
 }
 
 template <typename MeshType>
 void Parfait::NodeToNodeBuilder<MeshType>::addEdge(int left, int right) {
-    insertUnique(node_to_node[right], left);
-    insertUnique(node_to_node[left], right);
+    node_to_node[right].insert(left);
+    node_to_node[left].insert(right);
+    //insertUnique(node_to_node[right], left);
+    //insertUnique(node_to_node[left], right);
 }

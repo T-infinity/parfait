@@ -2,6 +2,7 @@
 #define NODE_TO_NODE_H
 
 #include <vector>
+#include <set>
 
 namespace Parfait {
     template<typename MeshType>
@@ -16,9 +17,8 @@ namespace Parfait {
     private:
         MeshType& mesh;
         void addEdge(int left, int right);
-        std::vector<std::vector<int>> node_to_node;
+        std::vector<std::set<int>> node_to_node;
 
-        void processFace(int cell_id,int face_id);
     };
 
 
