@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <RangeLoop.h>
+#include "timing.h"
 
 #ifdef PARFAIT_WITH_MPI
 
@@ -20,30 +21,36 @@ namespace Parfait {
       for (unsigned int i = 2; i < nodeMap.size(); i++)
           nodeMap[i] += nodeMap[i - 1];
 
+      auto beginning = Clock::now();
       auto myNonGhostIds = redistributeNodeIds();
-      //for(auto x:myNonGhostIds)
-      //    printf("Rank %i: %i\n",MessagePasser::Rank(),x);
+      auto afterNodes = Clock::now();
       auto recvTets = redistributeCells(myNonGhostIds, mesh->connectivity->tets, 4);
+      auto afterTets = Clock::now();
       auto recvPyramids = redistributeCells(myNonGhostIds,mesh->connectivity->pyramids,5);
+      auto afterPyramids = Clock::now();
       auto recvPrisms = redistributeCells(myNonGhostIds,mesh->connectivity->prisms,6);
+      auto afterPrisms = Clock::now();
       auto recvHexs = redistributeCells(myNonGhostIds,mesh->connectivity->hexes,8);
+      auto afterHexs = Clock::now();
 
 
       auto myGhostIds = identifyGhostNodes(myNonGhostIds, recvTets, recvPyramids, recvPrisms, recvHexs);
+      auto afterIdentifyingGhosts = Clock::now();
       auto my_all_node_ids = myNonGhostIds;
       my_all_node_ids.insert(my_all_node_ids.end(),myGhostIds.begin(),myGhostIds.end());
       std::sort(my_all_node_ids.begin(),my_all_node_ids.end());
       auto recvTriangles = redistributeSurfaceCells(my_all_node_ids,mesh->connectivity->triangles,3);
+      auto afterTriangles = Clock::now();
       auto recvTriangleTags = redistributeTags(my_all_node_ids, mesh->connectivity->triangles,
                                                mesh->metaData->triangleTags, 3);
+      auto afterTriangleTags = Clock::now();
       auto recvQuads  = redistributeSurfaceCells(my_all_node_ids,mesh->connectivity->quads,4);
+      auto afterQuads = Clock::now();
       auto recvQuadTags = redistributeTags(my_all_node_ids, mesh->connectivity->quads,
                                            mesh->metaData->quadTags, 4);
-      //for(int i=0;i<recvTriangles.size()/3;++i){
-      //    long *p = &recvTriangles[3*i];
-      //    printf("Rank %i: triangles %i (%i %i %i)\n",MessagePasser::Rank(),i,p[0],p[1],p[2]);
-      //}
+      auto afterQuadTags = Clock::now();
       redistributeNodeMetaData(myNonGhostIds,myGhostIds);
+      auto afterMetaData = Clock::now();
 
       int numberOfNonGhosts = myNonGhostIds.size();
       int numberOfGhosts = myGhostIds.size();
@@ -58,6 +65,7 @@ namespace Parfait {
       for (int i = 0; i < numberOfNonGhosts; i++)
           global_to_local[myNonGhostIds[i]] = i;
 
+      auto afterGhostStuff = Clock::now();
       mesh->connectivity->triangles = convertToLocalIds(global_to_local, recvTriangles);
       mesh->connectivity->quads = convertToLocalIds(global_to_local, recvQuads);
       mesh->connectivity->tets = convertToLocalIds(global_to_local, recvTets);
@@ -71,11 +79,42 @@ namespace Parfait {
       mesh->metaData->globalNodeIds = myNonGhostIds;
       mesh->metaData->globalNodeIds.insert(mesh->metaData->globalNodeIds.end(),myGhostIds.begin(),myGhostIds.end());
       mesh->metaData->nodeOwnershipDegree = ownership_degree;
+      auto afterFilling = Clock::now();
+
+      if(MessagePasser::Rank() == 0) {
+          printf("Time to redistribute node ids\n");
+          printReadableElapsedTime(beginning,afterNodes);
+          printf("Time to redistribute tets\n");
+          printReadableElapsedTime(afterNodes,afterTets);
+          printf("Time to redistribute pyramids\n");
+          printReadableElapsedTime(afterTets,afterPyramids);
+          printf("Time to redistribute prisms\n");
+          printReadableElapsedTime(afterPyramids,afterPrisms);
+          printf("Time to redistribute hexs\n");
+          printReadableElapsedTime(afterPrisms,afterHexs);
+          printf("Time to identify ghosts\n");
+          printReadableElapsedTime(afterHexs,afterIdentifyingGhosts);
+          printf("Time to redistribute triangles\n");
+          printReadableElapsedTime(afterIdentifyingGhosts,afterTriangles);
+          printf("Time to redistribute triangle tags\n");
+          printReadableElapsedTime(afterTriangles,afterTriangleTags);
+          printf("Time to redistribute quads\n");
+          printReadableElapsedTime(afterTriangleTags,afterQuads);
+          printf("Time to redistribute quad tags\n");
+          printReadableElapsedTime(afterQuads,afterQuadTags);
+          printf("Time to redistribute node meta data\n");
+          printReadableElapsedTime(afterQuadTags,afterMetaData);
+          printf("Time to do ghost stuff\n");
+          printReadableElapsedTime(afterMetaData,afterGhostStuff);
+          printf("Time to fill mesh vectors\n");
+          printReadableElapsedTime(afterGhostStuff,afterFilling);
+      }
 
       return mesh;
   }
 
   inline std::vector<long> NodeBasedRedistributor::redistributeNodeIds() {
+      if(MessagePasser::Rank() == 0) printf("Redistributing node ids\n");
     std::vector<long> recvNodeIds;
       for (int proc:range(MessagePasser::NumberOfProcesses())) {
           int count = 0;
@@ -100,6 +139,7 @@ namespace Parfait {
 
     inline void NodeBasedRedistributor::redistributeNodeMetaData(std::vector<long>&my_non_ghost_ids,
                                                                  std::vector<long>& my_ghost_ids) {
+        if(MessagePasser::Rank() == 0) printf("Redistributing node meta data\n");
         std::map<long, int> global_to_local;
         for (unsigned int i = 0; i < mesh->metaData->globalNodeIds.size(); i++)
             global_to_local[mesh->metaData->globalNodeIds[i]] = i;
@@ -159,6 +199,7 @@ namespace Parfait {
                                                                      std::vector<int> &cells,
                                                                      std::vector<int> &tags,
                                                                      int cellSize) {
+        if(MessagePasser::Rank() == 0) printf("Redistributing boundary tags (%i)\n",cellSize);
         std::vector<int> recvCellTags;
         for (int proc:range(MessagePasser::NumberOfProcesses())) {
             vector<long> neededNodeIds;
@@ -177,6 +218,7 @@ namespace Parfait {
 
   inline std::vector<long> NodeBasedRedistributor::redistributeCells(std::vector<long> &my_non_ghost_ids,
                                                                      std::vector<int> &cells, int cellSize) {
+      if(MessagePasser::Rank() == 0) printf("Redistributing cells (%i)\n",cellSize);
       vector<long> sendCellIds;
     vector<long> recvCells;
       sendCellIds.reserve(cells.size());
@@ -201,6 +243,7 @@ namespace Parfait {
   }
     inline std::vector<long> NodeBasedRedistributor::redistributeSurfaceCells(std::vector<long> &my_non_ghost_ids,
                                                                        std::vector<int> &cells, int cellSize) {
+        if(MessagePasser::Rank() == 0) printf("Redistributing surface cells (%i)\n",cellSize);
         vector<long> sendCellIds;
         vector<long> recvCells;
         sendCellIds.reserve(cells.size());
@@ -249,6 +292,7 @@ namespace Parfait {
   inline std::vector<long> NodeBasedRedistributor::identifyGhostNodes(std::vector<long>&my_non_ghost_ids,
         std::vector<long>& recvTets,std::vector<long>& recvPyramids,
         std::vector<long>& recvPrisms, std::vector<long>& recvHexs) {
+      if(MessagePasser::Rank() == 0) printf("Identifying ghost nodes\n");
       std::set<long> uniqueGhostNodeIds;
       if (!std::is_sorted(my_non_ghost_ids.begin(), my_non_ghost_ids.end()))
           throw std::logic_error("Recv node Ids expected in order.");

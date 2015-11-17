@@ -10,10 +10,10 @@ namespace Parfait {
     typedef std::chrono::minutes minutes;
     typedef std::chrono::hours hours;
 
-    auto Now() {return Clock::now();}
+    inline auto Now() {return Clock::now();}
 
-    void printTimeDifference(Clock::time_point t0, Clock::time_point t1);
-    void printReadableElapsedTime(Clock::time_point t0, Clock::time_point t1);
+    inline void printTimeDifference(Clock::time_point t0, Clock::time_point t1);
+    inline void printReadableElapsedTime(Clock::time_point t0, Clock::time_point t1);
 
 }
 #include "timing.hpp"
