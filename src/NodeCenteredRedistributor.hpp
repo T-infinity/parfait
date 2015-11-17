@@ -230,7 +230,7 @@ namespace Parfait {
           MessagePasser::Broadcast(neededNodeIds, proc);
           for (unsigned int i = 0; i < cells.size() / cellSize; i++) {
               if(iShouldSendThisCell(&cells[cellSize*i],cellSize,neededNodeIds))
-                      sendCellIds.push_back(i);
+                  sendCellIds.push_back(i);
           }
           vector<long> sendCells;
           sendCells.reserve(sendCellIds.size());

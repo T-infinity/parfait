@@ -28,8 +28,10 @@ namespace Parfait{
       auto after_reading = Now();
       Parfait::ParallelPartitionableMesh partitionableMesh(mesh);
       Parfait::ParallelNodeToNodeBuilder<decltype(partitionableMesh)> n2n_builder(partitionableMesh);
+      if(MessagePasser::Rank() == 0) printf("Building node to node graph\n");
       auto n2n = n2n_builder.buildNodeToNodeConnectivity();
       auto after_building_node_to_node = Now();
+      if(MessagePasser::Rank() == 0) printf("Calling partitioner\n");
       std::shared_ptr<Parfait::Partitioner> partitioner;
 #ifdef PARFAIT_WITH_PARMETIS
       partitioner = std::make_shared<Parfait::ParmetisPartitioner>();
@@ -38,6 +40,7 @@ namespace Parfait{
 #endif
       auto part = partitioner->generatePartVector(n2n);
       auto after_parmetis = Now();
+      if(MessagePasser::Rank() == 0) printf("Redistributing according to part vector\n");
       NodeBasedRedistributor distributor(mesh,part);
       auto distributed = distributor.redistribute();
       auto after_redistributing = Now();
