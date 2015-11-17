@@ -5,7 +5,6 @@
 template<typename MeshType>
 std::vector <std::vector<int>> Parfait::NodeToNodeBuilder<MeshType>::   buildNodeToNodeConnectivity() {
     if(MessagePasser::Rank() == 0) {printf("--tet edges\n");fflush(stdout);}
-    throw std::logic_error("can throw exception in release build....");
     for(int cellId = 0; cellId < mesh.numberOfTets(); cellId++){
         const int* ptr = mesh.getTet(cellId);
         std::array<int,4> cell {ptr[0],ptr[1],ptr[2],ptr[3]};
