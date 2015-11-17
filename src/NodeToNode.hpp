@@ -46,6 +46,8 @@ std::vector <std::vector<int>> Parfait::NodeToNodeBuilder<MeshType>::   buildNod
 
 template <typename MeshType>
 void Parfait::NodeToNodeBuilder<MeshType>::addEdge(int left, int right) {
+    if(left < 0 or right < 0) throw std::domain_error("negative node number");
+    if(left >= node_to_node.size() or right >= node_to_node.size()) throw std::domain_error("node number exceeds size");
     node_to_node[right].insert(left);
     node_to_node[left].insert(right);
     //insertUnique(node_to_node[right], left);
