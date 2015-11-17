@@ -6,16 +6,11 @@ template<typename MeshType>
 std::vector <std::vector<int>> Parfait::NodeToNodeBuilder<MeshType>::   buildNodeToNodeConnectivity() {
     if(MessagePasser::Rank() == 0) {printf("--tet edges\n");fflush(stdout);}
     for(int cellId = 0; cellId < mesh.numberOfTets(); cellId++){
-        if(MessagePasser::Rank() == 0) {printf("--tet %i of %i\n",cellId,mesh.numberOfTets());fflush(stdout);}
+        if(MessagePasser::Rank() == 0 and cellId%10000==0) {printf("--tet %i of %i\n",cellId,mesh.numberOfTets());fflush(stdout);}
         const int* ptr = mesh.getTet(cellId);
-        if(MessagePasser::Rank() == 0) {printf("--(after getting tet)\n");fflush(stdout);}
-        if(MessagePasser::Rank() == 0) {printf("--(%i)\n",ptr[0]);fflush(stdout);}
-        if(MessagePasser::Rank() == 0) {printf("--(%i %i %i %i)\n",ptr[0],ptr[1],ptr[2],ptr[3]);fflush(stdout);}
         std::array<int,4> cell {ptr[0],ptr[1],ptr[2],ptr[3]};
         for(int edge = 0; edge < CGNS::Edges::Tet::numberOfEdges(); edge++){
-            if(MessagePasser::Rank() == 0){printf("Processing edge %i\n",edge);fflush(stdout);}
             auto e = CGNS::Edges::Tet::getEdge(cell, edge);
-            if(MessagePasser::Rank() == 0){printf("adding edge %i\n",edge);fflush(stdout);}
             addEdge(e[0], e[1]);
         }
     }
