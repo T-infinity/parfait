@@ -32,6 +32,8 @@ namespace Parfait{
       if(MessagePasser::Rank() < 2){
           int megaBytes = getMemoryUseage();
           printf("Rank %i Using %i megabytes after distributing grid\n",MessagePasser::Rank(),megaBytes);
+          printf("Rank %i has %i nodes %i cells\n",MessagePasser::Rank(),
+                 (int)mesh->metaData->xyz.size()/3, mesh->connectivity->numberOfCells());
       }
       auto after_reading = Now();
       Parfait::ParallelPartitionableMesh partitionableMesh(mesh);
