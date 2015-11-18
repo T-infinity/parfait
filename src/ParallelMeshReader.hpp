@@ -359,12 +359,36 @@ inline void Parfait::ParallelMeshReader::distributeQuads() {
 }
 
 inline void Parfait::ParallelMeshReader::distributeTets() {
+    long globalNumberOfNodes = totalNumberOfNodes();
+    auto myNodeRange = LinearPartitioner::getRangeForWorker(MessagePasser::Rank(),globalNumberOfNodes,MessagePasser::NumberOfProcesses());
+    int nchunks = MessagePasser::NumberOfProcesses();
+    long ntets = gridTetMap.back();
+    for(int chunk=0;chunk<nchunks;++chunk){
+        std::vector<long> tetChunk;
+        if(MessagePasser::Rank() == 0) {
+            auto range = LinearPartitioner::getRangeForWorker(chunk, ntets, nchunks);
+            tetChunk = ParallelMeshReader::getTets(range.start, range.end);
+        }
+        MessagePasser::Broadcast(tetChunk,0);
+        for(unsigned int i=0;i<tetChunk.size()/4;++i){
+            bool iOwnIt = false;
+            for(int j=0;j<4;++j)
+                if(myNodeRange.owns(tetChunk[4*i+j]))
+                    iOwnIt = true;
+            if(iOwnIt){
+                for(int j=0;j<4;++j)
+                    mesh->connectivity->tets.push_back(globalToLocalId[tetChunk[4*i+j]]);
+            }
+        }
+    }
+#if 0
     if(MessagePasser::Rank() == 0)
         rootDistributeCells(4, gridTetMap, std::bind(&Parfait::ParallelMeshReader::getTets, this, std::placeholders::_1,
                                                      std::placeholders::_2),
                             std::bind(&Parfait::ParallelMeshReader::saveTet, this, std::placeholders::_1));
     else
         nonRootRecvCells(4, std::bind(&Parfait::ParallelMeshReader::saveTet, this, std::placeholders::_1));
+#endif
 }
 
 inline void Parfait::ParallelMeshReader::distributePyramids() {
