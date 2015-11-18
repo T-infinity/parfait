@@ -107,11 +107,13 @@ inline void Parfait::ParallelMeshReader::mapNodesToLocalSpace() {
             globalToLocalId[id] = localNodeId++;
         id = globalToLocalId[id];
     }
+#if 0
     for(auto &id : mesh->connectivity->tets){
         if(globalToLocalId.count(id) == 0)
             globalToLocalId[id] = localNodeId++;
         id = globalToLocalId[id];
     }
+#endif
     for(auto &id : mesh->connectivity->pyramids){
         if(globalToLocalId.count(id) == 0)
             globalToLocalId[id] = localNodeId++;
