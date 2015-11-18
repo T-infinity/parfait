@@ -22,6 +22,8 @@ namespace Parfait {
 	private:
 		Configuration& config;
 		std::vector<int> calculateNewPartitioning(std::shared_ptr<ParallelMesh> mesh);
+		std::shared_ptr<ParallelMesh> getDistributedMesh(std::vector<std::string>& grid_names,
+														 std::vector<bool>& is_big_endian);
 	};
 }
 #include "PreProcessor.hpp"

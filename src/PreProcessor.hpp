@@ -28,15 +28,13 @@ namespace Parfait{
           grid_names.push_back(config.getFilename(i));
           is_big_endian.push_back(config.isBigEndian(i));
       }
-      auto reader = std::make_shared<Parfait::ParallelMeshReader>(grid_names,is_big_endian);
-      auto mesh = reader->distributeGridsEvenly();
+      auto mesh = getDistributedMesh(grid_names,is_big_endian);
       if(MessagePasser::Rank() < 2){
           int megaBytes = getMemoryUseage();
           printf("Rank %i Using %i megabytes after distributing grid\n",MessagePasser::Rank(),megaBytes);
       }
       auto after_reading = Now();
       Parfait::ParallelPartitionableMesh partitionableMesh(mesh);
-      reader.reset();
       Parfait::ParallelNodeToNodeBuilder<decltype(partitionableMesh)> n2n_builder(partitionableMesh);
       if(MessagePasser::Rank() == 0) printf("Building node to node graph\n");
       auto n2n = n2n_builder.buildNodeToNodeConnectivity();
@@ -83,4 +81,10 @@ namespace Parfait{
       }
       return distributed;
   }
+
+    std::shared_ptr<ParallelMesh> PreProcessor::getDistributedMesh(std::vector<std::string>& grid_names,
+                                                                   std::vector<bool>& is_big_endian) {
+        auto reader = std::make_shared<Parfait::ParallelMeshReader>(grid_names,is_big_endian);
+        return reader->distributeGridsEvenly();
+    }
 }
