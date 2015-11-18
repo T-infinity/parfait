@@ -23,10 +23,11 @@ namespace Parfait{
           grid_names.push_back(config.getFilename(i));
           is_big_endian.push_back(config.isBigEndian(i));
       }
-      Parfait::ParallelMeshReader reader(grid_names,is_big_endian);
-      auto mesh = reader.distributeGridsEvenly();
+      auto reader = std::make_shared<Parfait::ParallelMeshReader>(grid_names,is_big_endian);
+      auto mesh = reader->distributeGridsEvenly();
       auto after_reading = Now();
       Parfait::ParallelPartitionableMesh partitionableMesh(mesh);
+      reader.reset();
       Parfait::ParallelNodeToNodeBuilder<decltype(partitionableMesh)> n2n_builder(partitionableMesh);
       if(MessagePasser::Rank() == 0) printf("Building node to node graph\n");
       auto n2n = n2n_builder.buildNodeToNodeConnectivity();
