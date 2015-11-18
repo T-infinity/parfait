@@ -17,9 +17,9 @@ namespace Parfait{
   { }
 
   inline std::shared_ptr<ParallelMesh> PreProcessor::createMesh(){
-      if(MessagePasser::Rank() == 0){
+      if(MessagePasser::Rank() < 2){
           int megaBytes = getMemoryUseage();
-          printf("Using %i megabytes at beginning of create mesh\n",megaBytes);
+          printf("Rank %i Using %i megabytes at beginning of create mesh\n",MessagePasser::Rank(),megaBytes);
       }
       auto before_reading = Now();
       std::vector<std::string> grid_names;
@@ -30,9 +30,9 @@ namespace Parfait{
       }
       auto reader = std::make_shared<Parfait::ParallelMeshReader>(grid_names,is_big_endian);
       auto mesh = reader->distributeGridsEvenly();
-      if(MessagePasser::Rank() == 0){
+      if(MessagePasser::Rank() < 2){
           int megaBytes = getMemoryUseage();
-          printf("Using %i megabytes after distributing grid\n",megaBytes);
+          printf("Rank %i Using %i megabytes after distributing grid\n",MessagePasser::Rank(),megaBytes);
       }
       auto after_reading = Now();
       Parfait::ParallelPartitionableMesh partitionableMesh(mesh);
@@ -40,9 +40,9 @@ namespace Parfait{
       Parfait::ParallelNodeToNodeBuilder<decltype(partitionableMesh)> n2n_builder(partitionableMesh);
       if(MessagePasser::Rank() == 0) printf("Building node to node graph\n");
       auto n2n = n2n_builder.buildNodeToNodeConnectivity();
-      if(MessagePasser::Rank() == 0){
+      if(MessagePasser::Rank() < 2){
           int megaBytes = getMemoryUseage();
-          printf("Using %i megabytes after building n2n\n",megaBytes);
+          printf("Rank %i Using %i megabytes after building n2n\n",MessagePasser::Rank(),megaBytes);
       }
       auto after_building_node_to_node = Now();
       if(MessagePasser::Rank() == 0) printf("Calling partitioner\n");
@@ -52,23 +52,23 @@ namespace Parfait{
 #else
       partitioner = std::make_shared<Parfait::ErrorPartitioner>();
 #endif
-      if(MessagePasser::Rank() == 0){
+      if(MessagePasser::Rank() < 2){
           int megaBytes = getMemoryUseage();
-          printf("Using %i megabytes after creating partitioner\n",megaBytes);
+          printf("Rank %i Using %i megabytes after creating partitioner\n",MessagePasser::Rank(),megaBytes);
       }
       auto part = partitioner->generatePartVector(n2n);
       auto after_parmetis = Now();
-      if(MessagePasser::Rank() == 0){
+      if(MessagePasser::Rank() < 2){
           int megaBytes = getMemoryUseage();
-          printf("Using %i megabytes after getting part vector\n",megaBytes);
+          printf("Rank %i Using %i megabytes after getting part vector\n",MessagePasser::Rank(),megaBytes);
       }
       if(MessagePasser::Rank() == 0) printf("Redistributing according to part vector\n");
       NodeBasedRedistributor distributor(mesh,part);
       auto distributed = distributor.redistribute();
       auto after_redistributing = Now();
-      if(MessagePasser::Rank() == 0){
+      if(MessagePasser::Rank() < 2){
           int megaBytes = getMemoryUseage();
-          printf("Using %i megabytes after redistributing\n",megaBytes);
+          printf("Rank %i Using %i megabytes after redistributing\n",MessagePasser::Rank(),megaBytes);
       }
 
       if(0 == MessagePasser::Rank()) {
