@@ -6,6 +6,7 @@
 #include <set>
 #include <stdlib.h>
 #include <MessagePasser.h>
+#include "LinearPartitioner.h"
 #include <ParallelImportedUgrid.h>
 #include "ParallelMesh.h"
 
@@ -106,6 +107,10 @@ namespace Parfait {
 
       std::set<int> getTargetProcessors(const vector<long> &transmitCell);
       std::vector<long> getCell(int cellLength, const vector<long> &cells, int cellId) const;
+      void extractAndAppendCells(int cellSize,
+                                 const std::vector<long>& chunkCells,
+                                 std::vector<int>& saveCells,
+                                 const LinearPartitioner::Range<long>& myNodeRange);
   };
 }
 

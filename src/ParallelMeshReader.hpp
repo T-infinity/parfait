@@ -370,25 +370,24 @@ inline void Parfait::ParallelMeshReader::distributeTets() {
             tetChunk = ParallelMeshReader::getTets(range.start, range.end);
         }
         MessagePasser::Broadcast(tetChunk,0);
-        for(unsigned int i=0;i<tetChunk.size()/4;++i){
-            bool iOwnIt = false;
-            for(int j=0;j<4;++j)
-                if(myNodeRange.owns(tetChunk[4*i+j]))
-                    iOwnIt = true;
-            if(iOwnIt){
-                for(int j=0;j<4;++j)
-                    mesh->connectivity->tets.push_back(tetChunk[4*i+j]);
-            }
+        extractAndAppendCells(4,tetChunk,mesh->connectivity->tets,myNodeRange);
+    }
+}
+
+inline void Parfait::ParallelMeshReader::extractAndAppendCells(int cellSize,
+                                                               const std::vector<long>& chunkCells,
+                                                               std::vector<int>& saveCells,
+                                                               const LinearPartitioner::Range<long>& myNodeRange){
+    for(unsigned int i=0;i<chunkCells.size()/cellSize;++i){
+        bool iOwnIt = false;
+        for(int j=0;j<cellSize;++j)
+            if(myNodeRange.owns(chunkCells[cellSize*i+j]))
+                iOwnIt = true;
+        if(iOwnIt){
+            for(int j=0;j<cellSize;++j)
+                mesh->connectivity->tets.push_back(chunkCells[cellSize*i+j]);
         }
     }
-#if 0
-    if(MessagePasser::Rank() == 0)
-        rootDistributeCells(4, gridTetMap, std::bind(&Parfait::ParallelMeshReader::getTets, this, std::placeholders::_1,
-                                                     std::placeholders::_2),
-                            std::bind(&Parfait::ParallelMeshReader::saveTet, this, std::placeholders::_1));
-    else
-        nonRootRecvCells(4, std::bind(&Parfait::ParallelMeshReader::saveTet, this, std::placeholders::_1));
-#endif
 }
 
 inline void Parfait::ParallelMeshReader::distributePyramids() {
