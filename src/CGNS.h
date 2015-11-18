@@ -24,6 +24,7 @@ namespace Parfait {
         template <class Tet>
         std::array<int, 2> getEdge(const Tet& tet, int edge) {
             auto e = getEdge(edge);
+            if(tet[e[0]] < 0 or tet[e[1]] < 0) throw std::domain_error("negative node in tet");
             return {tet[e[0]], tet[e[1]]};
         }
       }
