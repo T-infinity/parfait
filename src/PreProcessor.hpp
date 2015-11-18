@@ -3,6 +3,7 @@
 #include <PartitionableMesh.h>
 #include <ParallelPartitionableMesh.h>
 #include <ParallelNodeToNodeBuilder.h>
+#include <thread>
 #include "NodeCenteredRedistributor.h"
 #include "timing.h"
 #include "MemoryUseage.h"
@@ -28,8 +29,14 @@ namespace Parfait{
           grid_names.push_back(config.getFilename(i));
           is_big_endian.push_back(config.isBigEndian(i));
       }
+      if(MessagePasser::Rank() < 2){
+          std::this_thread::sleep_for(std::chrono::seconds(2));
+          int megaBytes = getMemoryUseage();
+          printf("Rank %i Using %i megabytes right before getting distributed mesh\n",MessagePasser::Rank(),megaBytes);
+      }
       auto mesh = getDistributedMesh(grid_names,is_big_endian);
       if(MessagePasser::Rank() < 2){
+          std::this_thread::sleep_for(std::chrono::seconds(2));
           int megaBytes = getMemoryUseage();
           printf("Rank %i Using %i megabytes after distributing grid\n",MessagePasser::Rank(),megaBytes);
           printf("Rank %i has %i nodes %i cells\n",MessagePasser::Rank(),
@@ -41,6 +48,7 @@ namespace Parfait{
       if(MessagePasser::Rank() == 0) printf("Building node to node graph\n");
       auto n2n = n2n_builder.buildNodeToNodeConnectivity();
       if(MessagePasser::Rank() < 2){
+          std::this_thread::sleep_for(std::chrono::seconds(2));
           int megaBytes = getMemoryUseage();
           printf("Rank %i Using %i megabytes after building n2n\n",MessagePasser::Rank(),megaBytes);
       }
@@ -53,12 +61,14 @@ namespace Parfait{
       partitioner = std::make_shared<Parfait::ErrorPartitioner>();
 #endif
       if(MessagePasser::Rank() < 2){
+          std::this_thread::sleep_for(std::chrono::seconds(2));
           int megaBytes = getMemoryUseage();
           printf("Rank %i Using %i megabytes after creating partitioner\n",MessagePasser::Rank(),megaBytes);
       }
       auto part = partitioner->generatePartVector(n2n);
       auto after_parmetis = Now();
       if(MessagePasser::Rank() < 2){
+          std::this_thread::sleep_for(std::chrono::seconds(2));
           int megaBytes = getMemoryUseage();
           printf("Rank %i Using %i megabytes after getting part vector\n",MessagePasser::Rank(),megaBytes);
       }
@@ -67,6 +77,7 @@ namespace Parfait{
       auto distributed = distributor.redistribute();
       auto after_redistributing = Now();
       if(MessagePasser::Rank() < 2){
+          std::this_thread::sleep_for(std::chrono::seconds(2));
           int megaBytes = getMemoryUseage();
           printf("Rank %i Using %i megabytes after redistributing\n",MessagePasser::Rank(),megaBytes);
       }
