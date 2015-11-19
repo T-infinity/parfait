@@ -22,7 +22,7 @@ include_directories(../../tinyxml/src
 set(VTK_WRITING_SOURCES
         catch_main.cpp
         VtkUnstructuredWriterTests.cpp
-)
+        VtkUnstructuredSurfaceWriterTests.cpp)
 
 include(${VTK_USE_FILE})
 LIST(REMOVE_ITEM VTK_LIBRARIES
