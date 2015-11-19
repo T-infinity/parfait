@@ -153,7 +153,7 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
     distributeTriangles(myNodeRange,nchunks);
     if (MessagePasser::Rank() == 0)
         printf("Distributing ...\n--quads\n");
-    distributeQuads();
+    distributeQuads(myNodeRange,nchunks);
     if (MessagePasser::Rank() == 0)
         printf("Distributing ...\n--tets\n");
     distributeTets(myNodeRange,nchunks);
@@ -357,6 +357,18 @@ inline void Parfait::ParallelMeshReader::distributeTriangles(Parfait::LinearPart
         MessagePasser::Broadcast(faces,0);
         MessagePasser::Broadcast(tags,0);
         extractAndAppendFaces(3, faces,tags,mesh->connectivity->triangles,mesh->metaData->triangleTags,myNodeRange);
+    }
+}
+
+inline void Parfait::ParallelMeshReader::distributeQuads(Parfait::LinearPartitioner::Range<long>& myNodeRange,
+                                                             int nchunks) {
+    long nquads = gridQuadMap.back();
+    for(int i =0; i <nchunks;++i){
+        auto faces = getCellChunk(QUAD, i, nquads,nchunks);
+        auto tags = getTagChunk(QUAD_TAG, i, nquads,nchunks);
+        MessagePasser::Broadcast(faces,0);
+        MessagePasser::Broadcast(tags,0);
+        extractAndAppendFaces(4, faces,tags,mesh->connectivity->quads,mesh->metaData->quadTags,myNodeRange);
     }
 }
 
