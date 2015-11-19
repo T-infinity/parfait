@@ -159,7 +159,7 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
     distributeTets(myNodeRange,nchunks);
     if (MessagePasser::Rank() == 0)
         printf("Distributing ...\n--pyramids\n");
-    distributePyramids();
+    distributePyramids(myNodeRange,nchunks);
     if (MessagePasser::Rank() == 0)
         printf("Distributing ...\n--prisms\n");
     distributePrisms();
@@ -373,6 +373,16 @@ inline void Parfait::ParallelMeshReader::distributeTets(Parfait::LinearPartition
     }
 }
 
+inline void Parfait::ParallelMeshReader::distributePyramids(Parfait::LinearPartitioner::Range<long>& myNodeRange,
+                                                        int nchunks) {
+    long npyramids = gridPyramidMap.back();
+    for(int i =0; i <nchunks;++i){
+        auto chunk = getCellChunk(PYRAMID, i, npyramids,nchunks);
+        MessagePasser::Broadcast(chunk,0);
+        extractAndAppendCells(5, chunk,mesh->connectivity->pyramids,myNodeRange);
+    }
+}
+
 inline std::vector<long> Parfait::ParallelMeshReader::getCellChunk(Parfait::ParallelMeshReader::CellType cellType,
                                                             int chunkId,long nCells,int nchunks){
     std::vector<long> chunk;
@@ -400,19 +410,9 @@ inline void Parfait::ParallelMeshReader::extractAndAppendCells(int cellSize,
                 iOwnIt = true;
         if(iOwnIt){
             for(int j=0;j<cellSize;++j)
-                mesh->connectivity->tets.push_back(chunkCells[cellSize*i+j]);
+                saveCells.push_back(chunkCells[cellSize*i+j]);
         }
     }
-}
-
-inline void Parfait::ParallelMeshReader::distributePyramids() {
-    if(MessagePasser::Rank() == 0)
-        rootDistributeCells(5, gridPyramidMap,
-                            std::bind(&Parfait::ParallelMeshReader::getPyramids, this, std::placeholders::_1,
-                                      std::placeholders::_2),
-                            std::bind(&Parfait::ParallelMeshReader::savePyramid, this, std::placeholders::_1));
-    else
-        nonRootRecvCells(5, std::bind(&Parfait::ParallelMeshReader::savePyramid, this, std::placeholders::_1));
 }
 
 inline void Parfait::ParallelMeshReader::distributePrisms() {
