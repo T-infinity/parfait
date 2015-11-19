@@ -65,8 +65,8 @@ namespace Parfait {
 
       void distributeTriangles();
       void distributeQuads();
-      void distributeTets(CellType cellType,LinearPartitioner::Range<long>& myNodeRange,int nchunks);
-      void distributePyramids();
+      void distributeTets(LinearPartitioner::Range<long>& myNodeRange,int nchunks);
+      void distributePyramids(LinearPartitioner::Range<long>& myNodeRange,int nchunks);
       void distributePrisms();
       void distributeHexs();
       void distributeUgrid();
