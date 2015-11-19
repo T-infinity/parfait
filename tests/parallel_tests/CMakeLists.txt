@@ -39,7 +39,6 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         parallel_sum_tests.cpp
         GathervTests.cpp
         AllGathervTests.cpp
-        MessageBuilder_test.cpp
         AsyncSends_tests.cpp
         SendRecvScalarTests.cpp
         SendRecvVectorTests.cpp

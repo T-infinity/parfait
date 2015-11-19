@@ -10,9 +10,6 @@
 #include <ParallelImportedUgrid.h>
 #include "ParallelMesh.h"
 
-template <typename T>
-class MessageBuilder;
-
 namespace Parfait {
   class ParallelMeshReader {
       template<class T> using vector = std::vector<T>;
@@ -46,19 +43,6 @@ namespace Parfait {
 
       void buildDistributionMaps();
       void distributeNodes();
-
-      template<typename CellGetter, typename TagGetter, typename CellSaver>
-      void rootDistributeSurfaceCells(int cellLength, std::vector<long> &gridCellMap,
-                                      CellGetter cellGetter, TagGetter tagGetter,
-                                      CellSaver cellSaver);
-      template<typename CellSaver>
-      void nonRootRecvCells(int cellLength, CellSaver cellSaver);
-      template<typename CellSaver>
-      void nonRootRecvSurfaceCells(int cellLength, CellSaver cellSaver);
-      template <class CellSaver>
-      void sendTransmitCellToTargets(CellSaver cellSaver,
-                                     MessageBuilder<long> &messageBuilder, const std::set<int> &target_procs,
-                                     const vector<long> &transmitCell) const;
 
       void distributeTriangles(LinearPartitioner::Range<long>& myNodeRange,int nchunks);
       void distributeQuads(LinearPartitioner::Range<long>& myNodeRange,int nchunks);
