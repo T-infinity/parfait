@@ -143,6 +143,11 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
     if (MessagePasser::Rank() == 0)
         printf("Distributing ...\n--nodes\n");
     distributeNodes();
+
+    long globalNumberOfNodes = totalNumberOfNodes();
+    auto myNodeRange = LinearPartitioner::getRangeForWorker(MessagePasser::Rank(),globalNumberOfNodes,MessagePasser::NumberOfProcesses());
+    int nchunks = MessagePasser::NumberOfProcesses();
+
     if (MessagePasser::Rank() == 0)
         printf("Distributing ...\n--triangles\n");
     distributeTriangles();
@@ -151,7 +156,7 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
     distributeQuads();
     if (MessagePasser::Rank() == 0)
         printf("Distributing ...\n--tets\n");
-    distributeTets();
+    distributeTets(TET,myNodeRange,nchunks);
     if (MessagePasser::Rank() == 0)
         printf("Distributing ...\n--pyramids\n");
     distributePyramids();
@@ -358,10 +363,8 @@ inline void Parfait::ParallelMeshReader::distributeQuads() {
         nonRootRecvSurfaceCells(4, std::bind(&Parfait::ParallelMeshReader::saveQuad, this, std::placeholders::_1));
 }
 
-inline void Parfait::ParallelMeshReader::distributeTets() {
-    long globalNumberOfNodes = totalNumberOfNodes();
-    auto myNodeRange = LinearPartitioner::getRangeForWorker(MessagePasser::Rank(),globalNumberOfNodes,MessagePasser::NumberOfProcesses());
-    int nchunks = MessagePasser::NumberOfProcesses();
+inline void Parfait::ParallelMeshReader::distributeTets(CellType cellType,Parfait::LinearPartitioner::Range<long>& myNodeRange,
+                                                        int nchunks) {
     long ntets = gridTetMap.back();
     for(int i =0; i <nchunks;++i){
         auto tetChunk = getCellChunk(TET, i,ntets,nchunks);
