@@ -16,6 +16,7 @@ class MessageBuilder;
 namespace Parfait {
   class ParallelMeshReader {
       template<class T> using vector = std::vector<T>;
+      enum CellType{TET,PYRAMID,PRISM,HEX};
   public:
       static std::shared_ptr<ParallelMesh> readDistributedGrid(std::string configurationFileName);
       static std::shared_ptr<ParallelMesh> readDistributedGrid(std::vector<std::string> gridFiles,
@@ -111,6 +112,7 @@ namespace Parfait {
                                  const std::vector<long>& chunkCells,
                                  std::vector<int>& saveCells,
                                  const LinearPartitioner::Range<long>& myNodeRange);
+      std::vector<long> getCellChunk(CellType cellType,int chunkId,long nCells,int nChunks);
   };
 }
 

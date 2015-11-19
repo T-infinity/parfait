@@ -363,15 +363,27 @@ inline void Parfait::ParallelMeshReader::distributeTets() {
     auto myNodeRange = LinearPartitioner::getRangeForWorker(MessagePasser::Rank(),globalNumberOfNodes,MessagePasser::NumberOfProcesses());
     int nchunks = MessagePasser::NumberOfProcesses();
     long ntets = gridTetMap.back();
-    for(int chunk=0;chunk<nchunks;++chunk){
-        std::vector<long> tetChunk;
-        if(MessagePasser::Rank() == 0) {
-            auto range = LinearPartitioner::getRangeForWorker(chunk, ntets, nchunks);
-            tetChunk = ParallelMeshReader::getTets(range.start, range.end);
-        }
+    for(int i =0; i <nchunks;++i){
+        auto tetChunk = getCellChunk(TET, i,ntets,nchunks);
         MessagePasser::Broadcast(tetChunk,0);
         extractAndAppendCells(4,tetChunk,mesh->connectivity->tets,myNodeRange);
     }
+}
+
+inline std::vector<long> Parfait::ParallelMeshReader::getCellChunk(Parfait::ParallelMeshReader::CellType cellType,
+                                                            int chunkId,long nCells,int nchunks){
+    std::vector<long> chunk;
+    if(MessagePasser::Rank() == 0) {
+        auto range = LinearPartitioner::getRangeForWorker(chunkId, nCells, nchunks);
+        switch(cellType){
+            case TET: return getTets(range.start,range.end);
+            case PYRAMID: return getPyramids(range.start,range.end);
+            case PRISM: return getPrisms(range.start,range.end);
+            case HEX: return getHexs(range.start,range.end);
+        }
+        throw std::logic_error("Invalid cell type");
+    }
+    return chunk;
 }
 
 inline void Parfait::ParallelMeshReader::extractAndAppendCells(int cellSize,
