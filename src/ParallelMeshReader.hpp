@@ -162,7 +162,7 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
     distributePyramids(myNodeRange,nchunks);
     if (MessagePasser::Rank() == 0)
         printf("Distributing ...\n--prisms\n");
-    distributePrisms();
+    distributePrisms(myNodeRange,nchunks);
     if (MessagePasser::Rank() == 0)
         printf("Distributing ...\n--hexes\n");
     distributeHexs();
@@ -383,6 +383,16 @@ inline void Parfait::ParallelMeshReader::distributePyramids(Parfait::LinearParti
     }
 }
 
+inline void Parfait::ParallelMeshReader::distributePrisms(Parfait::LinearPartitioner::Range<long>& myNodeRange,
+                                                        int nchunks) {
+    long nprisms = gridPrismMap.back();
+    for(int i =0; i <nchunks;++i){
+        auto chunk = getCellChunk(PRISM, i, nprisms,nchunks);
+        MessagePasser::Broadcast(chunk,0);
+        extractAndAppendCells(6, chunk,mesh->connectivity->prisms,myNodeRange);
+    }
+}
+
 inline std::vector<long> Parfait::ParallelMeshReader::getCellChunk(Parfait::ParallelMeshReader::CellType cellType,
                                                             int chunkId,long nCells,int nchunks){
     std::vector<long> chunk;
@@ -413,16 +423,6 @@ inline void Parfait::ParallelMeshReader::extractAndAppendCells(int cellSize,
                 saveCells.push_back(chunkCells[cellSize*i+j]);
         }
     }
-}
-
-inline void Parfait::ParallelMeshReader::distributePrisms() {
-    if(MessagePasser::Rank() == 0)
-        rootDistributeCells(6, gridPrismMap,
-                            std::bind(&Parfait::ParallelMeshReader::getPrisms, this, std::placeholders::_1,
-                                      std::placeholders::_2),
-                            std::bind(&Parfait::ParallelMeshReader::savePrism, this, std::placeholders::_1));
-    else
-        nonRootRecvCells(6, std::bind(&Parfait::ParallelMeshReader::savePrism, this, std::placeholders::_1));
 }
 
 inline void Parfait::ParallelMeshReader::distributeHexs() {
