@@ -264,29 +264,14 @@ void Parfait::ParallelMeshReader::rootDistributeSurfaceCells(int cellLength, std
     messageBuilder.padEmptySendsToNonSelf();
     messageBuilder.finishSends();
 }
-template <typename CellGetter, typename CellSaver>
-void Parfait::ParallelMeshReader::rootDistributeCells(int cellLength, std::vector<long> &gridCellMap,
-                                                      CellGetter cellGetter, CellSaver cellSaver) {
 
-    MessageBuilder<long> messageBuilder;
-    for(int proc = 0; proc < MessagePasser::NumberOfProcesses(); proc++){
-        auto range = LinearPartitioner::getRangeForWorker(proc, gridCellMap.back(), MessagePasser::NumberOfProcesses());
-        auto cells = cellGetter(range.start, range.end);
-        for(int cellId = 0; cellId < range.end - range.start; cellId++){
-            auto transmitCell = getCell(cellLength, cells, cellId);
-            auto targetProcessors = getTargetProcessors(transmitCell);
-            sendTransmitCellToTargets(cellSaver, messageBuilder, targetProcessors, transmitCell);
-        }
-    }
-    messageBuilder.padEmptySendsToNonSelf();
-    messageBuilder.finishSends();
-}
 inline std::set<int> ParallelMeshReader::getTargetProcessors(const std::vector<long> &transmitCell) {
     std::set<int> target_procs;
     for(const auto &id : transmitCell)
         target_procs.insert(getOwningProcOfNode(id));
     return target_procs;
 }
+
 inline std::vector<long> ParallelMeshReader::getCell(int cellLength, const std::vector<long> &cells, int cellId) const {
     std::vector<long> transmitCell;
     for(int i = 0; i < cellLength; i++){
@@ -363,6 +348,18 @@ inline void Parfait::ParallelMeshReader::distributeQuads() {
         nonRootRecvSurfaceCells(4, std::bind(&Parfait::ParallelMeshReader::saveQuad, this, std::placeholders::_1));
 }
 
+inline void Parfait::ParallelMeshReader::distributeTriangles(Parfait::LinearPartitioner::Range<long>& myNodeRange,
+                                                        int nchunks) {
+    long ntriangles = gridTriangleMap.back();
+    for(int i =0; i <nchunks;++i){
+        auto faces = getCellChunk(TRIANGLE, i, ntriangles,nchunks);
+        auto tags = getTagChunk(TRIANGLE_TAG, i, ntriangles,nchunks);
+        MessagePasser::Broadcast(faces,0);
+        MessagePasser::Broadcast(tags,0);
+        extractAndAppendFaces(3, faces,tags,mesh->connectivity->triangles,mesh->metaData->triangleTags,myNodeRange);
+    }
+}
+
 inline void Parfait::ParallelMeshReader::distributeTets(Parfait::LinearPartitioner::Range<long>& myNodeRange,
                                                         int nchunks) {
     long ntets = gridTetMap.back();
@@ -413,6 +410,22 @@ inline std::vector<long> Parfait::ParallelMeshReader::getCellChunk(Parfait::Para
             case PYRAMID: return getPyramids(range.start,range.end);
             case PRISM: return getPrisms(range.start,range.end);
             case HEX: return getHexs(range.start,range.end);
+            case TRIANGLE: return getTriangles(range.start,range.end);
+            case QUAD: return getQuads(range.start,range.end);
+        }
+        throw std::logic_error("Invalid cell type");
+    }
+    return chunk;
+}
+
+inline std::vector<int> Parfait::ParallelMeshReader::getTagChunk(Parfait::ParallelMeshReader::TagType tagType,
+                                                                   int chunkId,long nCells,int nchunks){
+    std::vector<int> chunk;
+    if(MessagePasser::Rank() == 0) {
+        auto range = LinearPartitioner::getRangeForWorker(chunkId, nCells, nchunks);
+        switch(tagType){
+            case TRIANGLE_TAG: return getTriangleTags(range.start,range.end);
+            case QUAD_TAG: return getQuadTags(range.start,range.end);
         }
         throw std::logic_error("Invalid cell type");
     }
@@ -431,6 +444,25 @@ inline void Parfait::ParallelMeshReader::extractAndAppendCells(int cellSize,
         if(iOwnIt){
             for(int j=0;j<cellSize;++j)
                 saveCells.push_back(chunkCells[cellSize*i+j]);
+        }
+    }
+}
+
+inline void Parfait::ParallelMeshReader::extractAndAppendFaces(int cellSize,
+                                                               const std::vector<long>& chunkFaces,
+                                                               const std::vector<int>& chunkTags,
+                                                               std::vector<int>& saveFaces,
+                                                               std::vector<int>& saveTags,
+                                                               const LinearPartitioner::Range<long>& myNodeRange){
+    for(unsigned int i=0;i< chunkFaces.size()/cellSize;++i){
+        bool iOwnIt = false;
+        for(int j=0;j<cellSize;++j)
+            if(myNodeRange.owns(chunkFaces[cellSize*i+j]))
+                iOwnIt = true;
+        if(iOwnIt){
+            for(int j=0;j<cellSize;++j)
+                saveFaces.push_back(chunkFaces[cellSize*i+j]);
+            saveTags.push_back(chunkTags[i]);
         }
     }
 }

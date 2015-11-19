@@ -16,7 +16,8 @@ class MessageBuilder;
 namespace Parfait {
   class ParallelMeshReader {
       template<class T> using vector = std::vector<T>;
-      enum CellType{TET,PYRAMID,PRISM,HEX};
+      enum CellType{TET,PYRAMID,PRISM,HEX,TRIANGLE,QUAD};
+      enum TagType{TRIANGLE_TAG,QUAD_TAG};
   public:
       static std::shared_ptr<ParallelMesh> readDistributedGrid(std::string configurationFileName);
       static std::shared_ptr<ParallelMesh> readDistributedGrid(std::vector<std::string> gridFiles,
@@ -45,11 +46,7 @@ namespace Parfait {
 
       void buildDistributionMaps();
       void distributeNodes();
-      void debug_printing();
 
-      template<typename CellGetter, typename CellSaver>
-      void rootDistributeCells(int cellLength, std::vector<long> &gridCellMap,
-                                                            CellGetter cellGetter, CellSaver cellSaver);
       template<typename CellGetter, typename TagGetter, typename CellSaver>
       void rootDistributeSurfaceCells(int cellLength, std::vector<long> &gridCellMap,
                                       CellGetter cellGetter, TagGetter tagGetter,
@@ -65,6 +62,7 @@ namespace Parfait {
 
       void distributeTriangles();
       void distributeQuads();
+      void distributeTriangles(LinearPartitioner::Range<long>& myNodeRange,int nchunks);
       void distributeTets(LinearPartitioner::Range<long>& myNodeRange,int nchunks);
       void distributePyramids(LinearPartitioner::Range<long>& myNodeRange,int nchunks);
       void distributePrisms(LinearPartitioner::Range<long>& myNodeRange,int nchunks);
@@ -112,7 +110,14 @@ namespace Parfait {
                                  const std::vector<long>& chunkCells,
                                  std::vector<int>& saveCells,
                                  const LinearPartitioner::Range<long>& myNodeRange);
+      void extractAndAppendFaces(int cellSize,
+                                 const std::vector<long>& chunkFaces,
+                                 const std::vector<int>& chunkTags,
+                                 std::vector<int>& saveCells,
+                                 std::vector<int>& saveTags,
+                                 const LinearPartitioner::Range<long>& myNodeRange);
       std::vector<long> getCellChunk(CellType cellType,int chunkId,long nCells,int nChunks);
+      std::vector<int> getTagChunk(TagType tagType,int chunkId,long nCells,int nChunks);
   };
 }
 
