@@ -150,7 +150,7 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
 
     if (MessagePasser::Rank() == 0)
         printf("Distributing ...\n--triangles\n");
-    distributeTriangles();
+    distributeTriangles(myNodeRange,nchunks);
     if (MessagePasser::Rank() == 0)
         printf("Distributing ...\n--quads\n");
     distributeQuads();
@@ -427,7 +427,7 @@ inline std::vector<int> Parfait::ParallelMeshReader::getTagChunk(Parfait::Parall
             case TRIANGLE_TAG: return getTriangleTags(range.start,range.end);
             case QUAD_TAG: return getQuadTags(range.start,range.end);
         }
-        throw std::logic_error("Invalid cell type");
+        throw std::logic_error("Invalid tag type");
     }
     return chunk;
 }
