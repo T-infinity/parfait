@@ -35,13 +35,6 @@ inline Parfait::ParallelMeshReader::ParallelMeshReader(std::vector<std::string> 
           mesh(std::make_shared<ParallelMesh>())
 {
     int ngrid = (int) gridFiles.size();
-    gridNodeMap.reserve(ngrid);
-    gridTriangleMap.reserve(ngrid);
-    gridQuadMap.reserve(ngrid);
-    gridTetMap.reserve(ngrid);
-    gridPyramidMap.reserve(ngrid);
-    gridPrismMap.reserve(ngrid);
-    gridHexMap.reserve(ngrid);
     gridNodeMap.push_back(0);
     gridTriangleMap.push_back(0);
     gridQuadMap.push_back(0);
