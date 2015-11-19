@@ -60,8 +60,6 @@ namespace Parfait {
                                      MessageBuilder<long> &messageBuilder, const std::set<int> &target_procs,
                                      const vector<long> &transmitCell) const;
 
-      void distributeTriangles();
-      void distributeQuads();
       void distributeTriangles(LinearPartitioner::Range<long>& myNodeRange,int nchunks);
       void distributeQuads(LinearPartitioner::Range<long>& myNodeRange,int nchunks);
       void distributeTets(LinearPartitioner::Range<long>& myNodeRange,int nchunks);
