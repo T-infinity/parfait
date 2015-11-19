@@ -6,10 +6,8 @@
 #include <vtkSmartPointer.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkCellArray.h>
-#include <vtkTetra.h>
-#include <vtkPyramid.h>
-#include <vtkWedge.h>
-#include <vtkHexahedron.h>
+#include <vtkTriangle.h>
+#include <vtkQuad.h>
 #include <vtkIntArray.h>
 #include <vtkFloatArray.h>
 #include <vtkDoubleArray.h>
