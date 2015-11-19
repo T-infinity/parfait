@@ -165,7 +165,7 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
     distributePrisms(myNodeRange,nchunks);
     if (MessagePasser::Rank() == 0)
         printf("Distributing ...\n--hexes\n");
-    distributeHexs();
+    distributeHexs(myNodeRange,nchunks);
 
     mapNodesToLocalSpace();
     createLocalToGlobalNodeIdMap();
@@ -393,6 +393,16 @@ inline void Parfait::ParallelMeshReader::distributePrisms(Parfait::LinearPartiti
     }
 }
 
+inline void Parfait::ParallelMeshReader::distributeHexs(Parfait::LinearPartitioner::Range<long>& myNodeRange,
+                                                          int nchunks) {
+    long nhexs = gridHexMap.back();
+    for(int i =0; i <nchunks;++i){
+        auto chunk = getCellChunk(HEX, i, nhexs,nchunks);
+        MessagePasser::Broadcast(chunk,0);
+        extractAndAppendCells(8, chunk,mesh->connectivity->hexes,myNodeRange);
+    }
+}
+
 inline std::vector<long> Parfait::ParallelMeshReader::getCellChunk(Parfait::ParallelMeshReader::CellType cellType,
                                                             int chunkId,long nCells,int nchunks){
     std::vector<long> chunk;
@@ -423,15 +433,6 @@ inline void Parfait::ParallelMeshReader::extractAndAppendCells(int cellSize,
                 saveCells.push_back(chunkCells[cellSize*i+j]);
         }
     }
-}
-
-inline void Parfait::ParallelMeshReader::distributeHexs() {
-    if(MessagePasser::Rank() == 0)
-        rootDistributeCells(8, gridHexMap, std::bind(&Parfait::ParallelMeshReader::getHexs, this, std::placeholders::_1,
-                                                     std::placeholders::_2),
-                            std::bind(&Parfait::ParallelMeshReader::saveHex, this, std::placeholders::_1));
-    else
-        nonRootRecvCells(8, std::bind(&Parfait::ParallelMeshReader::saveHex, this, std::placeholders::_1));
 }
 
 inline void ParallelMeshReader::saveTriangle(std::vector<long> triangle){

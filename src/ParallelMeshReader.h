@@ -68,7 +68,7 @@ namespace Parfait {
       void distributeTets(LinearPartitioner::Range<long>& myNodeRange,int nchunks);
       void distributePyramids(LinearPartitioner::Range<long>& myNodeRange,int nchunks);
       void distributePrisms(LinearPartitioner::Range<long>& myNodeRange,int nchunks);
-      void distributeHexs();
+      void distributeHexs(LinearPartitioner::Range<long>& myNodeRange,int nchunks);
       void distributeUgrid();
       void mapNodesToLocalSpace();
 
