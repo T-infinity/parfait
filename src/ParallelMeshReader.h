@@ -55,10 +55,8 @@ namespace Parfait {
       void mapNodesToLocalSpace();
 
       std::vector<double> getNodes(long begin, long end);
-      std::vector<int> getTriangleTags(long begin, long end);
-      std::vector<int> getQuadTags(long begin, long end);
-      template<typename ReturnType>
-      std::vector<ReturnType> getFromGrids(std::vector<int> (*readingFunction)(std::string, int, int, bool),
+      template<typename ReadingFunction,typename ReturnType>
+      std::vector<ReturnType> getFromGrids(ReadingFunction readingFunction,
                                      int objectSize,
                                      std::vector<long> &gridElementMap,
                                      long begin, long end,ReturnType constructor);
