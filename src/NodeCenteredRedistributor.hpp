@@ -255,10 +255,16 @@ namespace Parfait {
             if (MessagePasser::Rank() == proc)
                 neededNodeIds = my_non_ghost_ids;
             MessagePasser::Broadcast(neededNodeIds, proc);
-            for (unsigned int i = 0; i < cells.size() / cellSize; i++) {
-                if(iShouldSendThisCell(&cells[cellSize*i],cellSize,neededNodeIds))
-                    sendCellIds.push_back(i);
+            for(long nodeId:neededNodeIds){
+                auto iter = nodeToCell.find(nodeId);
+                if(iter != nodeToCell.end())
+                    for(int cellId:iter->second)
+                       sendCellIds.push_back(cellId);
             }
+            //for (unsigned int i = 0; i < cells.size() / cellSize; i++) {
+            //    if(iShouldSendThisCell(&cells[cellSize*i],cellSize,neededNodeIds))
+            //        sendCellIds.push_back(i);
+            //}
             vector<long> sendCells;
             sendCells.reserve(sendCellIds.size());
             for (auto id:sendCellIds)
