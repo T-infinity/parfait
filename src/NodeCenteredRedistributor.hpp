@@ -240,10 +240,11 @@ namespace Parfait {
         vector<long> recvCells;
 
         auto nodeToCell = mapNodesToCells(my_non_ghost_ids,cells,cellSize);
+        std::vector<bool> cellHasBeenAdded(cells.size(),false);
 
         for (int proc = 0; proc < MessagePasser::NumberOfProcesses(); proc++) {
-            std::set<int> cellIdSet;
             vector<long> neededNodeIds;
+            vector<long> sendCellIds;
             if (MessagePasser::Rank() == proc)
                 neededNodeIds = my_non_ghost_ids;
             MessagePasser::Broadcast(neededNodeIds, proc);
@@ -251,9 +252,9 @@ namespace Parfait {
                 auto iter = nodeToCell.find(nodeId);
                 if(iter != nodeToCell.end())
                     for(int cellId:iter->second)
-                        cellIdSet.insert(cellId);
+                        if(not cellHasBeenAdded[cellId])
+                            sendCellIds.push_back(cellId);
             }
-            vector<long> sendCellIds(cellIdSet.begin(),cellIdSet.end());
             //for (unsigned int i = 0; i < cells.size() / cellSize; i++) {
             //    if(iShouldSendThisCell(&cells[cellSize*i],cellSize,neededNodeIds))
             //        sendCellIds.push_back(i);
