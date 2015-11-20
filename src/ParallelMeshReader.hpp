@@ -238,25 +238,6 @@ inline void Parfait::ParallelMeshReader::distributeNodes() {
         MessagePasser::Recv(mesh->metaData->xyz,0);
 }
 
-inline std::set<int> ParallelMeshReader::getTargetProcessors(const std::vector<long> &transmitCell) {
-    std::set<int> target_procs;
-    for(const auto &id : transmitCell)
-        target_procs.insert(getOwningProcOfNode(id));
-    return target_procs;
-}
-
-inline std::vector<long> ParallelMeshReader::getCell(int cellLength, const std::vector<long> &cells, int cellId) const {
-    std::vector<long> transmitCell;
-    for(int i = 0; i < cellLength; i++){
-        auto id = cells[cellLength*cellId + i];
-        transmitCell.push_back(id);
-    }
-    return transmitCell;
-}
-
-inline bool isDoneSignal(const std::vector<long> &signal){
-    return 1 == signal.size();
-}
 
 inline void Parfait::ParallelMeshReader::distributeTriangles(Parfait::LinearPartitioner::Range<long>& myNodeRange,
                                                         int nchunks) {
@@ -424,49 +405,6 @@ inline int Parfait::ParallelMeshReader::getOwningGridOfEntity(std::vector<long> 
             return gridId;
     }
     throw std::logic_error("Could not find component grid of cell");
-}
-
-inline long ParallelMeshReader::convertComponentNodeIdToGlobal(int id,int grid) const {
-    return id + gridNodeMap[grid];
-}
-
-inline std::vector<double> Parfait::ParallelMeshReader::getNodes(long begin, long end) {
-    using namespace UgridReader;
-    std::vector<double> nodeBuffer(3*(end-begin),0.0);
-    int firstGrid  = getFirstGrid(gridNodeMap,begin);
-    int lastGrid   = getLastGrid(gridNodeMap,end);
-    int beginIndex = getBeginIndex(gridNodeMap,begin);
-    int endIndex   = getEndIndex(gridNodeMap,end);
-    int positionInBuffer = 0;
-    std::vector<double> tmp;
-    if(firstGrid == lastGrid)
-        tmp = readNodes(gridFiles[firstGrid],beginIndex,endIndex,isBigEndian[firstGrid]);
-    else
-        tmp = readNodes(gridFiles[firstGrid],beginIndex,
-                        gridNodeMap[firstGrid+1]-gridNodeMap[firstGrid],isBigEndian[firstGrid]);
-    for(double node : tmp)
-        nodeBuffer[positionInBuffer++] = node;
-    tmp.clear();
-
-    // read all nodes from grids between first and last grid
-    for(int i=firstGrid+1;i<lastGrid;i++)
-    {
-        //printf("--From grid %i: reading all nodes\n",i);
-        tmp = readNodes(gridFiles[i],isBigEndian[i]);
-        for(double node : tmp)
-            nodeBuffer[positionInBuffer++] = node;
-        tmp.clear();
-    }
-    // read nodes from last grid (start at zero and end at endIndex)
-    if(lastGrid > firstGrid)
-    {
-        tmp.clear();
-        tmp = readNodes(gridFiles[lastGrid],0,endIndex,isBigEndian[lastGrid]);
-        for(double node : tmp)
-            nodeBuffer[positionInBuffer++] = node;
-    }
-
-    return nodeBuffer;
 }
 
 template<typename ReadingFunction,typename ReturnType>

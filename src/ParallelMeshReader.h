@@ -54,7 +54,6 @@ namespace Parfait {
       void distributeUgrid();
       void mapNodesToLocalSpace();
 
-      std::vector<double> getNodes(long begin, long end);
       template<typename ReadingFunction,typename ReturnType>
       std::vector<ReturnType> getFromGrids(ReadingFunction readingFunction,
                                      int objectSize,
@@ -65,7 +64,6 @@ namespace Parfait {
       int getBeginIndex(std::vector<long> &gridMap, long begin);
       int getEndIndex(std::vector<long> &gridMap, long end);
 
-      long convertComponentNodeIdToGlobal(int id, int grid) const;
       int getOwningProcOfNode(long id);
       int getOwningGridOfNode(long id);
       int getOwningGridOfEntity(std::vector<long> &gridCellMap, long globalId);
@@ -77,8 +75,6 @@ namespace Parfait {
       void createNodeComponentIds();
       std::vector<double> getXyzForGhostNodes(std::vector<long>& ghostIds);
 
-      std::set<int> getTargetProcessors(const vector<long> &transmitCell);
-      std::vector<long> getCell(int cellLength, const vector<long> &cells, int cellId) const;
       void extractAndAppendCells(int cellSize,
                                  const std::vector<long>& chunkCells,
                                  std::vector<int>& saveCells,
