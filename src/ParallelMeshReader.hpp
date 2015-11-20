@@ -98,6 +98,7 @@ inline void Parfait::ParallelMeshReader::mapNodesToLocalSpace() {
             globalToLocalId[id] = localNodeId++;
         id = globalToLocalId[id];
     }
+
     for(auto &id : mesh->connectivity->tets){
         if(globalToLocalId.count(id) == 0)
             globalToLocalId[id] = localNodeId++;
@@ -653,6 +654,8 @@ inline std::vector<int> Parfait::ParallelMeshReader::getQuadTags(long begin, lon
 
 inline std::vector<long> Parfait::ParallelMeshReader::getTets(long begin, long end) {
     using namespace UgridReader;
+    std::vector<int> (*readFunction)(std::string,int,int,bool);
+    readFunction = readTets;
     std::vector<long> tetBuffer(4*(end-begin),0);
     int firstGrid  = getFirstGrid(gridTetMap,begin);
     int lastGrid   = getLastGrid(gridTetMap,end);
@@ -660,23 +663,20 @@ inline std::vector<long> Parfait::ParallelMeshReader::getTets(long begin, long e
     int endIndex   = getEndIndex(gridTetMap,end);
     int positionInBuffer = 0;
     std::vector<int> tmp;
-    if(firstGrid == lastGrid)
-    {
+    if(firstGrid == lastGrid) {
         // read tets from the first grid (start at beginIndex and read to endIndex)
-        tmp = readTets(gridFiles[firstGrid],beginIndex,endIndex,isBigEndian[firstGrid]);
+        tmp = readFunction(gridFiles[firstGrid],beginIndex,endIndex,isBigEndian[firstGrid]);
     }
-    else
-    {
+    else {
         // read tets from the first grid (start at beginIndex and read to the end of the file)
-        tmp = readTets(gridFiles[firstGrid],beginIndex,gridTetMap[firstGrid+1]
+        tmp = readFunction(gridFiles[firstGrid],beginIndex,gridTetMap[firstGrid+1]
                                                        -gridTetMap[firstGrid],isBigEndian[firstGrid]);
     }
     for(int tet : tmp)
         tetBuffer[positionInBuffer++] = tet + gridNodeMap[firstGrid];
     tmp.clear();
     // read all tets from grids between first and last grid
-    for(int i=firstGrid+1;i<lastGrid;i++)
-    {
+    for(int i=firstGrid+1;i<lastGrid;i++) {
         tmp = readTets(gridFiles[i],isBigEndian[i]);
         for(int tet : tmp)
             tetBuffer[positionInBuffer++] = tet + gridNodeMap[i];
@@ -684,14 +684,15 @@ inline std::vector<long> Parfait::ParallelMeshReader::getTets(long begin, long e
     }
 
     // read tets from last grid (start at zero and end at endIndex)
-    if(lastGrid > firstGrid)
-    {
-        tmp = readTets(gridFiles[lastGrid],0,endIndex,isBigEndian[lastGrid]);
+    if(lastGrid > firstGrid) {
+        tmp = readFunction(gridFiles[lastGrid],0,endIndex,isBigEndian[lastGrid]);
         for(int tet : tmp)
             tetBuffer[positionInBuffer++] = tet + gridNodeMap[lastGrid];
     }
     return tetBuffer;
 }
+
+
 
 inline std::vector<long> Parfait::ParallelMeshReader::getPyramids(long begin, long end) {
     using namespace UgridReader;
