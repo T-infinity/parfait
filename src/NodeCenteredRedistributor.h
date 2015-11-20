@@ -48,6 +48,7 @@ namespace Parfait {
       bool iShouldSendThisCell(int* cell, int cellSize,const std::vector<long>& neededNodeIds);
       bool iShouldSendThisSurfaceCell(int* cell, int cellSize,const std::vector<long>& neededNodeIds);
       std::map<long,std::vector<int>> mapNodesToCells(std::vector<long>& globalNodeIds,
+                                                      std::vector<int>& nodeOwnershipDegree,
                                                     std::vector<int>& cells,int cellSize);
   };
 
