@@ -260,7 +260,7 @@ namespace Parfait {
                 }
             }
             if(proc == 0 and cellSize == 4){
-                printf("Rank %i has % tets for the root\n",MessagePasser::Rank(),sendCellIds.size());
+                printf("Rank %i has %i tets for the root\n",MessagePasser::Rank(),sendCellIds.size());
             }
             //for (unsigned int i = 0; i < cells.size() / cellSize; i++) {
             //    if(iShouldSendThisCell(&cells[cellSize*i],cellSize,neededNodeIds))
