@@ -58,7 +58,7 @@ namespace Parfait {
       std::vector<ReturnType> getFromGrids(ReadingFunction readingFunction,
                                      int objectSize,
                                      std::vector<long> &gridElementMap,
-                                     long begin, long end,ReturnType constructor);
+                                     long begin, long end,bool isConnectivity,ReturnType constructor);
       int getFirstGrid(std::vector<long> &gridMap, long begin);
       int getLastGrid(std::vector<long> &gridMap, long end);
       int getBeginIndex(std::vector<long> &gridMap, long begin);

@@ -228,9 +228,9 @@ inline void Parfait::ParallelMeshReader::distributeNodes() {
         int nproc = MessagePasser::NumberOfProcesses();
         std::vector<double>(*f)(std::string,int,int,bool);
         f = UgridReader::readNodes;
-        mesh->metaData->xyz = getFromGrids(f,3,gridNodeMap,0,procNodeMap[1],double());
+        mesh->metaData->xyz = getFromGrids(f,3,gridNodeMap,0,procNodeMap[1],false,double());
         for(int proc=1;proc<nproc;proc++) {
-            vector<double> nodeBuffer = getFromGrids(f,3,gridNodeMap,procNodeMap[proc],procNodeMap[proc+1],double());
+            vector<double> nodeBuffer = getFromGrids(f,3,gridNodeMap,procNodeMap[proc],procNodeMap[proc+1],false,double());
             MessagePasser::Send(nodeBuffer,proc);
         }
     }
@@ -312,22 +312,22 @@ inline std::vector<long> Parfait::ParallelMeshReader::getCellChunk(Parfait::Para
         switch(cellType){
             case TET:
                 f = UgridReader::readTets;
-                return getFromGrids(f, 4,gridTetMap, range.start, range.end,long());
+                return getFromGrids(f, 4,gridTetMap, range.start, range.end,true,long());
             case PYRAMID:
                 f = UgridReader::readPyramids;
-                return getFromGrids(f,5,gridPyramidMap,range.start,range.end,long());
+                return getFromGrids(f,5,gridPyramidMap,range.start,range.end,true,long());
             case PRISM:
                 f = UgridReader::readPrisms;
-                return getFromGrids(f,6,gridPrismMap,range.start,range.end,long());
+                return getFromGrids(f,6,gridPrismMap,range.start,range.end,true,long());
             case HEX:
                 f = UgridReader::readHexs;
-                return getFromGrids(f,8,gridHexMap,range.start,range.end,long());
+                return getFromGrids(f,8,gridHexMap,range.start,range.end,true,long());
             case TRIANGLE:
                 f = UgridReader::readTriangles;
-                return getFromGrids(f,3,gridTriangleMap,range.start,range.end,long());
+                return getFromGrids(f,3,gridTriangleMap,range.start,range.end,true,long());
             case QUAD:
                 f = UgridReader::readQuads;
-                return getFromGrids(f,4,gridQuadMap,range.start,range.end,long());
+                return getFromGrids(f,4,gridQuadMap,range.start,range.end,true,long());
         }
         throw std::logic_error("Invalid cell type");
     }
@@ -343,10 +343,10 @@ inline std::vector<int> Parfait::ParallelMeshReader::getTagChunk(Parfait::Parall
         switch(tagType){
             case TRIANGLE_TAG:
                 f = UgridReader::readTriangleBoundaryTags;
-                return getFromGrids(f,1,gridTriangleMap,range.start,range.end,int());
+                return getFromGrids(f,1,gridTriangleMap,range.start,range.end,false,int());
             case QUAD_TAG:
                 f = UgridReader::readQuadBoundaryTags;
-                return getFromGrids(f,1,gridQuadMap,range.start,range.end,int());
+                return getFromGrids(f,1,gridQuadMap,range.start,range.end,false,int());
         }
         throw std::logic_error("Invalid tag type");
     }
@@ -411,7 +411,7 @@ template<typename ReadingFunction,typename ReturnType>
 inline std::vector<ReturnType> Parfait::ParallelMeshReader::getFromGrids(
     ReadingFunction readingFunction,
     int objectSize,
-    std::vector<long> &gridElementMap, long begin, long end,ReturnType constructor) {
+    std::vector<long> &gridElementMap, long begin, long end,bool isConnectivity,ReturnType constructor) {
 
     std::vector<ReturnType> buffer(objectSize*(end-begin),0);
     int firstGrid  = getFirstGrid(gridElementMap,begin);
@@ -422,28 +422,32 @@ inline std::vector<ReturnType> Parfait::ParallelMeshReader::getFromGrids(
     if(firstGrid == lastGrid) {
         // read objects from the first grid (start at beginIndex and read to endIndex)
         auto tmp = readingFunction(gridFiles[firstGrid],beginIndex,endIndex,isBigEndian[firstGrid]);
-        for(int x : tmp)
-            buffer[positionInBuffer++] = x + gridNodeMap[firstGrid];
+        if(isConnectivity)
+            for(int x : tmp)
+                buffer[positionInBuffer++] = x + gridNodeMap[firstGrid];
     }
     else {
         // read objects from the first grid (start at beginIndex and read to the end of the file)
         auto tmp = readingFunction(gridFiles[firstGrid],beginIndex, gridElementMap[firstGrid+1]
                                                        - gridElementMap[firstGrid],isBigEndian[firstGrid]);
-        for(int x : tmp)
-            buffer[positionInBuffer++] = x + gridNodeMap[firstGrid];
+        if(isConnectivity)
+            for(int x : tmp)
+                buffer[positionInBuffer++] = x + gridNodeMap[firstGrid];
     }
     // read all objects from grids between first and last grid
     for(int i=firstGrid+1;i<lastGrid;i++) {
         auto tmp = readingFunction(gridFiles[i],0, gridElementMap[i+1]- gridElementMap[i],isBigEndian[i]);
-        for(int x : tmp)
-            buffer[positionInBuffer++] = x + gridNodeMap[i];
+        if(isConnectivity)
+            for(int x : tmp)
+                buffer[positionInBuffer++] = x + gridNodeMap[i];
     }
 
     // read objects from last grid (start at zero and end at endIndex)
     if(lastGrid > firstGrid) {
         auto tmp = readingFunction(gridFiles[lastGrid],0,endIndex,isBigEndian[lastGrid]);
-        for(int x : tmp)
-            buffer[positionInBuffer++] = x + gridNodeMap[lastGrid];
+        if(isConnectivity)
+            for(int x : tmp)
+                buffer[positionInBuffer++] = x + gridNodeMap[lastGrid];
     }
     return buffer;
 }
