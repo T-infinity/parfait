@@ -226,9 +226,11 @@ inline std::shared_ptr<ParallelMesh> Parfait::ParallelMeshReader::distributeGrid
 inline void Parfait::ParallelMeshReader::distributeNodes() {
     if(MessagePasser::Rank() == 0) {
         int nproc = MessagePasser::NumberOfProcesses();
-        mesh->metaData->xyz = getNodes(0,procNodeMap[1]);
+        std::vector<double>(*f)(std::string,int,int,bool);
+        f = UgridReader::readNodes;
+        mesh->metaData->xyz = getFromGrids(f,3,gridNodeMap,0,procNodeMap[1],double());
         for(int proc=1;proc<nproc;proc++) {
-            vector<double> nodeBuffer = getNodes(procNodeMap[proc],procNodeMap[proc+1]);
+            vector<double> nodeBuffer = getFromGrids(f,3,gridNodeMap,procNodeMap[proc],procNodeMap[proc+1],double());
             MessagePasser::Send(nodeBuffer,proc);
         }
     }
@@ -479,30 +481,29 @@ inline std::vector<ReturnType> Parfait::ParallelMeshReader::getFromGrids(
     int beginIndex = getBeginIndex(gridElementMap,begin);
     int endIndex   = getEndIndex(gridElementMap,end);
     int positionInBuffer = 0;
-    std::vector<int> tmp;
     if(firstGrid == lastGrid) {
         // read objects from the first grid (start at beginIndex and read to endIndex)
-        tmp = readingFunction(gridFiles[firstGrid],beginIndex,endIndex,isBigEndian[firstGrid]);
+        auto tmp = readingFunction(gridFiles[firstGrid],beginIndex,endIndex,isBigEndian[firstGrid]);
+        for(int x : tmp)
+            buffer[positionInBuffer++] = x + gridNodeMap[firstGrid];
     }
     else {
         // read objects from the first grid (start at beginIndex and read to the end of the file)
-        tmp = readingFunction(gridFiles[firstGrid],beginIndex, gridElementMap[firstGrid+1]
+        auto tmp = readingFunction(gridFiles[firstGrid],beginIndex, gridElementMap[firstGrid+1]
                                                        - gridElementMap[firstGrid],isBigEndian[firstGrid]);
+        for(int x : tmp)
+            buffer[positionInBuffer++] = x + gridNodeMap[firstGrid];
     }
-    for(int x : tmp)
-        buffer[positionInBuffer++] = x + gridNodeMap[firstGrid];
-    tmp.clear();
     // read all objects from grids between first and last grid
     for(int i=firstGrid+1;i<lastGrid;i++) {
-        tmp = readingFunction(gridFiles[i],0, gridElementMap[i+1]- gridElementMap[i],isBigEndian[i]);
+        auto tmp = readingFunction(gridFiles[i],0, gridElementMap[i+1]- gridElementMap[i],isBigEndian[i]);
         for(int x : tmp)
             buffer[positionInBuffer++] = x + gridNodeMap[i];
-        tmp.clear();
     }
 
     // read objects from last grid (start at zero and end at endIndex)
     if(lastGrid > firstGrid) {
-        tmp = readingFunction(gridFiles[lastGrid],0,endIndex,isBigEndian[lastGrid]);
+        auto tmp = readingFunction(gridFiles[lastGrid],0,endIndex,isBigEndian[lastGrid]);
         for(int x : tmp)
             buffer[positionInBuffer++] = x + gridNodeMap[lastGrid];
     }
