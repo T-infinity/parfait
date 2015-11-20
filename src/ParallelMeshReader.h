@@ -58,7 +58,10 @@ namespace Parfait {
       std::vector<int> getTriangleTags(long begin, long end);
       std::vector<long> getQuads(long begin, long end);
       std::vector<int> getQuadTags(long begin, long end);
-      std::vector<long> getTets(long begin, long end);
+      std::vector<long> getFromGrids(std::vector<int> (*readingFunction)(std::string, int, int, bool),
+                                     int objectSize,
+                                     std::vector<long> &gridElementMap,
+                                     long begin, long end);
       std::vector<long> getPyramids(long begin, long end);
       std::vector<long> getPrisms(long begin, long end);
       std::vector<long> getHexs(long begin, long end);
