@@ -237,14 +237,12 @@ namespace Parfait {
     inline std::vector<long> NodeBasedRedistributor::redistributeCells(std::vector<long> &my_non_ghost_ids,
                                                                        std::vector<int> &cells, int cellSize) {
         if(MessagePasser::Rank() == 0) printf("Redistributing cells (%i)\n",cellSize);
-        vector<long> sendCellIds;
         vector<long> recvCells;
 
         auto nodeToCell = mapNodesToCells(my_non_ghost_ids,cells,cellSize);
 
-        sendCellIds.reserve(cells.size());
         for (int proc = 0; proc < MessagePasser::NumberOfProcesses(); proc++) {
-            sendCellIds.clear();
+            std::set<int> cellIdSet;
             vector<long> neededNodeIds;
             if (MessagePasser::Rank() == proc)
                 neededNodeIds = my_non_ghost_ids;
@@ -253,14 +251,15 @@ namespace Parfait {
                 auto iter = nodeToCell.find(nodeId);
                 if(iter != nodeToCell.end())
                     for(int cellId:iter->second)
-                       sendCellIds.push_back(cellId);
+                        cellIdSet.insert(cellId);
             }
+            vector<long> sendCellIds(cellIdSet.begin(),cellIdSet.end());
             //for (unsigned int i = 0; i < cells.size() / cellSize; i++) {
             //    if(iShouldSendThisCell(&cells[cellSize*i],cellSize,neededNodeIds))
             //        sendCellIds.push_back(i);
             //}
             vector<long> sendCells;
-            sendCells.reserve(sendCellIds.size());
+            sendCells.reserve(cellSize*sendCellIds.size());
             for (auto id:sendCellIds)
                 for (int j:range(cellSize))
                     sendCells.push_back(mesh->metaData->globalNodeIds[cells[cellSize * id + j]]);
