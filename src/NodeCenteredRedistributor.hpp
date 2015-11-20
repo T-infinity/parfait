@@ -24,17 +24,13 @@ namespace Parfait {
       auto beginning = Clock::now();
       auto myNonGhostIds = redistributeNodeIds();
       auto afterNodes = Clock::now();
-      auto nodeToTet = mapNodesToCells(mesh->metaData->globalNodeIds,mesh->connectivity->tets,4);
-      auto recvTets = redistributeCells(myNonGhostIds, mesh->connectivity->tets, 4,nodeToTet);
+      auto recvTets = redistributeCells(myNonGhostIds, mesh->connectivity->tets, 4);
       auto afterTets = Clock::now();
-      auto nodeToPyramid = mapNodesToCells(mesh->metaData->globalNodeIds,mesh->connectivity->pyramids,5);
-      auto recvPyramids = redistributeCells(myNonGhostIds,mesh->connectivity->pyramids,5,nodeToPyramid);
+      auto recvPyramids = redistributeCells(myNonGhostIds,mesh->connectivity->pyramids,5);
       auto afterPyramids = Clock::now();
-      auto nodeToPrism = mapNodesToCells(mesh->metaData->globalNodeIds,mesh->connectivity->prisms,6);
-      auto recvPrisms = redistributeCells(myNonGhostIds,mesh->connectivity->prisms,6,nodeToPrism);
+      auto recvPrisms = redistributeCells(myNonGhostIds,mesh->connectivity->prisms,6);
       auto afterPrisms = Clock::now();
-      auto nodeToHex = mapNodesToCells(mesh->metaData->globalNodeIds,mesh->connectivity->hexes,8);
-      auto recvHexs = redistributeCells(myNonGhostIds,mesh->connectivity->hexes,8,nodeToHex);
+      auto recvHexs = redistributeCells(myNonGhostIds,mesh->connectivity->hexes,8);
       auto afterHexs = Clock::now();
 
 
@@ -239,11 +235,12 @@ namespace Parfait {
     }
 
     inline std::vector<long> NodeBasedRedistributor::redistributeCells(std::vector<long> &my_non_ghost_ids,
-                                                                       std::vector<int> &cells, int cellSize,
-                                                                       std::map<long,std::vector<int>>& nodeToCell) {
+                                                                       std::vector<int> &cells, int cellSize) {
         if(MessagePasser::Rank() == 0) printf("Redistributing cells (%i)\n",cellSize);
         vector<long> sendCellIds;
         vector<long> recvCells;
+
+        auto nodeToCell = mapNodesToCells(my_non_ghost_ids,cells,cellSize);
 
         sendCellIds.reserve(cells.size());
         for (int proc = 0; proc < MessagePasser::NumberOfProcesses(); proc++) {

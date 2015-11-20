@@ -21,8 +21,7 @@ namespace Parfait {
       std::vector<int> redistributeTags(std::vector<long> &my_non_ghost_ids,
                                         std::vector<int> &cells, std::vector<int> &tags, int cellSize);
       std::vector<long> redistributeCells(std::vector<long> &my_non_ghost_ids,
-                                          std::vector<int> &cells, int cellSize,
-                                          std::map<long,std::vector<int>>& nodeToCell);
+                                          std::vector<int> &cells, int cellSize);
       std::vector<long> redistributeSurfaceCells(std::vector<long> &my_non_ghost_ids,
                                           std::vector<int> &cells, int cellSize);
 
