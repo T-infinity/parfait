@@ -24,13 +24,17 @@ namespace Parfait {
       auto beginning = Clock::now();
       auto myNonGhostIds = redistributeNodeIds();
       auto afterNodes = Clock::now();
-      auto recvTets = redistributeCells(myNonGhostIds, mesh->connectivity->tets, 4);
+      auto nodeToTet = mapNodesToCells(mesh->metaData->globalNodeIds.size(),mesh->connectivity->tets,4);
+      auto recvTets = redistributeCells(myNonGhostIds, mesh->connectivity->tets, 4,nodeToTet);
       auto afterTets = Clock::now();
-      auto recvPyramids = redistributeCells(myNonGhostIds,mesh->connectivity->pyramids,5);
+      auto nodeToPyramid = mapNodesToCells(mesh->metaData->globalNodeIds.size(),mesh->connectivity->pyramids,5);
+      auto recvPyramids = redistributeCells(myNonGhostIds,mesh->connectivity->pyramids,5,nodeToPyramid);
       auto afterPyramids = Clock::now();
-      auto recvPrisms = redistributeCells(myNonGhostIds,mesh->connectivity->prisms,6);
+      auto nodeToPrism = mapNodesToCells(mesh->metaData->globalNodeIds.size(),mesh->connectivity->prisms,6);
+      auto recvPrisms = redistributeCells(myNonGhostIds,mesh->connectivity->prisms,6,nodeToPrism);
       auto afterPrisms = Clock::now();
-      auto recvHexs = redistributeCells(myNonGhostIds,mesh->connectivity->hexes,8);
+      auto nodeToHex = mapNodesToCells(mesh->metaData->globalNodeIds.size(),mesh->connectivity->hexes,8);
+      auto recvHexs = redistributeCells(myNonGhostIds,mesh->connectivity->hexes,8,nodeToHex);
       auto afterHexs = Clock::now();
 
 
@@ -112,6 +116,19 @@ namespace Parfait {
 
       return mesh;
   }
+
+    inline std::vector<std::vector<int>> NodeBasedRedistributor::mapNodesToCells(int nnodes,
+                                                                                 std::vector<int>& cells,
+                                                                                 int cellSize){
+        std::vector<std::vector<int>> nodeToCell(nnodes);
+        int ncells = (int)cells.size()/cellSize;
+        for(int i=0;i<ncells;++i){
+            for(int j=0;j<cellSize;++j){
+                nodeToCell[cells[cellSize*i+j]].push_back(i);
+            }
+        }
+        return nodeToCell;
+    }
 
   inline std::vector<long> NodeBasedRedistributor::redistributeNodeIds() {
       if(MessagePasser::Rank() == 0) printf("Redistributing node ids\n");
@@ -216,8 +233,9 @@ namespace Parfait {
         return recvCellTags;
     }
 
-  inline std::vector<long> NodeBasedRedistributor::redistributeCells(std::vector<long> &my_non_ghost_ids,
-                                                                     std::vector<int> &cells, int cellSize) {
+    inline std::vector<long> NodeBasedRedistributor::redistributeCells(std::vector<long> &my_non_ghost_ids,
+                                                                       std::vector<int> &cells, int cellSize,
+                                                                       std::vector<std::vector<int>>& nodeToCell) {
       if(MessagePasser::Rank() == 0) printf("Redistributing cells (%i)\n",cellSize);
       vector<long> sendCellIds;
     vector<long> recvCells;
@@ -241,6 +259,7 @@ namespace Parfait {
       }
     return recvCells;
   }
+
     inline std::vector<long> NodeBasedRedistributor::redistributeSurfaceCells(std::vector<long> &my_non_ghost_ids,
                                                                        std::vector<int> &cells, int cellSize) {
         if(MessagePasser::Rank() == 0) printf("Redistributing surface cells (%i)\n",cellSize);

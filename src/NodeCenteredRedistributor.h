@@ -21,7 +21,8 @@ namespace Parfait {
       std::vector<int> redistributeTags(std::vector<long> &my_non_ghost_ids,
                                         std::vector<int> &cells, std::vector<int> &tags, int cellSize);
       std::vector<long> redistributeCells(std::vector<long> &my_non_ghost_ids,
-                                          std::vector<int> &cells, int cellSize);
+                                          std::vector<int> &cells, int cellSize,
+                                          std::vector<std::vector<int>>& nodeToCell);
       std::vector<long> redistributeSurfaceCells(std::vector<long> &my_non_ghost_ids,
                                           std::vector<int> &cells, int cellSize);
 
@@ -47,6 +48,8 @@ namespace Parfait {
       bool amItheOwnerOfThisNode(long globalId, const std::map<long, int>& globalToLocal);
       bool iShouldSendThisCell(int* cell, int cellSize,const std::vector<long>& neededNodeIds);
       bool iShouldSendThisSurfaceCell(int* cell, int cellSize,const std::vector<long>& neededNodeIds);
+      std::vector<std::vector<int>> mapNodesToCells(int nnodes,
+                                                    std::vector<int>& cells,int cellSize);
   };
 
 
