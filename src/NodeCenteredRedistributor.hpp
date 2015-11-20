@@ -239,15 +239,15 @@ namespace Parfait {
         if(MessagePasser::Rank() == 0) printf("Redistributing cells (%i)\n",cellSize);
         vector<long> recvCells;
 
-        auto nodeToCell = mapNodesToCells(my_non_ghost_ids,cells,cellSize);
+        //auto nodeToCell = mapNodesToCells(my_non_ghost_ids,cells,cellSize);
 
         for (int proc = 0; proc < MessagePasser::NumberOfProcesses(); proc++) {
             vector<long> neededNodeIds;
             vector<long> sendCellIds;
-            std::vector<bool> cellHasBeenAdded(cells.size(),false);
+            //std::vector<bool> cellHasBeenAdded(cells.size(),false);
             if (MessagePasser::Rank() == proc)
                 neededNodeIds = my_non_ghost_ids;
-            //MessagePasser::Broadcast(neededNodeIds, proc);
+            MessagePasser::Broadcast(neededNodeIds, proc);
             //for(long nodeId:neededNodeIds){
             //    auto iter = nodeToCell.find(nodeId);
             //    if(iter != nodeToCell.end()) {
