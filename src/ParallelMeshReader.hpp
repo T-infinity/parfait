@@ -326,12 +326,12 @@ inline std::vector<long> Parfait::ParallelMeshReader::getCellChunk(Parfait::Para
     if(MessagePasser::Rank() == 0) {
         auto range = LinearPartitioner::getRangeForWorker(chunkId, nCells, nchunks);
         switch(cellType){
-            case TET: return getFromGrids(UgridReader::readTets, 4,gridTetMap, range.start, range.end);
-            case PYRAMID: return getFromGrids(UgridReader::readPyramids,5,gridPyramidMap,range.start,range.end);
-            case PRISM: return getFromGrids(UgridReader::readPrisms,6,gridPrismMap,range.start,range.end);
-            case HEX: return getFromGrids(UgridReader::readHexs,8,gridHexMap,range.start,range.end);
-            case TRIANGLE: return getFromGrids(UgridReader::readTriangles,3,gridTriangleMap,range.start,range.end);
-            case QUAD: return getFromGrids(UgridReader::readQuads,4,gridQuadMap,range.start,range.end);
+            case TET: return getFromGrids(UgridReader::readTets, 4,gridTetMap, range.start, range.end,long());
+            case PYRAMID: return getFromGrids(UgridReader::readPyramids,5,gridPyramidMap,range.start,range.end,long());
+            case PRISM: return getFromGrids(UgridReader::readPrisms,6,gridPrismMap,range.start,range.end,long());
+            case HEX: return getFromGrids(UgridReader::readHexs,8,gridHexMap,range.start,range.end,long());
+            case TRIANGLE: return getFromGrids(UgridReader::readTriangles,3,gridTriangleMap,range.start,range.end,long());
+            case QUAD: return getFromGrids(UgridReader::readQuads,4,gridQuadMap,range.start,range.end,long());
         }
         throw std::logic_error("Invalid cell type");
     }
@@ -344,8 +344,8 @@ inline std::vector<int> Parfait::ParallelMeshReader::getTagChunk(Parfait::Parall
     if(MessagePasser::Rank() == 0) {
         auto range = LinearPartitioner::getRangeForWorker(chunkId, nCells, nchunks);
         switch(tagType){
-            case TRIANGLE_TAG: return getTriangleTags(range.start,range.end);
-            case QUAD_TAG: return getQuadTags(range.start,range.end);
+            case TRIANGLE_TAG: return getFromGrids(UgridReader::readTriangleBoundaryTags,1,gridTriangleMap,range.start,range.end,int());
+            case QUAD_TAG: return getFromGrids(UgridReader::readQuadBoundaryTags,1,gridQuadMap,range.start,range.end,int());
         }
         throw std::logic_error("Invalid tag type");
     }
@@ -385,43 +385,6 @@ inline void Parfait::ParallelMeshReader::extractAndAppendFaces(int cellSize,
             saveTags.push_back(chunkTags[i]);
         }
     }
-}
-
-inline void ParallelMeshReader::saveTriangle(std::vector<long> triangle){
-    auto tag = triangle.back();
-    triangle.pop_back();
-    if(triangle.size() != 3)
-        throw std::logic_error("Trying to save a triangle with unexpected length.");
-    mesh->metaData->triangleTags.push_back(tag);
-    for(auto id:triangle)
-        mesh->connectivity->triangles.push_back(id);
-}
-
-inline void ParallelMeshReader::saveQuad(std::vector<long> quad){
-    //TODO: these saver routines write longs to ints in the connectivity.
-    auto tag = quad.back();
-    quad.pop_back();
-    if(quad.size() != 4)
-        throw std::logic_error("Trying to save a quad with unexpected length.");
-    mesh->metaData->quadTags.push_back(tag);
-    for(auto id:quad)
-        mesh->connectivity->quads.push_back(id);
-}
-inline void ParallelMeshReader::saveTet(const std::vector<long>& tet){
-    for(auto id:tet)
-        mesh->connectivity->tets.push_back(id);
-}
-inline void ParallelMeshReader::savePyramid(const std::vector<long>& pyramid){
-    for(auto id:pyramid)
-        mesh->connectivity->pyramids.push_back(id);
-}
-inline void ParallelMeshReader::savePrism(const std::vector<long>& prism){
-    for(auto id:prism)
-        mesh->connectivity->prisms.push_back(id);
-}
-inline void ParallelMeshReader::saveHex(const std::vector<long>& hex){
-    for(auto id:hex)
-        mesh->connectivity->hexes.push_back(id);
 }
 
 inline int Parfait::ParallelMeshReader::getOwningProcOfNode(long id) {
@@ -486,43 +449,6 @@ inline std::vector<double> Parfait::ParallelMeshReader::getNodes(long begin, lon
     return nodeBuffer;
 }
 
-inline std::vector<long> Parfait::ParallelMeshReader::getTriangles(long begin, long end) {
-    using namespace UgridReader;
-    std::vector<long> triangleBuffer(3*(end-begin),0.0);
-    int firstGrid  = getFirstGrid(gridTriangleMap,begin);
-    int lastGrid   = getLastGrid(gridTriangleMap,end);
-    int beginIndex = getBeginIndex(gridTriangleMap,begin);
-    int endIndex   = getEndIndex(gridTriangleMap,end);
-    int positionInBuffer = 0;
-    std::vector<int> tmp;
-    if(firstGrid == lastGrid)
-        tmp = readTriangles(gridFiles[firstGrid],beginIndex,endIndex,isBigEndian[firstGrid]);
-    else
-        tmp = readTriangles(gridFiles[firstGrid],beginIndex,gridTriangleMap[firstGrid+1]
-                                                            -gridTriangleMap[firstGrid],isBigEndian[firstGrid]);
-    for(int triangle : tmp)
-        triangleBuffer[positionInBuffer++] = triangle + gridNodeMap[firstGrid];
-    tmp.clear();
-
-    // read all triangles from grids between first and last grid
-    for(int i=firstGrid+1;i<lastGrid;i++)
-    {
-        tmp = readTriangles(gridFiles[i],isBigEndian[i]);
-        for(int triangle : tmp)
-            triangleBuffer[positionInBuffer++] = triangle + gridNodeMap[i];
-        tmp.clear();
-    }
-
-    // read triangles from last grid (start at zero and end at endIndex)
-    if(lastGrid > firstGrid)
-    {
-        tmp = readTriangles(gridFiles[lastGrid],0,endIndex,isBigEndian[lastGrid]);
-        for(int triangle : tmp)
-            triangleBuffer[positionInBuffer++] = triangle + gridNodeMap[lastGrid];
-    }
-    return triangleBuffer;
-}
-
 inline std::vector<int> Parfait::ParallelMeshReader::getTriangleTags(long begin, long end) {
     using namespace UgridReader;
     std::vector<int> triangleTagBuffer(end-begin,0);
@@ -564,49 +490,6 @@ inline std::vector<int> Parfait::ParallelMeshReader::getTriangleTags(long begin,
             triangleTagBuffer[positionInBuffer++] = tag;
     }
     return triangleTagBuffer;
-}
-
-inline std::vector<long> Parfait::ParallelMeshReader::getQuads(long begin, long end) {
-    using namespace UgridReader;
-    std::vector<long> quadBuffer(4*(end-begin),0.0);
-    int firstGrid  = getFirstGrid(gridQuadMap,begin);
-    int lastGrid   = getLastGrid(gridQuadMap,end);
-    int beginIndex = getBeginIndex(gridQuadMap,begin);
-    int endIndex   = getEndIndex(gridQuadMap,end);
-    int positionInBuffer = 0;
-    std::vector<int> tmp;
-    if(firstGrid == lastGrid)
-    {
-        // read quads from the first grid (start at beginIndex and read to endIndex)
-        tmp = readQuads(gridFiles[firstGrid],beginIndex,endIndex,isBigEndian[firstGrid]);
-    }
-    else
-    {
-        // read quads from the first grid (start at beginIndex and read to the end of the file)
-        tmp = readQuads(gridFiles[firstGrid],beginIndex,gridQuadMap[firstGrid+1]
-                                                        -gridQuadMap[firstGrid],isBigEndian[firstGrid]);
-    }
-    for(int quad : tmp)
-        quadBuffer[positionInBuffer++] = quad + gridNodeMap[firstGrid];
-    tmp.clear();
-
-    // read all quads from grids between first and last grid
-    for(int i=firstGrid+1;i<lastGrid;i++)
-    {
-        tmp = readQuads(gridFiles[i],isBigEndian[i]);
-        for(int quad : tmp)
-            quadBuffer[positionInBuffer++] = quad + gridNodeMap[i];
-        tmp.clear();
-    }
-
-    // read quads from last grid (start at zero and end at endIndex)
-    if(lastGrid > firstGrid)
-    {
-        tmp = readQuads(gridFiles[lastGrid],0,endIndex,isBigEndian[lastGrid]);
-        for(int quad : tmp)
-            quadBuffer[positionInBuffer++] = quad + gridNodeMap[lastGrid];
-    }
-    return quadBuffer;
 }
 
 inline std::vector<int> Parfait::ParallelMeshReader::getQuadTags(long begin, long end) {
@@ -652,12 +535,13 @@ inline std::vector<int> Parfait::ParallelMeshReader::getQuadTags(long begin, lon
     return quadTagBuffer;
 }
 
-inline std::vector<long> Parfait::ParallelMeshReader::getFromGrids(
+template<typename ReturnType>
+inline std::vector<ReturnType> Parfait::ParallelMeshReader::getFromGrids(
     std::vector<int>(*readingFunction)(std::string, int, int, bool),
     int objectSize,
-    std::vector<long> &gridElementMap, long begin, long end) {
+    std::vector<long> &gridElementMap, long begin, long end,ReturnType constructor) {
 
-    std::vector<long> buffer(objectSize*(end-begin),0);
+    std::vector<ReturnType> buffer(objectSize*(end-begin),0);
     int firstGrid  = getFirstGrid(gridElementMap,begin);
     int lastGrid   = getLastGrid(gridElementMap,end);
     int beginIndex = getBeginIndex(gridElementMap,begin);

@@ -15,6 +15,7 @@ namespace Parfait {
       template<class T> using vector = std::vector<T>;
       enum CellType{TET,PYRAMID,PRISM,HEX,TRIANGLE,QUAD};
       enum TagType{TRIANGLE_TAG,QUAD_TAG};
+
   public:
       static std::shared_ptr<ParallelMesh> readDistributedGrid(std::string configurationFileName);
       static std::shared_ptr<ParallelMesh> readDistributedGrid(std::vector<std::string> gridFiles,
@@ -54,14 +55,13 @@ namespace Parfait {
       void mapNodesToLocalSpace();
 
       std::vector<double> getNodes(long begin, long end);
-      std::vector<long> getTriangles(long begin, long end);
       std::vector<int> getTriangleTags(long begin, long end);
-      std::vector<long> getQuads(long begin, long end);
       std::vector<int> getQuadTags(long begin, long end);
-      std::vector<long> getFromGrids(std::vector<int> (*readingFunction)(std::string, int, int, bool),
+      template<typename ReturnType>
+      std::vector<ReturnType> getFromGrids(std::vector<int> (*readingFunction)(std::string, int, int, bool),
                                      int objectSize,
                                      std::vector<long> &gridElementMap,
-                                     long begin, long end);
+                                     long begin, long end,ReturnType constructor);
       int getFirstGrid(std::vector<long> &gridMap, long begin);
       int getLastGrid(std::vector<long> &gridMap, long end);
       int getBeginIndex(std::vector<long> &gridMap, long begin);
@@ -71,14 +71,6 @@ namespace Parfait {
       int getOwningProcOfNode(long id);
       int getOwningGridOfNode(long id);
       int getOwningGridOfEntity(std::vector<long> &gridCellMap, long globalId);
-
-
-      void saveTriangle(std::vector<long> triangle);
-      void saveQuad(std::vector<long> quad);
-      void saveTet(const std::vector<long> &tet);
-      void savePyramid(const std::vector<long> &pyramid);
-      void savePrism(const std::vector<long> &prism);
-      void saveHex(const std::vector<long> &hex);
 
       std::map<long, int> globalToLocalId;
       std::map<int, long> localToGlobalId;
