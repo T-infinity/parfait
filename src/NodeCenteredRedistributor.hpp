@@ -244,9 +244,6 @@ namespace Parfait {
         if(MessagePasser::Rank() == 0) printf("Redistributing cells (%i)\n",cellSize);
         vector<long> sendCellIds;
         vector<long> recvCells;
-        std::map<long,int> oldGlobalToLocal;
-        for(unsigned int i=0;i<mesh->metaData->globalNodeIds.size();++i)
-            oldGlobalToLocal[mesh->metaData->globalNodeIds[i]] = i;
 
         sendCellIds.reserve(cells.size());
         for (int proc = 0; proc < MessagePasser::NumberOfProcesses(); proc++) {
