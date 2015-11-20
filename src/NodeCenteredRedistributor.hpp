@@ -239,8 +239,8 @@ namespace Parfait {
         if(MessagePasser::Rank() == 0) printf("Redistributing cells (%i)\n",cellSize);
         vector<long> recvCells;
 
-        auto nodeToCell = mapNodesToCells(my_non_ghost_ids,cells,cellSize);
-        std::vector<bool> cellHasBeenAdded(cells.size(),false);
+        //auto nodeToCell = mapNodesToCells(my_non_ghost_ids,cells,cellSize);
+        //std::vector<bool> cellHasBeenAdded(cells.size(),false);
 
         for (int proc = 0; proc < MessagePasser::NumberOfProcesses(); proc++) {
             vector<long> neededNodeIds;
@@ -248,21 +248,21 @@ namespace Parfait {
             if (MessagePasser::Rank() == proc)
                 neededNodeIds = my_non_ghost_ids;
             MessagePasser::Broadcast(neededNodeIds, proc);
-            for(long nodeId:neededNodeIds){
-                auto iter = nodeToCell.find(nodeId);
-                if(iter != nodeToCell.end()) {
-                    for (int cellId:iter->second) {
-                        if (not cellHasBeenAdded[cellId]) {
-                            sendCellIds.push_back(cellId);
-                            cellHasBeenAdded[cellId] = true;
-                        }
-                    }
-                }
-            }
-            //for (unsigned int i = 0; i < cells.size() / cellSize; i++) {
-            //    if(iShouldSendThisCell(&cells[cellSize*i],cellSize,neededNodeIds))
-            //        sendCellIds.push_back(i);
+            //for(long nodeId:neededNodeIds){
+            //    auto iter = nodeToCell.find(nodeId);
+            //    if(iter != nodeToCell.end()) {
+            //        for (int cellId:iter->second) {
+            //            if (not cellHasBeenAdded[cellId]) {
+            //                sendCellIds.push_back(cellId);
+            //                cellHasBeenAdded[cellId] = true;
+            //            }
+            //        }
+            //    }
             //}
+            for (unsigned int i = 0; i < cells.size() / cellSize; i++) {
+                if(iShouldSendThisCell(&cells[cellSize*i],cellSize,neededNodeIds))
+                    sendCellIds.push_back(i);
+            }
             vector<long> sendCells;
             sendCells.reserve(cellSize*sendCellIds.size());
             for (auto id:sendCellIds)
