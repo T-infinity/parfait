@@ -423,31 +423,40 @@ inline std::vector<ReturnType> Parfait::ParallelMeshReader::getFromGrids(
         // read objects from the first grid (start at beginIndex and read to endIndex)
         auto tmp = readingFunction(gridFiles[firstGrid],beginIndex,endIndex,isBigEndian[firstGrid]);
         if(isConnectivity)
-            for(int x : tmp)
-                buffer[positionInBuffer++] = x + gridNodeMap[firstGrid];
+            for(auto& x : tmp)
+                x += gridNodeMap[firstGrid];
+        for(auto& x : tmp)
+            buffer[positionInBuffer++] = x;
     }
     else {
         // read objects from the first grid (start at beginIndex and read to the end of the file)
         auto tmp = readingFunction(gridFiles[firstGrid],beginIndex, gridElementMap[firstGrid+1]
-                                                       - gridElementMap[firstGrid],isBigEndian[firstGrid]);
+            - gridElementMap[firstGrid],isBigEndian[firstGrid]);
         if(isConnectivity)
-            for(int x : tmp)
-                buffer[positionInBuffer++] = x + gridNodeMap[firstGrid];
+            for(auto& x : tmp)
+                x += gridNodeMap[firstGrid];
+        for(auto& x : tmp)
+            buffer[positionInBuffer++] = x;
     }
     // read all objects from grids between first and last grid
     for(int i=firstGrid+1;i<lastGrid;i++) {
         auto tmp = readingFunction(gridFiles[i],0, gridElementMap[i+1]- gridElementMap[i],isBigEndian[i]);
         if(isConnectivity)
-            for(int x : tmp)
-                buffer[positionInBuffer++] = x + gridNodeMap[i];
+            for(auto& x : tmp)
+                x += gridNodeMap[i];
+        for(auto& x : tmp)
+            buffer[positionInBuffer++] = x;
+
     }
 
     // read objects from last grid (start at zero and end at endIndex)
     if(lastGrid > firstGrid) {
         auto tmp = readingFunction(gridFiles[lastGrid],0,endIndex,isBigEndian[lastGrid]);
         if(isConnectivity)
-            for(int x : tmp)
-                buffer[positionInBuffer++] = x + gridNodeMap[lastGrid];
+            for(auto& x : tmp)
+                x += gridNodeMap[lastGrid];
+        for(auto& x : tmp)
+            buffer[positionInBuffer++] = x;
     }
     return buffer;
 }
