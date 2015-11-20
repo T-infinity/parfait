@@ -247,25 +247,25 @@ namespace Parfait {
             std::vector<bool> cellHasBeenAdded(cells.size(),false);
             if (MessagePasser::Rank() == proc)
                 neededNodeIds = my_non_ghost_ids;
-            MessagePasser::Broadcast(neededNodeIds, proc);
-            for(long nodeId:neededNodeIds){
-                auto iter = nodeToCell.find(nodeId);
-                if(iter != nodeToCell.end()) {
-                    for (int cellId:iter->second) {
-                        if (not cellHasBeenAdded[cellId]) {
-                            sendCellIds.push_back(cellId);
-                            cellHasBeenAdded[cellId] = true;
-                        }
-                    }
-                }
+            //MessagePasser::Broadcast(neededNodeIds, proc);
+            //for(long nodeId:neededNodeIds){
+            //    auto iter = nodeToCell.find(nodeId);
+            //    if(iter != nodeToCell.end()) {
+            //        for (int cellId:iter->second) {
+            //            if (not cellHasBeenAdded[cellId]) {
+            //                sendCellIds.push_back(cellId);
+            //                cellHasBeenAdded[cellId] = true;
+            //            }
+            //        }
+            //    }
+            //}
+            for (unsigned int i = 0; i < cells.size() / cellSize; i++) {
+                if(iShouldSendThisCell(&cells[cellSize*i],cellSize,neededNodeIds))
+                    sendCellIds.push_back(i);
             }
             if(proc == 0 and cellSize == 4){
                 printf("Rank %i has %i tets for the root\n",MessagePasser::Rank(),sendCellIds.size());
             }
-            //for (unsigned int i = 0; i < cells.size() / cellSize; i++) {
-            //    if(iShouldSendThisCell(&cells[cellSize*i],cellSize,neededNodeIds))
-            //        sendCellIds.push_back(i);
-            //}
             vector<long> sendCells;
             sendCells.reserve(cellSize*sendCellIds.size());
             for (auto id:sendCellIds)
