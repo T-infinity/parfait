@@ -330,8 +330,8 @@ inline std::vector<long> Parfait::ParallelMeshReader::getCellChunk(Parfait::Para
             case PYRAMID: return getFromGrids(UgridReader::readPyramids,5,gridPyramidMap,range.start,range.end);
             case PRISM: return getFromGrids(UgridReader::readPrisms,6,gridPrismMap,range.start,range.end);
             case HEX: return getFromGrids(UgridReader::readHexs,8,gridHexMap,range.start,range.end);
-            case TRIANGLE: return getTriangles(range.start,range.end);
-            case QUAD: return getQuads(range.start,range.end);
+            case TRIANGLE: return getFromGrids(UgridReader::readTriangles,3,gridTriangleMap,range.start,range.end);
+            case QUAD: return getFromGrids(UgridReader::readQuads,4,gridQuadMap,range.start,range.end);
         }
         throw std::logic_error("Invalid cell type");
     }
@@ -691,138 +691,6 @@ inline std::vector<long> Parfait::ParallelMeshReader::getFromGrids(
             buffer[positionInBuffer++] = x + gridNodeMap[lastGrid];
     }
     return buffer;
-}
-
-
-
-inline std::vector<long> Parfait::ParallelMeshReader::getPyramids(long begin, long end) {
-    using namespace UgridReader;
-    std::vector<long> pyramidBuffer(5*(end-begin),0.0);
-    int firstGrid  = getFirstGrid(gridPyramidMap,begin);
-    int lastGrid   = getLastGrid(gridPyramidMap,end);
-    int beginIndex = getBeginIndex(gridPyramidMap,begin);
-    int endIndex   = getEndIndex(gridPyramidMap,end);
-    int positionInBuffer = 0;
-    std::vector<int> tmp;
-    if(firstGrid == lastGrid)
-    {
-        // read pyramids from the first grid (start at beginIndex and read endIndex)
-        tmp = readPyramids(gridFiles[firstGrid],beginIndex,endIndex,isBigEndian[firstGrid]);
-    }
-    else
-    {
-        // read pyramids from the first grid (start at beginIndex and read to the end of the file)
-        tmp = readPyramids(gridFiles[firstGrid],beginIndex,gridPyramidMap[firstGrid+1]
-                                                           -gridPyramidMap[firstGrid],isBigEndian[firstGrid]);
-    }
-    for(int pyramid : tmp)
-        pyramidBuffer[positionInBuffer++] = pyramid + gridNodeMap[firstGrid];
-    tmp.clear();
-
-    // read all pyramids from grids between first and last grid
-    for(int i=firstGrid+1;i<lastGrid;i++)
-    {
-        tmp = readPyramids(gridFiles[i],isBigEndian[i]);
-        for(int pyramid : tmp)
-            pyramidBuffer[positionInBuffer++] = pyramid + gridNodeMap[i];
-        tmp.clear();
-    }
-
-    // read pyramids from last grid (start at zero and end at endIndex)
-    if(lastGrid > firstGrid)
-    {
-        tmp = readPyramids(gridFiles[lastGrid],0,endIndex,isBigEndian[lastGrid]);
-        for(int pyramid : tmp)
-            pyramidBuffer[positionInBuffer++] = pyramid + gridNodeMap[lastGrid];
-    }
-    return pyramidBuffer;
-}
-
-inline std::vector<long> Parfait::ParallelMeshReader::getPrisms(long begin, long end) {
-    using namespace UgridReader;
-    std::vector<long> prismBuffer(6*(end-begin),0);
-    int firstGrid  = getFirstGrid(gridPrismMap,begin);
-    int lastGrid   = getLastGrid(gridPrismMap,end);
-    int beginIndex = getBeginIndex(gridPrismMap,begin);
-    int endIndex   = getEndIndex(gridPrismMap,end);
-    int positionInBuffer = 0;
-
-    std::vector<int> tmp;
-    if(firstGrid == lastGrid)
-    {
-        // read prisms from the first grid (start at beginIndex and read to endIndex)
-        tmp = readPrisms(gridFiles[firstGrid],beginIndex,endIndex,isBigEndian[firstGrid]);
-    }
-    else
-    {
-        // read prisms from the first grid (start at beginIndex and read to the end of the file)
-        tmp = readPrisms(gridFiles[firstGrid],beginIndex,gridPrismMap[firstGrid+1]
-                                                         -gridPrismMap[firstGrid],isBigEndian[firstGrid]);
-    }
-    for(int prism : tmp)
-        prismBuffer[positionInBuffer++] = prism + gridNodeMap[firstGrid];
-    tmp.clear();
-
-    // read all prisms from grids between first and last grid
-    for(int i=firstGrid+1;i<lastGrid;i++)
-    {
-        tmp = readPrisms(gridFiles[i],isBigEndian[i]);
-        for(int prism : tmp)
-            prismBuffer[positionInBuffer++] = prism + gridNodeMap[i];
-        tmp.clear();
-    }
-
-    // read prisms from last grid (start at zero and end at endIndex)
-    if(lastGrid > firstGrid)
-    {
-        tmp = readPrisms(gridFiles[lastGrid],0,endIndex,isBigEndian[lastGrid]);
-        for(int prism : tmp)
-            prismBuffer[positionInBuffer++] = prism + gridNodeMap[lastGrid];
-    }
-    return prismBuffer;
-}
-
-inline std::vector<long> Parfait::ParallelMeshReader::getHexs(long begin, long end) {
-    using namespace UgridReader;
-    std::vector<long> hexBuffer(8*(end-begin),0.0);
-    int firstGrid  = getFirstGrid(gridHexMap,begin);
-    int lastGrid   = getLastGrid(gridHexMap,end);
-    int beginIndex = getBeginIndex(gridHexMap,begin);
-    int endIndex   = getEndIndex(gridHexMap,end);
-    int positionInBuffer = 0;
-    std::vector<int> tmp;
-    if(firstGrid == lastGrid)
-    {
-        // read hexs from the first grid (start at beginIndex and read to endIndex)
-        tmp = readHexs(gridFiles[firstGrid],beginIndex,endIndex,isBigEndian[firstGrid]);
-    }
-    else
-    {
-        // read hexs from the first grid (start at beginIndex and read to the end of the file)
-        tmp = readHexs(gridFiles[firstGrid],beginIndex,gridHexMap[firstGrid+1]
-                                                       -gridHexMap[firstGrid],isBigEndian[firstGrid]);
-    }
-    for(int hex : tmp)
-        hexBuffer[positionInBuffer++] = hex + gridNodeMap[firstGrid];
-    tmp.clear();
-
-    // read all hexs from grids between first and last grid
-    for(int i=firstGrid+1;i<lastGrid;i++)
-    {
-        tmp = readHexs(gridFiles[i],isBigEndian[i]);
-        for(int hex : tmp)
-            hexBuffer[positionInBuffer++] = hex + gridNodeMap[i];
-        tmp.clear();
-    }
-
-    // read hexs from last grid (start at zero and end at endIndex)
-    if(lastGrid > firstGrid)
-    {
-        tmp = readHexs(gridFiles[lastGrid],0,endIndex,isBigEndian[lastGrid]);
-        for(int hex : tmp)
-            hexBuffer[positionInBuffer++] = hex + gridNodeMap[lastGrid];
-    }
-    return hexBuffer;
 }
 
 inline int Parfait::ParallelMeshReader::getFirstGrid(std::vector<long> &gridMap, long begin) {

@@ -62,9 +62,6 @@ namespace Parfait {
                                      int objectSize,
                                      std::vector<long> &gridElementMap,
                                      long begin, long end);
-      std::vector<long> getPyramids(long begin, long end);
-      std::vector<long> getPrisms(long begin, long end);
-      std::vector<long> getHexs(long begin, long end);
       int getFirstGrid(std::vector<long> &gridMap, long begin);
       int getLastGrid(std::vector<long> &gridMap, long end);
       int getBeginIndex(std::vector<long> &gridMap, long begin);
