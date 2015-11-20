@@ -250,10 +250,14 @@ namespace Parfait {
             MessagePasser::Broadcast(neededNodeIds, proc);
             for(long nodeId:neededNodeIds){
                 auto iter = nodeToCell.find(nodeId);
-                if(iter != nodeToCell.end())
-                    for(int cellId:iter->second)
-                        if(not cellHasBeenAdded[cellId])
+                if(iter != nodeToCell.end()) {
+                    for (int cellId:iter->second) {
+                        if (not cellHasBeenAdded[cellId]) {
                             sendCellIds.push_back(cellId);
+                            cellHasBeenAdded[cellId] = true;
+                        }
+                    }
+                }
             }
             //for (unsigned int i = 0; i < cells.size() / cellSize; i++) {
             //    if(iShouldSendThisCell(&cells[cellSize*i],cellSize,neededNodeIds))
