@@ -177,8 +177,6 @@ namespace Parfait {
             for (auto globalNodeId : idsOfXyxsINeed) {
                 if(amItheOwnerOfThisNode(globalNodeId, global_to_local)) {
                     int localNodeId = global_to_local[globalNodeId];
-                    //printf("Rank %i owns gid %i (%f %f %f) (local id %i)\n",MessagePasser::Rank(),globalNodeId,mesh->metaData->xyz[3*localNodeId+0],
-                    //mesh->metaData->xyz[3*localNodeId+1], mesh->metaData->xyz[3*localNodeId+2],localNodeId);
                     sendXYZ.push_back(mesh->metaData->xyz[3 * localNodeId + 0]);
                     sendXYZ.push_back(mesh->metaData->xyz[3 * localNodeId + 1]);
                     sendXYZ.push_back(mesh->metaData->xyz[3 * localNodeId + 2]);
@@ -266,9 +264,6 @@ namespace Parfait {
             //    if(iShouldSendThisCell(&cells[cellSize*i],cellSize,neededNodeIds))
             //        sendCellIds.push_back(i);
            // }
-            if(proc == 0 and cellSize == 4){
-                printf("Rank %i has %i tets for the root\n",MessagePasser::Rank(),(int)sendCellIds.size());
-            }
             vector<long> sendCells;
             sendCells.reserve(cellSize*sendCellIds.size());
             for (auto id:sendCellIds)
