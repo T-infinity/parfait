@@ -53,7 +53,8 @@ inline std::vector<int> Parfait::CartBlock::getNodesInCell(int id) {
 
 inline int Parfait::CartBlock::getIdOfContainingCell(const double point[3]) const
 {
-  assert(contains(Point<double>(point)));
+    if(not contains(Point<double>(point)))
+        throw std::domain_error("Point not contained by any cell in block");
   double hx,hy,hz;
   hx = point[0] - lo[0]; // get distance from min point
   hy = point[1] - lo[1];
