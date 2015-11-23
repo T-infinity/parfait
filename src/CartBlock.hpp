@@ -51,7 +51,7 @@ inline std::vector<int> Parfait::CartBlock::getNodesInCell(int id) {
     return cellNodes;
 }
 
-inline int Parfait::CartBlock::getIdOfContainingCell(double point[3]) const
+inline int Parfait::CartBlock::getIdOfContainingCell(const double point[3]) const
 {
   assert(contains(Point<double>(point)));
   double hx,hy,hz;
