@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <cstring>
 #include <iostream>
+#include <vector>
 
 namespace MessagePasser{
 
@@ -11,7 +12,7 @@ namespace MessagePasser{
       size_t length;
       std::vector<char> data_copy;
       Element(size_t n) :length(n), data_copy(length){}
-      Element(size_t length, char* data)
+      Element(char* data, size_t length)
               :length(length),
                data_copy(data,data+length)
       {
@@ -37,7 +38,7 @@ namespace MessagePasser{
       template <typename T>
       typename std::enable_if<std::is_pod<T>::value, Stream &>::type
       operator<<(const T& a){
-          elements.push_back(Element(sizeof(a), (char*)&a));
+          elements.push_back(Element{(char*)&a, sizeof(a)});
           return *this;
       }
       template <typename T>
@@ -51,7 +52,7 @@ namespace MessagePasser{
 
       template <typename T> typename std::enable_if<std::is_pod<T>::value, Stream &>::type
       operator<<(const std::vector<T>& vec){
-          elements.push_back(Element{(vec.size()*sizeof(T)), (char*)vec.data()});
+          elements.push_back(Element{(char*)vec.data(), (vec.size()*sizeof(T))});
           return *this;
       }
       template <typename T> typename std::enable_if<std::is_pod<T>::value, Stream &>::type
@@ -83,7 +84,7 @@ namespace MessagePasser{
 
       template <typename T> typename std::enable_if<std::is_pod<T>::value, void>::type
       push_front(const T& a) {
-          elements.push_front(Element{sizeof(a), (char*)&a});
+          elements.push_front(Element{(char*)&a, sizeof(a)});
       }
 
       template <typename T> typename std::enable_if<not std::is_pod<T>::value, void>::type
@@ -97,7 +98,10 @@ namespace MessagePasser{
           }
       }
 
-      inline std::list<Element> getElements(){
+      inline size_t size() const {
+          return elements.size();
+      }
+      inline std::list<Element>& getElements(){
           return elements;
       }
       inline void push_element(const Element& e){
