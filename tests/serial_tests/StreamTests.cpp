@@ -22,6 +22,10 @@ TEST_CASE("Empty stream"){
     REQUIRE_THROWS_AS(stream >> a, std::logic_error);
 }
 
+TEST_CASE("STL like functions for Stream and Element"){
+    MessagePasser::Stream stream;
+}
+
 TEST_CASE("Stream vector of POD"){
 
     MessagePasser::Stream stream;

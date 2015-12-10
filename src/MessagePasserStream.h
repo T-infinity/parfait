@@ -11,8 +11,8 @@ namespace MessagePasser{
   struct Element {
   private:
       size_t length;
-  public:
       std::vector<char> data_copy;
+  public:
       Element(size_t n) :length(n), data_copy(length){}
       Element(char* data, size_t length)
               :length(length),
@@ -20,6 +20,7 @@ namespace MessagePasser{
       {
       }
       size_t size(){return length;}
+      char* data() {return data_copy.data();}
   };
 
   class Stream {
@@ -31,10 +32,6 @@ namespace MessagePasser{
           for(auto &e : s.elements)
               elements.emplace_back(e);
           return *this;
-      }
-
-      bool empty(){
-          return 0 == elements.size();
       }
 
       Stream& operator>>(Stream &s){
@@ -55,7 +52,7 @@ namespace MessagePasser{
           throwIfEmpty();
           auto e = elements.front();
           elements.pop_front();
-          a = *(T*)e.data_copy.data();
+          a = *(T*)e.data();
           return *this;
       }
 
@@ -71,7 +68,7 @@ namespace MessagePasser{
           elements.pop_front();
           auto length = e.size() / sizeof(T);
           vec.resize(length);
-          std::memcpy(vec.data(), e.data_copy.data(), e.size());
+          std::memcpy(vec.data(), e.data(), e.size());
           return *this;
       }
 
@@ -108,15 +105,14 @@ namespace MessagePasser{
           }
       }
 
-      inline size_t size() const {
-          return elements.size();
-      }
-      inline std::list<Element>& getElements(){
-          return elements;
-      }
-      inline void push_element(const Element& e){
-          elements.push_back(e);
-      }
+      inline bool empty(){ return 0 == elements.size(); }
+
+      inline size_t size() const { return elements.size(); }
+
+      inline std::list<Element>& getElements(){ return elements; }
+
+      inline void push_element(const Element& e){ elements.push_back(e); }
+
       inline void throwIfEmpty(){
           if(empty())
             throw std::logic_error("Tried to >> out of an empty stream");
