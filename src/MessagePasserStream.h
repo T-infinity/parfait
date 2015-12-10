@@ -93,7 +93,6 @@ namespace MessagePasser{
 
       template <typename T> typename std::enable_if<not std::is_pod<T>::value, void>::type
       push_front(const T& a) {
-          printf("\npushing non-pod object to the front"); fflush(stdout);
           Stream s;
           s << a;
           for(auto it = s.elements.rbegin(); it != s.elements.rend(); it++ ) {
