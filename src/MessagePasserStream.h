@@ -8,20 +8,19 @@
 
 namespace MessagePasser{
 
-  struct Element {
-  private:
-      size_t length;
-      std::vector<char> data_copy;
-  public:
-      Element(size_t n) :length(n), data_copy(length){}
-      Element(char* data, size_t length)
-              :length(length),
-               data_copy(data,data+length)
-      {
-      }
-      size_t size(){return length;}
-      char* data() {return data_copy.data();}
-  };
+    struct Element {
+        Element(size_t n) :length(n), data_copy(length){}
+        Element(char* data, size_t length)
+            :length(length),
+             data_copy(data,data+length)
+        {
+        }
+        size_t size(){return length;}
+        char* data() {return data_copy.data();}
+    private:
+        size_t length;
+        std::vector<char> data_copy;
+    };
 
   class Stream {
   private:
