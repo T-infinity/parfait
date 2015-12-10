@@ -35,6 +35,7 @@ namespace MessagePasser{
       }
 
       Stream& operator>>(Stream &s){
+          throwIfEmpty();
           s << *this;
           return *this;
       }
@@ -48,6 +49,7 @@ namespace MessagePasser{
       template <typename T>
       typename std::enable_if<std::is_pod<T>::value, Stream &>::type
       operator>>(T& a){
+          throwIfEmpty();
           auto e = elements.front();
           elements.pop_front();
           a = *(T*)e.data_copy.data();
@@ -61,6 +63,7 @@ namespace MessagePasser{
       }
       template <typename T> typename std::enable_if<std::is_pod<T>::value, Stream &>::type
               operator>>(std::vector<T>& vec){
+          throwIfEmpty();
           auto e = elements.front();
           elements.pop_front();
           auto length = e.length / sizeof(T);
@@ -78,6 +81,7 @@ namespace MessagePasser{
       }
       template <typename T> typename std::enable_if<not std::is_pod<T>::value, Stream &>::type
       operator>>(std::vector<T>& vec){
+          throwIfEmpty();
           auto e = elements.front();
           elements.pop_front();
           vec.resize(e.length);
@@ -109,6 +113,10 @@ namespace MessagePasser{
       }
       inline void push_element(const Element& e){
           elements.push_back(e);
+      }
+      inline void throwIfEmpty(){
+          if(empty())
+            throw std::logic_error("Tried to >> out of an empty stream");
       }
   };
 }

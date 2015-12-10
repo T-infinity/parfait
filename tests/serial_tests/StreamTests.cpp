@@ -18,6 +18,8 @@ TEST_CASE("Stream POD") {
 TEST_CASE("Empty stream"){
     MessagePasser::Stream stream;
     REQUIRE(stream.empty());
+    int a;
+    REQUIRE_THROWS_AS(stream >> a, std::logic_error);
 }
 
 TEST_CASE("Stream vector of POD"){
