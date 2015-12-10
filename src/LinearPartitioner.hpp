@@ -1,6 +1,8 @@
 #ifndef PARFAIT_LINEARPARTITIONER_HPP
 #define PARFAIT_LINEARPARTITIONER_HPP
 
+#include <vector>
+
 namespace Parfait {
   namespace LinearPartitioner {
 
