@@ -9,7 +9,9 @@
 namespace MessagePasser{
 
   struct Element {
+  private:
       size_t length;
+  public:
       std::vector<char> data_copy;
       Element(size_t n) :length(n), data_copy(length){}
       Element(char* data, size_t length)
@@ -17,6 +19,7 @@ namespace MessagePasser{
                data_copy(data,data+length)
       {
       }
+      size_t size(){return length;}
   };
 
   class Stream {
@@ -66,9 +69,9 @@ namespace MessagePasser{
           throwIfEmpty();
           auto e = elements.front();
           elements.pop_front();
-          auto length = e.length / sizeof(T);
+          auto length = e.size() / sizeof(T);
           vec.resize(length);
-          std::memcpy(vec.data(), e.data_copy.data(), e.length);
+          std::memcpy(vec.data(), e.data_copy.data(), e.size());
           return *this;
       }
 
@@ -84,7 +87,7 @@ namespace MessagePasser{
           throwIfEmpty();
           auto e = elements.front();
           elements.pop_front();
-          vec.resize(e.length);
+          vec.resize(e.size());
           for(auto & v : vec)
               *this >> v;
           return *this;
