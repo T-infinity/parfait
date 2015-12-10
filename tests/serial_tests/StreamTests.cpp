@@ -14,6 +14,12 @@ TEST_CASE("Stream POD") {
     double d;
     stream >> d;
 }
+
+TEST_CASE("Empty stream"){
+    MessagePasser::Stream stream;
+    REQUIRE(stream.empty());
+}
+
 TEST_CASE("Stream vector of POD"){
 
     MessagePasser::Stream stream;

@@ -29,6 +29,10 @@ namespace MessagePasser{
           return *this;
       }
 
+      bool empty(){
+          return 0 == elements.size();
+      }
+
       Stream& operator>>(Stream &s){
           s << *this;
           return *this;
