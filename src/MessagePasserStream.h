@@ -72,19 +72,16 @@ namespace MessagePasser{
           return *this;
       }
 
-      template <typename T>
-      Stream& operator<<(const Parfait::Extent<T>& extent){
-          elements.push_back(Element{(char*)extent.lo.data(), (sizeof(T)*6)});
+      Stream& operator<<(const Element& e){
+          elements.push_back(e);
           return *this;
       }
 
-      template <typename T>
-      Stream& operator>>(Parfait::Extent<T>& extent){
+      Stream& operator>>(Element& element){
           throwIfEmpty();
           auto e = elements.front();
           elements.pop_front();
-          auto length = e.size() / sizeof(T);
-          std::memcpy(extent.lo.data(), e.data(), e.size());
+          element = e;
           return *this;
       }
 

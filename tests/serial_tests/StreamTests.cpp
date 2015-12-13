@@ -22,13 +22,16 @@ TEST_CASE("Empty stream"){
     REQUIRE_THROWS_AS(stream >> a, std::logic_error);
 }
 
-TEST_CASE("Stream an extent"){
+TEST_CASE("Stream an Element"){
     MessagePasser::Stream stream;
     Parfait::Extent<double> extent {{0,0,0},{1,1,1}};
-    stream << extent;
+    MessagePasser::Element element((char*)extent.lo.data(),6*sizeof(double));
+    stream << element;
     extent.lo = {9,9,9};
     extent.hi = {9,9,9};
-    stream >> extent;
+    MessagePasser::Element element2(6*sizeof(double));
+    stream >> element2;
+    memcpy(extent.lo.data(),element2.data(),element2.size());
     REQUIRE(0 == extent.lo[0]);
     REQUIRE(1 == extent.hi[0]);
 }
