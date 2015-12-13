@@ -14,8 +14,12 @@ namespace MessagePasser{
         Element(char* data, size_t length)
             :length(length),
              data_copy(data,data+length)
-        {
-        }
+        { }
+        template<typename CopyableType>
+        Element(const CopyableType& n)
+            :length(sizeof(n)),
+             data_copy((char*)&n,(char*)&n+length)
+        {}
         size_t size(){return length;}
         char* data() {return data_copy.data();}
     private:
