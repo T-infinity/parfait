@@ -25,8 +25,7 @@ TEST_CASE("Empty stream"){
 TEST_CASE("Stream an Element"){
     MessagePasser::Stream stream;
     Parfait::Extent<double> extent {{0,0,0},{1,1,1}};
-    MessagePasser::Element element(extent);
-    stream << element;
+    stream << MessagePasser::Element(extent);
     extent.lo = {9,9,9};
     extent.hi = {9,9,9};
     MessagePasser::Element element2(6*sizeof(double));
