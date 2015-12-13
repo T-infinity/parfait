@@ -5,6 +5,7 @@
 #include <cstring>
 #include <iostream>
 #include <vector>
+#include "Extent.h"
 
 namespace MessagePasser{
 
@@ -68,6 +69,22 @@ namespace MessagePasser{
           auto length = e.size() / sizeof(T);
           vec.resize(length);
           std::memcpy(vec.data(), e.data(), e.size());
+          return *this;
+      }
+
+      template <typename T>
+      Stream& operator<<(const Parfait::Extent<T>& extent){
+          elements.push_back(Element{(char*)extent.lo.data(), (sizeof(T)*6)});
+          return *this;
+      }
+
+      template <typename T>
+      Stream& operator>>(Parfait::Extent<T>& extent){
+          throwIfEmpty();
+          auto e = elements.front();
+          elements.pop_front();
+          auto length = e.size() / sizeof(T);
+          std::memcpy(extent.lo.data(), e.data(), e.size());
           return *this;
       }
 
