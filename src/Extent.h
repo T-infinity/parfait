@@ -41,7 +41,7 @@ namespace Parfait {
         friend MessagePasser::Stream& operator>>(MessagePasser::Stream &stream, Extent<T>&extent){
             MessagePasser::Element element(6*sizeof(T));
             stream >> element;
-            memcpy(extent.lo.data(),element.data(),6*sizeof(T));
+            memcpy(extent.data(),element.data(),6*sizeof(T));
             return stream;
         }
     };

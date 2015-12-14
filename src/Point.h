@@ -8,15 +8,15 @@ namespace Parfait {
   template <typename T>
   class Point {
   public:
-    T pos[3];
+    std::array<T,3> pos;
 
     Point();
     Point(T x, T y, T z);
     Point(const T *);
 
-    T *data() { return pos; }
+    T *data() { return pos.data(); }
 
-    const T *data() const { return pos; }
+    const T *data() const { return pos.data(); }
 
     inline T &operator[](int i) {
       return pos[i];
