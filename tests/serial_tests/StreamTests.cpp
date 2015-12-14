@@ -38,10 +38,12 @@ TEST_CASE("Stream an Element"){
 TEST_CASE("Stream an extent"){
     MessagePasser::Stream stream;
     Parfait::Extent<double> extent {{0,0,0},{1,1,1}};
-    //stream << extent;
+    stream << extent;
     extent.lo = {9,9,9};
     extent.hi = {9,9,9};
-    //stream >> extent;
+    stream >> extent;
+    REQUIRE(0 == extent.lo[0]);
+    REQUIRE(1 == extent.hi[0]);
 }
 
 TEST_CASE("Stream vector of POD"){
