@@ -16,7 +16,8 @@ namespace Parfait {
         Extent();
         Extent(const T extent[6]);
         Extent(const Point<T> &lo, const Point<T> &hi);
-        T* data();
+        T* data() {return lo.data();};
+        const T* data() const {return lo.data();};
 
         bool contains(const Point<T> &p) const;
         bool contains(const Extent &box) const;
@@ -35,7 +36,7 @@ namespace Parfait {
         static Extent extentAroundPoint(const Point<T> &p, T tol);
         static double volume(const Extent &domain);
         friend MessagePasser::Stream& operator<<(MessagePasser::Stream &stream, const Extent<T>&extent){
-          stream << MessagePasser::Element((char*) extent.lo.data(),6*sizeof(T));
+          stream << MessagePasser::Element((char*) extent.data(),6*sizeof(T));
             return stream;
         }
         friend MessagePasser::Stream& operator>>(MessagePasser::Stream &stream, Extent<T>&extent){

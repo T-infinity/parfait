@@ -21,11 +21,6 @@ namespace Parfait {
   Extent<T>::Extent(const Point<T> &lo_in, const Point<T> &hi_in)
       : lo(lo_in), hi(hi_in) { }
 
-    template<typename T>
-    T* Extent<T>::data() {
-      return lo.data();
-    }
-
   template <typename T>
   bool Extent<T>::contains(const Point<T> &p) const {
     for (unsigned int i = 0; i < 3; i++) {
