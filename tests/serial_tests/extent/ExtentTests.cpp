@@ -18,6 +18,11 @@ TEST_CASE("Extent, Constructor"){
 
 }
 
+TEST_CASE("stl like functions"){
+    Extent<int> extent{{0,0,0},{1,1,1}};
+    REQUIRE(extent.lo.data() == extent.data());
+}
+
 TEST_CASE("Extent, PointerConstructors"){
 
     double d_lo[3] = {0.1,0.1,0.1};

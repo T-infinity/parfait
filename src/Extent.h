@@ -16,6 +16,7 @@ namespace Parfait {
         Extent();
         Extent(const T extent[6]);
         Extent(const Point<T> &lo, const Point<T> &hi);
+        T* data();
 
         bool contains(const Point<T> &p) const;
         bool contains(const Extent &box) const;
