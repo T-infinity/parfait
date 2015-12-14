@@ -33,13 +33,15 @@ namespace Parfait {
 
         static Extent extentAroundPoint(const Point<T> &p, T tol);
         static double volume(const Extent &domain);
-        friend void operator<<(MessagePasser::Stream &stream, const Extent<T>&extent){
+        friend MessagePasser::Stream& operator<<(MessagePasser::Stream &stream, const Extent<T>&extent){
           stream << MessagePasser::Element((char*) extent.lo.data(),6*sizeof(T));
+            return stream;
         }
-        friend void operator>>(MessagePasser::Stream &stream, Extent<T>&extent){
+        friend MessagePasser::Stream& operator>>(MessagePasser::Stream &stream, Extent<T>&extent){
             MessagePasser::Element element(6*sizeof(T));
             stream >> element;
             memcpy(extent.lo.data(),element.data(),6*sizeof(T));
+            return stream;
         }
     };
 
