@@ -1,5 +1,6 @@
 #include <catch.hpp>
 #include "MessagePasserStream.h"
+#include "Extent.h"
 
 TEST_CASE("Stream POD") {
     MessagePasser::Stream stream;
@@ -24,15 +25,23 @@ TEST_CASE("Empty stream"){
 
 TEST_CASE("Stream an Element"){
     MessagePasser::Stream stream;
+    double x = 3.5;
+    MessagePasser::Element element((char*)&x,sizeof(x));
+    stream << element;
+    x = 0;
+    MessagePasser::Element element2(sizeof(x));
+    stream >> element2;
+    memcpy(&x,element2.data(),sizeof(x));
+    REQUIRE(3.5 == x);
+}
+
+TEST_CASE("Stream an extent"){
+    MessagePasser::Stream stream;
     Parfait::Extent<double> extent {{0,0,0},{1,1,1}};
-    stream << MessagePasser::Element(extent);
+    //stream << extent;
     extent.lo = {9,9,9};
     extent.hi = {9,9,9};
-    MessagePasser::Element element2(6*sizeof(double));
-    stream >> element2;
-    memcpy(extent.lo.data(),element2.data(),element2.size());
-    REQUIRE(0 == extent.lo[0]);
-    REQUIRE(1 == extent.hi[0]);
+    //stream >> extent;
 }
 
 TEST_CASE("Stream vector of POD"){
