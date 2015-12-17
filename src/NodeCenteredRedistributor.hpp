@@ -114,21 +114,18 @@ namespace Parfait {
   }
 
     inline std::map<long,std::vector<int>> NodeBasedRedistributor::mapNodesToCells(std::vector<long>& globalNodeIds,
-                                                                                   std::vector<int>& nodeOwnershipDegree,
                                                                                  std::vector<int>& cells,
                                                                                  int cellSize){
         std::map<long,std::vector<int>> nodeToCell;
         int ncells = (int)cells.size()/cellSize;
         for(int i=0;i<ncells;++i){
             for(int j=0;j<cellSize;++j){
-                if(0 == nodeOwnershipDegree[cells[cellSize*i+j]]) {
-                    long nodeId = globalNodeIds[cells[cellSize * i + j]];
-                    auto iter = nodeToCell.find(nodeId);
-                    if (iter != nodeToCell.end())
-                        iter->second.push_back(i);
-                    else
-                        nodeToCell[nodeId] = {i};
-                }
+                long nodeId = globalNodeIds[cells[cellSize*i+j]];
+                auto iter = nodeToCell.find(nodeId);
+                if(iter != nodeToCell.end())
+                    iter->second.push_back(i);
+                else
+                    nodeToCell[nodeId] = {i};
             }
         }
         return nodeToCell;
@@ -177,6 +174,8 @@ namespace Parfait {
             for (auto globalNodeId : idsOfXyxsINeed) {
                 if(amItheOwnerOfThisNode(globalNodeId, global_to_local)) {
                     int localNodeId = global_to_local[globalNodeId];
+                    //printf("Rank %i owns gid %i (%f %f %f) (local id %i)\n",MessagePasser::Rank(),globalNodeId,mesh->metaData->xyz[3*localNodeId+0],
+                    //mesh->metaData->xyz[3*localNodeId+1], mesh->metaData->xyz[3*localNodeId+2],localNodeId);
                     sendXYZ.push_back(mesh->metaData->xyz[3 * localNodeId + 0]);
                     sendXYZ.push_back(mesh->metaData->xyz[3 * localNodeId + 1]);
                     sendXYZ.push_back(mesh->metaData->xyz[3 * localNodeId + 2]);
@@ -240,30 +239,33 @@ namespace Parfait {
         if(MessagePasser::Rank() == 0) printf("Redistributing cells (%i)\n",cellSize);
         vector<long> recvCells;
 
-        auto nodeToCell = mapNodesToCells(mesh->metaData->globalNodeIds,mesh->metaData->nodeOwnershipDegree,cells,cellSize);
+        //auto nodeToCell = mapNodesToCells(my_non_ghost_ids,cells,cellSize);
 
         for (int proc = 0; proc < MessagePasser::NumberOfProcesses(); proc++) {
             vector<long> neededNodeIds;
             vector<long> sendCellIds;
-            std::vector<bool> cellHasBeenAdded(cells.size(),false);
+            //std::vector<bool> cellHasBeenAdded(cells.size(),false);
             if (MessagePasser::Rank() == proc)
                 neededNodeIds = my_non_ghost_ids;
             MessagePasser::Broadcast(neededNodeIds, proc);
-            for(long nodeId:neededNodeIds){
-                auto iter = nodeToCell.find(nodeId);
-                if(iter != nodeToCell.end()) {
-                    for (int cellId:iter->second) {
-                        if (not cellHasBeenAdded[cellId]) {
-                           sendCellIds.push_back(cellId);
-                            cellHasBeenAdded[cellId] = true;
-                        }
-                    }
-                }
+            //for(long nodeId:neededNodeIds){
+            //    auto iter = nodeToCell.find(nodeId);
+            //    if(iter != nodeToCell.end()) {
+            //        for (int cellId:iter->second) {
+            //            if (not cellHasBeenAdded[cellId]) {
+            //                sendCellIds.push_back(cellId);
+            //                cellHasBeenAdded[cellId] = true;
+            //            }
+            //        }
+            //    }
+            //}
+            for (unsigned int i = 0; i < cells.size() / cellSize; i++) {
+                if(iShouldSendThisCell(&cells[cellSize*i],cellSize,neededNodeIds))
+                    sendCellIds.push_back(i);
             }
-            //for (unsigned int i = 0; i < cells.size() / cellSize; i++) {
-            //    if(iShouldSendThisCell(&cells[cellSize*i],cellSize,neededNodeIds))
-            //        sendCellIds.push_back(i);
-           // }
+            if(proc == 0 and cellSize == 4){
+                printf("Rank %i has %i tets for the root\n",MessagePasser::Rank(),sendCellIds.size());
+            }
             vector<long> sendCells;
             sendCells.reserve(cellSize*sendCellIds.size());
             for (auto id:sendCellIds)
