@@ -111,14 +111,30 @@ namespace Parfait {
 
   template <typename T>
   bool Point<T>::operator!=(const Point<T> &rhs) {
-    if (pos[0] != rhs.pos[0])
-      return true;
-    if (pos[1] != rhs.pos[1])
-      return true;
-    if (pos[2] != rhs.pos[2])
-      return true;
-    return false;
+      return not (*this == rhs);
   }
+
+  template <typename T>
+  bool Point<T>::operator<(const Point<T> &rhs) {
+      if (pos[0] < rhs.pos[0])
+          return true;
+      else if(pos[0] > rhs.pos[0])
+          return false;
+      if (pos[1] < rhs.pos[1])
+          return true;
+      else if(pos[1] < rhs.pos[1])
+          return false;
+      if (pos[2] < rhs.pos[2])
+          return true;
+      else if(pos[2] < rhs.pos[2])
+          return false;
+      return false;
+  }
+
+    template <typename T>
+    bool Point<T>::operator>(const Point<T> &rhs) {
+        return (not (*this < rhs)) and (not (*this == rhs));
+    }
 
   template <typename T>
   bool Point<T>::approxEqual(const Point<T> &rhs, T tol) const {

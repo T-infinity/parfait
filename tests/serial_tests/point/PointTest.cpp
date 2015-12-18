@@ -10,6 +10,26 @@ TEST_CASE("Point, Constructor"){
     REQUIRE(3.0 == b[2]);
 }
 
+TEST_CASE("Point < operator"){
+    Point<int> a {2,3,1};
+    Point<int> b {2,3,1};
+    REQUIRE_FALSE(a < b);
+    b = {2,3,2};
+    REQUIRE(a < b);
+    b = {2,2,1};
+    REQUIRE_FALSE(a < b);
+}
+
+TEST_CASE("Point > operator"){
+    Point<int> a {2,3,1};
+    Point<int> b {2,3,1};
+    REQUIRE_FALSE(a > b);
+    b = {2,3,2};
+    REQUIRE_FALSE(a > b);
+    b = {2,2,1};
+    REQUIRE(a > b);
+}
+
 TEST_CASE("Point, DoubleConstructor")
 {
     double p[3] = {1,2,3};
