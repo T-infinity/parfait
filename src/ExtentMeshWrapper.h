@@ -5,7 +5,9 @@
 namespace Parfait{
     class ExtentMeshWrapper{
     public:
-        ExtentMeshWrapper(){}
+        ExtentMeshWrapper() = default;
+        ExtentMeshWrapper(const Extent<double>& e):extents({e}){}
+        ExtentMeshWrapper(const std::vector<Extent<double>>& vec):extents(vec){}
         int numberOfNodes() {return 8*extents.size();}
         int numberOfCells() {return extents.size();}
         int numberOfNodesInCell(int i) {return 8;}

@@ -35,3 +35,18 @@ TEST_CASE("To turn extent boxes into a mesh that can be visualized"){
     REQUIRE(15 == vertexIds[7]);
 }
 
+TEST_CASE("test constructor that takes a single extent"){
+    Extent<double> e {{0,0,0},{1,1,1}};
+    ExtentMeshWrapper wrapper1(e);
+    REQUIRE(8 == wrapper1.numberOfNodes());
+}
+
+TEST_CASE("test vector constructor"){
+    Extent<double> e{{0,0,0},{1,1,1}};
+    std::vector<Extent<double>> vec;
+    vec.push_back(e);
+    vec.push_back(e);
+    ExtentMeshWrapper wrapper(vec);
+    REQUIRE(16 == wrapper.numberOfNodes());
+}
+
