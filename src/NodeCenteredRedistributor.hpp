@@ -264,9 +264,6 @@ namespace Parfait {
                 if(iShouldSendThisCell(&cells[cellSize*i],cellSize,neededNodeIds))
                     sendCellIds.push_back(i);
             }
-            if(proc == 0 and cellSize == 4){
-                printf("Rank %i has %i tets for the root\n",MessagePasser::Rank(),int(sendCellIds.size()));
-            }
             vector<long> sendCells;
             sendCells.reserve(cellSize*sendCellIds.size());
             for (auto id:sendCellIds)
