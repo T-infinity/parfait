@@ -51,7 +51,7 @@ set(SERIAL_TESTS_SOURCES
         VtkGenericTests/VtkGenericTests.cpp
         VtkSurfaceTests/VtkSurfaceTests.cpp
         MeshConnectivityTests.cpp
-        MeshMetaDataTests.cpp)
+        MeshMetaDataTests.cpp ExtentMeshWrapperTests.cpp)
 
 include_directories(../)
 
