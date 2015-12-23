@@ -43,7 +43,15 @@ inline Parfait::ParallelMeshReader::ParallelMeshReader(std::vector<std::string> 
     gridHexMap.push_back(0);
     for (int i:range(gridFiles)) {
         int nnodes, ntri, nquad, ntet, npyr, nprism, nhex;
-        UgridReader::readHeader(gridFiles[i], nnodes, ntri, nquad, ntet, npyr, nprism, nhex, isBigEndian[i]);
+        if(MessagePasser::Rank() == 0)
+            UgridReader::readHeader(gridFiles[i], nnodes, ntri, nquad, ntet, npyr, nprism, nhex, isBigEndian[i]);
+        MessagePasser::Broadcast(nnodes,0);
+        MessagePasser::Broadcast(ntri);
+        MessagePasser::Broadcast(nquad);
+        MessagePasser::Broadcast(ntet);
+        MessagePasser::Broadcast(npyr);
+        MessagePasser::Broadcast(nprism);
+        MessagePasser::Broadcast(nhex);
         gridNodeMap.push_back(nnodes);
         gridTriangleMap.push_back(ntri);
         gridQuadMap.push_back(nquad);
