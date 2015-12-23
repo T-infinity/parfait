@@ -1,5 +1,6 @@
 #include "ByteSwap.h"
 #include <stdexcept>
+#include "MessagePasser.h"
 
 inline void Parfait::UgridReader::readHeader(std::string filename,int &nnodes,
 		int &ntri,int &nquad,
