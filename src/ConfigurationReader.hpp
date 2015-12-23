@@ -17,8 +17,34 @@ namespace Parfait {
 
 	inline void ConfigurationReader::readMapbcFiles() {
 		for (auto filename:*gridFilenames) {
-            auto reader = MapbcReader(MapbcReader(filename.substr(0, filename.length() - 5).append("mapbc")));
-            mapbcVector->push_back(reader.getMap());
+            std::vector<int> tags;
+            std::vector<int> bcs;
+            std::vector<std::string> names;
+            if(MessagePasser::Rank() == 0) {
+                auto reader = MapbcReader(MapbcReader(filename.substr(0, filename.length() - 5).append("mapbc")));
+                for(auto x:reader.getMap()){
+                    tags.push_back(x.first);
+                    bcs.push_back(x.second.first);
+                    names.push_back(x.second.second);
+                }
+            }
+            MessagePasser::Broadcast(tags,0);
+            MessagePasser::Broadcast(bcs,0);
+            names.resize(tags.size());
+            for(int i=0;i<int(names.size());++i){
+                int n = (int)names[i].size();
+                MessagePasser::Broadcast(n,0);
+                std::vector<char> tmp(n);
+                if(MessagePasser::Rank() == 0)
+                    tmp = std::vector<char>(names[i].data(),names[i].data()+names[i].size());
+                MessagePasser::Broadcast(tmp,0);
+                names[i] = std::string(tmp.data(),tmp.data()+tmp.size());
+            }
+            BoundaryConditionMap bcMap;
+            for(int i=0;i<(int)tags.size();++i)
+                bcMap[tags[i]] = std::make_pair(bcs[i],names[i]);
+
+            mapbcVector->push_back(bcMap);
         }
 	}
 
