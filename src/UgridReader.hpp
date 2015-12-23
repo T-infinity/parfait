@@ -153,6 +153,8 @@ inline std::vector<double> Parfait::UgridReader::readNodes(std::string filename,
 
 inline std::vector<double> Parfait::UgridReader::readNodes(std::string filename,int begin,int end,bool swapBytes)
 {
+    if(MessagePasser::Rank() > 0)
+        throw std::logic_error("Error: rank "+std::to_string(MessagePasser::Rank())+" trying to read nodes");
     int nnodes,ntri,nquad,ntet,npyr,nprism,nhex;
     // get header info and allocate space for triangles
     readHeader(filename,nnodes,ntri,nquad,ntet,npyr,nprism,nhex,swapBytes);
