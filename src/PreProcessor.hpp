@@ -18,10 +18,6 @@ namespace Parfait{
   { }
 
   inline std::shared_ptr<ParallelMesh> PreProcessor::createMesh(){
-      if(MessagePasser::Rank() < 2){
-          int megaBytes = getMemoryUseage();
-          printf("Rank %i Using %i megabytes at beginning of create mesh\n",MessagePasser::Rank(),megaBytes);
-      }
       auto before_reading = Now();
       std::vector<std::string> grid_names;
       std::vector<bool> is_big_endian;
