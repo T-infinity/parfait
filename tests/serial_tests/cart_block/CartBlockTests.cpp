@@ -57,6 +57,40 @@ TEST_CASE("CartBlockTestsCells"){
     REQUIRE(numberOfNodes == block.numberOfNodes());
 }
 
+TEST_CASE("Make sure you get the right containing cell ids"){
+    CartBlock block({0,0,0},{1,1,1},2,2,2);
+
+    Point<double> pointOutsideBlock(3,3,3);
+    REQUIRE_THROWS(block.getIdOfContainingCell(pointOutsideBlock.data()));
+
+    SECTION("Test inside each cell"){
+        Point<double> p;
+        for(int i=0;i<block.numberOfCells();++i) {
+            block.getCellCentroid(i, p.data());
+            REQUIRE(i == block.getIdOfContainingCell(p.data()));
+        }
+    }
+    SECTION("Test corners"){
+        Point<double> p = {0,0,0};
+        REQUIRE(0 == block.getIdOfContainingCell(p.data()));
+        p = {1,0,0};
+        REQUIRE(1 == block.getIdOfContainingCell(p.data()));
+        p = {0,1,0};
+        REQUIRE(2 == block.getIdOfContainingCell(p.data()));
+        p = {1,1,0};
+        REQUIRE(3 == block.getIdOfContainingCell(p.data()));
+        p = {0,0,1};
+        REQUIRE(4 == block.getIdOfContainingCell(p.data()));
+        p = {1,0,1};
+        REQUIRE(5 == block.getIdOfContainingCell(p.data()));
+        p = {0,1,1};
+        REQUIRE(6 == block.getIdOfContainingCell(p.data()));
+        p = {1,1,1};
+        REQUIRE(7 == block.getIdOfContainingCell(p.data()));
+    }
+
+}
+
 TEST_CASE("CartBlockTestsNodeRetrieval"){
     double p1[3] = {1.0,2.0,3.0};
     double p2[3] = {2.2,3.2,4.2};
