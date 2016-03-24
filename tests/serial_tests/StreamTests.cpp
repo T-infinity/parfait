@@ -1,4 +1,5 @@
 #include <catch.hpp>
+#include <map>
 #include "MessagePasserStream.h"
 #include "Extent.h"
 

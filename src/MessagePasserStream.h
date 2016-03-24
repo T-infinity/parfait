@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <stdexcept>
+#include <map>
 
 namespace MessagePasser{
 
@@ -70,7 +71,14 @@ namespace MessagePasser{
           std::memcpy(vec.data(), e.data(), e.size());
           return *this;
       }
-
+      template <typename T, typename U>
+      Stream & operator<<(const std::pair<T, U>& p){
+          return *this << p.first << p.second;
+      }
+      template <typename T, typename U>
+      Stream & operator>>(std::pair<T, U>& p){
+          return *this >> p.first >> p.second;
+      }
       Stream& operator<<(const Element& e){
           elements.push_back(e);
           return *this;
@@ -85,12 +93,13 @@ namespace MessagePasser{
       }
 
       template <typename T> typename std::enable_if<not std::is_pod<T>::value, Stream &>::type
-      operator<<(const std::vector<T>& vec){
+      operator<<(const std::vector<T>& vec) {
           elements.push_back(Element{vec.size()});
-          for(auto &e :vec)
+          for (auto& e :vec)
               *this << e;
           return *this;
       }
+
       template <typename T> typename std::enable_if<not std::is_pod<T>::value, Stream &>::type
       operator>>(std::vector<T>& vec){
           throwIfEmpty();
@@ -99,6 +108,26 @@ namespace MessagePasser{
           vec.resize(e.size());
           for(auto & v : vec)
               *this >> v;
+          return *this;
+      }
+      template <typename T, typename U>
+      Stream& operator<<(const std::map<T, U> &m){
+          size_t length = m.size();
+          *this << length;
+          for(auto& pair : m){
+              *this << pair;
+          }
+          return *this;
+      }
+      template <typename T, typename U>
+      Stream& operator>>(std::map<T, U> &m){
+          size_t length;
+          *this >> length;
+          for(size_t i = 0; i < length; i++){
+              std::pair<T, U> p;
+              *this >> p;
+              m.insert(p);
+          }
           return *this;
       }
 

@@ -10,9 +10,9 @@ namespace Parfait {
   public:
     std::array<T,3> pos;
 
-    Point();
+    Point() = default;
     Point(T x, T y, T z);
-    Point(const T *);
+//    Point(const T *);
 
     T *data() { return pos.data(); }
 
@@ -48,6 +48,9 @@ namespace Parfait {
     static Point normalize(const Point &a);
 
     void Print() const;
+     std::string to_string() const;
+//     template <typename U>
+//      friend std::ostream& operator<<(std::ostream &os, const Point<U> &p);
   };
 }
 

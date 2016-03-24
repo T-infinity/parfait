@@ -30,6 +30,10 @@ namespace Parfait {
     }
     return true;
   }
+  template <typename T>
+  bool Extent<T>::approxEqual(const Extent<T> &e) const{
+    return lo.approxEqual(e.lo) and hi.approxEqual(e.hi);
+  }
 
   template <typename T>
   bool Extent<T>::contains(const Extent<T> &box) const {

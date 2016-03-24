@@ -21,6 +21,7 @@ namespace Parfait {
 
         bool contains(const Point<T> &p) const;
         bool contains(const Extent &box) const;
+        bool approxEqual(const Extent &e) const;
         T getLength_X() const;
         T getLength_Y() const;
         T getLength_Z() const;
