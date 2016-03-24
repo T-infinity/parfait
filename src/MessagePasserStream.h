@@ -7,6 +7,7 @@
 #include <vector>
 #include <stdexcept>
 #include <map>
+#include <set>
 
 namespace MessagePasser{
 
@@ -108,6 +109,26 @@ namespace MessagePasser{
           vec.resize(e.size());
           for(auto & v : vec)
               *this >> v;
+          return *this;
+      }
+      template <typename T>
+      Stream& operator<<(const std::set<T>& s){
+          size_t length = s.size();
+          *this << length;
+          for(const auto& p : s){
+              *this << p;
+          }
+          return *this;
+      }
+      template <typename T>
+      Stream& operator>>(std::set<T>& s){
+          size_t length;
+          *this >> length;
+          for(size_t i = 0; i < length; i++){
+              T p;
+              *this >> p;
+              s.insert(p);
+          }
           return *this;
       }
       template <typename T, typename U>
