@@ -92,29 +92,24 @@ namespace Parfait {
 	}
 
     inline void ConfigurationReader::getRotationForComponent(const TiXmlHandle &ComponentHandle) {
-        TiXmlElement *RotateElement;
-        RotateElement = ComponentHandle.FirstChild("rotate").ToElement();
-        double rotation_angle = 0.0;
-        Point<double> p1,p2;
-        if (RotateElement) {
-                double tmp;
-                int flag;
-                flag = RotateElement->QueryDoubleAttribute("angle", &tmp);
-                if (flag == TIXML_SUCCESS)
-                    rotation_angle = tmp;
-                else
-                	throw std::logic_error("Warning: Rotation defined with no angle of rotation");
+        for(auto Rotation = ComponentHandle.FirstChild("rotate").ToElement(); Rotation;) {
+                double angle;
+                if (TIXML_SUCCESS != Rotation->QueryDoubleAttribute("angle", &angle))
+                	throw std::logic_error("Rotation defined with no angle of rotation");
 
-                TiXmlHandle RotationHandle = ComponentHandle.FirstChild("rotate");
-                TiXmlElement *AxisBeginElement = RotationHandle.FirstChild("axis_begin").ToElement();
-                TiXmlElement *AxisEndElement = RotationHandle.FirstChild("axis_end").ToElement();
+                auto AxisBeginElement = Rotation->FirstChild("axis_begin")->ToElement();
+                auto AxisEndElement = Rotation->FirstChild("axis_end")->ToElement();
 
                 throwIfBadElement(AxisBeginElement);
                 throwIfBadElement(AxisEndElement);
 
-                p1 = getXYZ(AxisBeginElement);
-                p2 = getXYZ(AxisEndElement);
-                motionMatrices->back().addRotation(p1.data(), p2.data(), rotation_angle);
+                auto p1 = getXYZ(AxisBeginElement);
+                auto p2 = getXYZ(AxisEndElement);
+                motionMatrices->back().addRotation(p1.data(), p2.data(), angle);
+                auto next = Rotation->NextSibling("rotate");
+                if(not next)
+                    break;
+                Rotation = next->ToElement();
             }
     }
 
