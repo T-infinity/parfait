@@ -7,12 +7,12 @@ namespace Parfait{
 
   class CGNSToAflr {
   public:
-      template <typename T> void convertTet(T *tet){}
-      template <typename T> void convertPrism(T* prism){}
-      template <typename T> void convertHex(T*hex){}
+      template <typename T> static void convertTet(T *tet){}
+      template <typename T> static void convertPrism(T* prism){}
+      template <typename T> static void convertHex(T*hex){}
 
       template <typename T>
-      void convertPyramid(T* pyramid){
+      static void convertPyramid(T* pyramid){
           auto tmp = pyramid[2];
           pyramid[2] = pyramid[4];
           pyramid[4] = pyramid[3];
@@ -22,10 +22,10 @@ namespace Parfait{
 
   class CGNSToVtk {
   public:
-      template <typename T> void convertTet(T *tet){}
-      template <typename T> void convertPyramid(T* pyramid){}
-      template <typename T> void convertHex(T*hex){}
-      void convertPrism(int* prism){
+      template <typename T> static void convertTet(T *tet){}
+      template <typename T> static void convertPyramid(T* pyramid){}
+      template <typename T> static void convertHex(T*hex){}
+      static void convertPrism(int* prism){
           std::swap(prism[0],prism[3]);
           std::swap(prism[1],prism[4]);
           std::swap(prism[2],prism[5]);
@@ -34,10 +34,10 @@ namespace Parfait{
 
   class CGNSToFun3D {
   public:
-      template <typename T> void convertTet(T *tet){}
-      template <typename T> void convertPyramid(T* pyramid){}
+      template <typename T> static void convertTet(T *tet){}
+      template <typename T> static void convertPyramid(T* pyramid){}
       template <typename T>
-      void convertPrism(T* prism){
+      static void convertPrism(T* prism){
           std::swap(prism[1],prism[3]);
           auto tmp = prism[2];
           prism[2] = prism[4];
@@ -45,7 +45,7 @@ namespace Parfait{
           prism[5] = tmp;
       }
       template <typename T>
-      void convertHex(T* hex){
+      void static convertHex(T* hex){
           T tmp = hex[1];
           hex[1] = hex[4];
           hex[4] = hex[3];
@@ -59,11 +59,11 @@ namespace Parfait{
 
   class AflrToCGNS {
   public:
-      template <typename T> void convertTet(T *tet){}
-      template <typename T> void convertPrism(T* prism){}
-      template <typename T> void convertHex(T*hex){}
+      template <typename T> static void convertTet(T *tet){}
+      template <typename T> static void convertPrism(T* prism){}
+      template <typename T> static void convertHex(T*hex){}
       template <typename T>
-      void convertPyramid(T *pyramid) {
+      static void convertPyramid(T *pyramid) {
           T tmp = pyramid[2];
           pyramid[2] = pyramid[3];
           pyramid[3] = pyramid[4];
@@ -73,10 +73,10 @@ namespace Parfait{
 
   class Fun3DToCGNS {
   public:
-      template <typename T> void convertTet(T *tet){}
-      template <typename T> void convertPyramid(T* pyramid){}
+      template <typename T> static void convertTet(T *tet){}
+      template <typename T> static void convertPyramid(T* pyramid){}
       template <typename T>
-      void convertPrism(T* prism){
+      static void convertPrism(T* prism){
           std::swap(prism[1],prism[3]);
           auto tmp = prism[2];
           prism[2] = prism[5];
@@ -85,7 +85,7 @@ namespace Parfait{
       }
 
       template <typename T>
-      void convertHex(T* hex){
+      static void convertHex(T* hex){
           auto tmp = hex[1];
           hex[1] = hex[2];
           hex[2] = hex[6];
@@ -99,12 +99,12 @@ namespace Parfait{
 
   class VtkToCGNS {
   public:
-      template <typename T> void convertTet(T *tet){}
-      template <typename T> void convertPyramid(T* pyramid){}
-      template <typename T> void convertHex(T* hex){}
+      template <typename T> static void convertTet(T *tet){}
+      template <typename T> static void convertPyramid(T* pyramid){}
+      template <typename T> static void convertHex(T* hex){}
 
       template <typename T>
-      void convertPrism(T* prism){
+      static void convertPrism(T* prism){
           std::swap(prism[0],prism[3]);
           std::swap(prism[1],prism[4]);
           std::swap(prism[2],prism[5]);
