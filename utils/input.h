@@ -31,9 +31,9 @@ class Input{
         }
 
         bool deduceIsBigEndian(){
-            if(-1 != raw_input.find(".lb8."))
+            if(-1 != int(raw_input.find(".lb8.")))
                 return false;
-            if(-1 != raw_input.find(".b8."))
+            if(-1 != int(raw_input.find(".b8.")))
                 return true;
             while(true){
                 printf("Enter endianness (b/l): ");
@@ -50,7 +50,7 @@ class Input{
             path = project;
             project = stripPath(project);
             position = path.find_last_of("/");
-            if(-1 == position)
+            if(-1 == int(position))
                 path = "";
             else
                 path = path.substr(0,position+1);

@@ -140,6 +140,7 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
         buildDistributionMaps();
     MessagePasser::Broadcast(procNodeMap, 0);
 
+
     if (MessagePasser::Rank() == 0)
         printf("Distributing ...\n--nodes\n");
     distributeNodes();
