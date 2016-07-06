@@ -12,10 +12,10 @@ void UgridMeshAnalyzer::printStats() {
     printf("\nNumber of cells:          %d", ugrid.numberOfCells());
     printf("\nNumber of boundary faces: %d", ugrid.numberOfBoundaryFaces());
 
-    printf("\n\nNumber of tets:           %d", ugrid.tets.size() / 4);
-    printf("\nNumber of prisms:         %d", ugrid.prisms.size() / 6);
-    printf("\nNumber of pyramids:       %d", ugrid.pyramids.size() / 5);
-    printf("\nNumber of hexs:           %d", ugrid.hexs.size() / 8);
+    printf("\n\nNumber of tets:           %lu", ugrid.tets.size() / 4);
+    printf("\nNumber of prisms:         %lu", ugrid.prisms.size() / 6);
+    printf("\nNumber of pyramids:       %lu", ugrid.pyramids.size() / 5);
+    printf("\nNumber of hexs:           %lu", ugrid.hexs.size() / 8);
 }
 void UgridMeshAnalyzer::throwIfBadIndexFound() {
     for(int cellId = 0; cellId < ugrid.numberOfCells(); cellId++){

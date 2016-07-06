@@ -43,7 +43,15 @@ inline Parfait::ParallelMeshReader::ParallelMeshReader(std::vector<std::string> 
     gridHexMap.push_back(0);
     for (int i:range(gridFiles)) {
         int nnodes, ntri, nquad, ntet, npyr, nprism, nhex;
-        UgridReader::readHeader(gridFiles[i], nnodes, ntri, nquad, ntet, npyr, nprism, nhex, isBigEndian[i]);
+        if(MessagePasser::Rank() == 0)
+            UgridReader::readHeader(gridFiles[i], nnodes, ntri, nquad, ntet, npyr, nprism, nhex, isBigEndian[i]);
+        MessagePasser::Broadcast(nnodes,0);
+        MessagePasser::Broadcast(ntri,0);
+        MessagePasser::Broadcast(nquad,0);
+        MessagePasser::Broadcast(ntet,0);
+        MessagePasser::Broadcast(npyr,0);
+        MessagePasser::Broadcast(nprism,0);
+        MessagePasser::Broadcast(nhex,0);
         gridNodeMap.push_back(nnodes);
         gridTriangleMap.push_back(ntri);
         gridQuadMap.push_back(nquad);
@@ -131,6 +139,7 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
     if (0 == MessagePasser::Rank())
         buildDistributionMaps();
     MessagePasser::Broadcast(procNodeMap, 0);
+
 
     if (MessagePasser::Rank() == 0)
         printf("Distributing ...\n--nodes\n");

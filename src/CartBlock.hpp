@@ -60,9 +60,9 @@ inline int Parfait::CartBlock::getIdOfContainingCell(const double point[3]) cons
   hy = point[1] - lo[1];
   hz = point[2] - lo[2];
   int i,j,k;
-  i = (int)(hx/get_dx());     // calc discrete coord
-  j = (int)(hy/get_dy());
-  k = (int)(hz/get_dz());
+  i = std::min(int(hx/get_dx()),numberOfCells_X()-1);     // calc discrete coord
+  j = std::min(int(hy/get_dy()),numberOfCells_Y()-1);
+  k = std::min(int(hz/get_dz()),numberOfCells_Z()-1);
   return convert_ijk_ToCellId(i,j,k);
 }
 
