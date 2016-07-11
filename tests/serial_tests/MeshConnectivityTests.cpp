@@ -31,7 +31,7 @@ TEST_CASE("test getters"){
     }
 
     SECTION("for hexs"){
-        connectivity.hexes = {0,1,2,3,4,5,6,7};
+        connectivity.hexs = {0, 1, 2, 3, 4, 5, 6, 7};
         REQUIRE(1 == connectivity.numberOfHexes());
         int *p = connectivity.getHexPtr(0);
         for(int i=0;i<8;i++)
@@ -58,7 +58,7 @@ TEST_CASE("test getters"){
         connectivity.tets = {0, 1, 2, 3};
         connectivity.pyramids = {4,5,6,7,8};
         connectivity.prisms = {0,9,8,7,6,5};
-        connectivity.hexes = {5,4,7,1,4,3,2,9};
+        connectivity.hexs = {5, 4, 7, 1, 4, 3, 2, 9};
 
         REQUIRE(4 == connectivity.numberOfCells());
 

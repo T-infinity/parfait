@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 2.8)
 PROJECT(ParfaitInterfaces)
 add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/tests/grids/6cell.lb8.ugrid")
 
-add_definitions(-DPARFAIT_WITH_MPI -DPARFAIT_WITH_PARMETIS)
+add_definitions(-DPARFAIT_WITH_MPI -DPARFAIT_WITH_PARMETIS -DPARFAIT_WITH_VTK)
 find_package(MPI REQUIRED)
 
 include_directories(
@@ -12,9 +12,14 @@ include_directories(
     "${MPI_INCLUDE_PATH}"
     )
 
+find_package(VTK REQUIRED)
+include(${VTK_USE_FILE})
+
 set(PARFAIT_INTERFACE_SRCS
-    parfait_preprocessor.cpp
-    parfait_preprocessor.h
+    parfait_interface.cpp
+    parfait_vis_interface.cpp
+    yoga_interface.cpp
+    boundary_condition_mock_interface.cpp
        )
 
 include_directories(../../tinyxml/src)
@@ -28,4 +33,5 @@ target_link_libraries(example_grid_import
             ${MPI_LIBRARIES}
             parmetis
             metis
+            ${VTK_LIBRARIES}
             )

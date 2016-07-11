@@ -31,7 +31,7 @@ namespace Parfait {
       auto afterPyramids = Clock::now();
       auto recvPrisms = redistributeCells(myNonGhostIds,mesh->connectivity->prisms,6);
       auto afterPrisms = Clock::now();
-      auto recvHexs = redistributeCells(myNonGhostIds,mesh->connectivity->hexes,8);
+      auto recvHexs = redistributeCells(myNonGhostIds, mesh->connectivity->hexs, 8);
       auto afterHexs = Clock::now();
 
 
@@ -72,7 +72,7 @@ namespace Parfait {
       mesh->connectivity->tets = convertToLocalIds(global_to_local, recvTets);
       mesh->connectivity->pyramids = convertToLocalIds(global_to_local, recvPyramids);
       mesh->connectivity->prisms = convertToLocalIds(global_to_local, recvPrisms);
-      mesh->connectivity->hexes = convertToLocalIds(global_to_local, recvHexs);
+      mesh->connectivity->hexs = convertToLocalIds(global_to_local, recvHexs);
       mesh->metaData->xyz = recvXYZ;
       mesh->metaData->nodeComponentIds = recvAssociatedComponentIds;
       mesh->metaData->triangleTags = recvTriangleTags;
