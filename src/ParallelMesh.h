@@ -12,9 +12,10 @@ namespace Parfait {
         public:
         ParallelMesh();
         std::shared_ptr<MeshConnectivity> connectivity;
-        std::shared_ptr<MeshParallelMetaData> metaData;
         int countNodesAtDegree(int degree) const;
         int countNodesAboveDegree(int degree) const;
+        std::shared_ptr<MeshParallelMetaData> metaData;
+    private:
     };
 
   inline int ParallelMesh::countNodesAtDegree(int degree) const {
