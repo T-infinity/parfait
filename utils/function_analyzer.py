@@ -11,6 +11,8 @@ def isHeaderFile(file):
 def isCPlusPlusSourceFile(file):
     if(file.endswith('.cxx') or file.endswith('.cpp')):
         return 1
+    if(isHeaderFile(file)):
+        return 1
     return 0
 
 def getHeaderFileNames(dir):

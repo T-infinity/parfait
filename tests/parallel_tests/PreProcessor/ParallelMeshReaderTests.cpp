@@ -13,7 +13,7 @@ TEST_CASE("Read in the grid and check it if run on one proc") {
         REQUIRE(0 == (mesh->connectivity->tets.size() / 4));
         REQUIRE(0 == (mesh->connectivity->pyramids.size() / 5));
         REQUIRE(6 == (mesh->connectivity->prisms.size() / 6));
-        REQUIRE(0 == (mesh->connectivity->hexes.size() / 6));
+        REQUIRE(0 == (mesh->connectivity->hexs.size() / 6));
         for(int i = 0; i < 14; i++){
             REQUIRE(i == mesh->metaData->globalNodeIds[i]);
         }

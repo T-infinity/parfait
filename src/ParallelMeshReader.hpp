@@ -122,7 +122,7 @@ inline void Parfait::ParallelMeshReader::mapNodesToLocalSpace() {
             globalToLocalId[id] = localNodeId++;
         id = globalToLocalId[id];
     }
-    for(auto &id : mesh->connectivity->hexes){
+    for(auto &id : mesh->connectivity->hexs){
         if(globalToLocalId.count(id) == 0)
             globalToLocalId[id] = localNodeId++;
         id = globalToLocalId[id];
@@ -308,7 +308,7 @@ inline void Parfait::ParallelMeshReader::distributeHexs(Parfait::LinearPartition
     for(int i =0; i <nchunks;++i){
         auto chunk = getCellChunk(HEX, i, nhexs,nchunks);
         MessagePasser::Broadcast(chunk,0);
-        extractAndAppendCells(8, chunk,mesh->connectivity->hexes,myNodeRange);
+        extractAndAppendCells(8, chunk, mesh->connectivity->hexs, myNodeRange);
     }
 }
 

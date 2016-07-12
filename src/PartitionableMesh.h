@@ -16,7 +16,7 @@ namespace Parfait {
         tets(mesh->connectivity->tets),
                 pyramids(mesh->connectivity->pyramids),
                 prisms(mesh->connectivity->prisms),
-                hexes(mesh->connectivity->hexes)
+                hexes(mesh->connectivity->hexs)
         {
             std::unordered_set<int> nodes;
             for(int id : tets)
