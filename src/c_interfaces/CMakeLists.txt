@@ -19,7 +19,7 @@ set(PARFAIT_INTERFACE_SRCS
     parfait_interface.cpp
     parfait_vis_interface.cpp
     yoga_interface.cpp
-    boundary_condition_mock_interface.cpp
+        mock_bc_interface.cpp
        )
 
 include_directories(../../tinyxml/src)

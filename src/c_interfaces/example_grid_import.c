@@ -4,7 +4,7 @@
 #include "parfait_interface.h"
 #include "parfait_vis_interface.h"
 #include "yoga_interface.h"
-#include "boundary_condition_mock_interface.h"
+#include "mock_bc_interface.h"
 
 
 int main(int argc, char *argv[]){

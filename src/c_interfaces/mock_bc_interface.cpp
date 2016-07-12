@@ -1,4 +1,4 @@
-#include "boundary_condition_mock_interface.h"
+#include "mock_bc_interface.h"
 #include <ConfigurationReader.h>
 
 using namespace Parfait;
