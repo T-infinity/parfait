@@ -3,11 +3,11 @@
 #include <MotionMatrix.h>
 // Requirements:  Mesh must implement the following
 //
-// mesh.numberOfNodes();
-// mesh.getNode(int,double*);
-// mesh.setNode(int,double*);
+// meshBuilder.numberOfNodes();
+// meshBuilder.getNode(int,double*);
+// meshBuilder.setNode(int,double*);
 //
-// Then the mesh can be moved by passing the mesh
+// Then the meshBuilder can be moved by passing the meshBuilder
 // and a MotionMatrix to the move() function.
 // (The motion matrix can be used to create
 // arbitrary combinations of translations and

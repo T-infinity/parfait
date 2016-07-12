@@ -34,10 +34,10 @@ template <typename MeshType>
 std::vector<std::vector<int>> buildNodeToCell(MeshType &mesh_i){
     
 
-    Mesh<MeshType> mesh(mesh_i);
-    std::vector<std::vector<int>> nodeToCell(mesh.numberOfNodes());
+    Mesh<MeshType> meshBuilder(mesh_i);
+    std::vector<std::vector<int>> nodeToCell(meshBuilder.numberOfNodes());
 
-    for(auto cell : mesh.cells()){
+    for(auto cell : meshBuilder.cells()){
         auto cellNodes = cell.getNodes(); 
         for(int node : cellNodes){
             insertUnique(nodeToCell[node], cell.Id());

@@ -272,7 +272,7 @@ inline std::vector<int> Parfait::CartMesh::getNodesInCellFace(int cellId, int fa
             faceNodes[3] = nodes[5];
             return faceNodes;
         default:
-            throw std::domain_error("Requested nodes for face " + std::to_string(faceId) + " but cart mesh cells only have 6 faces.");
+            throw std::domain_error("Requested nodes for face " + std::to_string(faceId) + " but cart meshBuilder cells only have 6 faces.");
     }
 }
 

@@ -90,7 +90,7 @@ namespace Parfait {
                 isBoundNode[face[j]] = true;
             }
         }
-        // count up the total number of nodes in the surface mesh
+        // count up the total number of nodes in the surface meshBuilder
         numberOfSurfaceNodes = 0;
         for (int i:range(mesh.numberOfNodes()))
             if (isBoundNode[i])

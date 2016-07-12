@@ -25,7 +25,7 @@ public:
 private:
 };
 
-TEST_CASE("can create a vizualization for a surface mesh"){
+TEST_CASE("can create a vizualization for a surface meshBuilder"){
     MockVtkSurfaceMesh mesh;
     Parfait::VtkUnstructuredSurfaceWriter writer("surface",mesh);
     writer.writeBinary();

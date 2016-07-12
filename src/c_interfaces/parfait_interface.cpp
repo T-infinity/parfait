@@ -33,7 +33,7 @@ void parfait_initialize(const char* fname){
   std::vector<MotionMatrix> motionMatrices;
   for (int i = 0; i < config.numberOfGrids(); ++i)
     motionMatrices.push_back(config.getMotionMatrix(i));
-  //ComponentPlacer::movePoints(mesh->metaData->xyz, mesh->metaData->nodeComponentIds, motionMatrices);
+  //ComponentPlacer::movePoints(meshBuilder->metaData->xyz, meshBuilder->metaData->nodeComponentIds, motionMatrices);
   std::vector<BoundaryConditionMap> boundaryConditionMaps;
   for (int i = 0; i < config.numberOfGrids(); i++)
     boundaryConditionMaps.push_back(config.getMapbcObject(i));

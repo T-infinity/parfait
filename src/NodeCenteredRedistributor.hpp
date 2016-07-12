@@ -107,7 +107,7 @@ namespace Parfait {
           printReadableElapsedTime(afterQuadTags,afterMetaData);
           printf("Time to do ghost stuff\n");
           printReadableElapsedTime(afterMetaData,afterGhostStuff);
-          printf("Time to fill mesh vectors\n");
+          printf("Time to fill meshBuilder vectors\n");
           printReadableElapsedTime(afterGhostStuff,afterFilling);
       }
 
@@ -175,8 +175,8 @@ namespace Parfait {
             for (auto globalNodeId : idsOfXyxsINeed) {
                 if(amItheOwnerOfThisNode(globalNodeId, global_to_local)) {
                     int localNodeId = global_to_local[globalNodeId];
-                    //printf("Rank %i owns gid %i (%f %f %f) (local id %i)\n",MessagePasser::Rank(),globalNodeId,mesh->metaData->xyz[3*localNodeId+0],
-                    //mesh->metaData->xyz[3*localNodeId+1], mesh->metaData->xyz[3*localNodeId+2],localNodeId);
+                    //printf("Rank %i owns gid %i (%f %f %f) (local id %i)\n",MessagePasser::Rank(),globalNodeId,meshBuilder->metaData->xyz[3*localNodeId+0],
+                    //meshBuilder->metaData->xyz[3*localNodeId+1], meshBuilder->metaData->xyz[3*localNodeId+2],localNodeId);
                     sendXYZ.push_back(mesh->metaData->xyz[3 * localNodeId + 0]);
                     sendXYZ.push_back(mesh->metaData->xyz[3 * localNodeId + 1]);
                     sendXYZ.push_back(mesh->metaData->xyz[3 * localNodeId + 2]);

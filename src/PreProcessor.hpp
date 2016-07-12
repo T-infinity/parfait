@@ -32,8 +32,7 @@ namespace Parfait{
                     mesh->connectivity->numberOfFaces());
       }
       auto after_reading = Now();
-      Parfait::ParallelPartitionableMesh partitionableMesh(mesh);
-      Parfait::ParallelNodeToNodeBuilder<decltype(partitionableMesh)> n2n_builder(partitionableMesh);
+      Parfait::ParallelNodeToNodeBuilder<Parfait::ParallelMesh> n2n_builder(*mesh.get());
       if(MessagePasser::Rank() == 0) printf("Building node to node graph\n");
       auto n2n = n2n_builder.buildNodeToNodeConnectivity();
       auto after_building_node_to_node = Now();

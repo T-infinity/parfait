@@ -32,7 +32,7 @@ inline Parfait::ParallelMeshReader::ParallelMeshReader(std::vector<std::string> 
                                                        std::vector<bool> isBigEndian_in)
         : isBigEndian(isBigEndian_in), 
           gridFiles(gridFiles_in),
-          mesh(std::make_shared<ParallelMesh>())
+          meshBuilder(std::make_shared<ParallelMeshBuilder>())
 {
     gridNodeMap.push_back(0);
     gridTriangleMap.push_back(0);
@@ -96,33 +96,33 @@ inline void Parfait::ParallelMeshReader::mapNodesToLocalSpace() {
         globalToLocalId[globalNodeId] = localNodeId++;
     }
 
-    for(auto &id : mesh->connectivity->triangles){
+    for(auto &id : meshBuilder->connectivity->triangles){
         if(globalToLocalId.count(id) == 0)
             globalToLocalId[id] = localNodeId++;
         id = globalToLocalId[id];
     }
-    for(auto &id : mesh->connectivity->quads){
+    for(auto &id : meshBuilder->connectivity->quads){
         if(globalToLocalId.count(id) == 0)
             globalToLocalId[id] = localNodeId++;
         id = globalToLocalId[id];
     }
 
-    for(auto &id : mesh->connectivity->tets){
+    for(auto &id : meshBuilder->connectivity->tets){
         if(globalToLocalId.count(id) == 0)
             globalToLocalId[id] = localNodeId++;
         id = globalToLocalId[id];
     }
-    for(auto &id : mesh->connectivity->pyramids){
+    for(auto &id : meshBuilder->connectivity->pyramids){
         if(globalToLocalId.count(id) == 0)
             globalToLocalId[id] = localNodeId++;
         id = globalToLocalId[id];
     }
-    for(auto &id : mesh->connectivity->prisms){
+    for(auto &id : meshBuilder->connectivity->prisms){
         if(globalToLocalId.count(id) == 0)
             globalToLocalId[id] = localNodeId++;
         id = globalToLocalId[id];
     }
-    for(auto &id : mesh->connectivity->hexs){
+    for(auto &id : meshBuilder->connectivity->hexs){
         if(globalToLocalId.count(id) == 0)
             globalToLocalId[id] = localNodeId++;
         id = globalToLocalId[id];
@@ -175,32 +175,39 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
     createNodeComponentIds();
 
 
-
-    if(MessagePasser::Rank() == 0)
-        printf("Distributing ghost xyz\n");
-    int nregular = mesh->countNodesAtDegree(0);
-    std::vector<long> ghostIds(mesh->metaData->globalNodeIds.begin()+nregular,mesh->metaData->globalNodeIds.end());
-    auto ghostXyz = getXyzForGhostNodes(ghostIds);
-    mesh->metaData->xyz.insert(mesh->metaData->xyz.end(),ghostXyz.begin(),ghostXyz.end());
+    gatherGhostXyz();
     if (MessagePasser::Rank() == 0)
         printf("Done Distributing ...\n");
 }
 
+inline void ParallelMeshReader::gatherGhostXyz() {
+    if(MessagePasser::Rank() == 0)
+        printf("Distributing ghost xyz\n");
+    int nregular = 0;
+    int number_of_nodes = int(meshBuilder->metaData->xyz.size() / 3);
+    for(int i=0; i < number_of_nodes; ++i)
+        if(meshBuilder->metaData->nodeOwnershipDegree[i] == 0)
+            nregular++;
+    std::vector<long> ghostIds(meshBuilder->metaData->globalNodeIds.begin() + nregular, meshBuilder->metaData->globalNodeIds.end());
+    auto ghostXyz = getXyzForGhostNodes(ghostIds);
+    meshBuilder->metaData->xyz.insert(meshBuilder->metaData->xyz.end(), ghostXyz.begin(), ghostXyz.end());
+}
+
 inline void ParallelMeshReader::createNodeComponentIds() {
-    mesh->metaData->nodeComponentIds = std::vector<int>(localToGlobalId.size());
+    meshBuilder->metaData->nodeComponentIds = std::vector<int>(localToGlobalId.size());
     for(unsigned int localId = 0; localId < localToGlobalId.size(); localId++){
-        auto globalId = mesh->metaData->globalNodeIds[localId];
+        auto globalId = meshBuilder->metaData->globalNodeIds[localId];
         auto componentId = getOwningGridOfNode(globalId);
-        mesh->metaData->nodeComponentIds[localId] = componentId;
+        meshBuilder->metaData->nodeComponentIds[localId] = componentId;
     }
 }
 inline void ParallelMeshReader::createNodeOwnerships() {
-    mesh->metaData->nodeOwnershipDegree = std::vector<int>(mesh->metaData->globalNodeIds.size());
+    meshBuilder->metaData->nodeOwnershipDegree = std::vector<int>(meshBuilder->metaData->globalNodeIds.size());
     for(unsigned int localId = 0; localId < localToGlobalId.size(); localId++){
-        if(localId < mesh->metaData->xyz.size() / 3)
-            mesh->metaData->nodeOwnershipDegree[localId] = 0;
+        if(localId < meshBuilder->metaData->xyz.size() / 3)
+            meshBuilder->metaData->nodeOwnershipDegree[localId] = 0;
         else
-            mesh->metaData->nodeOwnershipDegree[localId] = 1;
+            meshBuilder->metaData->nodeOwnershipDegree[localId] = 1;
     }
 }
 
@@ -228,7 +235,7 @@ inline void Parfait::ParallelMeshReader::buildDistributionMaps() {
 
 inline std::shared_ptr<ParallelMesh> Parfait::ParallelMeshReader::distributeGridsEvenly() {
     distributeUgrid();
-    return mesh;
+    return std::make_shared<ParallelMesh>(meshBuilder->connectivity, meshBuilder->metaData);
 }
 
 
@@ -237,14 +244,14 @@ inline void Parfait::ParallelMeshReader::distributeNodes() {
         int nproc = MessagePasser::NumberOfProcesses();
         std::vector<double>(*f)(std::string,int,int,bool);
         f = UgridReader::readNodes;
-        mesh->metaData->xyz = getFromGrids(f,3,gridNodeMap,0,procNodeMap[1],false,double());
+        meshBuilder->metaData->xyz = getFromGrids(f,3,gridNodeMap,0,procNodeMap[1],false,double());
         for(int proc=1;proc<nproc;proc++) {
             vector<double> nodeBuffer = getFromGrids(f,3,gridNodeMap,procNodeMap[proc],procNodeMap[proc+1],false,double());
             MessagePasser::Send(nodeBuffer,proc);
         }
     }
     else
-        MessagePasser::Recv(mesh->metaData->xyz,0);
+        MessagePasser::Recv(meshBuilder->metaData->xyz,0);
 }
 
 
@@ -256,7 +263,7 @@ inline void Parfait::ParallelMeshReader::distributeTriangles(Parfait::LinearPart
         auto tags = getTagChunk(TRIANGLE_TAG, i, ntriangles,nchunks);
         MessagePasser::Broadcast(faces,0);
         MessagePasser::Broadcast(tags,0);
-        extractAndAppendFaces(3, faces,tags,mesh->connectivity->triangles,mesh->metaData->triangleTags,myNodeRange);
+        extractAndAppendFaces(3, faces,tags,meshBuilder->connectivity->triangles,meshBuilder->metaData->triangleTags,myNodeRange);
     }
 }
 
@@ -268,7 +275,7 @@ inline void Parfait::ParallelMeshReader::distributeQuads(Parfait::LinearPartitio
         auto tags = getTagChunk(QUAD_TAG, i, nquads,nchunks);
         MessagePasser::Broadcast(faces,0);
         MessagePasser::Broadcast(tags,0);
-        extractAndAppendFaces(4, faces,tags,mesh->connectivity->quads,mesh->metaData->quadTags,myNodeRange);
+        extractAndAppendFaces(4, faces,tags,meshBuilder->connectivity->quads,meshBuilder->metaData->quadTags,myNodeRange);
     }
 }
 
@@ -278,7 +285,7 @@ inline void Parfait::ParallelMeshReader::distributeTets(Parfait::LinearPartition
     for(int i =0; i <nchunks;++i){
         auto tetChunk = getCellChunk(TET, i,ntets,nchunks);
         MessagePasser::Broadcast(tetChunk,0);
-        extractAndAppendCells(4,tetChunk,mesh->connectivity->tets,myNodeRange);
+        extractAndAppendCells(4,tetChunk,meshBuilder->connectivity->tets,myNodeRange);
     }
 }
 
@@ -288,7 +295,7 @@ inline void Parfait::ParallelMeshReader::distributePyramids(Parfait::LinearParti
     for(int i =0; i <nchunks;++i){
         auto chunk = getCellChunk(PYRAMID, i, npyramids,nchunks);
         MessagePasser::Broadcast(chunk,0);
-        extractAndAppendCells(5, chunk,mesh->connectivity->pyramids,myNodeRange);
+        extractAndAppendCells(5, chunk,meshBuilder->connectivity->pyramids,myNodeRange);
     }
 }
 
@@ -298,7 +305,7 @@ inline void Parfait::ParallelMeshReader::distributePrisms(Parfait::LinearPartiti
     for(int i =0; i <nchunks;++i){
         auto chunk = getCellChunk(PRISM, i, nprisms,nchunks);
         MessagePasser::Broadcast(chunk,0);
-        extractAndAppendCells(6, chunk,mesh->connectivity->prisms,myNodeRange);
+        extractAndAppendCells(6, chunk,meshBuilder->connectivity->prisms,myNodeRange);
     }
 }
 
@@ -308,7 +315,7 @@ inline void Parfait::ParallelMeshReader::distributeHexs(Parfait::LinearPartition
     for(int i =0; i <nchunks;++i){
         auto chunk = getCellChunk(HEX, i, nhexs,nchunks);
         MessagePasser::Broadcast(chunk,0);
-        extractAndAppendCells(8, chunk, mesh->connectivity->hexs, myNodeRange);
+        extractAndAppendCells(8, chunk, meshBuilder->connectivity->hexs, myNodeRange);
     }
 }
 
@@ -516,7 +523,7 @@ inline int Parfait::ParallelMeshReader::numberOfGrids() const{
 
 inline void ParallelMeshReader::createLocalToGlobalNodeIdMap() {
     for(unsigned int localId = 0; localId < localToGlobalId.size(); localId++){
-        mesh->metaData->globalNodeIds.push_back(localToGlobalId[localId]);
+        meshBuilder->metaData->globalNodeIds.push_back(localToGlobalId[localId]);
     }
 }
 
@@ -533,11 +540,11 @@ inline std::vector<double> ParallelMeshReader::getXyzForGhostNodes(std::vector<l
         for(long id:requestedIds){
             if(globalToLocalId.count(id) == 1){
                 int localId = globalToLocalId[id];
-                if(mesh->metaData->nodeOwnershipDegree[localId]==0) {
+                if(meshBuilder->metaData->nodeOwnershipDegree[localId]==0) {
                     responseIds.push_back(id);
-                    responseXyz.push_back(mesh->metaData->xyz[3 * localId + 0]);
-                    responseXyz.push_back(mesh->metaData->xyz[3 * localId + 1]);
-                    responseXyz.push_back(mesh->metaData->xyz[3 * localId + 2]);
+                    responseXyz.push_back(meshBuilder->metaData->xyz[3 * localId + 0]);
+                    responseXyz.push_back(meshBuilder->metaData->xyz[3 * localId + 1]);
+                    responseXyz.push_back(meshBuilder->metaData->xyz[3 * localId + 2]);
                 }
             }
         }
