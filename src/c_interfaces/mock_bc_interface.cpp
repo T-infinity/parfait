@@ -35,5 +35,6 @@ void mock_bc_initialize(const char* filename,
 }
 
 int mock_get_boundary_condition(int face_id){
-   mockBoundaryCondition.getBoundaryCondition(face_id);
+   //mockBoundaryCondition.getBoundaryCondition(face_id);
+    return 0;
 }
