@@ -15,6 +15,10 @@ namespace Parfait {
       inline bool doOwnLocalId(int localId) const {
           return nodeOwnershipDegree[localId] == 0;
       }
+      inline bool isGhostNode(int localId) const {
+          return nodeOwnershipDegree[localId] != 0;
+      }
+
       inline long getGlobalNodeId(int localId) const {
           return globalNodeIds[localId];
       }

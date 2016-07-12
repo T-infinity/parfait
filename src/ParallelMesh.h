@@ -79,7 +79,7 @@ namespace Parfait {
     }
 
     inline int ParallelMesh::isGhostNode(int id) const {
-        return metaData->nodeOwnershipDegree[id] == 0 ? 0 : 1;
+        return metaData->nodeOwnershipDegree[id] != 0;
     }
 
     inline ParallelMesh::ParallelMesh(std::shared_ptr<MeshConnectivity> conn, std::shared_ptr<MeshParallelMetaData> mData) {

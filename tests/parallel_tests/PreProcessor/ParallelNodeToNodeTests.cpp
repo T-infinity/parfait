@@ -8,7 +8,7 @@
 #include "MeshConnectivity.h"
 #include "MeshParallelMetadata.h"
 
-TEST_CASE("Redistribution Parallel Tests"){
+TEST_CASE("Redistribution Parallel Tests", "[broken]"){
 
     if(MessagePasser::NumberOfProcesses() < 2)
         return;
