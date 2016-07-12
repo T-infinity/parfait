@@ -9,6 +9,7 @@
 
 namespace Parfait {
 	class PreProcessor {
+
 	public:
 		PreProcessor(Configuration& configuration);
 		std::shared_ptr<ParallelMesh> createMesh();

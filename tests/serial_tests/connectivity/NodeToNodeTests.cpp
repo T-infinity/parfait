@@ -15,9 +15,11 @@ TEST_CASE("NodeToNodeTests,Exists") {
     vector<int> tets {0,1,2,3};
     ImportedUgrid one_tet_mesh(xyz,{},{},tets,{},{},{},{},{});
 
-    auto mesh = std::make_shared<ParallelMesh>();
-    mesh->connectivity->tets = tets;
-    mesh->metaData->xyz = xyz;
+    std::shared_ptr<MeshConnectivity> connectivity = std::make_shared<MeshConnectivity>();
+    std::shared_ptr<MeshParallelMetaData> metaData = std::make_shared<MeshParallelMetaData>();
+    connectivity->tets = tets;
+    metaData->xyz = xyz;
+    auto mesh = std::make_shared<ParallelMesh>(connectivity, metaData);
     PartitionableMesh partitionableMesh(mesh);
     NodeToNodeBuilder<decltype(partitionableMesh)> builder(partitionableMesh);
     auto n2n = builder.buildNodeToNodeConnectivity();

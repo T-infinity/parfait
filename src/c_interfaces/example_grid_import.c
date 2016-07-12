@@ -19,7 +19,7 @@ int main(int argc, char *argv[]){
                   &parfait_get_number_of_nodes_in_cell,
                   &parfait_get_nodes_in_cell,
                   &parfait_get_global_node_id,
-                  &parfait_get_component_grid_id, &parfait_get_node_xyz, &parfait_get_node_ownership,
+                  &parfait_get_component_grid_id, &parfait_get_node_xyz, &parfait_is_ghost_node,
                   &parfait_get_number_of_faces, &parfait_get_number_of_nodes_in_face,
                   &parfait_get_nodes_in_face, &mock_get_boundary_condition);
 

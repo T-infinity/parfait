@@ -48,25 +48,26 @@ void parfait_initialize(const char* fname){
 }
 
 int parfait_get_number_of_nodes(){
-  return applesauce.mesh->metaData->xyz.size()/3;
+  return applesauce.mesh->numberOfNodes();
 }
 
 void parfait_get_node_xyz(int n,double* p){
-  p[0] = applesauce.mesh->metaData->xyz[3*n+0];
-  p[1] = applesauce.mesh->metaData->xyz[3*n+1];
-  p[2] = applesauce.mesh->metaData->xyz[3*n+2];
+  auto point = applesauce.mesh->getXyz(n);
+  p[0] = point[0];
+  p[1] = point[1];
+  p[2] = point[2];
 }
 
 int parfait_get_component_grid_id(int id){
-  return applesauce.mesh->metaData->nodeComponentIds[id];
+  return applesauce.mesh->getNodeComponentId(id);
 }
 
 long parfait_get_global_node_id(int id){
-  return applesauce.mesh->metaData->globalNodeIds[id];
+  return applesauce.mesh->getGlobalNodeId(id);
 }
 
-int parfait_get_node_ownership(int id){
-  return applesauce.mesh->metaData->nodeOwnershipDegree[id];
+int parfait_is_ghost_node(int id){
+  return applesauce.mesh->isGhostNode(id);
 }
 
 int parfait_get_number_of_cells(){
@@ -116,9 +117,9 @@ int parfait_get_number_of_nodes_in_face(int face_id){
 
 int parfait_get_boundary_tag(int face_id){
   if(face_id < applesauce.num_triangles)
-    return applesauce.mesh->metaData->triangleTags[face_id];
+    return applesauce.mesh->getTriangleTag(face_id);
   face_id -= applesauce.num_triangles;
-  return applesauce.mesh->metaData->quadTags[face_id];
+  return applesauce.mesh->getQuadTag(face_id);
 }
 
 void parfait_get_nodes_in_face(int face_id,int* nodes){
