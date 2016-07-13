@@ -56,7 +56,6 @@ inline void partitionMesh(int rank, int nproc,
 
 
     printf("Rank %i: has %i nodes for ParMETIS\n",rank,nnodes);
-    printParmetisInput(vtxdist, xadj, adjncy, tpwgts);
 	auto metis = ParMETIS_V3_PartKway(vtxdist.data(),
                                       xadj.data(),
                                       adjncy.data(),
