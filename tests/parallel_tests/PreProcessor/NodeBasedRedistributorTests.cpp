@@ -46,6 +46,5 @@ TEST_CASE("Node Centered Redistributor"){
     auto total = MessagePasser::ParallelSum(number_of_owned_nodes);
     REQUIRE(6 == total);
 
-    REQUIRE(mesh->numberOfNodes() == 6*3);
+    REQUIRE(mesh->numberOfNodes() == 6);
 }
-
