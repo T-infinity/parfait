@@ -1,5 +1,4 @@
-#ifndef PREPROCESSOR_H
-#define PREPROCESSOR_H
+#pragma once
 #include <string>
 #include "ConfigurationReader.h"
 #include "Configuration.h"
@@ -28,5 +27,3 @@ namespace Parfait {
 	};
 }
 #include "PreProcessor.hpp"
-
-#endif

@@ -1,6 +1,4 @@
-#ifndef PARALLEL_MESH_REDISTRIBUTOR_H
-#define PARALLEL_MESH_REDISTRIBUTOR_H
-
+#pragma once
 #ifdef PARFAIT_WITH_MPI
 
 #include <vector>
@@ -55,5 +53,4 @@ namespace Parfait {
 }
 #include "NodeCenteredRedistributor.hpp"
 
-#endif
 #endif

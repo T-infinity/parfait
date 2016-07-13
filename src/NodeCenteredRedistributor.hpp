@@ -34,7 +34,6 @@ namespace Parfait {
       auto recvHexs = redistributeCells(myNonGhostIds, mesh->connectivity->hexs, 8);
       auto afterHexs = Clock::now();
 
-
       auto myGhostIds = identifyGhostNodes(myNonGhostIds, recvTets, recvPyramids, recvPrisms, recvHexs);
       auto afterIdentifyingGhosts = Clock::now();
       auto my_all_node_ids = myNonGhostIds;

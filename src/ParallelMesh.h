@@ -1,5 +1,4 @@
-#ifndef PARFAIT_MESHBASICPARALLEL_H
-#define PARFAIT_MESHBASICPARALLEL_H
+#pragma once
 
 #include <memory>
 #include <algorithm>
@@ -31,7 +30,6 @@ namespace Parfait {
         const int* getPrism(int id) const;
         int numberOfHexes() const;
         const int* getHex(int id) const;
-
         std::shared_ptr<MeshConnectivity> connectivity;
         std::shared_ptr<MeshParallelMetaData> metaData;
     private:
@@ -119,5 +117,3 @@ namespace Parfait {
         return &(connectivity->hexs[8*id]);
     }
 }
-
-#endif
