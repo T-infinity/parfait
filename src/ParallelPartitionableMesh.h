@@ -1,5 +1,4 @@
-#ifndef PARFAIT_PARALLELPARTITIONABLEMESH_H
-#define PARFAIT_PARALLELPARTITIONABLEMESH_H
+#pragma once
 
 #include <memory>
 #include "ParallelMesh.h"
@@ -27,5 +26,3 @@ namespace Parfait {
       std::vector<long>& globalNodeIds;
   };
 }
-
-#endif 

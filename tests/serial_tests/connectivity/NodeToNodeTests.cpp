@@ -2,7 +2,7 @@
 #include "NodeToNode.h"
 #include <catch.hpp>
 #include "ParallelMesh.h"
-#include <PartitionableMesh.h>
+
 using namespace Parfait;
 
 using namespace std;

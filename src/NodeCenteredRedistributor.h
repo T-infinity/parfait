@@ -30,7 +30,8 @@ namespace Parfait {
                                            std::vector<long>& recvHexs);
       void redistributeNodeMetaData(std::vector<long>&my_non_ghost_ids,
                                     std::vector<long>& my_ghost_ids);
-      std::shared_ptr<ParallelMesh> mesh;
+      std::shared_ptr<ParallelMeshBuilder> mesh;
+      std::shared_ptr<ParallelMesh> mesh_old;
       std::vector<int> part;
       std::vector<int> nodeMap;
       std::vector<int> recvAssociatedComponentIds;

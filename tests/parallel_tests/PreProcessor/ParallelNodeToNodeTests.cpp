@@ -2,8 +2,6 @@
 #include <memory>
 #include <MessagePasser.h>
 #include "ParallelMesh.h"
-#include <PartitionableMesh.h>
-#include <ParallelPartitionableMesh.h>
 #include <ParallelNodeToNodeBuilder.h>
 #include "MeshConnectivity.h"
 #include "MeshParallelMetadata.h"

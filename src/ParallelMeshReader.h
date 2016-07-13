@@ -1,5 +1,4 @@
-#ifndef PARALLEL_MESH_READER_NAIVE_H
-#define PARALLEL_MESH_READER_NAIVE_H
+#pragma once
 
 #include <vector>
 #include <string>
@@ -11,15 +10,7 @@
 #include "ParallelMesh.h"
 
 namespace Parfait {
-    class ParallelMeshBuilder{
-    public:
-        inline ParallelMeshBuilder() {
-            metaData = std::make_shared<MeshParallelMetaData>();
-            connectivity = std::make_shared<MeshConnectivity>();
-        }
-        std::shared_ptr<MeshParallelMetaData> metaData;
-        std::shared_ptr<MeshConnectivity> connectivity;
-    };
+
   class ParallelMeshReader {
       template<class T> using vector = std::vector<T>;
       enum CellType{TET,PYRAMID,PRISM,HEX,TRIANGLE,QUAD};
@@ -102,5 +93,3 @@ namespace Parfait {
 }
 
 #include "ParallelMeshReader.hpp"
-
-#endif

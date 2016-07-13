@@ -1,5 +1,4 @@
-#ifndef PARFAIT_PARTITIONABLEMESH_H
-#define PARFAIT_PARTITIONABLEMESH_H
+#pragma once
 
 #include <vector>
 #include <unordered_set>
@@ -58,5 +57,3 @@ namespace Parfait {
         }
     };
 }
-
-#endif

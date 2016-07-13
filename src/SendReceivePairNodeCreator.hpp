@@ -10,8 +10,8 @@ namespace Parfait {
         buildGlobalToLocalMap();
     }
     inline void NodePairCreator::buildGlobalToLocalMap() {
-        for(unsigned int local = 0; local < mesh->metaData->globalNodeIds.size(); local++){
-            auto & global = mesh->metaData->globalNodeIds[local];
+        for(int local = 0; local < mesh->numberOfNodes(); local++){
+            auto global = mesh->getGlobalNodeId(local);
             global_to_local[global] = local;
         }
     }
@@ -55,9 +55,9 @@ namespace Parfait {
     }
     inline std::vector<long> NodePairCreator::getOwnedNodeGlobalIds() {
         std::vector<long> owned_global_nodes;
-        for(unsigned int localId = 0; localId < mesh->metaData->globalNodeIds.size(); localId++){
-            if(mesh->metaData->nodeOwnershipDegree[localId] == 0) {
-                auto global_id = mesh->metaData->globalNodeIds[localId];
+        for(int localId = 0; localId < mesh->numberOfNodes(); localId++){
+            if(not mesh->isGhostNode(localId)) {
+                auto global_id = mesh->getGlobalNodeId(localId);
                 owned_global_nodes.push_back(global_id);
             }
         }
@@ -65,9 +65,9 @@ namespace Parfait {
     }
     inline std::vector<long> NodePairCreator::findNeededNodes() {
         std::vector<long> needed_nodes;
-        for(unsigned int localId = 0; localId < mesh->metaData->globalNodeIds.size(); localId++) {
-            if (mesh->metaData->nodeOwnershipDegree[localId] != 0) {
-                auto global_id = mesh->metaData->globalNodeIds[localId];
+        for(int localId = 0; localId < mesh->numberOfNodes(); localId++) {
+            if (mesh->isGhostNode(localId)) {
+                auto global_id = mesh->getGlobalNodeId(localId);
                 needed_nodes.push_back(global_id);
             }
         }

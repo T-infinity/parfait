@@ -8,16 +8,21 @@
 namespace Parfait {
   inline NodeBasedRedistributor::NodeBasedRedistributor(std::shared_ptr<ParallelMesh> mesh_in,
                                                         vector<int> &part_in)
-          : mesh(mesh_in),
+          : mesh(std::make_shared<ParallelMeshBuilder>(*mesh_in.get())),
+            mesh_old(mesh_in),
             part(part_in)
   { }
-
 
   inline std::shared_ptr<ParallelMesh> NodeBasedRedistributor::redistribute() {
 
       int nproc = MessagePasser::NumberOfProcesses();
       nodeMap.assign(nproc, 0);
-      MessagePasser::AllGather(mesh->countNodesAtDegree(0), nodeMap);
+      int num_owned = 0;
+      for(unsigned int n = 0; n < mesh->metaData->xyz.size()/3; n++){
+          if(mesh->metaData->nodeOwnershipDegree[n] == 0)
+              num_owned++;
+      }
+      MessagePasser::AllGather(num_owned, nodeMap);
       nodeMap.insert(nodeMap.begin(), 0);
       for (unsigned int i = 2; i < nodeMap.size(); i++)
           nodeMap[i] += nodeMap[i - 1];
@@ -110,7 +115,7 @@ namespace Parfait {
           printReadableElapsedTime(afterGhostStuff,afterFilling);
       }
 
-      return mesh;
+      return mesh->exportMesh();
   }
 
     inline std::map<long,std::vector<int>> NodeBasedRedistributor::mapNodesToCells(std::vector<long>& globalNodeIds,
