@@ -25,12 +25,6 @@ namespace Parfait{
           is_big_endian.push_back(config.isBigEndian(i));
       }
       auto mesh = getDistributedMesh(grid_names,is_big_endian);
-      if(MessagePasser::Rank() < 2){
-          std::this_thread::sleep_for(std::chrono::seconds(2));
-          printf("Rank %i has %i nodes %i cells %i surface faces\n",MessagePasser::Rank(),
-                 (int)mesh->metaData->xyz.size()/3, mesh->connectivity->numberOfCells(),
-                    mesh->connectivity->numberOfFaces());
-      }
       auto after_reading = Now();
       Parfait::ParallelNodeToNodeBuilder<Parfait::ParallelMesh> n2n_builder(*mesh.get());
       if(MessagePasser::Rank() == 0) printf("Building node to node graph\n");

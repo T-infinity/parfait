@@ -8,7 +8,7 @@
 #include "MeshConnectivity.h"
 #include "MeshParallelMetadata.h"
 
-TEST_CASE("Redistribution Parallel Tests", "[broken]"){
+TEST_CASE("Redistribution Parallel Tests"){
 
     if(MessagePasser::NumberOfProcesses() < 2)
         return;
@@ -18,10 +18,10 @@ TEST_CASE("Redistribution Parallel Tests", "[broken]"){
     if(MessagePasser::Rank() == 0){
         connectivity->prisms = {0,1,2,3,4,5};
         metaData->nodeOwnershipDegree = {0,0,0,1,1,1};
-        metaData->globalNodeIds = {0,1,2};
+        metaData->globalNodeIds = {0,1,2,3,4,5};
         connectivity->triangles = {0,1,2};
-        metaData->nodeComponentIds = {0,0,0};
-        metaData->xyz = {0,0,0, 1,0,0, 1,1,0};
+        metaData->nodeComponentIds = {0,0,0,0,0,0};
+        metaData->xyz = {0,0,0, 1,0,0, 1,1,0, 0,0,1, 1,0,1, 1,1,1};
     }
 
     if(MessagePasser::Rank() == 1){
@@ -30,7 +30,7 @@ TEST_CASE("Redistribution Parallel Tests", "[broken]"){
         connectivity->triangles = {0,1,2};
         metaData->globalNodeIds = {3,4,5,0,1,2};
         metaData->nodeComponentIds = {0,0,0};
-        metaData->xyz = {0,0,1, 1,0,1, 1,1,1};
+        metaData->xyz = {0,0,1, 1,0,1, 1,1,1, 0,0,0, 1,0,0, 1,1,0};
     }
 
     Parfait::ParallelMesh mesh(connectivity, metaData);

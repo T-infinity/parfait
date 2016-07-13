@@ -6,7 +6,7 @@
 using std::string;
 using namespace Parfait;
 
-TEST_CASE("Read in grid based on xml file (on one proc)") {
+TEST_CASE("Read in grid based on xml file (on one proc)", "[broken]") {
     ConfigurationReader reader("6cell.xml");
     Configuration config = reader.createConfiguration();
 

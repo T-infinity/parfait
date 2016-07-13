@@ -19,9 +19,9 @@ TEST_CASE("NodeToNodeTests,Exists") {
     std::shared_ptr<MeshParallelMetaData> metaData = std::make_shared<MeshParallelMetaData>();
     connectivity->tets = tets;
     metaData->xyz = xyz;
-    auto mesh = std::make_shared<ParallelMesh>(connectivity, metaData);
-    PartitionableMesh partitionableMesh(mesh);
-    NodeToNodeBuilder<decltype(partitionableMesh)> builder(partitionableMesh);
+    metaData->nodeOwnershipDegree.resize(xyz.size(), 0);
+    Parfait::ParallelMesh mesh(connectivity, metaData);
+    NodeToNodeBuilder<decltype(mesh)> builder(mesh);
     auto n2n = builder.buildNodeToNodeConnectivity();
 
     REQUIRE(4==n2n.size());
