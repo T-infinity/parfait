@@ -25,7 +25,7 @@ namespace Parfait{
       auto local_node_to_node = nodeBuilder.buildNodeToNodeConnectivity();
 
       int index = 0;
-      if(MessagePasser::Rank() == 0) {printf("Combining into full n2n for %d nodes\n", local_node_to_node.size()); fflush(stdout);}
+      if(MessagePasser::Rank() == 0) {printf("Combining into full n2n for %lu nodes\n", local_node_to_node.size()); fflush(stdout);}
 
       for(unsigned int localId = 0; localId < local_node_to_node.size(); localId++){
           if(mesh.isGhostNode(localId)) continue;
