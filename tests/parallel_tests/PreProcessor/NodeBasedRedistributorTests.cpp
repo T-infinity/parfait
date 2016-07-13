@@ -20,7 +20,7 @@ TEST_CASE("Node Centered Redistributor"){
         connectivity->triangles = {0,1,2};
         metaData->triangleTags = {1};
         metaData->nodeComponentIds = {0,0,0};
-        metaData->xyz = {0,0,0, 1,0,0, 1,1,0};
+        metaData->xyz = {0,0,0, 1,0,0, 1,1,0, 0,0,1, 1,0,1, 1,1,1};
     }
 
     if(Rank() == 1){
@@ -30,7 +30,7 @@ TEST_CASE("Node Centered Redistributor"){
         metaData->triangleTags = {1};
         metaData->globalNodeIds = {3,4,5,0,1,2};
         metaData->nodeComponentIds = {0,0,0};
-        metaData->xyz = {0,0,1, 1,0,1, 1,1,1};
+        metaData->xyz = {0,0,1, 1,0,1, 1,1,1, 0,0,0, 1,0,0, 1,1,0,};
     }
 
     auto mesh = std::make_shared<Parfait::ParallelMesh>(connectivity, metaData);
