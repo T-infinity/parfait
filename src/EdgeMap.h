@@ -1,6 +1,4 @@
-#ifndef EDGE_MAP_H
-#define EDGE_MAP_H
-
+#pragma once
 #include <array>
 #include <vector>
 namespace Parfait {
@@ -74,4 +72,3 @@ namespace Parfait{
         throw std::logic_error("Nodes Do not share an edge.");
     }
 }
-#endif

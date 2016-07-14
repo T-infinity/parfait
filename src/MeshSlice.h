@@ -1,5 +1,4 @@
-#ifndef MESH_SLICE_H
-#define MESH_SLICE_H
+#pragma once
 
 #include <vector>
 #include "GenericMesh.h"
@@ -186,4 +185,3 @@ namespace Parfait {
         }
     }
 }
-#endif

@@ -1,5 +1,4 @@
-#ifndef VTK_FIELD_H
-#define VTK_FIELD_H
+#pragma once
 
 #include<stdlib.h>
 #include<stdio.h>
@@ -10,7 +9,6 @@
 #define INT32_FIELD 301
 #define FLOAT32_FIELD 302
 #define FLOAT64_FIELD 303
-
 
 namespace Parfait {
     template<typename T>
@@ -49,5 +47,3 @@ namespace Parfait {
     };
 }
 #include "VtkField.hpp"
-
-#endif

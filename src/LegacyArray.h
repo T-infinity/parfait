@@ -7,8 +7,7 @@ class LegacyArray
 		int size(){return arrayLength;}
 		T operator[](int i) const {return arrayPointer[i];}
 		T &operator[](int i) {return arrayPointer[i];}
-		class Iterator
-		{
+		class Iterator {
 			public:
 				Iterator(LegacyArray<T> &a,int index);
 				void operator++();
@@ -39,8 +38,7 @@ void LegacyArray<T>::Iterator::operator++()
 {++index;}
 
 template<typename T>
-bool LegacyArray<T>::Iterator::operator!=(const Iterator& rhs)
-{
+bool LegacyArray<T>::Iterator::operator!=(const Iterator& rhs) {
 	if(rhs.index != index)
 		return true;
 	return false;	
@@ -48,7 +46,6 @@ bool LegacyArray<T>::Iterator::operator!=(const Iterator& rhs)
 
 
 template<typename T>
-T LegacyArray<T>::Iterator::operator*()
-{
+T LegacyArray<T>::Iterator::operator*() {
 	return a[index];
 }

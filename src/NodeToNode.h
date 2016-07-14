@@ -1,5 +1,4 @@
-#ifndef NODE_TO_NODE_H
-#define NODE_TO_NODE_H
+#pragma once
 
 #include <vector>
 #include <set>
@@ -24,4 +23,3 @@ namespace Parfait {
 
 }
 #include "NodeToNode.hpp"
-#endif

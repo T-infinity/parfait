@@ -1,5 +1,4 @@
-#ifndef VTK_SURFACE_WRITER_H
-#define VTK_SURFACE_WRITER_H
+#pragma once
 #include <vector>
 #include <stdlib.h>
 #include <assert.h>
@@ -80,5 +79,3 @@ namespace Parfait {
     };
 }
 #include "VtkSurfaceWriter.hpp"
-
-#endif

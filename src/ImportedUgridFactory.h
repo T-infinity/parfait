@@ -1,14 +1,7 @@
-#ifndef IMPORTED_UGRID_FACTORY_H
-#define IMPORTED_UGRID_FACTORY_H
+#pragma once
 
-#ifndef UGRID_READER_H
 #include "UgridReader.h"
-#endif
-
-#ifndef IMPORTED_UGRID_H
 #include "ImportedUgrid.h"
-#endif
-
 #include <vector>
 #include <string>
 #include <stdexcept>
@@ -221,4 +214,3 @@ inline ImportedUgrid ImportedUgridFactory::readUgrid(std::vector<std::string> &f
                              triangleTags, quadTags);
     }
 }
-#endif

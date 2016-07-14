@@ -1,5 +1,4 @@
-#ifndef CONFIGURATION_H
-#define CONFIGURATION_H
+#pragma once
 #include <string>
 #include <vector>
 #include <ConfigurationReader.h>
@@ -38,5 +37,3 @@ namespace Parfait {
 	};
 }
 #include "Configuration.hpp"
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef PARFAIT_MESHPARALLELMETADATA_H
-#define PARFAIT_MESHPARALLELMETADATA_H
+#pragma once
 
 #include <vector>
 
@@ -22,5 +21,3 @@ namespace Parfait {
         }
     };
 }
-
-#endif

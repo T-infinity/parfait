@@ -1,13 +1,6 @@
-#ifndef UNIT_TRANSFORMER_H
-#define UNIT_TRANSFORMER_H
-
-#ifndef POINT_H
+#pragma once
 #include "Point.h"
-#endif
-
-#ifndef EXTENT_H
 #include "Extent.h"
-#endif
 
 namespace Parfait {
     class UnitTransformer {
@@ -60,5 +53,3 @@ namespace Parfait {
         double oneOverScale;
     };
 }
-
-#endif

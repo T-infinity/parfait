@@ -7,7 +7,6 @@
 std::shared_ptr<Parfait::ParallelMesh> getTestMesh(){
 
     Parfait::ParallelMeshBuilder meshBuilder;
-    std::vector<int> part(3, MessagePasser::Rank());
     if(MessagePasser::Rank() == 0){
         meshBuilder.connectivity->prisms = {0,1,2,3,4,5};
         meshBuilder.metaData->nodeOwnershipDegree = {0,0,0,1,1,1};

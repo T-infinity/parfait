@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <RangeLoop.h>
 #include <map>
-#include "timing.h"
+#include "Timing.h"
 
 #ifdef PARFAIT_WITH_MPI
 

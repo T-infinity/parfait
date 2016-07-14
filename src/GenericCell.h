@@ -1,5 +1,4 @@
-#ifndef GENERIC_CELL_H
-#define GENERIC_CELL_H
+#pragma once
 #include "GenericFace.h"
 
 #include <vector>
@@ -40,5 +39,3 @@ namespace Parfait {
     };
 }
 #include "GenericCell.hpp"
-
-#endif

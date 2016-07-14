@@ -1,5 +1,4 @@
-#ifndef MESH_MOVER_H
-#define MESH_MOVER_H
+#pragma once
 #include <MotionMatrix.h>
 // Requirements:  Mesh must implement the following
 //
@@ -27,4 +26,3 @@ namespace Parfait {
         }
     }
 }
-#endif

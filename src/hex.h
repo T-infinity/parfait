@@ -1,5 +1,4 @@
-#ifndef __HEX_H
-#define __HEX_H
+#pragma once
 
 #include <Point.h>
 #include <Extent.h>
@@ -70,6 +69,3 @@ inline Parfait::Hex::Hex(Extent<double> extent){
     points[7][1] = extent.hi[1];
     points[7][2] = extent.hi[2];
 }
-
-
-#endif

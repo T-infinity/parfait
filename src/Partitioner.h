@@ -1,5 +1,4 @@
-#ifndef PARMETIS_PREPPER_H
-#define PARMETIS_PREPPER_H
+#pragma once
 #include <vector>
 #include <memory>
 #include "ParallelMesh.h"
@@ -14,6 +13,4 @@ namespace Parfait {
           throw std::logic_error("No partitioners available");
       }
   };
-
 }
-#endif

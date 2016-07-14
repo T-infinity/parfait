@@ -1,5 +1,4 @@
-#ifndef PARFAIT_VTKEXPLODEDVIEWWRITER_H
-#define PARFAIT_VTKEXPLODEDVIEWWRITER_H
+#pragma once
 #include <string>
 
 namespace Parfait {
@@ -14,4 +13,3 @@ namespace Parfait {
   };
 }
 #include "VtkExplodedViewWriter.hpp"
-#endif

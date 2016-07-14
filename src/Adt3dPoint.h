@@ -1,24 +1,8 @@
-#ifndef ADT_3D_POINT_H
-#define ADT_3D_POINT_H
-
-#ifndef ADT_H
+#pragma once
 #include "Adt.h"
-#endif
-
-#ifndef POINT_H
 #include "point.h"
-#endif
-
-#ifndef EXTENT_H
 #include "extent.h"
-#endif
-
-#ifndef UNIT_TRANSFORMER_H
-#include "unit_transformer.h"
-#endif
-
 #include <string>
-
 #include <stdexcept>
 
 namespace Parfait {
@@ -68,5 +52,3 @@ namespace Parfait {
 }
 
 #include "Adt3dPoint.hpp"
-
-#endif

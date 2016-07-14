@@ -1,5 +1,4 @@
-#ifndef MPI_CLEAN_CHECK
-#define MPI_CLEAN_CHECK
+#pragma once
 
 #include <mpi.h>
 #define CHECK_MPI_CLEAN    { \
@@ -13,5 +12,3 @@
                                abort(); \
                            } \
                            }
-
-#endif

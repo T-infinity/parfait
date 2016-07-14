@@ -1,5 +1,4 @@
-#ifndef RANGE_LOOP_H
-#define RANGE_LOOP_H
+#pragma once
 // This is a convenience tool for looping over ranges.
 // There are several ways to use it.
 //
@@ -19,16 +18,14 @@
 // ---------------------------------------
 // for(int i:range(tets,4))
 //
-class range
-{
+class range {
 	public:
 		range(int low,int high):lo(low),hi(high){}
 		range(int high):lo(0),hi(high){}
 		template<typename T>
 		inline range(T container):lo(0),hi(container.end()-container.begin()){}
 
-		class Iterator
-		{
+		class Iterator {
 			public:
 				Iterator(range &myRange_in,int index_in):myRange(myRange_in),index(index_in){}
 				void operator++() {++index;}
@@ -44,6 +41,3 @@ class range
 		int lo;
 		int hi;
 };
-
-
-#endif

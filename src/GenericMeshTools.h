@@ -1,21 +1,9 @@
-#ifndef GENERIC_MESH_TOOLS_H
-#define GENERIC_MESH_TOOLS_H
+#pragma once
 
-#ifndef RANGE_LOOP_H
 #include "RangeLoop.h"
-#endif
-
-#ifndef POINT_H
 #include "Point.h"
-#endif
-
-#ifndef GENERIC_MESH_H
 #include "GenericMesh.h"
-#endif
-
-#ifndef VECTOR_TOOLS_H
 #include "VectorTools.h"
-#endif
 
 #include <cmath>
 #include <stdexcept>
@@ -237,4 +225,3 @@ namespace Parfait {
     }
   };
 }
-#endif

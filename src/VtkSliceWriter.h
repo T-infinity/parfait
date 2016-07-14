@@ -1,5 +1,4 @@
-#ifndef VTK_SLICE_WRITER_H
-#define VTK_SLICE_WRITER_H
+#pragma once
 
 #include <vector>
 #include <string>
@@ -47,5 +46,3 @@ namespace Parfait {
 }
 
 #include "VtkSliceWriter.hpp"
-
-#endif

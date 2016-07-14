@@ -1,6 +1,4 @@
-#ifndef VTK_VOLUME_WRITER_H
-#define VTK_VOLUME_WRITER_H
-
+#pragma once
 
 #ifdef PARFAIT_WITH_VTK
 #include <string>
@@ -66,4 +64,3 @@ namespace Parfait {
 #include "VtkUnstructuredWriter.hpp"
 
 #endif // PARFAIT_WITH_VTK
-#endif

@@ -3,7 +3,7 @@
 #include <ParallelNodeToNodeBuilder.h>
 #include <thread>
 #include "NodeCenteredRedistributor.h"
-#include "timing.h"
+#include "Timing.h"
 
 #ifdef PARFAIT_WITH_PARMETIS
 #include "ParmetisPartitioner.h"

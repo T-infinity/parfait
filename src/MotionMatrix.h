@@ -1,5 +1,4 @@
-#ifndef MOTION_MATRIX_H
-#define MOTION_MATRIX_H
+#pragma once
 #include <assert.h>
 #include <ContiguousMatrixMultiplication.h>
 #include <math.h>
@@ -30,5 +29,3 @@ namespace Parfait {
 }
 
 #include "MotionMatrix.hpp"
-
-#endif

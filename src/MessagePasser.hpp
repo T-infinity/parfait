@@ -1,4 +1,4 @@
-#include "checkpoint.h"
+#include "Checkpoint.h"
 #ifdef PARFAIT_WITH_MPI
 #include <stdexcept>
 

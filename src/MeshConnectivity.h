@@ -1,5 +1,4 @@
-#ifndef PARFAIT_MESHDATA_H
-#define PARFAIT_MESHDATA_H
+#pragma once
 #include <vector>
 #include <stdexcept>
 
@@ -69,4 +68,3 @@ namespace Parfait{
         }
     };
 }
-#endif 

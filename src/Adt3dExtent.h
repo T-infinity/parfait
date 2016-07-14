@@ -1,17 +1,8 @@
-#ifndef ADT_3D_EXTENT_H
-#define ADT_3D_EXTENT_H
+#pragma once
 
-#ifndef ADT_H
 #include "Adt.h"
-#endif
-
-#ifndef POINT_H
 #include "point.h"
-#endif
-
-#ifndef UNIT_TRANSFORMER_H
-#include "unit_transformer.h"
-#endif
+#include "UnitTransformer.h"
 
 namespace Parfait {
     class Adt3DExtent {
@@ -26,5 +17,3 @@ namespace Parfait {
     };
 }
 #include "Adt3dExtent.hpp"
-
-#endif

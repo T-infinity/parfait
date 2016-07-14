@@ -1,5 +1,5 @@
 #include "VtkGenericWriter.h"
-#include "vtk_extent_writer.h"
+#include "VtkExtentWriter.h"
 #include "ImportedUgrid.h"
 #include "MessagePasser.h"
 #include <vector>

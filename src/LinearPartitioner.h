@@ -1,5 +1,4 @@
-#ifndef PARFAIT_LINEARPARTITIONER_H
-#define PARFAIT_LINEARPARTITIONER_H
+#pragma once
 #include <tuple>
 #include <vector>
 
@@ -34,4 +33,3 @@ namespace Parfait {
 }
 
 #include "LinearPartitioner.hpp"
-#endif 

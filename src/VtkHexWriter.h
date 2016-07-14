@@ -1,11 +1,10 @@
-#ifndef VTK_HEX_WRITER_H
-#define VTK_HEX_WRITER_H
+#pragma once
 
 #include <vector>
 #include <string>
 
 #ifndef __HEX_H
-#include "hex.h"
+#include "Hex.h"
 #endif
 
 namespace Parfait{
@@ -24,4 +23,3 @@ namespace Parfait{
 }
 
 #include "VtkHexWriter.hpp"
-#endif

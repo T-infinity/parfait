@@ -1,5 +1,4 @@
-#ifndef PARFAIT_PARALLELNODETONODE_H
-#define PARFAIT_PARALLELNODETONODE_H
+#pragma once
 
 #include <vector>
 #include "GenericMesh.h"
@@ -42,4 +41,3 @@ namespace Parfait{
   ParallelNodeToNodeBuilder<Mesh>::ParallelNodeToNodeBuilder(const Mesh &mesh_in) : mesh(mesh_in) {
   }
 }
-#endif 

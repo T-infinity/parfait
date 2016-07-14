@@ -1,5 +1,4 @@
-#ifndef ADT_ELEM_H
-#define ADT_ELEM_H
+#pragma once
 
 #define ADT_TOL 1.0e-12
 #define ADT_NO_CHILD -1
@@ -42,5 +41,3 @@ namespace Parfait {
     };
 }
 #include "AdtElem.hpp"
-
-#endif

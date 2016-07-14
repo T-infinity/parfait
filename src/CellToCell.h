@@ -1,5 +1,4 @@
-#ifndef CELL_TO_CELL_H
-#define CELL_TO_CELL_H
+#pragma once
 
 #include <stdio.h>
 #include <algorithm>
@@ -160,5 +159,3 @@ std::vector<std::vector<int>> buildNodeToCell(MeshType &mesh_i){
         fclose(fp);
     }
 }
-
-#endif

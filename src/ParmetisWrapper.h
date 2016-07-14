@@ -1,5 +1,4 @@
-#ifndef PARMETISWRAPPER_H
-#define PARMETISWRAPPER_H
+#pragma once
 
 #ifdef PARFAIT_WITH_PARMETIS
 #include "parmetis.h"
@@ -39,4 +38,3 @@ void partitionMesh(int rank, int nproc,
 				   int* part_vec);
 
 #include "ParmetisWrapper.hpp"
-#endif

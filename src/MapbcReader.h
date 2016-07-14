@@ -1,5 +1,4 @@
-#ifndef MAPBC_READER_H
-#define MAPBC_READER_H
+#pragma once
 #include <string>
 #include <map>
 
@@ -25,5 +24,3 @@ namespace Parfait {
 }
 
 #include "MapbcReader.hpp"
-
-#endif
