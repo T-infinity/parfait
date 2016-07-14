@@ -99,3 +99,71 @@ inline int ParallelMesh::numberOfQuads() const {
 inline const int* ParallelMesh::getQuad(int id) const {
     return &(data->quads[4*id]);
 }
+
+inline int ParallelMesh::numberOfCells() const {
+    return numberOfTets() + numberOfPyramids() + numberOfPrisms() + numberOfHexes();
+}
+
+inline int ParallelMesh::numberOfNodesInCell(int id) const {
+    if(id < numberOfTets())
+        return 4;
+    id -= numberOfTets();
+    if(id < numberOfPyramids())
+        return 5;
+    id -= numberOfPyramids();
+    if(id < numberOfPrisms())
+        return 6;
+    return 8;
+}
+
+inline const int *ParallelMesh::getCell(int id) const {
+    if(id < numberOfTets())
+        return getTet(id);
+    id -= numberOfTets();
+    if(id < numberOfPyramids())
+        return getPyramid(id);
+    id -= numberOfPyramids();
+    if(id < numberOfPrisms())
+        return getPrism(id);
+    id -= numberOfPrisms();
+    return getHex(id);
+
+}
+
+inline int ParallelMesh::numberOfFaces() const {
+    return numberOfTriangles() + numberOfQuads();
+}
+
+inline const int *ParallelMesh::getFace(int id) const {
+    if(id < numberOfTriangles())
+        return getTriangle(id);
+    id -= numberOfTriangles();
+    return getQuad(id);
+}
+
+inline int ParallelMesh::numberOfNodesInFace(int id) const {
+    if(id < numberOfTriangles())
+        return 3;
+    return 4;
+}
+
+inline int ParallelMesh::getFaceTag(int id) const {
+    if(id < numberOfTriangles())
+        return getTriangleTag(id);
+    id -= numberOfTriangles();
+    return getQuadTag(id);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

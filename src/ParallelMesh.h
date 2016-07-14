@@ -30,6 +30,9 @@ namespace Parfait {
 
       ParallelMesh(ParallelMeshBuilder builder);
       int numberOfNodes() const;
+      int numberOfCells() const;
+      int numberOfNodesInCell(int id) const;
+      const int* getCell(int id) const;
       int getTriangleTag(int id) const;
       int getQuadTag(int id) const;
       int getNodeComponentId(int id) const;
@@ -47,6 +50,10 @@ namespace Parfait {
       const int* getPrism(int id) const;
       int numberOfHexes() const;
       const int* getHex(int id) const;
+      int numberOfFaces() const;
+      int numberOfNodesInFace(int id) const;
+      const int* getFace(int id) const;
+      int getFaceTag(int id) const;
       int numberOfTriangles() const;
       const int* getTriangle(int id) const;
       int numberOfQuads() const;
