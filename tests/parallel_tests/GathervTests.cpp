@@ -1,6 +1,6 @@
 #include <vector>
 #include <MessagePasser.h>
-#include "mpi_compare_tols.h"
+#include "MPICompareTols.h"
 #include "catch.hpp"
 
 using namespace MessagePasser;

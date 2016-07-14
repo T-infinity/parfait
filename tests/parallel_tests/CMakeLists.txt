@@ -35,7 +35,7 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         catch_main.cpp
         DangerStreamTests.cpp
         ParallelExtent_test.cpp
-        parallel_sum_tests.cpp
+        ParallelSumTests.cpp
         GathervTests.cpp
         AllGathervTests.cpp
         AsyncSends_tests.cpp
