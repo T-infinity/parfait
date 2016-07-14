@@ -1,13 +1,28 @@
 #pragma once
 #include <memory>
 #include <algorithm>
-#include "MeshConnectivity.h"
-#include "MeshParallelMetadata.h"
 #include "SendReceivePair.h"
 #include "Point.h"
 
 namespace Parfait {
   class ParallelMeshBuilder;
+
+  struct ParallelMeshData {
+      std::vector<double> xyz;
+      std::vector<int> triangleTags;
+      std::vector<int> quadTags;
+
+      std::vector<long> globalNodeIds;
+      std::vector<int> nodeOwnershipDegree;
+      std::vector<int> nodeComponentIds;
+
+      std::vector<int> triangles;
+      std::vector<int> quads;
+      std::vector<int> tets;
+      std::vector<int> pyramids;
+      std::vector<int> prisms;
+      std::vector<int> hexs;
+  };
 
   class ParallelMesh {
   public:
@@ -38,10 +53,8 @@ namespace Parfait {
       const int* getQuad(int id) const;
 
   private:
-      std::shared_ptr<MeshParallelMetaData> metaData;
-      std::shared_ptr<MeshConnectivity> connectivity;
+      std::shared_ptr<ParallelMeshData> data;
   };
-
 
   class ParallelMeshBuilder{
   public:
@@ -49,8 +62,7 @@ namespace Parfait {
       ParallelMeshBuilder(ParallelMesh mesh);
       std::shared_ptr<ParallelMesh> exportMesh();
 
-      std::shared_ptr<MeshParallelMetaData> metaData;
-      std::shared_ptr<MeshConnectivity> connectivity;
+      std::shared_ptr<ParallelMeshData> data;
   };
 }
 

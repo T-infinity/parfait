@@ -14,9 +14,9 @@ TEST_CASE("NodeToNodeTests,Exists") {
     vector<int> tets {0,1,2,3};
 
     Parfait::ParallelMeshBuilder meshBuilder;
-    meshBuilder.connectivity->tets = tets;
-    meshBuilder.metaData->xyz = xyz;
-    meshBuilder.metaData->nodeOwnershipDegree.resize(xyz.size(), 0);
+    meshBuilder.data->tets = tets;
+    meshBuilder.data->xyz = xyz;
+    meshBuilder.data->nodeOwnershipDegree.resize(xyz.size(), 0);
     Parfait::ParallelMesh mesh(meshBuilder);
     NodeToNodeBuilder<decltype(mesh)> builder(mesh);
     auto n2n = builder.buildNodeToNodeConnectivity();

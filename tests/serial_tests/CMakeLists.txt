@@ -49,8 +49,8 @@ set(SERIAL_TESTS_SOURCES
         ugridWriterTests/ugridWriterTests.cpp
         VtkGenericTests/VtkGenericTests.cpp
         VtkSurfaceTests/VtkSurfaceTests.cpp
-        MeshConnectivityTests.cpp
-        MeshMetaDataTests.cpp ExtentMeshWrapperTests.cpp)
+        ExtentMeshWrapperTests.cpp
+        )
 
 include_directories(../)
 
