@@ -1,6 +1,3 @@
-#ifndef GENERIC_NODE_H
-#define GENERIC_NODE_H
-
 namespace Parfait {
     template<class MeshType>
     class Node {
@@ -15,5 +12,3 @@ namespace Parfait {
     };
 }
 #include "GenericNode.hpp"
-
-#endif

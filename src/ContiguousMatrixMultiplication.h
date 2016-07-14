@@ -1,5 +1,4 @@
-#ifndef CONTIGUOUS_MATRIX_MULTIPLICATION_H
-#define CONTIGUOUS_MATRIX_MULTIPLICATION_H
+#pragma once
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
@@ -32,5 +31,3 @@ inline void MatrixMatrixMultiply(const double *A,const double *B, int anrows, in
       for(int brow=0;brow<bnrows;brow++)
         O[arow*bncols+acol] += A[arow*ancols+brow]*B[brow*bncols+acol];
 }
-#endif
-

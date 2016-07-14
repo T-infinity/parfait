@@ -14,18 +14,17 @@ TEST_CASE("Read in grid based on xml file (on one proc)") {
     auto mesh = preProcessor.createMesh();
 
     if(MessagePasser::NumberOfProcesses() == 1){
-        REQUIRE(12 == (mesh->connectivity->triangles.size() / 3));
-        REQUIRE(12 == mesh->metaData->triangleTags.size());
-        REQUIRE(6 == (mesh->connectivity->quads.size() / 4));
-        REQUIRE(0 == (mesh->connectivity->tets.size() / 4));
-        REQUIRE(0 == (mesh->connectivity->pyramids.size() / 5));
-        REQUIRE(6 == (mesh->connectivity->prisms.size() / 6));
-        REQUIRE(0 == (mesh->connectivity->hexs.size() / 6));
+        REQUIRE(12 == mesh->numberOfTriangles());
+        REQUIRE(6 == mesh->numberOfQuads());
+        REQUIRE(0 == mesh->numberOfTets());
+        REQUIRE(0 == mesh->numberOfPyramids());
+        REQUIRE(6 == mesh->numberOfPrisms());
+        REQUIRE(0 == mesh->numberOfHexes());
         for(int i = 0; i < 14; i++){
-            REQUIRE(i == mesh->metaData->globalNodeIds[i]);
+            REQUIRE(i == mesh->getGlobalNodeId(i));
         }
         for(int i = 0; i < 14; i++){
-            REQUIRE(0 == mesh->metaData->nodeOwnershipDegree[i]);
+            REQUIRE(not mesh->isGhostNode(i));
         }
     }
 

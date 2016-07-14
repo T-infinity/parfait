@@ -1,5 +1,4 @@
-#ifndef POINT_H
-#define POINT_H
+#pragma once
 
 #include <array>
 #include <vector>
@@ -54,5 +53,3 @@ namespace Parfait {
 }
 
 #include "Point.hpp"
-
-#endif

@@ -1,23 +1,28 @@
 #include <algorithm>
 #include <RangeLoop.h>
 #include <map>
-#include "timing.h"
+#include "Timing.h"
 
 #ifdef PARFAIT_WITH_MPI
 
 namespace Parfait {
   inline NodeBasedRedistributor::NodeBasedRedistributor(std::shared_ptr<ParallelMesh> mesh_in,
                                                         vector<int> &part_in)
-          : mesh(mesh_in),
+          : mesh(std::make_shared<ParallelMeshBuilder>(*mesh_in.get())),
+            mesh_old(mesh_in),
             part(part_in)
   { }
-
 
   inline std::shared_ptr<ParallelMesh> NodeBasedRedistributor::redistribute() {
 
       int nproc = MessagePasser::NumberOfProcesses();
       nodeMap.assign(nproc, 0);
-      MessagePasser::AllGather(mesh->countNodesAtDegree(0), nodeMap);
+      int num_owned = 0;
+      for(unsigned int n = 0; n < mesh->data->xyz.size()/3; n++){
+          if(mesh->data->nodeOwnershipDegree[n] == 0)
+              num_owned++;
+      }
+      MessagePasser::AllGather(num_owned, nodeMap);
       nodeMap.insert(nodeMap.begin(), 0);
       for (unsigned int i = 2; i < nodeMap.size(); i++)
           nodeMap[i] += nodeMap[i - 1];
@@ -25,30 +30,29 @@ namespace Parfait {
       auto beginning = Clock::now();
       auto myNonGhostIds = redistributeNodeIds();
       auto afterNodes = Clock::now();
-      auto recvTets = redistributeCells(myNonGhostIds, mesh->connectivity->tets, 4);
+      auto recvTets = redistributeCells(myNonGhostIds, mesh->data->tets, 4);
       auto afterTets = Clock::now();
-      auto recvPyramids = redistributeCells(myNonGhostIds,mesh->connectivity->pyramids,5);
+      auto recvPyramids = redistributeCells(myNonGhostIds,mesh->data->pyramids,5);
       auto afterPyramids = Clock::now();
-      auto recvPrisms = redistributeCells(myNonGhostIds,mesh->connectivity->prisms,6);
+      auto recvPrisms = redistributeCells(myNonGhostIds,mesh->data->prisms,6);
       auto afterPrisms = Clock::now();
-      auto recvHexs = redistributeCells(myNonGhostIds, mesh->connectivity->hexs, 8);
+      auto recvHexs = redistributeCells(myNonGhostIds, mesh->data->hexs, 8);
       auto afterHexs = Clock::now();
-
 
       auto myGhostIds = identifyGhostNodes(myNonGhostIds, recvTets, recvPyramids, recvPrisms, recvHexs);
       auto afterIdentifyingGhosts = Clock::now();
       auto my_all_node_ids = myNonGhostIds;
       my_all_node_ids.insert(my_all_node_ids.end(),myGhostIds.begin(),myGhostIds.end());
       std::sort(my_all_node_ids.begin(),my_all_node_ids.end());
-      auto recvTriangles = redistributeSurfaceCells(my_all_node_ids,mesh->connectivity->triangles,3);
+      auto recvTriangles = redistributeSurfaceCells(my_all_node_ids,mesh->data->triangles,3);
       auto afterTriangles = Clock::now();
-      auto recvTriangleTags = redistributeTags(my_all_node_ids, mesh->connectivity->triangles,
-                                               mesh->metaData->triangleTags, 3);
+      auto recvTriangleTags = redistributeTags(my_all_node_ids, mesh->data->triangles,
+                                               mesh->data->triangleTags, 3);
       auto afterTriangleTags = Clock::now();
-      auto recvQuads  = redistributeSurfaceCells(my_all_node_ids,mesh->connectivity->quads,4);
+      auto recvQuads  = redistributeSurfaceCells(my_all_node_ids,mesh->data->quads,4);
       auto afterQuads = Clock::now();
-      auto recvQuadTags = redistributeTags(my_all_node_ids, mesh->connectivity->quads,
-                                           mesh->metaData->quadTags, 4);
+      auto recvQuadTags = redistributeTags(my_all_node_ids, mesh->data->quads,
+                                           mesh->data->quadTags, 4);
       auto afterQuadTags = Clock::now();
       redistributeNodeMetaData(myNonGhostIds,myGhostIds);
       auto afterMetaData = Clock::now();
@@ -67,19 +71,19 @@ namespace Parfait {
           global_to_local[myNonGhostIds[i]] = i;
 
       auto afterGhostStuff = Clock::now();
-      mesh->connectivity->triangles = convertToLocalIds(global_to_local, recvTriangles);
-      mesh->connectivity->quads = convertToLocalIds(global_to_local, recvQuads);
-      mesh->connectivity->tets = convertToLocalIds(global_to_local, recvTets);
-      mesh->connectivity->pyramids = convertToLocalIds(global_to_local, recvPyramids);
-      mesh->connectivity->prisms = convertToLocalIds(global_to_local, recvPrisms);
-      mesh->connectivity->hexs = convertToLocalIds(global_to_local, recvHexs);
-      mesh->metaData->xyz = recvXYZ;
-      mesh->metaData->nodeComponentIds = recvAssociatedComponentIds;
-      mesh->metaData->triangleTags = recvTriangleTags;
-      mesh->metaData->quadTags = recvQuadTags;
-      mesh->metaData->globalNodeIds = myNonGhostIds;
-      mesh->metaData->globalNodeIds.insert(mesh->metaData->globalNodeIds.end(),myGhostIds.begin(),myGhostIds.end());
-      mesh->metaData->nodeOwnershipDegree = ownership_degree;
+      mesh->data->triangles = convertToLocalIds(global_to_local, recvTriangles);
+      mesh->data->quads = convertToLocalIds(global_to_local, recvQuads);
+      mesh->data->tets = convertToLocalIds(global_to_local, recvTets);
+      mesh->data->pyramids = convertToLocalIds(global_to_local, recvPyramids);
+      mesh->data->prisms = convertToLocalIds(global_to_local, recvPrisms);
+      mesh->data->hexs = convertToLocalIds(global_to_local, recvHexs);
+      mesh->data->xyz = recvXYZ;
+      mesh->data->nodeComponentIds = recvAssociatedComponentIds;
+      mesh->data->triangleTags = recvTriangleTags;
+      mesh->data->quadTags = recvQuadTags;
+      mesh->data->globalNodeIds = myNonGhostIds;
+      mesh->data->globalNodeIds.insert(mesh->data->globalNodeIds.end(),myGhostIds.begin(),myGhostIds.end());
+      mesh->data->nodeOwnershipDegree = ownership_degree;
       auto afterFilling = Clock::now();
 
       if(MessagePasser::Rank() == 0) {
@@ -107,11 +111,11 @@ namespace Parfait {
           printReadableElapsedTime(afterQuadTags,afterMetaData);
           printf("Time to do ghost stuff\n");
           printReadableElapsedTime(afterMetaData,afterGhostStuff);
-          printf("Time to fill mesh vectors\n");
+          printf("Time to fill meshBuilder vectors\n");
           printReadableElapsedTime(afterGhostStuff,afterFilling);
       }
 
-      return mesh;
+      return mesh->exportMesh();
   }
 
     inline std::map<long,std::vector<int>> NodeBasedRedistributor::mapNodesToCells(std::vector<long>& globalNodeIds,
@@ -146,7 +150,7 @@ namespace Parfait {
           sendNodes.reserve(3 * count);
           for (unsigned int localNodeId = 0; localNodeId < part.size(); localNodeId++) {
               if (part[localNodeId] == proc) {
-                  auto globalNodeId = mesh->metaData->globalNodeIds[localNodeId];
+                  auto globalNodeId = mesh->data->globalNodeIds[localNodeId];
                   sendIds.push_back(globalNodeId);
               }
           }
@@ -160,8 +164,8 @@ namespace Parfait {
                                                                  std::vector<long>& my_ghost_ids) {
         if(MessagePasser::Rank() == 0) printf("Redistributing node meta data\n");
         std::map<long, int> global_to_local;
-        for (unsigned int i = 0; i < mesh->metaData->globalNodeIds.size(); i++)
-            global_to_local[mesh->metaData->globalNodeIds[i]] = i;
+        for (unsigned int i = 0; i < mesh->data->globalNodeIds.size(); i++)
+            global_to_local[mesh->data->globalNodeIds[i]] = i;
         for (int proc=0;proc<MessagePasser::NumberOfProcesses();++proc) {
             vector<long> idsOfXyxsINeed;
             if (MessagePasser::Rank() == proc) {
@@ -175,13 +179,11 @@ namespace Parfait {
             for (auto globalNodeId : idsOfXyxsINeed) {
                 if(amItheOwnerOfThisNode(globalNodeId, global_to_local)) {
                     int localNodeId = global_to_local[globalNodeId];
-                    //printf("Rank %i owns gid %i (%f %f %f) (local id %i)\n",MessagePasser::Rank(),globalNodeId,mesh->metaData->xyz[3*localNodeId+0],
-                    //mesh->metaData->xyz[3*localNodeId+1], mesh->metaData->xyz[3*localNodeId+2],localNodeId);
-                    sendXYZ.push_back(mesh->metaData->xyz[3 * localNodeId + 0]);
-                    sendXYZ.push_back(mesh->metaData->xyz[3 * localNodeId + 1]);
-                    sendXYZ.push_back(mesh->metaData->xyz[3 * localNodeId + 2]);
+                    sendXYZ.push_back(mesh->data->xyz[3 * localNodeId + 0]);
+                    sendXYZ.push_back(mesh->data->xyz[3 * localNodeId + 1]);
+                    sendXYZ.push_back(mesh->data->xyz[3 * localNodeId + 2]);
                     sendGlobalNodeId.push_back(globalNodeId);
-                    sendAssociatedComponentId.push_back(mesh->metaData->nodeComponentIds[localNodeId]);
+                    sendAssociatedComponentId.push_back(mesh->data->nodeComponentIds[localNodeId]);
                 }
             }
 
@@ -210,7 +212,7 @@ namespace Parfait {
         if(globalToLocal.end() == it)
             return false;
         int localId = it->second;
-        if(mesh->metaData->nodeOwnershipDegree[localId] == 0)
+        if(mesh->data->nodeOwnershipDegree[localId] == 0)
             return true;
         return false;
     }
@@ -268,7 +270,7 @@ namespace Parfait {
             sendCells.reserve(cellSize*sendCellIds.size());
             for (auto id:sendCellIds)
                 for (int j:range(cellSize))
-                    sendCells.push_back(mesh->metaData->globalNodeIds[cells[cellSize * id + j]]);
+                    sendCells.push_back(mesh->data->globalNodeIds[cells[cellSize * id + j]]);
             MessagePasser::Gatherv(sendCells, recvCells, proc);
         }
         return recvCells;
@@ -294,17 +296,17 @@ namespace Parfait {
             sendCells.reserve(sendCellIds.size());
             for (auto id:sendCellIds)
                 for (int j:range(cellSize))
-                    sendCells.push_back(mesh->metaData->globalNodeIds[cells[cellSize * id + j]]);
+                    sendCells.push_back(mesh->data->globalNodeIds[cells[cellSize * id + j]]);
             MessagePasser::Gatherv(sendCells, recvCells, proc);
         }
         return recvCells;
     }
 
     inline bool NodeBasedRedistributor::iShouldSendThisCell(int* cell,int cellSize,const std::vector<long>& neededNodeIds){
-        if(mesh->metaData->nodeOwnershipDegree[cell[0]] != 0) return false;
+        if(mesh->data->nodeOwnershipDegree[cell[0]] != 0) return false;
         for(int i=0;i<cellSize;i++){
             int localNodeId = cell[i];
-            long globalNodeId = mesh->metaData->globalNodeIds[localNodeId];
+            long globalNodeId = mesh->data->globalNodeIds[localNodeId];
             if(std::binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalNodeId))
                 return true;
         }
@@ -312,10 +314,10 @@ namespace Parfait {
     }
 
     inline bool NodeBasedRedistributor::iShouldSendThisSurfaceCell(int* cell,int cellSize,const std::vector<long>& neededNodeIds){
-        if(mesh->metaData->nodeOwnershipDegree[cell[0]] != 0) return false;
+        if(mesh->data->nodeOwnershipDegree[cell[0]] != 0) return false;
         for(int i=0;i<cellSize;i++){
             int localNodeId = cell[i];
-            long globalNodeId = mesh->metaData->globalNodeIds[localNodeId];
+            long globalNodeId = mesh->data->globalNodeIds[localNodeId];
             if(not std::binary_search(neededNodeIds.begin(),neededNodeIds.end(),globalNodeId))
                 return false;
         }

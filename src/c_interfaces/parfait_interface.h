@@ -8,7 +8,7 @@ void parfait_initialize(const char*);
 int parfait_get_number_of_nodes();
 void parfait_get_node_xyz(int,double*);
 long parfait_get_global_node_id(int);
-int parfait_get_node_ownership(int);
+int parfait_is_ghost_node(int);
 int parfait_get_component_grid_id(int);
 int parfait_get_number_of_cells();
 int parfait_get_number_of_nodes_in_cell(int);

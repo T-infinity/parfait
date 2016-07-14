@@ -1,12 +1,9 @@
-#ifndef VTK_EXTENT_BINARY_WRITER_H
-#define VTK_EXTENT_BINARY_WRITER_H
+#pragma once
 
 #include <vector>
 #include <string>
 
-#ifndef EXTENT_H
 #include "Extent.h"
-#endif
 
 namespace Parfait {
     class VtkExtentWriter {
@@ -26,5 +23,4 @@ namespace Parfait {
     };
 }
 
-#include "vtk_extent_writer.hpp"
-#endif
+#include "VtkExtentWriter.hpp"

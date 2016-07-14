@@ -1,7 +1,5 @@
+#pragma once
 #ifdef PARFAIT_WITH_ANN
-#ifndef KD_TREE_H
-#define KD_TREE_H
-
 #include "ANN/ANN.h"
 
 class KdTree
@@ -26,6 +24,4 @@ class KdTree
 	ANNdistArray 	dists;
 	ANNkd_tree*		tree;
 };
-
-#endif 
 #endif

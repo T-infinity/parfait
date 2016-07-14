@@ -1,5 +1,6 @@
-#ifndef GENERIC_SURFACE_MESH_H
-#define GENERIC_SURFACE_MESH_H
+
+#include <vector>
+
 namespace Parfait {
     template<class MeshType>
     class SurfaceMesh {
@@ -18,5 +19,3 @@ namespace Parfait {
                 int faceId) const { return mesh.getNodesInBoundaryFace(faceId); }
     };
 }
-
-#endif

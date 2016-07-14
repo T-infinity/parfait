@@ -1,5 +1,4 @@
-#ifndef CART_MESH_H
-#define CART_MESH_H
+#pragma once
 #include "Point.h"
 
 #include "CartBlock.h"
@@ -55,5 +54,3 @@ namespace Parfait {
 }
 
 #include "CartMesh.hpp"
-
-#endif

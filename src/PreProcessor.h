@@ -1,5 +1,4 @@
-#ifndef PREPROCESSOR_H
-#define PREPROCESSOR_H
+#pragma once
 #include <string>
 #include "ConfigurationReader.h"
 #include "Configuration.h"
@@ -9,6 +8,7 @@
 
 namespace Parfait {
 	class PreProcessor {
+
 	public:
 		PreProcessor(Configuration& configuration);
 		std::shared_ptr<ParallelMesh> createMesh();
@@ -27,5 +27,3 @@ namespace Parfait {
 	};
 }
 #include "PreProcessor.hpp"
-
-#endif

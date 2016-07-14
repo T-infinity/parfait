@@ -1,5 +1,4 @@
-#ifndef BYTESWAP_H
-#define BYTESWAP_H
+#pragma once
 
 namespace Parfait {
 // binary read/write functions that swap endianness 
@@ -8,6 +7,3 @@ namespace Parfait {
 }
 
 #include "ByteSwap.hpp"
-
-#endif
-

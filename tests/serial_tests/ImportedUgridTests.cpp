@@ -59,7 +59,7 @@ TEST_CASE("ImportedUgridTests,FaceTests")
 	setup();
 	ImportedUgrid ugrid(nodes,triangles,quads,
 			tets,pyramids,prisms,hexs, triangleTags, quadTags);
-	// create face object from first face of first cell in mesh	
+	// create face object from first face of first cell in meshBuilder
 	CellFace<ImportedUgrid> face(ugrid,0,0);
 	REQUIRE(3 == face.numberOfNodes());
 
@@ -76,7 +76,7 @@ TEST_CASE("ImportedUgridTests,CellTests")
 	setup();
 	ImportedUgrid ugrid(nodes,triangles,quads,
 			tets,pyramids,prisms,hexs, triangleTags, quadTags);
-	// create face object from first face of first cell in mesh	
+	// create face object from first face of first cell in meshBuilder
 	Cell<ImportedUgrid> cell(ugrid,0);
 	REQUIRE(4 == cell.numberOfNodes());
 	// get nodes and check that they are 0--3
@@ -115,7 +115,7 @@ TEST_CASE("ImportedUgridTests,CellCollectionTests")
 	REQUIRE(4 == mesh.numberOfFacesInCell(0));
 	REQUIRE(3 == ugrid.numberOfNodesInCellFace(0,0));
 
-	//printf("looping over cells in mesh....\n");
+	//printf("looping over cells in meshBuilder....\n");
     int cellId = 0;
 	for(auto cell:mesh.cells())
 	{
@@ -199,7 +199,7 @@ TEST_CASE("ImportedUgridTests, DirectFaceAccess")
 template <class MeshType>
 void constFunction(const MeshType &mesh)
 {
-    //for(auto cell : mesh.cells()){
+    //for(auto cell : meshBuilder.cells()){
     //    for(auto face : cell){
 
     //    }

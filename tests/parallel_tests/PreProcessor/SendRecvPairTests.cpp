@@ -5,25 +5,28 @@
 #include <SendReceivePairCreator.h>
 
 std::shared_ptr<Parfait::ParallelMesh> getTestMesh(){
-    auto mesh = std::make_shared<Parfait::ParallelMesh>();
+
+    Parfait::ParallelMeshBuilder meshBuilder;
     if(MessagePasser::Rank() == 0){
-        mesh->connectivity->prisms = {0,1,2,3,4,5};
-        mesh->metaData->nodeOwnershipDegree = {0,0,0,1,1,1};
-        mesh->metaData->globalNodeIds = {0,1,2,3,4,5};
-        mesh->connectivity->triangles = {0,1,2};
-        mesh->metaData->triangleTags = {1};
-        mesh->metaData->nodeComponentIds = {0,0,0};
-        mesh->metaData->xyz = {0,0,0, 1,0,0, 1,1,0};
+        meshBuilder.data->prisms = {0,1,2,3,4,5};
+        meshBuilder.data->nodeOwnershipDegree = {0,0,0,1,1,1};
+        meshBuilder.data->globalNodeIds = {0,1,2,3,4,5};
+        meshBuilder.data->triangles = {0,1,2};
+        meshBuilder.data->triangleTags = {1};
+        meshBuilder.data->nodeComponentIds = {0,0,0};
+        meshBuilder.data->xyz = {0,0,0, 1,0,0, 1,1,0};
     }
-    else if (MessagePasser::Rank() == 1){
-        mesh->connectivity->prisms = {3,4,5,0,1,2};
-        mesh->metaData->nodeOwnershipDegree = {0,0,0,1,1,1};
-        mesh->connectivity->triangles = {0,1,2};
-        mesh->metaData->triangleTags = {1};
-        mesh->metaData->globalNodeIds = {3,4,5,0,1,2};
-        mesh->metaData->nodeComponentIds = {0,0,0};
-        mesh->metaData->xyz = {0,0,1, 1,0,1, 1,1,1};
+
+    if(MessagePasser::Rank() == 1){
+        meshBuilder.data->prisms = {3,4,5,0,1,2};
+        meshBuilder.data->nodeOwnershipDegree = {0,0,0,1,1,1};
+        meshBuilder.data->triangles = {0,1,2};
+        meshBuilder.data->triangleTags = {1};
+        meshBuilder.data->globalNodeIds = {3,4,5,0,1,2};
+        meshBuilder.data->nodeComponentIds = {0,0,0};
+        meshBuilder.data->xyz = {0,0,1, 1,0,1, 1,1,1};
     }
+    auto mesh = std::make_shared<Parfait::ParallelMesh>(meshBuilder);
     return mesh;
 }
 

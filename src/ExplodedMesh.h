@@ -1,5 +1,4 @@
-#ifndef PARFAIT_EXPLODEDMESH_H
-#define PARFAIT_EXPLODEDMESH_H
+#pragma once
 #include "Point.h"
 
 namespace Parfait {
@@ -31,4 +30,3 @@ namespace Parfait {
 }
 
 #include "ExplodedMesh.hpp"
-#endif

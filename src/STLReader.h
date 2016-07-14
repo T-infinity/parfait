@@ -1,5 +1,4 @@
-#ifndef PARFAIT_STLREADER_H
-#define PARFAIT_STLREADER_H
+#pragma once
 #include <string>
 
 namespace Parfait{
@@ -23,4 +22,3 @@ namespace Parfait{
 }
 
 #include "STLReader.hpp"
-#endif 

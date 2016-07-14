@@ -1,7 +1,7 @@
 #include <vector>
 #include <MessagePasser.h>
 #include "catch.hpp"
-#include <checkpoint.h>
+#include <Checkpoint.h>
 
 using namespace MessagePasser;
 

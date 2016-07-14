@@ -1,5 +1,4 @@
-#ifndef IMPORTED_UGRID_H
-#define IMPORTED_UGRID_H
+#pragma once
 #include <vector>
 #include <assert.h>
 #include <stdlib.h>
@@ -73,5 +72,3 @@ namespace Parfait {
 }
 
 #include "ImportedUgrid.hpp"
-
-#endif

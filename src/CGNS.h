@@ -1,7 +1,7 @@
-#ifndef PARFAIT_CGNS_H
-#define PARFAIT_CGNS_H
+#pragma once
 
 #include "MessagePasser.h"
+#include <array>
 
 namespace Parfait {
   namespace CGNS {
@@ -106,4 +106,3 @@ namespace Parfait {
     }
   }
 }
-#endif 

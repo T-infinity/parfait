@@ -1,5 +1,4 @@
-#ifndef PARFAIT_PARALLELPARTITIONABLEMESH_H
-#define PARFAIT_PARALLELPARTITIONABLEMESH_H
+#pragma once
 
 #include <memory>
 #include "ParallelMesh.h"
@@ -15,6 +14,10 @@ namespace Parfait {
       inline bool doOwnLocalId(int localId) const {
           return nodeOwnershipDegree[localId] == 0;
       }
+      inline bool isGhostNode(int localId) const {
+          return nodeOwnershipDegree[localId] != 0;
+      }
+
       inline long getGlobalNodeId(int localId) const {
           return globalNodeIds[localId];
       }
@@ -23,5 +26,3 @@ namespace Parfait {
       std::vector<long>& globalNodeIds;
   };
 }
-
-#endif 

@@ -1,5 +1,4 @@
-#ifndef VECTOR_TOOLS_H
-#define VECTOR_TOOLS_H
+#pragma once
 #include <vector>
 
 template <class Container, class T>
@@ -45,6 +44,3 @@ void insertUnique(std::vector<T> &vec,T n)
 	else if(vec.back() < n)  // if all elements smaller, push back
 		vec.push_back(n);
 }
-
-
-#endif

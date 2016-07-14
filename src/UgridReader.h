@@ -1,5 +1,4 @@
-#ifndef UGRID_READER_H
-#define UGRID_READER_H
+#pragma once
 #include <assert.h>
 #include <vector>
 #include <stdlib.h>
@@ -81,5 +80,3 @@ namespace Parfait {
 }
 
 #include "UgridReader.hpp"
-
-#endif

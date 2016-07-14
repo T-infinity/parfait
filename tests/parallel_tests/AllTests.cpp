@@ -1,4 +1,4 @@
-#include <checkpoint.h>
+#include <Checkpoint.h>
 #include "MessagePasser.h"
 #include "CppUTest/CommandLineTestRunner.h"
 

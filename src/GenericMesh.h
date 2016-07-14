@@ -1,5 +1,4 @@
-#ifndef GENERIC_MESH_H
-#define GENERIC_MESH_H
+#pragma once
 #include "GenericCell.h"
 #include "GenericFace.h"
 #include "GenericNode.h"
@@ -60,4 +59,3 @@ namespace Parfait {
     };
 }
 #include "GenericMesh.hpp"
-#endif

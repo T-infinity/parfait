@@ -1,5 +1,4 @@
-#ifndef GENERIC_FACE_H
-#define GENERIC_FACE_H
+#pragma once
 
 #include <vector>
 namespace Parfait {
@@ -35,5 +34,3 @@ namespace Parfait {
     };
 }
 #include "GenericFace.hpp"
-
-#endif

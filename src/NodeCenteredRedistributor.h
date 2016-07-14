@@ -1,6 +1,4 @@
-#ifndef PARALLEL_MESH_REDISTRIBUTOR_H
-#define PARALLEL_MESH_REDISTRIBUTOR_H
-
+#pragma once
 #ifdef PARFAIT_WITH_MPI
 
 #include <vector>
@@ -32,7 +30,8 @@ namespace Parfait {
                                            std::vector<long>& recvHexs);
       void redistributeNodeMetaData(std::vector<long>&my_non_ghost_ids,
                                     std::vector<long>& my_ghost_ids);
-      std::shared_ptr<ParallelMesh> mesh;
+      std::shared_ptr<ParallelMeshBuilder> mesh;
+      std::shared_ptr<ParallelMesh> mesh_old;
       std::vector<int> part;
       std::vector<int> nodeMap;
       std::vector<int> recvAssociatedComponentIds;
@@ -55,5 +54,4 @@ namespace Parfait {
 }
 #include "NodeCenteredRedistributor.hpp"
 
-#endif
 #endif

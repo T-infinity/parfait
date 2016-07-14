@@ -1,5 +1,4 @@
-#ifndef PARFAIT_PARALLELIMPORTEDUGRID_H
-#define PARFAIT_PARALLELIMPORTEDUGRID_H
+#pragma once
 
 #include <ImportedUgrid.h>
 namespace Parfait {
@@ -35,5 +34,3 @@ namespace Parfait {
 }
 
 #include "ParallelImportedUgrid.hpp"
-
-#endif 

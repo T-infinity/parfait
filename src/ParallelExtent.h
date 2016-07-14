@@ -1,5 +1,4 @@
-#ifndef PARFAIT_PARALLELEXTENT_H
-#define PARFAIT_PARALLELEXTENT_H
+#pragma once
 
 #include <Extent.h>
 
@@ -14,4 +13,3 @@ namespace Parfait {
 }
 
 #include "ParallelExtent.hpp"
-#endif 

@@ -1,5 +1,4 @@
-#ifndef NODE_TO_CELL_H
-#define NODE_TO_CELL_H
+#pragma once
 
 #include <vector>
 #include "VectorTools.h"
@@ -21,5 +20,3 @@ namespace Parfait {
         return nodeToCell;
     }
 }
-
-#endif

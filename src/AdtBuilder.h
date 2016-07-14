@@ -1,5 +1,4 @@
-#ifndef ADT_BUILDER_H
-#define ADT_BUILDER_H
+#pragma once
 #include "RangeLoop.h"
 #include "Adt3dExtent.h"
 #include "GenericMesh.h"
@@ -18,6 +17,3 @@ namespace Parfait {
         }
     };
 }
-
-
-#endif

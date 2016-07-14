@@ -6,8 +6,6 @@
 #include <parmetis.h>
 #include <metis.h>
 
-
-
 struct ParMetisInfo{
     idx_t *vertex_weights = NULL;
     idx_t *edge_weights = NULL;
@@ -29,11 +27,13 @@ inline int getMyNumberOfNodes(int rank, const long *proc_node_map);
 
 inline std::vector<real_t> getTpWeights(idx_t nparts);
 
-inline void PartitionMesh(int rank,int nproc,
-		long *proc_node_map,
-		long *ia,
-		long *ja,
-		int *part_vec)
+void printParmetisInput(const std::vector<idx_t>& vtxdist, const std::vector<idx_t>& xadj,
+                        const std::vector<idx_t>& adjncy, const std::vector<real_t>& tpwgts);
+inline void partitionMesh(int rank, int nproc,
+                          long* proc_node_map,
+                          long* ia,
+                          long* ja,
+                          int* part_vec)
 {
     int nnodes = getMyNumberOfNodes(rank, proc_node_map);
     ParMetisInfo parMetisInfo;
@@ -78,6 +78,29 @@ inline void PartitionMesh(int rank,int nproc,
 		part_vec[i] = part[i];
     if(0 == rank)
         printf("ParMETIS done...\n");
+}
+void printParmetisInput(const std::vector<idx_t>& vtxdist, const std::vector<idx_t>& xadj,
+                        const std::vector<idx_t>& adjncy, const std::vector<real_t>& tpwgts) {
+
+    for(int r = 0; r < MessagePasser::NumberOfProcesses(); r++){
+        if(r == MessagePasser::Rank()){
+            printf("\n\n\nRank %d\n", MessagePasser::Rank());
+            printf("Vertex Distribution:\n");
+            for(auto d : vtxdist)
+                printf("%d, ", d);
+            printf("\nAdjacency Map:");
+            for(auto m : xadj)
+                printf("%d, ", m);
+            printf("\nAdjacency: ");
+            for(auto a : adjncy)
+                printf("%d, ", a);
+            printf("\nTpWeights:");
+            for(auto w : tpwgts)
+                printf("%f, ", w);
+            fflush(stdout);
+        }
+        MessagePasser::Barrier();
+    }
 }
 
 std::vector<real_t> getTpWeights(idx_t nparts) {

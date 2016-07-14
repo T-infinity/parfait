@@ -1,9 +1,5 @@
-//
-// Created by Cameron T Druyor Jr on 6/9/15.
-//
-
 #include "MessagePasser.h"
-#include "mpi_compare_tols.h"
+#include "MPICompareTols.h"
 #include "catch.hpp"
 
 using namespace MessagePasser;

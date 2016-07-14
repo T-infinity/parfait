@@ -1,5 +1,4 @@
-#ifndef ADT_H
-#define ADT_H
+#pragma once
 
 #include "AdtElem.h"
 #include <vector>
@@ -36,5 +35,3 @@ namespace Parfait {
     };
 }
 #include "Adt.hpp"
-
-#endif

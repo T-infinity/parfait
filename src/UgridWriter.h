@@ -1,5 +1,4 @@
-#ifndef UGRID_WRITER_H
-#define UGRID_WRITER_H
+#pragma once
 #include <assert.h>
 #include <vector>
 #include <stdlib.h>
@@ -75,5 +74,3 @@ namespace Parfait {
 }
 
 #include "UgridWriter.hpp"
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef MESSAGE_PASSER_STATUS_H
-#define MESSAGE_PASSER_STATUS_H
+#pragma once
 #include <mpi.h>
 namespace MessagePasser {
     class MessageStatus {
@@ -10,5 +9,3 @@ namespace MessagePasser {
         MPI_Request r;
     };
 }
-
-#endif

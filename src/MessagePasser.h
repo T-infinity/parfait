@@ -1,5 +1,4 @@
-#ifndef MESSAGE_PASSER_H
-#define MESSAGE_PASSER_H
+#pragma once
 #include <vector>
 #include <assert.h>
 #include <stdio.h>
@@ -143,7 +142,4 @@ namespace MessagePasser
 #else // define non-mpi dependent versions
 
 #include "MessagePasserSerial.hpp"
-#endif
-
-
 #endif

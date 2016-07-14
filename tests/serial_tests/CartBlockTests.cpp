@@ -184,13 +184,13 @@ TEST_CASE("CartBlockTestsLegacyTests"){
 	REQUIRE(cell.contains(Point<double>(p3)));
 
 	std::vector<int> ids;
-	// make a box around the whole mesh, and make sure you get
+	// make a box around the whole meshBuilder, and make sure you get
 	// all the cells
 	Extent<double> query_box(p1,p2);
 	ids = c.getCellIdsInExtent(query_box);
 	REQUIRE((ncells_x*ncells_y*ncells_z) == (int)ids.size());
 	
-	// make a box that does not overlap the mesh and assert that it returns no cells
+	// make a box that does not overlap the meshBuilder and assert that it returns no cells
 	extent[0] = -10.0;
 	extent[1] = -10.0;
 	extent[2] = -10.0;
@@ -203,7 +203,7 @@ TEST_CASE("CartBlockTestsLegacyTests"){
 
 	REQUIRE((int)ids.size() == 0);
 
-	// make a box bigger than the mesh and make sure it returns all of them
+	// make a box bigger than the meshBuilder and make sure it returns all of them
 	extent[3] = 10.0;
 	//query_box.resize(extent);
     query_box = Extent<double>(extent);

@@ -1,5 +1,4 @@
-#ifndef PARALLEL_MESH_READER_NAIVE_H
-#define PARALLEL_MESH_READER_NAIVE_H
+#pragma once
 
 #include <vector>
 #include <string>
@@ -11,6 +10,7 @@
 #include "ParallelMesh.h"
 
 namespace Parfait {
+
   class ParallelMeshReader {
       template<class T> using vector = std::vector<T>;
       enum CellType{TET,PYRAMID,PRISM,HEX,TRIANGLE,QUAD};
@@ -40,7 +40,7 @@ namespace Parfait {
       std::vector<long> gridPrismMap;
       std::vector<long> gridHexMap;
 
-      std::shared_ptr<ParallelMesh> mesh;
+      std::shared_ptr<ParallelMeshBuilder> meshBuilder;
 
       void buildDistributionMaps();
       void distributeNodes();
@@ -87,9 +87,9 @@ namespace Parfait {
                                  const LinearPartitioner::Range<long>& myNodeRange);
       std::vector<long> getCellChunk(CellType cellType,int chunkId,long nCells,int nChunks);
       std::vector<int> getTagChunk(TagType tagType,int chunkId,long nCells,int nChunks);
+
+      void gatherGhostXyz();
   };
 }
 
 #include "ParallelMeshReader.hpp"
-
-#endif

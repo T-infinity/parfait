@@ -1,5 +1,4 @@
-#ifndef EXTENT_BUILDER_H
-#define EXTENT_BUILDER_H
+#pragma once
 
 #include "Extent.h"
 #include <limits>
@@ -71,5 +70,3 @@ namespace Parfait {
         }
     }
 }
-
-#endif

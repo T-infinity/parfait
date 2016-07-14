@@ -1,5 +1,4 @@
-#ifndef STL_H
-#define STL_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -60,6 +59,3 @@ namespace Parfait {
 }
 
 #include "STL.hpp"
-
-#endif
-

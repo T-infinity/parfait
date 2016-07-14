@@ -1,5 +1,4 @@
-#ifndef CART_BLOCK_H
-#define CART_BLOCK_H
+#pragma once
 
 #include "Extent.h"
 #include <vector>
@@ -52,5 +51,3 @@ namespace Parfait {
 }
 
 #include "CartBlock.hpp"
-
-#endif

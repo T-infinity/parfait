@@ -21,7 +21,7 @@ namespace Parfait {
           procNodeMap[i] += procNodeMap[i - 1];
       // allocate part vector and call 3rd party partitioner
       std::vector<int> part(node_to_node.size(), 0);
-      PartitionMesh(MessagePasser::Rank(), MessagePasser::NumberOfProcesses(), procNodeMap.data(),
+      partitionMesh(MessagePasser::Rank(), MessagePasser::NumberOfProcesses(), procNodeMap.data(),
                     ia.data(), ja.data(), part.data());
       return part;
   }

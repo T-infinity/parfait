@@ -108,7 +108,6 @@ namespace Parfait {
           if (isBoundNode[i])
               boundaryNodeIdMap[i] = count++;
   }
-
   template<typename Mesh>
   void VtkSurfaceWriter<Mesh>::writeHeader() {
       FILE *f = fopen(filename.c_str(), "w");

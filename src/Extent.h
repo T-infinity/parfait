@@ -1,10 +1,7 @@
-#ifndef EXTENT_H
-#define EXTENT_H
+#pragma once
 
 #include "MessagePasserStream.h"
-#ifndef POINT_H
 #include "Point.h"
-#endif
 
 namespace Parfait {
     template <typename T>
@@ -54,5 +51,3 @@ namespace Parfait {
 }
 
 #include <Extent.hpp>
-
-#endif

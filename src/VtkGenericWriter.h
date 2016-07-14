@@ -1,5 +1,4 @@
-#ifndef PARALLEL_VTK_H
-#define PARALLEL_VTK_H
+#pragma once
 #include <vector>
 #include <string>
 #include <stdlib.h>
@@ -44,5 +43,3 @@ namespace Parfait {
     };
 }
 #include "VtkGenericWriter.hpp"
-
-#endif
