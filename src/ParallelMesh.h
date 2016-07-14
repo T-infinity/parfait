@@ -7,14 +7,13 @@
 #include "Point.h"
 
 namespace Parfait {
-    class ParallelMeshBuilder;
+  class ParallelMeshBuilder;
 
   class ParallelMesh {
   public:
       friend class ParallelMeshBuilder;
 
-      ParallelMesh();
-      ParallelMesh(std::shared_ptr<MeshConnectivity> conn, std::shared_ptr<MeshParallelMetaData> mData);
+      ParallelMesh(ParallelMeshBuilder builder);
       int numberOfNodes() const;
       int getTriangleTag(int id) const;
       int getQuadTag(int id) const;
@@ -39,21 +38,20 @@ namespace Parfait {
       const int* getQuad(int id) const;
 
   private:
-      std::shared_ptr<MeshConnectivity> connectivity;
       std::shared_ptr<MeshParallelMetaData> metaData;
+      std::shared_ptr<MeshConnectivity> connectivity;
   };
 
 
   class ParallelMeshBuilder{
   public:
-      ParallelMeshBuilder(ParallelMesh& mesh);
       ParallelMeshBuilder();
+      ParallelMeshBuilder(ParallelMesh mesh);
       std::shared_ptr<ParallelMesh> exportMesh();
 
       std::shared_ptr<MeshParallelMetaData> metaData;
       std::shared_ptr<MeshConnectivity> connectivity;
   };
-
 }
 
 #include "ParallelMesh.hpp"

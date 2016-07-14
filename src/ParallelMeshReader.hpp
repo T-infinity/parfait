@@ -235,7 +235,7 @@ inline void Parfait::ParallelMeshReader::buildDistributionMaps() {
 
 inline std::shared_ptr<ParallelMesh> Parfait::ParallelMeshReader::distributeGridsEvenly() {
     distributeUgrid();
-    return std::make_shared<ParallelMesh>(meshBuilder->connectivity, meshBuilder->metaData);
+    return meshBuilder->exportMesh();
 }
 
 

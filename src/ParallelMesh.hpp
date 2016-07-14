@@ -4,17 +4,22 @@ inline ParallelMeshBuilder::ParallelMeshBuilder() :
           metaData(std::make_shared<MeshParallelMetaData>()),
           connectivity(std::make_shared<MeshConnectivity>()){ }
 
-inline ParallelMeshBuilder::ParallelMeshBuilder(ParallelMesh& mesh) :
+inline ParallelMeshBuilder::ParallelMeshBuilder(ParallelMesh mesh) :
     metaData(mesh.metaData), connectivity(mesh.connectivity){
 }
 
 inline std::shared_ptr<ParallelMesh> ParallelMeshBuilder::exportMesh() {
-    return std::make_shared<Parfait::ParallelMesh>(connectivity, metaData);
+    return std::make_shared<Parfait::ParallelMesh>(*this);
 }
 
 inline int ParallelMesh::countNodesAtDegree(int degree) const {
     return int(std::count(metaData->nodeOwnershipDegree.begin(),
                       metaData->nodeOwnershipDegree.end(),degree));
+}
+
+inline ParallelMesh::ParallelMesh(ParallelMeshBuilder builder)
+        : metaData(builder.metaData),
+          connectivity(builder.connectivity){
 }
 
 inline int ParallelMesh::countNodesAboveDegree(int degree) const {
@@ -23,11 +28,6 @@ inline int ParallelMesh::countNodesAboveDegree(int degree) const {
         if(o > degree)
             count++;
     return count;
-}
-
-inline ParallelMesh::ParallelMesh()
-        : connectivity(std::make_shared<MeshConnectivity>()),
-          metaData(std::make_shared<MeshParallelMetaData>()){
 }
 
 inline int ParallelMesh::numberOfNodes() const {
@@ -56,11 +56,6 @@ inline long ParallelMesh::getGlobalNodeId(int id) const {
 
 inline int ParallelMesh::isGhostNode(int id) const {
     return metaData->nodeOwnershipDegree[id] != 0;
-}
-
-inline ParallelMesh::ParallelMesh(std::shared_ptr<MeshConnectivity> conn, std::shared_ptr<MeshParallelMetaData> mData) {
-    metaData = mData;
-    connectivity = conn;
 }
 
 inline int ParallelMesh::numberOfTets() const {

@@ -10,30 +10,29 @@ TEST_CASE("Node Centered Redistributor"){
     if(NumberOfProcesses() != 2)
         return;
 
-    auto connectivity = std::make_shared<Parfait::MeshConnectivity>();
-    auto metaData = std::make_shared<Parfait::MeshParallelMetaData>();
+    Parfait::ParallelMeshBuilder meshBuilder;
     std::vector<int> part(3, Rank());
     if(Rank() == 0){
-        connectivity->prisms = {0,1,2,3,4,5};
-        metaData->nodeOwnershipDegree = {0,0,0,1,1,1};
-        metaData->globalNodeIds = {0,1,2,3,4,5};
-        connectivity->triangles = {0,1,2};
-        metaData->triangleTags = {1};
-        metaData->nodeComponentIds = {0,0,0};
-        metaData->xyz = {0,0,0, 1,0,0, 1,1,0, 0,0,1, 1,0,1, 1,1,1};
+        meshBuilder.connectivity->prisms = {0,1,2,3,4,5};
+        meshBuilder.metaData->nodeOwnershipDegree = {0,0,0,1,1,1};
+        meshBuilder.metaData->globalNodeIds = {0,1,2,3,4,5};
+        meshBuilder.connectivity->triangles = {0,1,2};
+        meshBuilder.metaData->triangleTags = {1};
+        meshBuilder.metaData->nodeComponentIds = {0,0,0};
+        meshBuilder.metaData->xyz = {0,0,0, 1,0,0, 1,1,0, 0,0,1, 1,0,1, 1,1,1};
     }
 
     if(Rank() == 1){
-        connectivity->prisms = {3,4,5,0,1,2};
-        metaData->nodeOwnershipDegree = {0,0,0,1,1,1};
-        connectivity->triangles = {0,1,2};
-        metaData->triangleTags = {1};
-        metaData->globalNodeIds = {3,4,5,0,1,2};
-        metaData->nodeComponentIds = {0,0,0};
-        metaData->xyz = {0,0,1, 1,0,1, 1,1,1, 0,0,0, 1,0,0, 1,1,0,};
+        meshBuilder.connectivity->prisms = {3,4,5,0,1,2};
+        meshBuilder.metaData->nodeOwnershipDegree = {0,0,0,1,1,1};
+        meshBuilder.connectivity->triangles = {0,1,2};
+        meshBuilder.metaData->triangleTags = {1};
+        meshBuilder.metaData->globalNodeIds = {3,4,5,0,1,2};
+        meshBuilder.metaData->nodeComponentIds = {0,0,0};
+        meshBuilder.metaData->xyz = {0,0,1, 1,0,1, 1,1,1, 0,0,0, 1,0,0, 1,1,0,};
     }
 
-    auto mesh = std::make_shared<Parfait::ParallelMesh>(connectivity, metaData);
+    auto mesh = std::make_shared<Parfait::ParallelMesh>(meshBuilder);
     Parfait::NodeBasedRedistributor reDistributor(mesh, part);
     mesh = reDistributor.redistribute();
 

@@ -1,4 +1,3 @@
-#include <ImportedUgrid.h>
 #include "NodeToNode.h"
 #include <catch.hpp>
 #include "ParallelMesh.h"
@@ -13,14 +12,12 @@ TEST_CASE("NodeToNodeTests,Exists") {
                         1,1,0,
                         0,0,1};
     vector<int> tets {0,1,2,3};
-    ImportedUgrid one_tet_mesh(xyz,{},{},tets,{},{},{},{},{});
 
-    std::shared_ptr<MeshConnectivity> connectivity = std::make_shared<MeshConnectivity>();
-    std::shared_ptr<MeshParallelMetaData> metaData = std::make_shared<MeshParallelMetaData>();
-    connectivity->tets = tets;
-    metaData->xyz = xyz;
-    metaData->nodeOwnershipDegree.resize(xyz.size(), 0);
-    Parfait::ParallelMesh mesh(connectivity, metaData);
+    Parfait::ParallelMeshBuilder meshBuilder;
+    meshBuilder.connectivity->tets = tets;
+    meshBuilder.metaData->xyz = xyz;
+    meshBuilder.metaData->nodeOwnershipDegree.resize(xyz.size(), 0);
+    Parfait::ParallelMesh mesh(meshBuilder);
     NodeToNodeBuilder<decltype(mesh)> builder(mesh);
     auto n2n = builder.buildNodeToNodeConnectivity();
 
