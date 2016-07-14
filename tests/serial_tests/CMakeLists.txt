@@ -10,46 +10,46 @@ file(GLOB_RECURSE HEADERS
 
 set(SERIAL_TESTS_SOURCES
         catch_main.cpp
-        adt/Adt3DExtentTests.cpp
-        adt/Adt3DPointTests.cpp
-        adt/AdtTests.cpp
+        Adt3DExtentTests.cpp
+        Adt3DPointTests.cpp
+        AdtBuilderTests.cpp
+        AdtTests.cpp
         AflrToCGNSTests.cpp
-        build_neighbors/build_neighbors_test.cpp
-        cart_block/CartBlockSliceTests.cpp
-        cart_block/CartBlockTests.cpp
-        CGNS_Ordering/CGNSEdgeTests.cpp
+        BuildNeighborsTests.cpp
+        CartBlockSliceTests.cpp
+        CartBlockTests.cpp
+        CGNSEdgeTests.cpp
         CGNSToAflrTests.cpp
         CGNSToFun3dTests.cpp
         CGNSToVtkTests.cpp
         CompressedMapTests.cpp
-        connectivity/NodeToNodeTests.cpp
-        edge_map/EdgeMapTests.cpp
-        extent/ExtentBuilderTests.cpp
-        extent/ExtentTests.cpp
+        ExtentMeshWrapperTests.cpp
+        EdgeMapTests.cpp
+        ExtentBuilderTests.cpp
+        ExtentTests.cpp
+        FacetTests.cpp
         Fun3DToCGNSTests.cpp
-        high_level_mesh_searching/AdtBuilderTests.cpp
-        LinearPartitioner/LinearPartitionerTests.cpp
+        LegacyArrayTests.cpp
+        LinearPartitionerTests.cpp
         MatrixTests.cpp
-        parfait_mesh/ParfaitMesh_test.cpp
-        point/PointTest.cpp
-        range_loop/RangeLoopTests.cpp
+        NodeToNodeTests.cpp
+        ParfaitMeshTests.cpp
+        PointTest.cpp
+        RangeLoopTests.cpp
         StreamTests.cpp
-        vectors/LegacyArrayTests.cpp
-        vectors/VectorToolsTests.cpp
-        VtkExplodedViewWriter/VtkExplodedViewWriterTests.cpp
-        VtkFieldTests/VtkFieldTests.cpp
+        STLTests.cpp
+        STLReaderTests.cpp
+        VectorToolsTests.cpp
+        VtkExplodedViewWriterTests.cpp
+        VtkFieldTests.cpp
         VtkSliceWriterTests.cpp
         VtkToCGNSTests.cpp
-        generic_mesh_tools/GenericMeshToolsTests.cpp
-        Geometry/facet_test.cpp
-        Geometry/stl_test.cpp
-        Geometry/STLReader_test.cpp
-        mesh_interfaces/imported_ugrid_tests.cpp
-        ugrid_factory/ugrid_factory_tests.cpp
-        ugridWriterTests/ugridWriterTests.cpp
-        VtkGenericTests/VtkGenericTests.cpp
-        VtkSurfaceTests/VtkSurfaceTests.cpp
-        ExtentMeshWrapperTests.cpp
+        GenericMeshToolsTests.cpp
+        ImportedUgridTests.cpp
+        UgridFactoryTests.cpp
+        UgridWriterTests.cpp
+        VtkGenericTests.cpp
+        VtkSurfaceTests.cpp
         )
 
 include_directories(../)
