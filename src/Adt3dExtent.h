@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Adt.h"
-#include "point.h"
+#include "Point.h"
 #include "UnitTransformer.h"
 
 namespace Parfait {

@@ -1,7 +1,7 @@
 #pragma once
 #include "Adt.h"
-#include "point.h"
-#include "extent.h"
+#include "Point.h"
+#include "Extent.h"
 #include <string>
 #include <stdexcept>
 
