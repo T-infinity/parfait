@@ -9,7 +9,7 @@ namespace Parfait {
   public:
       std::array<T,3> pos;
 
-      Point();
+      Point() = default;
       Point(T x, T y, T z);
       Point(const T *);
 

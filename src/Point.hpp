@@ -12,29 +12,12 @@ namespace Parfait {
     pos[2] = c;
   }
 
-//
-//  template <typename T>
-//  Point<T>::Point(const T *p) {
-//    pos[0] = p[0];
-//    pos[1] = p[1];
-//    pos[2] = p[2];
-//  }
 
   template <typename T>
-  void Point<T>::Print() const {
-    printf(" %e %e %e", pos[0], pos[1], pos[2]);
-  }
-//  template <typename T>
-//  std::ostream& operator<<(std::ostream &os, const Point<T> &p){
-//    os << p[0] << " " << p[1] << " " << p[2];
-//    return os;
-//  }
-
-  template <typename T>
-  std::string Point<T>::to_string() const {
-    std::string s;
-    s = std::to_string(pos[0]) + " " + std::to_string(pos[1]) + " " + std::to_string(pos[2]);
-    return s;
+  Point<T>::Point(const T *p) {
+    pos[0] = p[0];
+    pos[1] = p[1];
+    pos[2] = p[2];
   }
 
   template <typename T>
