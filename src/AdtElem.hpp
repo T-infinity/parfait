@@ -20,11 +20,11 @@ namespace Parfait {
                                    std::array<double, ndim> const &set_xmax, int set_object,
                                    const double *set_object_x) {
         level = set_level;
-        object_id = set_object;
+        tag = set_object;
         lchild = nullptr;
         rchild = nullptr;
 
-        for (int i = 0; i < ndim; i++) {
+        for (int i=0; i<ndim; i++) {
             xmin[i] = set_xmin[i];
             xmax[i] = set_xmax[i];
             object_x[i] = set_object_x[i];
@@ -32,7 +32,7 @@ namespace Parfait {
     }
 
     template<int ndim>
-    bool Adt_elem<ndim>::contains_object(const double *x_in) const {
+    bool Adt_elem<ndim>::contains_object(const double* x_in) const {
         for (int i = 0; i < ndim; i++)
             if (x_in[i] < xmin[i] - ADT_TOL || x_in[i] > xmax[i] + ADT_TOL)
                 return false;
@@ -40,8 +40,8 @@ namespace Parfait {
     }
 
     template<int ndim>
-    bool Adt_elem<ndim>::contains_hyper_rectangle(const double *a,
-                                                  const double *b) const {
+    bool Adt_elem<ndim>::contains_hyper_rectangle(const double* a,
+                                                  const double* b) const {
 
         for (int i = 0; i < ndim; i++)
             if (b[i] < xmin[i] - ADT_TOL || a[i] > xmax[i] + ADT_TOL) return false;
@@ -50,7 +50,7 @@ namespace Parfait {
 
     template<int ndim>
     bool Adt_elem<ndim>::hyper_rectangle_contains_object(
-            const double *a, const double *b) const {
+            const double* a, const double* b) const {
         for (int i = 0; i < ndim; i++)
             if (b[i] < object_x[i] - ADT_TOL || a[i] > object_x[i] + ADT_TOL)
                 return false;

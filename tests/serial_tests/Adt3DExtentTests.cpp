@@ -47,3 +47,40 @@ TEST_CASE("Adt3DExtent, StoreNegativeExtent") {
     inside = adt.retrieve(Extent<double>(Point<double>(-4,-4,-4), Point<double>(4,4,4)));
     REQUIRE(3 == inside.size());
 }
+
+
+TEST_CASE("Adt3DExtent, With two elements") {
+    Adt3DExtent adt({{0,0,0}, {1,1,1}});
+
+    adt.store(6, {{0,0,0},{.1,.1,.1}});
+    adt.store(7, {{.5,.5,.5}, {1,1,1}});
+    adt.removeFirst(6, {{0,0,0},{1,1,1}});
+
+    auto inside = adt.retrieve({{0,0,0},{.1,.1,.1}});
+    REQUIRE(inside.size() == 0);
+
+    inside = adt.retrieve({{.5,.5,.5},{1,1,1}});
+    REQUIRE(inside.size() == 1);
+    REQUIRE(7 == inside[0]);
+}
+
+TEST_CASE("Adt3DExtent, Delete Leaving Zero Elements") {
+    Adt3DExtent adt({{0,0,0}, {1,1,1}});
+
+    adt.store(6, {{0,0,0},{.1,.1,.1}});
+    adt.removeFirst(6, {{0,0,0},{1,1,1}});
+
+    auto inside = adt.retrieve({{0,0,0},{.1,.1,.1}});
+    REQUIRE(inside.size() == 0);
+
+}
+
+TEST_CASE("Adt3DExtent, Delete From Empty Tree") {
+    Adt3DExtent adt({{0,0,0}, {1,1,1}});
+
+    adt.removeFirst(6, {{0,0,0},{1,1,1}});
+
+    auto inside = adt.retrieve({{0,0,0},{.1,.1,.1}});
+    REQUIRE(inside.size() == 0);
+
+}

@@ -13,7 +13,7 @@ namespace Parfait {
     class Adt_elem {
     public:
         int level;
-        int object_id;
+        int tag;
         Adt_elem *lchild;
         Adt_elem *rchild;
         std::array<double, ndim> xmin;

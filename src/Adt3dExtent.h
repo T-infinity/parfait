@@ -9,8 +9,9 @@ namespace Parfait {
     public:
         Adt3DExtent() = delete;
         Adt3DExtent(const Extent<double> &domain);
-        void store(int Id, const Extent<double> &extent);
+        void store(int id, const Extent<double> &extent);
         std::vector<int> retrieve(const Extent<double> &domain) const;
+        void removeFirst(int id, const Extent<double>& e);
     private:
         UnitTransformer unitTransformer;
         Adt<6> adt;

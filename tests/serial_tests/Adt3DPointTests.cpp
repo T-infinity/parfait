@@ -66,9 +66,16 @@ TEST_CASE("Adt3DPoint, StorePointOutsideDomain") {
     Adt3DPoint adt(Extent<double>(Point<double>(-2,-2,-2), Point<double>(2,2,2)));
     Point<double> point(5,5,5);
 
-    //CHECK_THROWS(std::exception, adt.store(10, point));
+    REQUIRE_THROWS(adt.store(10, point));
 }
 
+TEST_CASE("Adt3DPoint, Remove Points") {
+    Adt3DPoint adt(Extent<double>(Point<double>(-2,-2,-2), Point<double>(2,2,2)));
+    adt.store(0, {.6,.6,.6});
+    adt.removeFirst(0, {{0,0,0}, {1,1,1}});
+    auto inside = adt.retrieve({{0,0,0},{1,1,1}});
+    REQUIRE(inside.size() == 0);
+}
 
 
 
