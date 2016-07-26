@@ -3,7 +3,7 @@ namespace MessagePasser {
   template<typename T>
   T ParallelSum(T value, int rootId) {
 	  T sum = 0;
-	  MPI_Reduce(&value, &sum, 1, Type(value), MPI_SUM, rootId, MPI_COMM_WORLD);
+	  MPI_Reduce(&value, &sum, 1, Type(value), MPI_SUM, rootId, getCommunicator());
 	  return sum;
   }
 
@@ -11,21 +11,21 @@ namespace MessagePasser {
   T ParallelMax(T value, int rootId) {
 	  T tmp = value;
 	  T max = value;
-	  MPI_Reduce(&tmp, &max, 1, Type(value), MPI_MAX, rootId, MPI_COMM_WORLD);
+	  MPI_Reduce(&tmp, &max, 1, Type(value), MPI_MAX, rootId, getCommunicator());
 	  return max;
   }
   template<typename T>
   T ParallelMin(T value, int rootId) {
 	  T tmp = value;
 	  T min = value;
-	  MPI_Reduce(&tmp, &min, 1, Type(value), MPI_MIN, rootId, MPI_COMM_WORLD);
+	  MPI_Reduce(&tmp, &min, 1, Type(value), MPI_MIN, rootId, getCommunicator());
 	  return min;
   }
   template <typename T>
   T ParallelMinAll(T value) {
 	  T tmp = value;
 	  T min;
-	  MPI_Allreduce(&tmp, &min, 1, Type(value), MPI_MIN, MPI_COMM_WORLD);
+	  MPI_Allreduce(&tmp, &min, 1, Type(value), MPI_MIN, getCommunicator());
 	  return min;
   }
 
@@ -33,7 +33,7 @@ namespace MessagePasser {
   T ParallelMaxAll(T value) {
 	  T tmp = value;
 	  T max;
-	  MPI_Allreduce(&tmp, &max, 1, Type(value), MPI_MAX, MPI_COMM_WORLD);
+	  MPI_Allreduce(&tmp, &max, 1, Type(value), MPI_MAX, getCommunicator());
 	  return max;
   }
 
@@ -43,7 +43,7 @@ namespace MessagePasser {
           result.resize(vec.size());
 	  if (vec.size() > 0)
 		  MPI_Reduce((void *) vec.data(), result.data(),
-					 vec.size(), Type(T()), MPI_MAX, rootId, MPI_COMM_WORLD);
+					 vec.size(), Type(T()), MPI_MAX, rootId, getCommunicator());
 	  return result;
   }
 
@@ -53,7 +53,7 @@ namespace MessagePasser {
           result.resize(vec.size());
 	  if (vec.size() > 0)
 		  MPI_Reduce((void *) vec.data(), result.data(),
-					 vec.size(), Type(T()), MPI_MIN, rootId, MPI_COMM_WORLD);
+					 vec.size(), Type(T()), MPI_MIN, rootId, getCommunicator());
 	  return result;
   }
 

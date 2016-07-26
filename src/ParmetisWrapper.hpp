@@ -14,7 +14,7 @@ struct ParMetisInfo{
     idx_t ncon    = 1;     // Number of weights.....not sure whytf this is 1 instead of 0...
     idx_t options[3] = {0,0,0};
     idx_t edgecut;
-    MPI_Comm comm = MPI_COMM_WORLD;
+    MPI_Comm comm = MessagePasser::getCommunicator();
 };
 
 inline std::vector<idx_t> getVertexDistributionAcrossProcs(int nproc, const long *proc_node_map);

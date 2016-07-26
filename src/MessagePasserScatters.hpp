@@ -2,7 +2,7 @@ namespace MessagePasser {
 // scatter a vector that has exactly nproc 	elements
   template<typename T>
   void Scatter(std::vector<T> &vec, T &recv_value, int rootId) {
-	  MPI_Scatter(vec.data(), sizeof(T), MPI_CHAR, &recv_value, sizeof(T), MPI_CHAR, rootId, MPI_COMM_WORLD);
+	  MPI_Scatter(vec.data(), sizeof(T), MPI_CHAR, &recv_value, sizeof(T), MPI_CHAR, rootId, getCommunicator());
   }
 
 // scatter a vector that divides evenly into the number of procs
@@ -16,7 +16,7 @@ namespace MessagePasser {
 	  }
 	  Broadcast(size, rootId);
 	  recv_vec.resize(size);
-	  MPI_Scatter(vec.data(), size*sizeof(T), MPI_CHAR, recv_vec.data(), size*sizeof(T), MPI_CHAR, rootId, MPI_COMM_WORLD);
+	  MPI_Scatter(vec.data(), size*sizeof(T), MPI_CHAR, recv_vec.data(), size*sizeof(T), MPI_CHAR, rootId, getCommunicator());
   }
 
 // scatterv a vector that does not divide evenly into number of procs
@@ -45,6 +45,6 @@ namespace MessagePasser {
             x *= sizeof(T);
         local_size *= sizeof(T);
 	  MPI_Scatterv(vec.data(), sendcounts.data(), displs.data(), MPI_CHAR,
-				   recv_vec.data(), local_size, MPI_CHAR, rootId, MPI_COMM_WORLD);
+				   recv_vec.data(), local_size, MPI_CHAR, rootId, getCommunicator());
   }
 }
