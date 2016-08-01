@@ -71,8 +71,10 @@ namespace Parfait {
         auto stuff = createVtkArrayPointer(data);
         stuff->SetNumberOfComponents(number_of_components);
         stuff->SetName(name.c_str());
-        for (int i = 0; i < vtk_grid->GetNumberOfPoints(); i++)
-            stuff->InsertNextValue(data[i]);
+        for (int i = 0; i < vtk_grid->GetNumberOfPoints(); i++) {
+            for(int j=0;j<number_of_components;++j)
+                stuff->InsertNextValue(data[i*number_of_components+j]);
+        }
         vtk_grid->GetPointData()->AddArray(stuff);
     }
 
