@@ -243,7 +243,7 @@ namespace Parfait {
   template<int ndim>
   std::tuple<Adt_elem<ndim>*, Adt_elem<ndim>*> Adt<ndim>::findFirstLeaf(Adt_elem<ndim>* elem, Adt_elem<ndim>* parent) {
       if(isLeaf(elem))
-          return std::tuple(elem, parent);
+          return std::make_tuple(elem, parent);
       if(elem->lchild != nullptr) return findFirstLeaf(elem->lchild, elem);
       return findFirstLeaf(elem->rchild, elem);
   }
