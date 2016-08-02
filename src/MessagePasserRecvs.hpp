@@ -7,7 +7,7 @@ namespace MessagePasser {
       vec.clear();
       vec.resize(length);
       MPI_Status status;
-      MPI_Recv(vec.data(), length*sizeof(T), MPI_CHAR, source, 0, MPI_COMM_WORLD, &status);
+      MPI_Recv(vec.data(), length*sizeof(T), MPI_CHAR, source, 0, getCommunicator(), &status);
   }
 
 // recv a vector (receiver doesn't know length)
@@ -15,10 +15,10 @@ namespace MessagePasser {
   void Recv(std::vector<T> &vec, int source) {
       int n = 0;
       MPI_Status status;
-      MPI_Probe(source, 0, MPI_COMM_WORLD, &status);
+      MPI_Probe(source, 0, getCommunicator(), &status);
       MPI_Get_count(&status, MPI_CHAR, &n);
       vec.resize(n/sizeof(T));
-      MPI_Recv(vec.data(), n, MPI_CHAR, source, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+      MPI_Recv(vec.data(), n, MPI_CHAR, source, 0, getCommunicator(), MPI_STATUS_IGNORE);
   }
 
   template<typename T>
@@ -38,7 +38,7 @@ namespace MessagePasser {
   MessageStatus NonBlockingRecv(std::vector<T> &vec, int length, int source) {
       MessageStatus status;
       vec.resize(length);
-      MPI_Irecv(vec.data(), length*sizeof(T), MPI_CHAR, source, 0, MPI_COMM_WORLD, status.request());
+      MPI_Irecv(vec.data(), length*sizeof(T), MPI_CHAR, source, 0, getCommunicator(), status.request());
       return status;
   }
 }

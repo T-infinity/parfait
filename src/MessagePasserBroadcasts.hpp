@@ -2,7 +2,7 @@
 namespace MessagePasser {
   template<typename T>
   void Broadcast(T &value, int rootId) {
-	  MPI_Bcast(&value, sizeof(T), MPI_CHAR, rootId, MPI_COMM_WORLD);
+	  MPI_Bcast(&value, sizeof(T), MPI_CHAR, rootId, getCommunicator());
   }
 
   // broadcast a vector of KNOWN size
@@ -20,7 +20,7 @@ namespace MessagePasser {
 			  vec.resize(vecLength);
 	  }
 	  if (vecLength != 0)
-		  MPI_Bcast(vec.data(), vecLength*sizeof(T), MPI_CHAR, rootId, MPI_COMM_WORLD);
+		  MPI_Bcast(vec.data(), vecLength*sizeof(T), MPI_CHAR, rootId, getCommunicator());
   }
 
   // broadcast a vector of unknown size
@@ -34,6 +34,6 @@ namespace MessagePasser {
 		  vec.clear();
 		  vec.resize(size);
 	  }
-	  MPI_Bcast(vec.data(), size*sizeof(T), MPI_CHAR, rootId, MPI_COMM_WORLD);
+	  MPI_Bcast(vec.data(), size*sizeof(T), MPI_CHAR, rootId, getCommunicator());
   }
 }

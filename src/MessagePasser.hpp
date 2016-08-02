@@ -29,30 +29,30 @@ inline void MessagePasser::Finalize(){
 
 inline int MessagePasser::Rank(){
 	int rank=0;
-	MPI_Comm_rank(MPI_COMM_WORLD,&rank);
+	MPI_Comm_rank(getCommunicator(),&rank);
 	return rank;
 }
 
 inline int MessagePasser::NumberOfProcesses(){
 	int size=0;
-	MPI_Comm_size(MPI_COMM_WORLD,&size);
+	MPI_Comm_size(getCommunicator(),&size);
 	return size;
 }
 
 template <typename T>
 void MessagePasser::Send(const T& value,int destination){
-    MPI_Send(&value,1,Type(value),destination,0,MPI_COMM_WORLD);
+    MPI_Send(&value,1,Type(value),destination,0,getCommunicator());
 }
 
 template <typename T>
 void MessagePasser::Recv(T &value, int source){
     MPI_Status status;
-    MPI_Recv(&value,1,Type(value),source,0,MPI_COMM_WORLD,&status);
+    MPI_Recv(&value,1,Type(value),source,0,getCommunicator(),&status);
 }
 template <typename T>
 void MessagePasser::Recv(T &value){
 	MPI_Status status;
-	MPI_Recv(&value,1,Type(value),MPI_ANY_SOURCE,0,MPI_COMM_WORLD,&status);
+	MPI_Recv(&value,1,Type(value),MPI_ANY_SOURCE,0,getCommunicator(),&status);
 }
 #endif
 

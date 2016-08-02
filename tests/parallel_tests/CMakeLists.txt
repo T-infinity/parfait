@@ -56,6 +56,7 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         PreProcessor/PreProcessorTests.cpp
         PreProcessor/ParallelMeshReaderTests.cpp
         PreProcessor/SendRecvPairTests.cpp
+        ../../src/MessagePasser.cpp
 )
 
 add_executable(ParfaitParallelTests

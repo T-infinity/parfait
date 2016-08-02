@@ -2,13 +2,13 @@
 template<typename T>
 void MessagePasser::Gather(T value,std::vector<T> &vec,int rootId) {
 	vec.resize(NumberOfProcesses());
-	MPI_Gather(&value,sizeof(T),MPI_CHAR,vec.data(),sizeof(T),MPI_CHAR,rootId,MPI_COMM_WORLD);
+	MPI_Gather(&value,sizeof(T),MPI_CHAR,vec.data(),sizeof(T),MPI_CHAR,rootId,getCommunicator());
 }
 
 template<typename T>
 void MessagePasser::AllGather(T value,std::vector<T> &vec) {
 	vec.resize(NumberOfProcesses());
-	MPI_Allgather(&value,sizeof(T),MPI_CHAR,vec.data(),sizeof(T),MPI_CHAR,MPI_COMM_WORLD);
+	MPI_Allgather(&value,sizeof(T),MPI_CHAR,vec.data(),sizeof(T),MPI_CHAR,getCommunicator());
 }
 
 template<typename T>
@@ -18,7 +18,7 @@ void MessagePasser::Gather(const std::vector<T> &send_vec,int send_count,std::ve
 		recv_vec.resize(send_count*NumberOfProcesses());
 	}
 	MPI_Gather(send_vec.data(),send_count*sizeof(T),MPI_CHAR,recv_vec.data(),send_count*sizeof(T),
-			MPI_CHAR,rootId,MPI_COMM_WORLD);
+			MPI_CHAR,rootId,getCommunicator());
 }
 
 template<typename T>
@@ -36,7 +36,7 @@ void MessagePasser::Gatherv(const std::vector<T> &send_vec,std::vector<T> &recv_
 	}
 	MPI_Gatherv(send_vec.data(),sendcount,MPI_CHAR,
 			recv_vec.data(),recv_counts.data(),map.data(),MPI_CHAR,
-			rootId,MPI_COMM_WORLD);
+			rootId,getCommunicator());
 	// make map make sense for original datatype
 	for(auto& x:map)
 		x /= sizeof(T);
@@ -100,7 +100,7 @@ void MessagePasser::AllGatherv(const std::vector<T> &send_vec,std::vector<T> &re
 	recv_vec.resize(map.back()/sizeof(T));
 	MPI_Allgatherv(&send_vec[0],sendcount,MPI_CHAR,
 			&recv_vec[0],&recv_counts[0],&map[0],MPI_CHAR,
-			MPI_COMM_WORLD);
+			getCommunicator());
 	for(auto& x:map)
 		x /= sizeof(T);
 }
