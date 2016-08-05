@@ -32,6 +32,7 @@ set(SERIAL_TESTS_SOURCES
         LegacyArrayTests.cpp
         LinearPartitionerTests.cpp
         MatrixTests.cpp
+        MeshInterfaceTests.cpp
         NodeToNodeTests.cpp
         ParfaitMeshTests.cpp
         PointTest.cpp

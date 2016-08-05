@@ -35,7 +35,7 @@ inline int Parfait::CartBlock::numberOfCells() const {return number_of_cells;}
 
 inline int Parfait::CartBlock::numberOfNodes() const {return (kx+1)*(ky+1)*(kz+1);}
 
-inline std::vector<int> Parfait::CartBlock::getNodesInCell(int id) {
+inline std::vector<int> Parfait::CartBlock::getNodesInCell(int id) const {
     int i, j, k;
     convertCellIdTo_ijk(id, i, j, k);
 
@@ -118,7 +118,7 @@ inline void Parfait::CartBlock::getNode(int node_id,double point[3]) const
   point[2] = lo[2] + (get_dz())*((double)(k));
 }
 
-inline Parfait::Point<double> Parfait::CartBlock::getNode(int node_id) const {
+inline Parfait::Point<double> Parfait::CartBlock::getPoint(int node_id) const {
     Point<double> p;
     getNode(node_id,p.data());
     return p;

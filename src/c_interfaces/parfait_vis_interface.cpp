@@ -10,9 +10,9 @@ using namespace Parfait;
 class MeshWrapper{
 public:
     int numberOfNodes(){return nnodes();};
-    Point<double> getNode(int id){
+    Point<double> getPoint(int id){
         Point<double> p;
-        getPoint(id,p.data());
+        getXyz(id,p.data());
         return p;
     }
     int numberOfNodesInCell(int id){return nnodesInCell(id);};
@@ -27,7 +27,7 @@ public:
     int (*ncells)();
     int (*nnodesInCell)(int);
     void (*getCell)(int,int*);
-    void (*getPoint)(int,double*);
+    void (*getXyz)(int,double*);
 
 };
 
@@ -40,7 +40,7 @@ void vtk_register(int (*numberOfNodes)(),
                                  int (*numberOfCells)(),
                                  int (*numberOfNodesInCell)(int),
                                  void (*getNodesInCell)(int,int*),
-                                 void (*getPoint)(int,double*)){
+                                 void (*getXyz)(int,double*)){
     printf("parfait vtk vis, registering functions from solver\n");
     printf("Mesh data\n");
     printf("------------------------------------------\n");
@@ -50,7 +50,7 @@ void vtk_register(int (*numberOfNodes)(),
     mesh.nnodes = numberOfNodes;
     mesh.ncells = numberOfCells;
     mesh.getCell = getNodesInCell;
-    mesh.getPoint = getPoint;
+    mesh.getXyz = getXyz;
     mesh.nnodesInCell = numberOfNodesInCell;
 }
 

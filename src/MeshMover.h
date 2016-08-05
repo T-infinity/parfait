@@ -3,7 +3,7 @@
 // Requirements:  Mesh must implement the following
 //
 // meshBuilder.numberOfNodes();
-// meshBuilder.getNode(int,double*);
+// meshBuilder.getPoint(int,double*);
 // meshBuilder.setNode(int,double*);
 //
 // Then the meshBuilder can be moved by passing the meshBuilder

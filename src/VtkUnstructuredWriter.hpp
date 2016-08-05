@@ -12,7 +12,7 @@ namespace Parfait {
         vtkSmartPointer<vtkPoints> points =
                 vtkSmartPointer<vtkPoints>::New();
         for (int i = 0; i < mesh.numberOfNodes(); i++) {
-            auto p = mesh.getNode(i);
+            auto p = mesh.getPoint(i);
             points->InsertNextPoint(p[0], p[1], p[2]);
         }
         vtk_grid->SetPoints(points);

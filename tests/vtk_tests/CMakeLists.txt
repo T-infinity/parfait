@@ -21,6 +21,7 @@ include_directories(../../tinyxml/src
 
 set(VTK_WRITING_SOURCES
         catch_main.cpp
+        DynamicVtkTests.cpp
         VtkUnstructuredWriterTests.cpp
         VtkUnstructuredSurfaceWriterTests.cpp)
 
