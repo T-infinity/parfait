@@ -19,7 +19,7 @@ option(PARFAIT_WITH_VTK "Configure with ParMetis" ON)
 add_subdirectory(utils)
 add_subdirectory(src/c_interfaces)
 add_subdirectory(tests/serial_tests)
-add_subdirectory(tests/serial_tests/plugin_tests)
+add_subdirectory(tests/plugin_tests)
 add_subdirectory(tinyxml)
 add_subdirectory(plugins)
 

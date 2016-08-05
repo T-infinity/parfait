@@ -16,7 +16,7 @@ int main(int argc, const char* argv[]) {
 //           ugrid.triangles.size()/3, ugrid.nodes.size());
 
     Parfait::STL::STL surface;
-    for(int cell_id = 0; cell_id < ugrid.triangles.size() / 3; cell_id++){
+    for(int cell_id = 0; cell_id < int(ugrid.triangles.size() / 3); cell_id++){
         auto* tri = &ugrid.triangles[3*cell_id];
         Parfait::Facet f;
         for(int i = 0; i < 3; i++){

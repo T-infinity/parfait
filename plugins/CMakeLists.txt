@@ -23,3 +23,7 @@ add_library(ParfaitVtkPlugin SHARED
         ${VtkPluginSources}
         )
 
+target_link_libraries(ParfaitVtkPlugin
+        ${VTK_LIBRARIES}
+        )
+

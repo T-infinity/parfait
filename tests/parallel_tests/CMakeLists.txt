@@ -68,6 +68,7 @@ if(PARFAIT_WITH_PARMETIS)
             tinyxml
             parmetis
             metis
+            irc
     )
 else()
     target_link_libraries(ParfaitParallelTests

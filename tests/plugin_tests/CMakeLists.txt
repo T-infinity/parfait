@@ -14,5 +14,5 @@ set(PLUGIN_TESTS_SOURCES
 
 include_directories(../)
 
-add_executable(PluginTests ${PLUGIN_TESTS_SOURCES} ${HEADERS} ../../catch.hpp)
+add_executable(PluginTests ${PLUGIN_TESTS_SOURCES} ${HEADERS} ../catch.hpp)
 target_link_libraries(PluginTests dl)

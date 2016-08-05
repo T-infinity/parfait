@@ -3,10 +3,13 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-class VolumeMeshInterface;
 
-void registerMesh(const VolumeMeshInterface* mesh);
-void writeBinary(const char* name);
+namespace Parfait {
+  class VolumeMeshInterface;
+}
+class ParfaitVizualizer;
+
+ParfaitVizualizer* registerMesh(const Parfait::VolumeMeshInterface* mesh);
 
 #ifdef __cplusplus
 };
