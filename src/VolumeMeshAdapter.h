@@ -16,7 +16,6 @@ namespace Parfait {
                   numberOfCells_m(std::bind(&MeshType::numberOfCells, std::ref(mesh))),
                   getNodesInCell_m(std::bind(&MeshType::getNodesInCell, std::ref(mesh),std::placeholders::_1)),
                   getPoint_m(std::bind(&MeshType::getPoint, std::ref(mesh), std::placeholders::_1))
-
         {
         }
 
