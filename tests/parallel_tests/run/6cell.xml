@@ -1,7 +1,0 @@
-<?xml version="1.0" ?>
-<global>
-	<tex>
-	</tex>
-    <component filename="../../grids/6cell.lb8.ugrid" endian="little"/>
-
-</global>
