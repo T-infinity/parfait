@@ -9,7 +9,7 @@ file(GLOB_RECURSE HEADERS
 
 set(PLUGIN_TESTS_SOURCES
         catch_main.cpp
-        ../../src/VtkPluginLoader.cpp
+        ../../src/VizPluginLoader.cpp
         VtkPluginTests.cpp
         )
 
