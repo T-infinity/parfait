@@ -8,6 +8,8 @@
 
 # but don't ignore directories, so we can recurse
 !*/
+# except, ignore the build directory
+build/*
 
 # also..... don't ignore these guys.....
 
@@ -20,6 +22,7 @@
 !*.lua
 !*.sh
 !*.py
+
 
 # but... DO ignore Matt's silly little unit scripts
 unit.sh
