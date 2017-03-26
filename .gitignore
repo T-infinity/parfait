@@ -1,0 +1,26 @@
+# TL;DR
+#
+# Basically, only add files of specific types, and ignore everything else
+
+
+# ignore ALL files
+*
+
+# but don't ignore directories, so we can recurse
+!*/
+
+# also..... don't ignore these guys.....
+
+# C++ sources
+!*.cpp
+!*.h
+!*.hpp
+
+# Scripts
+!*.lua
+!*.sh
+!*.py
+
+# but... DO ignore Matt's silly little unit scripts
+unit.sh
+!CMakeLists.txt
