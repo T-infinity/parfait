@@ -15,6 +15,7 @@ namespace Parfait {
         typedef Parfait::Point<double> Point;
     public:
         STL() = default;
+        STL(const std::vector<Facet>& facets):facets(facets){}
 
         std::string filename;
         std::vector<Facet> facets;

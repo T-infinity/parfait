@@ -79,6 +79,7 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         test/GatherTests.cpp
         test/BroadcastTests.cpp
         test/ScatterTests.cpp
+        test/DistanceCalculatorTests.cpp
         test/ScattervTests.cpp
         test/ReductionTests.cpp
         test/MessagePasserBasicsTests.cpp
