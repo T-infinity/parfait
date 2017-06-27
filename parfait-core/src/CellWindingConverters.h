@@ -30,10 +30,23 @@ namespace Parfait {
       static void convertPyramid(T* pyramid) { }
       template<typename T>
       static void convertHex(T* hex) { }
-      static void convertPrism(int* prism) {
+      template<typename T>
+      static void convertPrism(T* prism) {
           std::swap(prism[0], prism[3]);
           std::swap(prism[1], prism[4]);
           std::swap(prism[2], prism[5]);
+      }
+      template<typename T>
+      static void convertPenta_15(T* cell){
+        std::swap(cell[9], cell[12]);
+        std::swap(cell[10], cell[13]);
+        std::swap(cell[11], cell[14]);
+      }
+      template<typename T>
+      static void convertPenta_18(T* cell){
+          std::swap(cell[9], cell[12]);
+          std::swap(cell[10], cell[13]);
+          std::swap(cell[11], cell[14]);
       }
   };
 
