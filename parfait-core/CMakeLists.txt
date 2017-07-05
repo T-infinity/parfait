@@ -53,6 +53,7 @@ set(SERIAL_TESTS_SOURCES
   test/UgridFactoryTests.cpp
   test/UgridWriterTests.cpp
   test/NodeToCellTests.cpp
+        test/EdgeBuilderTests.cpp
   )
 
 

@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <vector>
-#include <ConfigurationReader.h>
 #include <MotionMatrix.h>
 #include <iostream>
 #include <stdio.h>
