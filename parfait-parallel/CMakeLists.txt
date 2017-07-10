@@ -92,6 +92,7 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         )
 
 add_library(MessagePasser src/MessagePasser.cpp ${SOURCE_FILES} ${PARFAIT_HEADERS})
+add_library(MessagePasser_static src/MessagePasser.cpp ${SOURCE_FILES} ${PARFAIT_HEADERS})
 
 add_executable(ParfaitParallelTests
         ${PARFAIT_PARALLEL_TESTS_SRC}
@@ -107,7 +108,7 @@ target_link_libraries(ParfaitParallelTests
 install(FILES ${PARFAIT_HEADERS}  ${MESSAGE_PASSER_HEADERS}
         DESTINATION parfait/include)
 
-install(TARGETS MessagePasser
+    install(TARGETS MessagePasser MessagePasser_static
         EXPORT parfait-targets
         DESTINATION parfait/lib)
 
