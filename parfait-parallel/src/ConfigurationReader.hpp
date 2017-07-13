@@ -20,6 +20,11 @@ namespace Parfait {
       return nlohmann::json::parse(i);
   }
 
+    inline void throwIfNotFound(nlohmann::json json,const std::string& s){
+        if(json.find(s) == json.end())
+            throw std::logic_error("Parfait::ConfigurationReader: "+s+" not found in json object");
+    }
+
   inline bool ConfigurationReader::getIsBigEndian(nlohmann::json& component) {
       if (component.find("is_big_endian") != component.end())
           return component["is_big_endian"];
@@ -43,20 +48,26 @@ namespace Parfait {
           auto rotation = component["rotation"];
           std::array<double, 3> p0, p1;
           for (int i = 0; i < 3; ++i) {
+              throwIfNotFound(rotation,"axis_begin");
               p0[i] = rotation.at("axis_begin")[i];
+              throwIfNotFound(rotation,"axis_end");
               p1[i] = rotation.at("axis_end")[i];
           }
+          throwIfNotFound(rotation,"angle");
           double angle = rotation.at("angle");
           m.addRotation(p0.data(), p1.data(), angle);
       }
       return m;
   }
 
+
   inline void ConfigurationReader::load() {
       auto config = loadConfigFileAsJsonObject(filename);
       ngrids = 0;
+      throwIfNotFound(config,"components");
       for (auto& component:config["components"]) {
           ngrids++;
+          throwIfNotFound(component,"filename");
           gridFilenames.push_back(component.at("filename"));
           bigEndian.push_back(getIsBigEndian(component));
           motionMatrices.push_back(createMotionMatrixForComponent(component));
