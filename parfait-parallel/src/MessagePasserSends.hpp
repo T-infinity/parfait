@@ -27,7 +27,7 @@ void MessagePasser::Send(std::vector<std::vector<T>>& vec, int destination) cons
 
 template<typename T>
 MessagePasser::MessageStatus MessagePasser::NonBlockingSend(
-        std::vector<T>& vec,
+        const std::vector<T>& vec,
         int length, int destination) const {
     MessageStatus status;
     MPI_Isend(vec.data(), length * sizeof(T), MPI_CHAR, destination, 0, getCommunicator(), status.request());
@@ -36,6 +36,6 @@ MessagePasser::MessageStatus MessagePasser::NonBlockingSend(
 
 template<typename T>
 MessagePasser::MessageStatus MessagePasser::NonBlockingSend(
-        std::vector<T>& vec, int destination) const {
+        const std::vector<T>& vec, int destination) const {
     return NonBlockingSend(vec, vec.size(), destination);
 }

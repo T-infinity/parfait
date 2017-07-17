@@ -21,7 +21,7 @@ std::map<int, std::vector<long>> getSendTo(
             for (auto thing : current_need) {
                 if (have.count(thing) != 0) {
                     send_set[r].insert(thing);
-                };
+            };
             }
         }
     }

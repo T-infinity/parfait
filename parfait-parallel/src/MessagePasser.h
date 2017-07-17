@@ -53,10 +53,10 @@ public:
     void Send(std::vector<T>& vec, int length, int destination) const;
 
     template<typename T>
-    MessageStatus NonBlockingSend(std::vector<T>& vec, int length, int destination) const;
+    MessageStatus NonBlockingSend(const std::vector<T>& vec, int length, int destination) const;
 
     template<typename T>
-    MessageStatus NonBlockingSend(std::vector<T>& vec, int destination) const;
+    MessageStatus NonBlockingSend(const std::vector<T>& vec, int destination) const;
 
     template<typename T>
     MessageStatus NonBlockingRecv(std::vector<T>& vec, int length, int source) const;
