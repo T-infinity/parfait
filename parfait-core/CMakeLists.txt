@@ -31,7 +31,8 @@ set(SERIAL_TESTS_SOURCES
   test/CompressedMapTests.cpp
   test/ExtentMeshWrapperTests.cpp
   test/EdgeMapTests.cpp
-  test/ExtentBuilderTests.cpp
+        test/EdgeFieldLeastSquaresGradientTests.cpp
+        test/ExtentBuilderTests.cpp
   test/ExtentTests.cpp
   test/FacetTests.cpp
   test/Fun3DToCGNSTests.cpp
@@ -43,6 +44,7 @@ set(SERIAL_TESTS_SOURCES
   test/ParfaitMeshTests.cpp
   test/PointTest.cpp
   test/RangeLoopTests.cpp
+        test/StencilLeastSquaresGradientTests.cpp
   test/StringToolsTests.cpp
   test/StreamTests.cpp
   test/STLTests.cpp
