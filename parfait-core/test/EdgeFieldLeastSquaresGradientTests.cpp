@@ -13,17 +13,27 @@ TEST_CASE("Edge collection least squares gradient of more than 1 variable"){
         var[i][0] = 5*p[0] + 1*p[1] + 3*p[2];
         var[i][1] = 5.5*p[0] + 1.1*p[1] + 3.3*p[2];
     }
-    auto grad = calculateNodeGradientsFromEdges(getEdge, edges.size(), getXyz, points.size(), var);
 
-    REQUIRE(grad.size() == points.size());
-    for(auto& g : grad){
-        REQUIRE(g[0][0] == Approx(5));
-        REQUIRE(g[0][1] == Approx(1));
-        REQUIRE(g[0][2] == Approx(3));
+    auto gs = calcGSWeights(getEdge, edges.size(), getXyz, points.size());
 
-        REQUIRE(g[1][0] == Approx(5.5));
-        REQUIRE(g[1][1] == Approx(1.1));
-        REQUIRE(g[1][2] == Approx(3.3));
+    auto getFirstVariable = [&](int node_id){return var[node_id][0];};
+    auto getSecondVariable = [&](int node_id){return var[node_id][1];};
+
+    auto grad_first = calculateNodeGradientsFromEdges(getEdge, edges.size(), getXyz, points.size(),
+                                                      gs, getFirstVariable);
+    auto grad_second = calculateNodeGradientsFromEdges(getEdge, edges.size(), getXyz, points.size(),
+                                                       gs, getSecondVariable);
+
+    REQUIRE(grad_first.size() == points.size());
+    for(auto& g : grad_first) {
+        REQUIRE(g[0] == Approx(5));
+        REQUIRE(g[1] == Approx(1));
+        REQUIRE(g[2] == Approx(3));
+    }
+    for(auto& g : grad_second){
+        REQUIRE(g[0] == Approx(5.5));
+        REQUIRE(g[1] == Approx(1.1));
+        REQUIRE(g[2] == Approx(3.3));
     }
 }
 
