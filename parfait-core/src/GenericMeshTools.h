@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Point.h"
-#include "GenericMesh.h"
 #include "VectorTools.h"
 
 #include <cmath>

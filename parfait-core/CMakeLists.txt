@@ -17,8 +17,7 @@ set(SERIAL_TESTS_SOURCES
   test/AllTests.cpp
   test/Adt3DExtentTests.cpp
   test/Adt3DPointTests.cpp
-  test/AdtBuilderTests.cpp
-  test/AdtTests.cpp
+        test/AdtTests.cpp
   test/AflrToCGNSTests.cpp
         test/BuildCRSTests.cpp
   test/CartBlockSliceTests.cpp
@@ -29,7 +28,6 @@ set(SERIAL_TESTS_SOURCES
   test/CGNSToVtkTests.cpp
   test/CompressedMapTests.cpp
   test/ExtentMeshWrapperTests.cpp
-  test/EdgeMapTests.cpp
         test/EdgeFieldLeastSquaresGradientTests.cpp
         test/ExtentBuilderTests.cpp
   test/ExtentTests.cpp

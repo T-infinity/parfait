@@ -1,4 +1,3 @@
-#include "GenericMesh.h"
 #include "CartMesh.h"
 #include "GenericMeshTools.h"
 #include <catch.hpp>

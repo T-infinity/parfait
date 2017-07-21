@@ -9,7 +9,6 @@
 #include "VectorTools.h"
 #include "GenericMeshTools.h"
 #include "Adt3dExtent.h"
-#include "AdtBuilder.h"
 #include "ExtentBuilder.h"
 #include "NodeToCell.h"
 
@@ -41,49 +40,5 @@ namespace Parfait {
             }
         }
         return shared;
-    }
-
-    template<typename MeshType>
-    std::vector<std::vector<int>> buildEdgeToCell(MeshType &mesh_in,
-                                                  std::vector<std::array<int, 2>> &edges) {
-
-        Mesh<MeshType> mesh(mesh_in);
-        auto nodeToCell = buildNodeToCell(mesh_in);
-        std::vector<std::vector<int>> e2c(edges.size());
-
-        for (unsigned int edgeId = 0; edgeId < edges.size(); edgeId++) {
-            std::array<int, 2> edge = edges[edgeId];
-            auto sharedCells = getSharedCells(edge[0], edge[1], nodeToCell);
-            e2c[edgeId] = sharedCells;
-        }
-        return e2c;
-    }
-
-    template<typename T>
-    std::vector<std::vector<int> > buildCellToCell(T &meshInterface) {
-        Mesh<T> mesh(meshInterface);
-        printf("Parfait-buildCellToCell: putting cells in ADT for searching\n");
-        Adt3DExtent adt = AdtBuilder::putCellsInAdt(meshInterface);
-
-        std::vector<std::vector<int> > c2c;
-        c2c.resize(mesh.numberOfCells());
-
-        printf("Parfait-buildCellToCell: populating c2c connectivity\n");
-        // populate c2c connectivity
-        for (auto cell:mesh.cells()) {
-            for (int neighborId:adt.retrieve(ExtentBuilder::build(cell))) {
-                if (neighborId == cell.Id())
-                    continue;
-                for (auto face:cell) {
-                    for (auto nbrFace : mesh.cell(neighborId))
-                        if (facesMatch(face, nbrFace)) {
-                            insertUnique(c2c[cell.Id()], neighborId);
-                            insertUnique(c2c[neighborId], cell.Id());
-                            break;
-                        }
-                }
-            }
-        }
-        return c2c;
     }
 }

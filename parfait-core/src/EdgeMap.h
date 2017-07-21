@@ -28,13 +28,6 @@ namespace Parfait {
 #include "CellToCell.h"
 namespace Parfait{
     template<typename MeshType>
-    EdgeMap<MeshType>::EdgeMap(MeshType &mesh_in)
-            : mesh(mesh_in), edges(GenericMeshTools::getUniqueEdges(mesh)) {
-        edgeToCell = buildEdgeToCell(mesh, edges);
-        nodeToEdge = buildNodeToEdge();
-    }
-
-    template<typename MeshType>
     int EdgeMap<MeshType>::getOtherNode(const Edge &e, int node1) {
         if (e[0] == node1) {
             return e[1];
