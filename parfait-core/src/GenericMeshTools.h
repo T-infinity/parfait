@@ -58,43 +58,6 @@ namespace Parfait {
         return center;
     }
 
-    template<class MeshType, class CellType>
-    Point<double> cellCenter(MeshType &mesh, CellType &cell) {
-        auto nodes = cell.getNodes();
-        return GenericMeshTools::computeCenter(mesh, nodes);
-    }
-
-    template<class MeshType>
-    Point<double> cellCenter(MeshType &mesh_in, int cellId) {
-
-        Mesh<MeshType> mesh(mesh_in);
-        auto cell = mesh.cell(cellId);
-        return cellCenter(mesh_in, cell);
-    }
-
-    template<class MeshType, class CellType>
-    inline double computeCellVolume(MeshType &mesh_in, CellType &&cell) {
-        Mesh<MeshType> mesh(mesh_in);
-        double volume_ = 0;
-        auto centerOfCell = cellCenter(mesh, cell);
-
-        for (int faceId : range(cell.numberOfFaces())) {
-            auto face = cell.getFace(faceId);
-            auto faceNodes = face.getNodes();
-            auto faceCenter = computeCenter(mesh, faceNodes);
-
-            for (int index1 : range(face.numberOfNodes())) {
-                int index2 = (index1 + 1) % face.numberOfNodes();
-                Point<double> node1, node2;
-                mesh.getNode(faceNodes[index1], &node1[0]);
-                mesh.getNode(faceNodes[index2], &node2[0]);
-
-                volume_ += computeTetVolume(node2, node1, faceCenter, centerOfCell);
-            }
-        }
-        return volume_;
-    }
-
     template<class MeshType>
     std::vector<std::array<int, 2>> getUniqueEdges(MeshType &mesh_in) {
 
@@ -231,12 +194,6 @@ namespace Parfait {
         return edges;
     }
 
-    template<class MeshType, class FaceType>
-    Point<double> faceCenter(MeshType &mesh, FaceType &face) {
-        auto faceNodes = face.getNodes();
-        return GenericMeshTools::computeCenter(mesh, faceNodes);
-    }
-
     template <typename T>
     Point<T> computeTriangleArea(const Point<T>& a, const Point<T>& b, const Point<T>& c){
         auto v1 = b - a;
@@ -245,37 +202,6 @@ namespace Parfait {
         auto area = 0.5 * Point<double>::cross(v1, v2);
         return area;
     }
-
-    template<class MeshType, class FaceType>
-    Point<double> getFaceArea(MeshType &mesh, FaceType &face) {
-        auto faceNodeIds = face.getNodes();
-        if (3 == faceNodeIds.size()) {
-            Point<double> a, b, c;
-            mesh.getNode(faceNodeIds[0], &a[0]);
-            mesh.getNode(faceNodeIds[1], &b[0]);
-            mesh.getNode(faceNodeIds[2], &c[0]);
-
-            return computeTriangleArea(a, b, c);
-        } else {
-            auto start = computeCenter(mesh, faceNodeIds);
-            Point<double> area(0, 0, 0);
-            mesh.getNode(faceNodeIds[0], &start[0]);
-            for (auto index : range((int) faceNodeIds.size() - 1)) {
-
-                int node1 = faceNodeIds[index];
-                int node2 = faceNodeIds[(index + 1) % faceNodeIds.size()];
-                Point<double> a, b;
-                mesh.getNode(node1, &a[0]);
-                mesh.getNode(node2, &b[0]);
-
-                a -= start;
-                b -= start;
-                area += 0.5 * Point<double>::cross(a, b);
-            }
-            return area;
-        }
-    }
-
 
     template<typename MeshType, class CellType>
     bool containsPoint(MeshType &mesh, CellType &&cell, const Point<double> &p) {

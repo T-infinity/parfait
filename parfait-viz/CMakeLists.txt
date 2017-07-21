@@ -26,8 +26,6 @@ file(GLOB_RECURSE PARFAIT_VIZ_HEADERS
 
 add_library(ParfaitViz src/VizPluginLoader.cpp)
 
-add_subdirectory(plugins)
-
 install(FILES ${PARFAIT_VIZ_HEADERS} 
     DESTINATION parfait-viz/include)
 

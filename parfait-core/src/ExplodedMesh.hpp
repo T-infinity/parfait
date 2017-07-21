@@ -99,7 +99,7 @@ namespace Parfait{
   }
   void ExplodedMesh::shrinkPoints(double scale){
       for(int cellId = 0; cellId < (int)cells.size(); cellId++){
-          auto center = GenericMeshTools::cellCenter(*this, cellId);
+          auto center = GenericMeshTools::computeCenter(*this, this->getNodesInCell(cellId));
           for(int n : getNodesInCell(cellId)){
               auto p = points[n];
               auto dp = p - center;

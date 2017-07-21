@@ -4,56 +4,6 @@
 #include <catch.hpp>
 using namespace Parfait;
 
-TEST_CASE("GenericMeshToolsTests,CellCenter")
-{
-    CartMesh cartMesh({0,0,2}, {1,2,3}, 1, 1, 1);
-
-    Mesh<CartMesh> mesh(cartMesh);
-
-    auto cell = mesh.cell(0);
-    auto center = GenericMeshTools::cellCenter(mesh, cell);
-    REQUIRE(0.5 == Approx(center[0]));
-    REQUIRE(1.0 == Approx(center[1]));
-    REQUIRE(2.5 == Approx(center[2]));
-}
-
-TEST_CASE("GenericMeshToolsTests,CellVolume")
-{
-    CartMesh cartMesh({0,0,2}, {1,1,3}, 2, 2, 2);
-
-    Mesh<CartMesh> mesh(cartMesh);
-
-    auto cell = mesh.cell(0);
-    double volume = GenericMeshTools::computeCellVolume(mesh, cell);
-    REQUIRE(0.125 == Approx(volume));
-}
-
-TEST_CASE("GenericMeshToolsTests, FaceCenter")
-{
-    CartMesh cartMesh({0,0,0}, {1,1,1}, 2, 2, 2);
-    Mesh<CartMesh> mesh(cartMesh);
-
-    auto cell = mesh.cell(0);
-    auto face = cell.getFace(0);
-    auto faceCenter = GenericMeshTools::faceCenter(mesh, face);
-    REQUIRE(0.25 == Approx(faceCenter[0]));
-    REQUIRE(0.25 == Approx(faceCenter[1]));
-    REQUIRE(   0 == Approx(faceCenter[2]));
-}
-
-TEST_CASE("GenericMeshToolsTests, FaceArea")
-{
-    CartMesh cartMesh({0,0,0}, {1,1,1}, 2, 2, 2);
-    Mesh<CartMesh> mesh(cartMesh);
-
-    auto cell = mesh.cell(0);
-    auto face = cell.getFace(0);
-    auto areaVector = GenericMeshTools::getFaceArea(mesh, face);
-    REQUIRE(0 ==    Approx(areaVector[0]));
-    REQUIRE(0 ==    Approx(areaVector[1]));
-    REQUIRE(-.25 == Approx(areaVector[2]));
-}
-
 TEST_CASE("GenericMeshToolsTests, UniqueEdges"){
 
     CartMesh cartMesh({0,0,0}, {1,1,1}, 1,1,1);

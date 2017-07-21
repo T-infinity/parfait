@@ -36,8 +36,7 @@ set(SERIAL_TESTS_SOURCES
   test/ExtentTests.cpp
   test/FacetTests.cpp
   test/Fun3DToCGNSTests.cpp
-  test/LegacyArrayTests.cpp
-  test/LinearPartitionerTests.cpp
+        test/LinearPartitionerTests.cpp
   test/MatrixTests.cpp
   test/MeshInterfaceTests.cpp
   test/NodeToNodeTests.cpp
