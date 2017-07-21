@@ -6,7 +6,7 @@
 
 class DualMetrics {
 public:
-    DualMetrics(int number_of_nodes, int number_of_edges)
+    explicit DualMetrics(int number_of_nodes, int number_of_edges)
             : node_volumes(number_of_nodes, 0), edge_areas(number_of_edges, {0,0,0}) {}
     std::vector<double> node_volumes;
     std::vector<Parfait::Point<double>> edge_areas;

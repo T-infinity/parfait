@@ -10,14 +10,9 @@ inline bool isIn(const Container & container, T t){
     return false;
 }
 
-// Insert an item into a vector if that item 
-// is not already in the vector.
-// Cannot be used on data that doesn't not have the < operator overloaded.
 template<typename T>
-void insertUnique(std::vector<T> &vec,T n)
-{
-	for(auto it=vec.begin();it<vec.end();it++)
-	{
+void insertUnique(std::vector<T> &vec,T n) {
+	for(auto it=vec.begin();it<vec.end();it++) {
 		if(n == *it)  // don't insert duplicate
 			return;
 		if(n < *it)   // insert in front of next biggest element

@@ -5,7 +5,7 @@ namespace Parfait {
 
     class CRS {
         public:
-            CRS(const std::vector<std::vector<int>>& graph){
+            explicit CRS(const std::vector<std::vector<int>>& graph){
                 ia.resize(graph.size()+1);
                 ia[0] = 0;
                 for(int i = 0; i < graph.size(); i++){
