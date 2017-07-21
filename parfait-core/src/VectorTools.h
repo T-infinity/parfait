@@ -10,19 +10,6 @@ inline bool isIn(const Container & container, T t){
     return false;
 }
 
-// Searches Linearly if an item is in a vector
-// Can be used on non-sorted arrays (and non-sortable data structures)
-template <class T>
-inline bool isIn(const std::vector<T> &vec, T t){
-
-    for(auto u : vec){
-        if(t == u){
-            return true;
-        }
-    }
-    return false;
-}
-
 // Insert an item into a vector if that item 
 // is not already in the vector.
 // Cannot be used on data that doesn't not have the < operator overloaded.

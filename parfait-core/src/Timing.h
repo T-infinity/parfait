@@ -11,8 +11,8 @@ namespace Parfait {
 
     inline auto Now() {return Clock::now();}
 
-    inline void printTimeDifference(Clock::time_point t0, Clock::time_point t1);
-    inline void printReadableElapsedTime(Clock::time_point t0, Clock::time_point t1);
+    inline std::string timeDifferenceInMillisecondsAsString(Clock::time_point t0, Clock::time_point t1);
+    inline std::string readableElapsedTimeAsString(Clock::time_point t0, Clock::time_point t1);
 
 }
 #include "Timing.hpp"
