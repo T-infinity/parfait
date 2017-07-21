@@ -39,6 +39,7 @@ include_directories(
         ${METIS_INCLUDE_DIRS}
         ${MPI_INCLUDE_PATH}
         ${JSON_INCLUDE_DIR}
+        ${CATCH_INCLUDE_DIR}
 )
 
 file(GLOB_RECURSE PARFAIT_HEADERS
