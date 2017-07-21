@@ -98,6 +98,7 @@ add_library(MessagePasser_static src/MessagePasser.cpp ${SOURCE_FILES} ${PARFAIT
 add_executable(ParfaitParallelTests
         ${PARFAIT_PARALLEL_TESTS_SRC}
         ${HEADERS})
+add_dependencies(ParfaitParallelTests catch)
 
 target_link_libraries(ParfaitParallelTests
         MessagePasser
