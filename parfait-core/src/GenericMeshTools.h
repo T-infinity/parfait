@@ -276,20 +276,6 @@ namespace Parfait {
         }
     }
 
-    template<typename MeshType>
-    std::vector<std::vector<int>> buildNode2Cell(MeshType &mesh_in) {
-        Mesh<MeshType> mesh(mesh_in);
-        std::vector<std::vector<int>> node2Cell(mesh.numberOfNodes());
-
-        for (auto cell : mesh.cells()) {
-            for (auto face : cell) {
-                for (auto node : face) {
-                    insertUnique(node2Cell[node], cell.Id());
-                }
-            }
-        }
-        return node2Cell;
-    }
 
     template<typename MeshType, class CellType>
     bool containsPoint(MeshType &mesh, CellType &&cell, const Point<double> &p) {

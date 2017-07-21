@@ -54,47 +54,6 @@ TEST_CASE("GenericMeshToolsTests, FaceArea")
     REQUIRE(-.25 == Approx(areaVector[2]));
 }
 
-TEST_CASE("GenericMeshToolsTests, node2Cell")
-{
-    CartMesh cartMesh({0,0,0}, {1,1,1}, 2, 2, 2);
-
-    auto node2Cell = GenericMeshTools::buildNode2Cell(cartMesh);
-
-    REQUIRE(27 == node2Cell.size());
-    //--- bottom face nodes
-    REQUIRE(1 == node2Cell[0].size());
-    REQUIRE(2 == node2Cell[1].size());
-    REQUIRE(1 == node2Cell[2].size());
-    REQUIRE(2 == node2Cell[3].size());
-    REQUIRE(4 == node2Cell[4].size());
-    REQUIRE(2 == node2Cell[5].size());
-    REQUIRE(1 == node2Cell[6].size());
-    REQUIRE(2 == node2Cell[7].size());
-    REQUIRE(1 == node2Cell[8].size());
-
-    //--- middle face nodes
-    REQUIRE(2 == node2Cell[ 9].size());
-    REQUIRE(4 == node2Cell[10].size());
-    REQUIRE(2 == node2Cell[11].size());
-    REQUIRE(4 == node2Cell[12].size());
-    REQUIRE(8 == node2Cell[13].size());
-    REQUIRE(4 == node2Cell[14].size());
-    REQUIRE(2 == node2Cell[15].size());
-    REQUIRE(4 == node2Cell[16].size());
-    REQUIRE(2 == node2Cell[17].size());
-
-    //--- top face nodes
-    REQUIRE(1 == node2Cell[18].size());
-    REQUIRE(2 == node2Cell[19].size());
-    REQUIRE(1 == node2Cell[20].size());
-    REQUIRE(2 == node2Cell[21].size());
-    REQUIRE(4 == node2Cell[22].size());
-    REQUIRE(2 == node2Cell[23].size());
-    REQUIRE(1 == node2Cell[24].size());
-    REQUIRE(2 == node2Cell[25].size());
-    REQUIRE(1 == node2Cell[26].size());
-}
-
 TEST_CASE("GenericMeshToolsTests, UniqueEdges"){
 
     CartMesh cartMesh({0,0,0}, {1,1,1}, 1,1,1);
