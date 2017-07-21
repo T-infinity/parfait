@@ -1,5 +1,4 @@
 #include "ImportedUgrid.h"
-#include "RangeLoop.h"
 #include <vector>
 #include "GenericMesh.h"
 #include "GenericSurfaceMesh.h"
@@ -124,7 +123,7 @@ TEST_CASE("ImportedUgridTests,BoundaryFaceTests") {
 
     SurfaceMesh<ImportedUgrid> mesh(ugrid);
     REQUIRE(4 == mesh.numberOfBoundaryFaces());
-    for(auto id : range(mesh.numberOfBoundaryFaces())){
+    for(auto id = 0; id < mesh.numberOfBoundaryFaces(); id++){
         REQUIRE(3 == mesh.numberOfNodesInBoundaryFace(id));
     }
 
@@ -169,23 +168,4 @@ TEST_CASE("ImportedUgridTests, DirectFaceAccess") {
     auto cell = mesh.cell(0);
     auto face = cell.getFace(0);
     REQUIRE(3 == face.numberOfNodes());
-}
-
-template <class MeshType>
-void constFunction(const MeshType &mesh) {
-    //for(auto cell : meshBuilder.cells()){
-    //    for(auto face : cell){
-
-    //    }
-    //}
-}
-
-TEST_CASE("ImportedUgridTests, constCheck") {
-	using namespace ImportedUgridTests;
-	setup();
-	ImportedUgrid ugrid(nodes,triangles,quads,
-			tets,pyramids,prisms,hexs, triangleTags, quadTags);
-    Mesh<ImportedUgrid> mesh(ugrid);
-    constFunction(mesh);
-
 }

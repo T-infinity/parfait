@@ -1,5 +1,4 @@
 #include <stdexcept>
-#include "RangeLoop.h"
 #include <string>
 
 inline Parfait::CartMesh::CartMesh(
@@ -119,7 +118,7 @@ inline int Parfait::CartMesh::faceNeighbor(int cellId, int faceId) const
             j++;
             if(j >= block.numberOfCells_Y())
             {
-                for(int side : range(3)){
+                for(int side = 0; side < 3; side++){
                     neighbor += numberOfCellsOnSide(side);
                 }
                 neighbor += i + k*block.numberOfCells_X();
@@ -130,7 +129,7 @@ inline int Parfait::CartMesh::faceNeighbor(int cellId, int faceId) const
             i--;
             if(i < 0)
             {
-                for(int side : range(4)){
+                for(int side = 0; side < 4; side++){
                     neighbor += numberOfCellsOnSide(side);
                 }
                 neighbor += j + k*block.numberOfCells_Y();
@@ -141,7 +140,7 @@ inline int Parfait::CartMesh::faceNeighbor(int cellId, int faceId) const
             k++;
             if(k >= block.numberOfCells_Z())
             {
-                for(int side : range(5)){
+                for(int side = 0; side < 5; side++){
                     neighbor += numberOfCellsOnSide(side);
                 }
                 neighbor += j*block.numberOfCells_X() + i;

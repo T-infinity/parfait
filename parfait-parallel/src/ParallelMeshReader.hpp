@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <vector>
 #include <memory>
-#include <RangeLoop.h>
 #include <ImportedUgrid.h>
 #include <UgridReader.h>
 #include <LinearPartitioner.h>
@@ -109,7 +108,7 @@ inline Parfait::ParallelMeshReader::ParallelMeshReader(
     gridPyramidMap.push_back(0);
     gridPrismMap.push_back(0);
     gridHexMap.push_back(0);
-    for (int i:range(gridFiles)) {
+    for (int i = 0; i < gridFiles.size(); i++) {
         int nnodes, ntri, nquad, ntet, npyr, nprism, nhex;
         if (mp->Rank() == 0)
             UgridReader::readHeader(gridFiles[i], nnodes, ntri, nquad, ntet, npyr, nprism, nhex, isBigEndian[i]);
@@ -244,7 +243,7 @@ inline void ParallelMeshReader::createNodeComponentIds() {
 
 inline void Parfait::ParallelMeshReader::buildDistributionMaps() {
     int totalNodes = 0;
-    for (int i:range(gridFiles)) {
+    for (int i = 0; i < gridFiles.size(); i++) {
         int nnodes, ntri, nquad, ntet, npyr, nprism, nhex;
         UgridReader::readHeader(gridFiles[i], nnodes, ntri, nquad,
                                 ntet, npyr, nprism, nhex, isBigEndian[i]);

@@ -42,7 +42,6 @@ set(SERIAL_TESTS_SOURCES
   test/NodeToNodeTests.cpp
   test/ParfaitMeshTests.cpp
   test/PointTest.cpp
-  test/RangeLoopTests.cpp
         test/StencilLeastSquaresGradientTests.cpp
   test/StringToolsTests.cpp
   test/StreamTests.cpp
@@ -52,8 +51,7 @@ set(SERIAL_TESTS_SOURCES
   test/GenericMeshToolsTests.cpp
   test/ImportedUgridTests.cpp
   test/UgridFactoryTests.cpp
-  test/UgridWriterTests.cpp
-  test/NodeToCellTests.cpp
+        test/NodeToCellTests.cpp
         test/EdgeBuilderTests.cpp
   )
 
