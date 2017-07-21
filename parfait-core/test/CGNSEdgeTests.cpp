@@ -1,5 +1,5 @@
 #include <catch.hpp>
-#include <CGNS.h>
+#include <CGNSElements.h>
 
 TEST_CASE("Tet edge windings"){
 

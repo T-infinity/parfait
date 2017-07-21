@@ -24,14 +24,8 @@ file(GLOB_RECURSE PARFAIT_VIZ_HEADERS
         src/*.hpp
 )
 
-add_library(ParfaitViz src/VizPluginLoader.cpp)
-
 install(FILES ${PARFAIT_VIZ_HEADERS} 
     DESTINATION parfait-viz/include)
-
-install(TARGETS ParfaitViz 
-    EXPORT parfait-viz-targets
-    DESTINATION parfait-viz/lib)
 
 install(FILES parfait-vizConfig.cmake 
     DESTINATION parfait-viz)

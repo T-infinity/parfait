@@ -20,8 +20,7 @@ set(SERIAL_TESTS_SOURCES
   test/AdtBuilderTests.cpp
   test/AdtTests.cpp
   test/AflrToCGNSTests.cpp
-  test/BuildNeighborsTests.cpp
-  test/BuildCRSTests.cpp
+        test/BuildCRSTests.cpp
   test/CartBlockSliceTests.cpp
   test/CartBlockTests.cpp
   test/CGNSEdgeTests.cpp
@@ -37,10 +36,9 @@ set(SERIAL_TESTS_SOURCES
   test/FacetTests.cpp
   test/Fun3DToCGNSTests.cpp
         test/LinearPartitionerTests.cpp
-  test/MatrixTests.cpp
+        test/SparseMatrixTests.cpp
   test/MeshInterfaceTests.cpp
-  test/NodeToNodeTests.cpp
-  test/ParfaitMeshTests.cpp
+        test/ParfaitMeshTests.cpp
   test/PointTest.cpp
         test/StencilLeastSquaresGradientTests.cpp
   test/StringToolsTests.cpp
@@ -50,9 +48,12 @@ set(SERIAL_TESTS_SOURCES
   test/VectorToolsTests.cpp
   test/GenericMeshToolsTests.cpp
   test/ImportedUgridTests.cpp
-  test/UgridFactoryTests.cpp
         test/NodeToCellTests.cpp
         test/EdgeBuilderTests.cpp
+        test/HexMetricsTests.cpp
+        test/PyramidMetricsTests.cpp
+        test/PrismMetricsTests.cpp
+        test/TetMetricsTests.cpp
   )
 
 

@@ -1,8 +1,7 @@
 #pragma once
 #include <tuple>
 #include <GenericMeshTools.h>
-#include <ParallelMesh.h>
-#include <CGNS.h>
+#include <CGNSElements.h>
 
 class DualMetrics {
 public:
@@ -224,7 +223,7 @@ auto calculatePrismAreas(const Cell& cell){
     return areas;
 }
 
-inline DualMetrics calcMetrics(const Parfait::ParallelMesh& mesh, 
+template <typename ParallelMesh> DualMetrics calcMetrics(const ParallelMesh& mesh,
         const std::vector<std::array<int, 2>>& edges) {
     DualMetrics metrics(mesh.numberOfNodes(), edges.size());
     auto getTet     = [&](int i){return mesh.getTet(i);};

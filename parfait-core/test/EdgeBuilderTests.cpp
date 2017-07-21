@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include <EdgeBuilder.h>
-#include <CGNS.h>
+#include <CGNSElements.h>
 
 TEST_CASE("add cells to edge list"){
     Parfait::EdgeBuilder edgeBuilder;

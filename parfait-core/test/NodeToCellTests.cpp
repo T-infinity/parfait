@@ -4,7 +4,7 @@
 
 using namespace Parfait;
 
-TEST_CASE("sdlkfjhsdlfkhjd"){
+TEST_CASE("Build Node To Cell from a MeshTemplate"){
 	CartBlock block({0,0,0},{1,1,1},2,2,2);
 	auto n2c = buildNodeToCell(block);
 
