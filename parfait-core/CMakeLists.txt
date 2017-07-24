@@ -56,7 +56,7 @@ set(SERIAL_TESTS_SOURCES
   test/UgridWriterTests.cpp
   test/NodeToCellTests.cpp
         test/EdgeBuilderTests.cpp
-  )
+        )
 
 
 add_executable(ParfaitSerialTests ${SERIAL_TESTS_SOURCES} ${PARFAIT_CORE_HEADERS})
