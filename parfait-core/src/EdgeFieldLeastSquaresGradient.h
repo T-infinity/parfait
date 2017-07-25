@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <cmath>
 #include "LeastSquaresGradient.h"
 
 namespace Parfait {
