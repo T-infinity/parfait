@@ -12,12 +12,6 @@ add_definitions(
   -DCATCH_WITH_MPI
 )
 
-include_directories(
-        ../parfait-core/src/
-        src
-        test
-        ${MPI_INCLUDE_PATH}
-)
 
 file(GLOB_RECURSE PARFAIT_VIZ_HEADERS
         src/*.h
@@ -25,6 +19,9 @@ file(GLOB_RECURSE PARFAIT_VIZ_HEADERS
 )
 
 add_library(ParfaitViz src/VizPluginLoader.cpp)
+target_include_directories(ParfaitViz PUBLIC
+            ../parfait-core/src/
+)
 
 add_subdirectory(plugins)
 
