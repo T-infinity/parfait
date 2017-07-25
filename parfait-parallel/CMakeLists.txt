@@ -31,16 +31,6 @@ add_definitions(-DRAMP_TEST_JSON="${CMAKE_SOURCE_DIR}/grids/ramp.json")
 add_definitions(-DCOMBINED_TEST_JSON="${CMAKE_SOURCE_DIR}/grids/combined.json")
 
 
-include_directories(
-        ../parfait-core/src/
-        src
-        test
-        ${PARMETIS_INCLUDE_DIRS}
-        ${METIS_INCLUDE_DIRS}
-        ${MPI_INCLUDE_PATH}
-        ${JSON_INCLUDE_DIR}
-        ${CATCH_INCLUDE_DIR}
-)
 
 file(GLOB_RECURSE PARFAIT_HEADERS
         ../parfait-core/src/*.h
@@ -93,11 +83,29 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         )
 
 add_library(MessagePasser src/MessagePasser.cpp ${SOURCE_FILES} ${PARFAIT_HEADERS})
+target_include_directories(MessagePasser PUBLIC
+    ../parfait-core/src
+        src
+    )
 add_library(MessagePasser_static src/MessagePasser.cpp ${SOURCE_FILES} ${PARFAIT_HEADERS})
+target_include_directories(MessagePasser_static PUBLIC
+    ../parfait-core/src
+        src
+    )
 
 add_executable(ParfaitParallelTests
         ${PARFAIT_PARALLEL_TESTS_SRC}
         ${HEADERS})
+target_include_directories(ParfaitParallelTests PUBLIC
+        ../parfait-core/src/
+        src
+        test
+        ${PARMETIS_INCLUDE_DIRS}
+        ${METIS_INCLUDE_DIRS}
+        ${MPI_INCLUDE_PATH}
+        ${JSON_INCLUDE_DIR}
+        ${CATCH_INCLUDE_DIR}
+)
 add_dependencies(ParfaitParallelTests catch)
 
 target_link_libraries(ParfaitParallelTests

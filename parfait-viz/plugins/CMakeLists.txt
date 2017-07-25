@@ -21,6 +21,10 @@ set(VtkPluginSources
 add_library(ParfaitVtkPlugin SHARED
         ${VtkPluginSources}
         )
+target_include_directories(ParfaitVtkPlugin PUBLIC
+                ../../parfait-core/src/
+        ../src
+)
 
 target_link_libraries(ParfaitVtkPlugin
         ${VTK_LIBRARIES}
