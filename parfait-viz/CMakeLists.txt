@@ -12,11 +12,14 @@ add_definitions(
   -DCATCH_WITH_MPI
 )
 
-
-file(GLOB_RECURSE PARFAIT_VIZ_HEADERS
-        src/*.h
-        src/*.hpp
-)
+set(PARFAIT_VIZ_HEADERS
+        src/ParfaitVizualizer.h
+        src/VtkExtentWriter.h
+        src/VtkUnstructuredWriter.h
+        src/VtkUnstructuredWriter.hpp
+        src/VtkUnstructuredSurfaceWriter.h
+        src/VtkUnstructuredSurfaceWriter.hpp
+        )
 
 install(FILES ${PARFAIT_VIZ_HEADERS} 
     DESTINATION parfait-viz/include)
