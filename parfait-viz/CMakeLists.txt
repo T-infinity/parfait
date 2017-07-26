@@ -12,12 +12,6 @@ add_definitions(
   -DCATCH_WITH_MPI
 )
 
-include_directories(
-        ../parfait-core/src/
-        src
-        test
-        ${MPI_INCLUDE_PATH}
-)
 
 file(GLOB_RECURSE PARFAIT_VIZ_HEADERS
         src/*.h

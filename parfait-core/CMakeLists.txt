@@ -9,9 +9,6 @@ file(GLOB_RECURSE PARFAIT_CORE_HEADERS
     "src/*.hpp"
 )
 
-include_directories(src 
-    ${CATCH_INCLUDE_DIR}
-    )
 
 set(SERIAL_TESTS_SOURCES
   test/AllTests.cpp
@@ -56,4 +53,8 @@ set(SERIAL_TESTS_SOURCES
 
 
 add_executable(ParfaitSerialTests ${SERIAL_TESTS_SOURCES} ${PARFAIT_CORE_HEADERS})
+target_include_directories(ParfaitSerialTests PUBLIC
+    src 
+    ${CATCH_INCLUDE_DIR}
+    )
 add_dependencies(ParfaitSerialTests catch)

@@ -1,37 +1,37 @@
 #include "VectorTools.h"
 #include "CGNSElements.h"
 #include "MessagePasser.h"
-
+#include "EdgeBuilder.h"
 template<typename MeshType>
 std::vector <std::vector<int>> Parfait::NodeToNodeBuilder<MeshType>::   buildNodeToNodeConnectivity() {
-    for (int cellId = 0; cellId < mesh.numberOfTets(); cellId++) {
-        auto cell = mesh.getTet(cellId);
-        for (int edge = 0; edge < CGNS::Tet::numberOfEdges(); edge++) {
-            auto e = CGNS::Tet::edge_to_node[edge];
-            addEdge(cell[e[0]], cell[e[1]]);
+    EdgeBuilder edgeBuilder;
+    std::vector<int> cell;
+    for(int i=0;i<mesh.numberOfCells();i++){
+        int n = mesh.numberOfNodesInCell(i);
+        cell.resize(n);
+        switch(n){
+            case 4:
+                edgeBuilder.addCell(cell.data(),CGNS::Tet::edge_to_node);
+                break;
+            case 5:
+                edgeBuilder.addCell(cell.data(),CGNS::Pyramid::edge_to_node);
+                break;
+            case 6:
+                edgeBuilder.addCell(cell.data(),CGNS::Prism::edge_to_node);
+                break;
+            case 8:
+                edgeBuilder.addCell(cell.data(),CGNS::Hex::edge_to_node);
+                break;
+            default:
+                throw std::logic_error("NodeToNodeBuilder: only linear volume elements supported");
         }
     }
-    for (int cellId = 0; cellId < mesh.numberOfPyramids(); cellId++) {
-        auto cell = mesh.getPyramid(cellId);
-        for (int edge = 0; edge < CGNS::Pyramid::numberOfEdges(); edge++) {
-            auto e = CGNS::Pyramid::edge_to_node[edge];
-            addEdge(cell[e[0]], cell[e[1]]);
-        }
+
+    for(auto&e : edgeBuilder.edges()){
+        node_to_node[e[0]].insert(e[1]);
+        node_to_node[e[1]].insert(e[0]);
     }
-    for (int cellId = 0; cellId < mesh.numberOfPrisms(); cellId++) {
-        auto cell = mesh.getPrism(cellId);
-        for (int edge = 0; edge < CGNS::Prism::numberOfEdges(); edge++) {
-            auto e = CGNS::Prism::edge_to_node[edge];
-            addEdge(cell[e[0]], cell[e[1]]);
-        }
-    }
-    for (int cellId = 0; cellId < mesh.numberOfHexes(); cellId++) {
-        auto cell = mesh.getHex(cellId);
-        for (int edge = 0; edge < CGNS::Hex::numberOfEdges(); edge++) {
-            auto e = CGNS::Hex::edge_to_node[edge];
-            addEdge(cell[e[0]], cell[e[1]]);
-        }
-    }
+
     std::vector<std::vector<int>> n2n;
     for (auto& row:node_to_node)
         n2n.push_back(std::vector<int>(row.begin(), row.end()));
