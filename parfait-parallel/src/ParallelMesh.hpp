@@ -137,6 +137,13 @@ inline std::vector<int> ParallelMesh::getNodesInCell(int id) const {
     return cell;
 }
 
+inline void ParallelMesh::getNodesInCell(int id,int* cell) const {
+    auto cell_ptr = getCell(id);
+    int n = numberOfNodesInCell(id);
+    for(int i=0;i<n;i++)
+        cell[i] = cell_ptr[i];    
+}
+
 inline std::vector<int> ParallelMesh::getNodesInFace(int id) const {
     auto face_ptr = getFace(id);
     std::vector<int> face;

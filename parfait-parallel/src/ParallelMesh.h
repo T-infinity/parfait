@@ -34,6 +34,7 @@ namespace Parfait {
       int numberOfNodesInCell(int id) const;
       const int* getCell(int id) const;
       std::vector<int> getNodesInCell(int id) const;
+      void getNodesInCell(int id,int* cell) const;
       std::vector<int> getNodesInFace(int id) const;
       int getTriangleTag(int id) const;
       int owningRankOfNode(int id) const;
