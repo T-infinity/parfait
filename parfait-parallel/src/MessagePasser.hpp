@@ -3,7 +3,7 @@
 inline void MessagePasser::Init() {
     int initialized = 0;
     MPI_Initialized(&initialized);
-    if (!initialized)
+    if (not initialized)
         MPI_Init(NULL, NULL);
     const char* comm_name = "MPI_COMM_WORLD";
     MPI_Comm_set_name(MPI_COMM_WORLD, comm_name);
@@ -13,7 +13,7 @@ inline void MessagePasser::InitWithThreads() {
     int initialized = 0;
     MPI_Initialized(&initialized);
     int provided;
-    if (!initialized)
+    if (not initialized)
         MPI_Init_thread(NULL, NULL, MPI_THREAD_MULTIPLE, &provided);
     if (provided != MPI_THREAD_MULTIPLE)
         throw std::logic_error("Could not instantiate MPI runtime with MPI_THREAD_MULTIPLE");
@@ -22,10 +22,13 @@ inline void MessagePasser::InitWithThreads() {
 }
 
 inline void MessagePasser::Finalize() {
-    int finalized = 0;
+    int initialized, finalized;
+    MPI_Initialized(&initialized);
+    if(not initialized) return;
     MPI_Finalized(&finalized);
-    if (!finalized)
+    if (not finalized) {
         MPI_Finalize();
+    }
 }
 
 inline int MessagePasser::Rank() const {
