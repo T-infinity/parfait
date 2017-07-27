@@ -1,14 +1,14 @@
 #include "VectorTools.h"
 #include "CGNSElements.h"
-#include "MessagePasser.h"
 #include "EdgeBuilder.h"
 template<typename MeshType>
-std::vector <std::vector<int>> Parfait::NodeToNodeBuilder<MeshType>::   buildNodeToNodeConnectivity() {
+std::vector <std::vector<int>> Parfait::NodeToNodeBuilder<MeshType>::buildNodeToNodeConnectivity() {
     EdgeBuilder edgeBuilder;
     std::vector<int> cell;
     for(int i=0;i<mesh.numberOfCells();i++){
         int n = mesh.numberOfNodesInCell(i);
         cell.resize(n);
+        mesh.getNodesInCell(i,cell.data());
         switch(n){
             case 4:
                 edgeBuilder.addCell(cell.data(),CGNS::Tet::edge_to_node);

@@ -49,7 +49,7 @@ set(SERIAL_TESTS_SOURCES
         test/PyramidMetricsTests.cpp
         test/PrismMetricsTests.cpp
         test/TetMetricsTests.cpp
-  )
+        test/NodeToNodeBuilderTests.cpp)
 
 
 add_executable(ParfaitSerialTests ${SERIAL_TESTS_SOURCES} ${PARFAIT_CORE_HEADERS})
