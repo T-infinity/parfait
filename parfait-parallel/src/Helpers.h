@@ -4,6 +4,7 @@
 #include <ParallelMesh.h>
 #include <SyncPattern.h>
 #include <MessagePasser.h>
+#include "SyncPattern.h"
 
 namespace Helpers {
     inline Parfait::Point<double> computeTriangleArea(
@@ -58,12 +59,12 @@ namespace Helpers {
   }
 
   template<typename Mesh>
-  SyncPattern getNodeSyncPattern(std::shared_ptr<MessagePasser> mp, Mesh& mesh) {
+  Parfait::SyncPattern getNodeSyncPattern(std::shared_ptr<MessagePasser> mp, Mesh& mesh) {
       std::vector<long> have;
       std::vector<long> need;
       std::tie(have, need) = buildHaveNeedForNodes(mp, mesh);
 
-      auto s = SyncPattern(buildSyncPattern(mp, have, need));
+      auto s = Parfait::SyncPattern(Parfait::SyncPattern::build(mp, have, need));
       return s;
   }
 }

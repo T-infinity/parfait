@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <map>
+#include <set>
 #include "MessagePasser.h"
 
 namespace Parfait {
