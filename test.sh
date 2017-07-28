@@ -3,9 +3,10 @@ set -e
 
 cd build
 make
-cd parfait-core
-./ParfaitSerialTests
+cd parfait
+mpirun -np 1 ./ParfaitTests -d yes
+mpirun -np 2 ./ParfaitTests -d yes
 cd ..
-cd parfait-parallel
-mpirun -np 1 ./ParfaitParallelTests
-mpirun -np 2 ./ParfaitParallelTests
+cd MessagePasser
+mpirun -np 1 ./MessagePasserTests
+mpirun -np 2 ./MessagePasserTests
