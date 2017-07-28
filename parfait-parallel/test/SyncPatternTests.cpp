@@ -17,7 +17,7 @@ TEST_CASE("Sync Pattern Exists") {
         need = std::vector<long> {0,1,2,3};
     }
 
-    SyncPattern syncPattern = buildSyncPattern(mp, have, need);
+    Parfait::SyncPattern syncPattern = Parfait::SyncPattern::build(mp, have, need);
     if(mp->NumberOfProcesses() < 2){
         REQUIRE_THROWS(syncPattern.send_to.at(1));
         REQUIRE_THROWS(syncPattern.receive_from.at(1));

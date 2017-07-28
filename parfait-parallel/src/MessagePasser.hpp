@@ -1,4 +1,21 @@
 #include <stdexcept>
+#include <mpi.h>
+
+inline MessagePasser::MessagePasser()
+        :communicator(MPI_COMM_WORLD) {
+}
+inline MessagePasser::MessagePasser(MPI_Comm comm)
+        : communicator(comm) {
+
+}
+inline MPI_Comm MessagePasser::getCommunicator() const {
+    return communicator;
+}
+
+inline void MessagePasser::setCommunicator(MPI_Comm comm) {
+    communicator = comm;
+}
+
 
 inline void MessagePasser::Init() {
     int initialized = 0;

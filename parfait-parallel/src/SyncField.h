@@ -30,7 +30,7 @@ class Syncer {
 public:
     Syncer(std::shared_ptr<MessagePasser> mp,
            Field& f,
-           const SyncPattern& syncPattern) : mp(mp), f(f), syncPattern(syncPattern) {
+           const Parfait::SyncPattern& syncPattern) : mp(mp), f(f), syncPattern(syncPattern) {
     }
 
     void start() {
@@ -73,7 +73,7 @@ public:
 private:
     std::shared_ptr<MessagePasser> mp;
     Field& f;
-    const SyncPattern& syncPattern;
+    const Parfait::SyncPattern& syncPattern;
     std::map<int, std::vector<T>> recv_buffer;
     std::map<int, std::vector<T>> send_buffer;
     std::vector<MessagePasser::MessageStatus> send_statuses;
@@ -81,7 +81,7 @@ private:
 };
 
 template<typename T, typename Field>
-void syncField(std::shared_ptr<MessagePasser> mp, Field& f, const SyncPattern& syncPattern) {
+void syncField(std::shared_ptr<MessagePasser> mp, Field& f, const Parfait::SyncPattern& syncPattern) {
     Syncer<T, Field> syncer(mp, f, syncPattern);
     syncer.start();
     syncer.finish();
@@ -89,7 +89,7 @@ void syncField(std::shared_ptr<MessagePasser> mp, Field& f, const SyncPattern& s
 
 template<typename T>
 void syncVector(std::shared_ptr<MessagePasser> mp, std::vector<T>& vec, std::map<long, int>& global_to_local,
-                SyncPattern& sync_pattern) {
+                Parfait::SyncPattern& sync_pattern) {
     SyncWrapper<T> syncer(vec, global_to_local);
     syncField<T>(mp, syncer, sync_pattern);
 }

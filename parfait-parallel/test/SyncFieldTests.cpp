@@ -48,7 +48,7 @@ TEST_CASE("Field Exists Tests") {
     }
 
     f.global_to_local = buildGlobalToLocal(global_ids);
-    auto sync_pattern = buildSyncPattern(mp, {global_ids.begin(), global_ids.begin()+4},
+    auto sync_pattern = Parfait::SyncPattern::build(mp, {global_ids.begin(), global_ids.begin()+4},
                                          {global_ids.begin()+4, global_ids.end()});
 
     syncField<double>(mp, f, sync_pattern);

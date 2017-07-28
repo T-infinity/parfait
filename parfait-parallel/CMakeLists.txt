@@ -41,16 +41,9 @@ file(GLOB_RECURSE PARFAIT_HEADERS
         src/*.hpp
         )
 
-file(GLOB_RECURSE MESSAGE_PASSER_HEADERS
-        src/Mess*.h
-        src/Mess*.hpp
-        )
 
 set(SOURCE_FILES
-        src/Helpers.cpp
-        src/SurfaceElementWinding.cpp
         src/SurfaceNeighbors.cpp
-        src/SyncPattern.cpp
         )
 
 set(PARFAIT_PARALLEL_TESTS_SRC
@@ -79,23 +72,13 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         test/NodeBasedRedistributorTests.cpp
         test/PreProcessorTests.cpp
         test/ParallelMeshReaderTests.cpp
-        src/MessagePasser.cpp
         )
-
-add_library(MessagePasser src/MessagePasser.cpp ${SOURCE_FILES} ${PARFAIT_HEADERS})
-target_include_directories(MessagePasser PUBLIC
-    ../parfait-core/src
-        src
-    )
-add_library(MessagePasser_static src/MessagePasser.cpp ${SOURCE_FILES} ${PARFAIT_HEADERS})
-target_include_directories(MessagePasser_static PUBLIC
-    ../parfait-core/src
-        src
-    )
 
 add_executable(ParfaitParallelTests
         ${PARFAIT_PARALLEL_TESTS_SRC}
-        ${HEADERS})
+        ${PARFAIT_HEADERS}
+        )
+
 target_include_directories(ParfaitParallelTests PUBLIC
         ../parfait-core/src/
         src
@@ -106,10 +89,10 @@ target_include_directories(ParfaitParallelTests PUBLIC
         ${JSON_INCLUDE_DIR}
         ${CATCH_INCLUDE_DIR}
 )
+
 add_dependencies(ParfaitParallelTests catch)
 
 target_link_libraries(ParfaitParallelTests
-        MessagePasser
         ${MPI_LIBRARIES}
         ${PARMETIS_LIBRARY}
         ${METIS_LIBRARY}
@@ -117,10 +100,6 @@ target_link_libraries(ParfaitParallelTests
 
 install(FILES ${PARFAIT_HEADERS}  ${MESSAGE_PASSER_HEADERS}
         DESTINATION parfait/include)
-
-    install(TARGETS MessagePasser MessagePasser_static
-        EXPORT parfait-targets
-        DESTINATION parfait/lib)
 
 install(FILES parfaitConfig.cmake
         DESTINATION parfait)
