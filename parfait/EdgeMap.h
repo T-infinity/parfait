@@ -1,6 +1,11 @@
 #pragma once
 #include <array>
 #include <vector>
+#include <stdexcept>
+
+#include "GenericMeshTools.h"
+#include "CellToCell.h"
+
 namespace Parfait {
     template<class MeshType>
     class EdgeMap {
@@ -22,11 +27,7 @@ namespace Parfait {
     private:
         std::vector<std::vector<int>> buildNodeToEdge();
     };
-}
 
-#include "GenericMeshTools.h"
-#include "CellToCell.h"
-namespace Parfait{
     template<typename MeshType>
     int EdgeMap<MeshType>::getOtherNode(const Edge &e, int node1) {
         if (e[0] == node1) {

@@ -3,6 +3,7 @@
 #include "ParallelMesh.h"
 #include "Helpers.h"
 
+namespace Parfait {
 struct BoundaryGhostEdge {
 public:
     int boundary_tag;
@@ -70,4 +71,5 @@ inline std::vector<BoundaryGhostEdge> buildBoundaryEdges(const Parfait::Parallel
         }
     }
     return output;
+}
 }

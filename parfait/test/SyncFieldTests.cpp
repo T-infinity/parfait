@@ -51,7 +51,7 @@ TEST_CASE("Field Exists Tests") {
     auto sync_pattern = Parfait::SyncPattern::build(mp, {global_ids.begin(), global_ids.begin()+4},
                                          {global_ids.begin()+4, global_ids.end()});
 
-    syncField<double>(mp, f, sync_pattern);
+    Parfait::syncField<double>(mp, f, sync_pattern);
 
 
     REQUIRE(f.data[5] == 5);
