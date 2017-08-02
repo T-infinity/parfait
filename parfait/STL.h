@@ -56,8 +56,6 @@ namespace Parfait {
         Parfait::Adt3DExtent adt;
         Point LoopClosest(const Point &point, double &dist) const;
     };
-
-
   }
 }
 
