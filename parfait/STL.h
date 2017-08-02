@@ -16,6 +16,8 @@ namespace Parfait {
     public:
         STL() = default;
         STL(const std::vector<Facet>& facets):facets(facets){}
+        template <typename P>
+        void addFacet(const P& p1, const P& p2, const P& p3);
 
         std::string filename;
         std::vector<Facet> facets;
