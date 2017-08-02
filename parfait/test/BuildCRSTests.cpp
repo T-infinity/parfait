@@ -12,7 +12,7 @@ TEST_CASE("Build CRS"){
         {2,3,5,6}
     };
 
-    Parfait::CRS crs(graph);
+    Parfait::CRS crs = Parfait::CRS::buildCRSFromGraph(graph);
 
     REQUIRE(8 == crs.ia.size());
     REQUIRE(0 == crs.ia[0]);

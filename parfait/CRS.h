@@ -1,31 +1,33 @@
 #include <string>
 #include <stdexcept>
+#include <vector>
 
 namespace Parfait {
 
     class CRS {
         public:
-            explicit CRS(const std::vector<std::vector<int>>& graph){
-                ia.resize(graph.size()+1);
-                ia[0] = 0;
+            static CRS buildCRSFromGraph(const std::vector<std::vector<int>> &graph){
+                CRS crs;
+                crs.ia.resize(graph.size()+1);
+                crs.ia[0] = 0;
                 for(int i = 0; i < graph.size(); i++){
-                    ia[i+1] = ia[i] + graph[i].size();
+                    crs.ia[i+1] = crs.ia[i] + graph[i].size();
                     for(int j = 0; j < graph[i].size(); j++){
                         auto id = graph[i][j];
-                        ja.push_back(id);
+                        crs.ja.push_back(id);
                         if(id == i){
-                            iau.push_back(ia[i] + j);
+                            crs.iau.push_back(crs.ia[i] + j);
                         }
                     }
                 }
-
+                return crs;
             }
 
             int getLocation(int i, int j){
                 if(i == j){
                     return iau[i];
                 }
-                for(int search = ia[i]; search < ia[i+1]; search++){
+                for(auto search = ia[i]; search < ia[i+1]; search++){
                     if(ja[search] == j)
                         return search;
                 }
