@@ -41,4 +41,7 @@ TEST_CASE("STL add facet"){
 
     Parfait::STL::STL stl;
     stl.addFacet(p1, p2, p3);
+    REQUIRE(stl.facets[0].points[0][0] == Approx(0));
+    REQUIRE(stl.facets[0].points[2][0] == Approx(1));
+
 }
