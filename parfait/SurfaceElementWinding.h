@@ -46,15 +46,8 @@ namespace Parfait {
         return (Parfait::Point<double>::dot(out_direction, surface_area) > 0);
     }
 
-    template<typename T>
-    void swap(T& a, T& b) {
-        auto t = a;
-        a = b;
-        b = t;
-    }
-
     inline void rewindTriangle(int* triangle) {
-        swap(triangle[1], triangle[2]);
+        std::swap(triangle[1], triangle[2]);
     }
 
     inline void rewindQuad(int* quad) {
