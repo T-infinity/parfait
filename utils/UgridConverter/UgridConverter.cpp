@@ -7,7 +7,7 @@
 #include <json.hpp>
 #include "CommandLineParser.h"
 #include "../../parfait/ExplodedMesh.h"
-
+#include "../../parfait/STL.h"
 
 std::string stripExtension(std::string in){
     return in.substr(0,in.rfind(".ugrid"));
@@ -53,6 +53,31 @@ void writeOutputFile(std::shared_ptr<ImportedUgrid> ugrid, std::string filename,
         Parfait::ExplodedMesh explodedMesh(*ugrid.get());;
         Parfait::VtkUnstructuredWriter writer(filename + ".exploded", explodedMesh);
         writer.writeBinary();
+    } else if(file_type == "stl") {
+        Parfait::STL::STL stl;
+        for(int t = 0; t < ugrid->triangles.size() / 3; t++){
+            auto* tri = &ugrid->triangles[3*t];
+            Parfait::Facet f = Parfait::Facet{ugrid->getPoint(tri[0]),
+                                              ugrid->getPoint(tri[1]),
+                                              ugrid->getPoint(tri[2])};
+            f.normal[0] = ugrid->triangleTags[t];
+            stl.facets.push_back(f);
+        }
+        for(int q = 0; q < ugrid->quads.size() / 4; q++){
+            auto* quad = &ugrid->quads[4*q];
+            Parfait::Facet f = {ugrid->getPoint(quad[0]),
+                                ugrid->getPoint(quad[1]),
+                                ugrid->getPoint(quad[2])};
+            f.normal[0] = ugrid->quadTags[q];
+            stl.facets.push_back(f);
+
+            f = {ugrid->getPoint(quad[2]),
+                 ugrid->getPoint(quad[3]),
+                 ugrid->getPoint(quad[0])};
+            f.normal[0] = ugrid->quadTags[q];
+            stl.facets.push_back(f);
+        }
+        stl.writeAsciiFile(filename);
     } else {
         std::cout << "Request <" << file_type << "> is unknown" << std::endl;
     }

@@ -9,7 +9,7 @@ inline void printHelpAndExit(){
     printf("Output arguments:\n");
     printf("   -o <output filename>\n");
     printf("   -ot <output file type>\n");
-    printf("      options: [vtk, vtk-surface, vtk-exploded, lb8 ]\n");
+    printf("      options: [vtk, vtk-surface, vtk-exploded, lb8, stl ]\n");
     exit(0);
 }
 
