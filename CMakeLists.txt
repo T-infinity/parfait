@@ -7,6 +7,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 #--------------- Add catch as external project----------------------------------------------------------------
 include(ExternalProject)
 find_package(Git REQUIRED)
+find_package(nlohmann_json REQUIRED)
 
 
 ExternalProject_Add(
