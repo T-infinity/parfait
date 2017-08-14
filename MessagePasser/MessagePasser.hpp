@@ -26,18 +26,6 @@ inline void MessagePasser::Init() {
     MPI_Comm_set_name(MPI_COMM_WORLD, comm_name);
 }
 
-inline void MessagePasser::InitWithThreads() {
-    int initialized = 0;
-    MPI_Initialized(&initialized);
-    int provided;
-    if (not initialized)
-        MPI_Init_thread(NULL, NULL, MPI_THREAD_MULTIPLE, &provided);
-    if (provided != MPI_THREAD_MULTIPLE)
-        throw std::logic_error("Could not instantiate MPI runtime with MPI_THREAD_MULTIPLE");
-    const char* comm_name = "MPI_COMM_WORLD";
-    MPI_Comm_set_name(MPI_COMM_WORLD, comm_name);
-}
-
 inline void MessagePasser::Finalize() {
     int initialized, finalized;
     MPI_Initialized(&initialized);

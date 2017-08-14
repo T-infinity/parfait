@@ -20,7 +20,6 @@ public:
     MessagePasser(MPI_Comm comm);
     static void Init();
     static void Finalize();
-    static void InitWithThreads();
     int Rank() const;
     int NumberOfProcesses() const;
     void setCommunicator(MPI_Comm comm);
