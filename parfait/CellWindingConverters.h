@@ -15,10 +15,8 @@ namespace Parfait {
 
       template<typename T>
       static void convertPyramid(T* pyramid) {
-          auto tmp = pyramid[2];
-          pyramid[2] = pyramid[4];
-          pyramid[4] = pyramid[3];
-          pyramid[3] = tmp;
+          std::swap(pyramid[2], pyramid[4]);
+          std::swap(pyramid[1], pyramid[3]);
       }
   };
 
@@ -87,10 +85,8 @@ namespace Parfait {
       static void convertHex(T* hex) { }
       template<typename T>
       static void convertPyramid(T* pyramid) {
-          T tmp = pyramid[2];
-          pyramid[2] = pyramid[3];
-          pyramid[3] = pyramid[4];
-          pyramid[4] = tmp;
+          std::swap(pyramid[2], pyramid[4]);
+          std::swap(pyramid[1], pyramid[3]);
       }
   };
 

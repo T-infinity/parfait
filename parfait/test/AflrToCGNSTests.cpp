@@ -20,9 +20,9 @@ TEST_CASE("AflrToCGNS, pyramidsDoChange") {
     converter.convertPyramid(pyramid.data());
 
     REQUIRE(pyramid[0]==original[0]);
-    REQUIRE(pyramid[1]==original[1]);
-    REQUIRE(pyramid[2]==original[3]);
-    REQUIRE(pyramid[3]==original[4]);
+    REQUIRE(pyramid[1]==original[3]);
+    REQUIRE(pyramid[2]==original[4]);
+    REQUIRE(pyramid[3]==original[1]);
     REQUIRE(pyramid[4]==original[2]);
 }
 
