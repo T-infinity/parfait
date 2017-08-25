@@ -36,6 +36,7 @@ set(SERIAL_TESTS_SOURCES
         test/Adt3DPointTests.cpp
         test/AdtTests.cpp
         test/AflrToCGNSTests.cpp
+        test/BlockSparseMatrixTests.cpp
         test/BuildCRSTests.cpp
         test/CartBlockSliceTests.cpp
         test/CartBlockTests.cpp
