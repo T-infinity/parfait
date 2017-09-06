@@ -102,6 +102,8 @@ namespace Parfait {
           std::string parallel_filename = base_name + ".pvtu";
           pwriter->SetFileName(parallel_filename.c_str());
           pwriter->SetNumberOfPieces(nproc);
+          pwriter->SetStartPiece(0);
+          pwriter->SetEndPiece(nproc-1);
           pwriter->SetInputData(vtk_grid);
           pwriter->Write();
       }
