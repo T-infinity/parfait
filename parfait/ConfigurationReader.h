@@ -9,7 +9,7 @@
 #include <parfait/MapbcReader.h>
 #include <MessagePasser/MessagePasser.h>
 #include <parfait/Point.h>
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 #include <fstream>
 
 namespace Parfait {

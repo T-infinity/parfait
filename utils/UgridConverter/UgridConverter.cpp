@@ -4,7 +4,7 @@
 #include <VtkUnstructuredSurfaceWriter.h>
 #include <iostream>
 #include <memory>
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 #include "CommandLineParser.h"
 #include "../../parfait/ExplodedMesh.h"
 #include "../../parfait/STL.h"
