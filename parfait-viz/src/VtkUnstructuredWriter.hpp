@@ -94,19 +94,23 @@ namespace Parfait {
     inline void VtkUnstructuredWriter::writeBinary() {
         writeLocalFile(base_name+".vtu");
     }
-  inline void VtkUnstructuredWriter::writeBinary(int rank,int nproc) {
-      writeLocalFile(base_name+"_"+std::to_string(rank)+".vtu");
-      if (0 == rank) {
+	inline void VtkUnstructuredWriter::writeBinary(int rank,int nproc) {
+		auto communicator = vtkSmartPointer<vtkHackCommunicator>::New();
+		auto controller = vtkSmartPointer<vtkHackController>::New();
+		controller->SetCommunicator(communicator);
+
+		controller->SetNumberOfProcesses(nproc);
+		controller->SetRank(rank);
           vtkSmartPointer<vtkXMLPUnstructuredGridWriter> pwriter =
               vtkSmartPointer<vtkXMLPUnstructuredGridWriter>::New();
           std::string parallel_filename = base_name + ".pvtu";
+		  pwriter->SetController(controller);
           pwriter->SetFileName(parallel_filename.c_str());
           pwriter->SetNumberOfPieces(nproc);
-          pwriter->SetStartPiece(0);
-          pwriter->SetEndPiece(nproc-1);
+          pwriter->SetStartPiece(rank);
+          pwriter->SetEndPiece(rank);
           pwriter->SetInputData(vtk_grid);
           pwriter->Write();
-      }
 
   }
 
