@@ -19,6 +19,7 @@ set(PARFAIT_VIZ_HEADERS
         src/VtkUnstructuredWriter.hpp
         src/VtkUnstructuredSurfaceWriter.h
         src/VtkUnstructuredSurfaceWriter.hpp
+        src/VtkHacking.h
         )
 
 install(FILES ${PARFAIT_VIZ_HEADERS} 

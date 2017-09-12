@@ -1,6 +1,7 @@
 #pragma once
 
 
+#include "VtkHacking.h"
 #include <string>
 #include <vector>
 #include <vtkSmartPointer.h>
@@ -18,7 +19,6 @@
 #include <stdio.h>
 #include <vtkXMLUnstructuredGridWriter.h>
 #include <vtkXMLPUnstructuredGridWriter.h>
-
 namespace Parfait {
     class VtkUnstructuredWriter {
     public:
