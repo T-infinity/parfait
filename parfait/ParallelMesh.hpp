@@ -1,12 +1,12 @@
-using namespace Parfait;
 #include <MessagePasser/MessagePasser.h>
 
+namespace Parfait {
 inline ParallelMeshBuilder::ParallelMeshBuilder(std::shared_ptr<MessagePasser> mp) :
-        messagePasser(mp), data(std::make_shared<ParallelMeshData>()) {}
+    messagePasser(mp), data(std::make_shared<ParallelMeshData>()) {}
 
 inline ParallelMeshBuilder::ParallelMeshBuilder(std::shared_ptr<MessagePasser> mp,
                                                 ParallelMesh mesh) :
-        messagePasser(mp), data(mesh.data) {
+    messagePasser(mp), data(mesh.data) {
 }
 
 inline std::shared_ptr<ParallelMesh> ParallelMeshBuilder::exportMesh() {
@@ -21,7 +21,7 @@ inline int ParallelMesh::countOwnedNodes() const {
 
 inline ParallelMesh::ParallelMesh(std::shared_ptr<MessagePasser> messagePasser,
                                   ParallelMeshBuilder builder)
-        : messagePasser(messagePasser), data(builder.data) {
+    : messagePasser(messagePasser), data(builder.data) {
 }
 
 inline int ParallelMesh::numberOfNodes() const {
@@ -60,7 +60,7 @@ inline int ParallelMesh::numberOfTets() const {
     return int(data->tets.size() / 4);
 }
 
-inline const int* ParallelMesh::getTet(int id) const {
+inline const int *ParallelMesh::getTet(int id) const {
     return &(data->tets[4 * id]);
 }
 
@@ -68,7 +68,7 @@ inline int ParallelMesh::numberOfPyramids() const {
     return int(data->pyramids.size() / 5);
 }
 
-inline const int* ParallelMesh::getPyramid(int id) const {
+inline const int *ParallelMesh::getPyramid(int id) const {
     return &(data->pyramids[5 * id]);
 }
 
@@ -76,7 +76,7 @@ inline int ParallelMesh::numberOfPrisms() const {
     return int(data->prisms.size() / 6);
 }
 
-inline const int* ParallelMesh::getPrism(int id) const {
+inline const int *ParallelMesh::getPrism(int id) const {
     return &(data->prisms[6 * id]);
 }
 
@@ -84,19 +84,19 @@ inline int ParallelMesh::numberOfHexes() const {
     return int(data->hexs.size() / 8);
 }
 
-inline const int* ParallelMesh::getHex(int id) const {
+inline const int *ParallelMesh::getHex(int id) const {
     return &(data->hexs[8 * id]);
 }
 inline int ParallelMesh::numberOfTriangles() const {
     return int(data->triangles.size() / 3);
 }
-inline const int* ParallelMesh::getTriangle(int id) const {
+inline const int *ParallelMesh::getTriangle(int id) const {
     return &(data->triangles[3 * id]);
 }
 inline int ParallelMesh::numberOfQuads() const {
     return int(data->quads.size() / 4);
 }
-inline const int* ParallelMesh::getQuad(int id) const {
+inline const int *ParallelMesh::getQuad(int id) const {
     return &(data->quads[4 * id]);
 }
 
@@ -116,7 +116,7 @@ inline int ParallelMesh::numberOfNodesInCell(int id) const {
     return 8;
 }
 
-inline const int* ParallelMesh::getCell(int id) const {
+inline const int *ParallelMesh::getCell(int id) const {
     if (id < numberOfTets())
         return getTet(id);
     id -= numberOfTets();
@@ -137,11 +137,11 @@ inline std::vector<int> ParallelMesh::getNodesInCell(int id) const {
     return cell;
 }
 
-inline void ParallelMesh::getNodesInCell(int id,int* cell) const {
+inline void ParallelMesh::getNodesInCell(int id, int *cell) const {
     auto cell_ptr = getCell(id);
     int n = numberOfNodesInCell(id);
-    for(int i=0;i<n;i++)
-        cell[i] = cell_ptr[i];    
+    for (int i = 0; i < n; i++)
+        cell[i] = cell_ptr[i];
 }
 
 inline std::vector<int> ParallelMesh::getNodesInFace(int id) const {
@@ -156,7 +156,7 @@ inline int ParallelMesh::numberOfFaces() const {
     return numberOfTriangles() + numberOfQuads();
 }
 
-inline const int* ParallelMesh::getFace(int id) const {
+inline const int *ParallelMesh::getFace(int id) const {
     if (id < numberOfTriangles())
         return getTriangle(id);
     id -= numberOfTriangles();
@@ -175,7 +175,7 @@ inline int ParallelMesh::getFaceTag(int id) const {
     id -= numberOfTriangles();
     return getQuadTag(id);
 }
-
+}
 
 
 

@@ -8,14 +8,14 @@ TEST_CASE("Add dual metrics tet"){
     std::vector<Parfait::Point<double>> xyz = {{0,0,0}, {1,0,0}, {1,1,0}, {0,0,1}};
     std::vector<int> tet = {0,1,2,3};
 
-    DualMetrics dual_metrics(4, 6);
+    Parfait::DualMetrics dual_metrics(4, 6);
     auto getTet = [&](int tet_id) {
         return tet;
     };
     auto getXyz = [&](int node){
         return xyz[node];
     };
-    addTetDualMetrics(getTet, getXyz, 1, edges, dual_metrics);
+    Parfait::addTetDualMetrics(getTet, getXyz, 1, edges, dual_metrics);
 
 
     for(int edge = 0; edge < edges.size(); edge++) {

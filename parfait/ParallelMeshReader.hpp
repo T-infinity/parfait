@@ -53,7 +53,7 @@ inline std::vector<int> setNodeOwnerRank(
     return findNodeOwnerRank(mp, have, need, global_to_local);
 }
 
-inline void ParallelMeshReader::createNodeOwnerRank() {
+inline void Parfait::ParallelMeshReader::createNodeOwnerRank() {
     std::vector<long> have;
     std::set<long> need;
     std::map<long, int> global_to_local;
@@ -71,7 +71,7 @@ inline void ParallelMeshReader::createNodeOwnerRank() {
     meshBuilder->data->nodeOwnerRank = findNodeOwnerRank(mp, have, need, global_to_local);
 }
 
-inline std::shared_ptr<ParallelMesh> Parfait::ParallelMeshReader::readDistributedGrid(
+inline std::shared_ptr<Parfait::ParallelMesh> Parfait::ParallelMeshReader::readDistributedGrid(
         std::shared_ptr<MessagePasser> mp,
         std::string configurationFileName) {
     ConfigurationReader configurationReader(configurationFileName);
@@ -86,7 +86,7 @@ inline std::shared_ptr<ParallelMesh> Parfait::ParallelMeshReader::readDistribute
     return reader.distributeGridsEvenly();
 }
 
-inline std::shared_ptr<ParallelMesh> Parfait::ParallelMeshReader::readDistributedGrid(
+inline std::shared_ptr<Parfait::ParallelMesh> Parfait::ParallelMeshReader::readDistributedGrid(
         std::shared_ptr<MessagePasser> mp,
         std::vector<std::string> gridFiles,
         std::vector<bool> isBigEndian) {
@@ -220,7 +220,7 @@ inline void Parfait::ParallelMeshReader::distributeUgrid() {
     gatherGhostXyz();
 }
 
-inline void ParallelMeshReader::gatherGhostXyz() {
+inline void Parfait::ParallelMeshReader::gatherGhostXyz() {
     int nregular = 0;
     int number_of_nodes = int(meshBuilder->data->xyz.size() / 3);
     for (int i = 0; i < number_of_nodes; ++i)
@@ -232,7 +232,7 @@ inline void ParallelMeshReader::gatherGhostXyz() {
     meshBuilder->data->xyz.insert(meshBuilder->data->xyz.end(), ghostXyz.begin(), ghostXyz.end());
 }
 
-inline void ParallelMeshReader::createNodeComponentIds() {
+inline void Parfait::ParallelMeshReader::createNodeComponentIds() {
     meshBuilder->data->nodeComponentIds = std::vector<int>(localToGlobalId.size());
     for (unsigned int localId = 0; localId < localToGlobalId.size(); localId++) {
         auto globalId = meshBuilder->data->globalNodeIds[localId];
@@ -263,7 +263,7 @@ inline void Parfait::ParallelMeshReader::buildDistributionMaps() {
     }
 }
 
-inline std::shared_ptr<ParallelMesh> Parfait::ParallelMeshReader::distributeGridsEvenly() {
+inline std::shared_ptr<Parfait::ParallelMesh> Parfait::ParallelMeshReader::distributeGridsEvenly() {
     distributeUgrid();
     return meshBuilder->exportMesh();
 }
@@ -558,13 +558,13 @@ inline int Parfait::ParallelMeshReader::numberOfGrids() const {
     return gridFiles.size();
 }
 
-inline void ParallelMeshReader::createLocalToGlobalNodeIdMap() {
+inline void Parfait::ParallelMeshReader::createLocalToGlobalNodeIdMap() {
     for (unsigned int localId = 0; localId < localToGlobalId.size(); localId++) {
         meshBuilder->data->globalNodeIds.push_back(localToGlobalId[localId]);
     }
 }
 
-inline std::vector<double> ParallelMeshReader::getXyzForGhostNodes(std::vector<long>& ghostIds) {
+inline std::vector<double> Parfait::ParallelMeshReader::getXyzForGhostNodes(std::vector<long>& ghostIds) {
     std::vector<long> gatheredIds;
     std::vector<double> gatheredXyz;
     for (int proc = 0; proc < mp->NumberOfProcesses(); ++proc) {
