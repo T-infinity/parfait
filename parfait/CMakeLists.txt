@@ -43,6 +43,7 @@ set(SERIAL_TESTS_SOURCES
         test/CGNSToAflrTests.cpp
         test/CGNSToFun3dTests.cpp
         test/CGNSToVtkTests.cpp
+        test/DualMetricsTests.cpp
         test/ExtentMeshWrapperTests.cpp
         test/EdgeFieldLeastSquaresGradientTests.cpp
         test/ExtentBuilderTests.cpp
