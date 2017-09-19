@@ -31,7 +31,7 @@ private:
     void operator=(const vtkHackCommunicator &)   ;
 };
 
-vtkStandardNewMacro(vtkHackCommunicator);
+inline vtkStandardNewMacro(vtkHackCommunicator);
 
 
 
@@ -74,4 +74,4 @@ private:
     void operator=(const vtkHackController&);
 };
 
-vtkStandardNewMacro(vtkHackController);
+inline vtkStandardNewMacro(vtkHackController);
