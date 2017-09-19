@@ -12,7 +12,7 @@ public:
 };
 
 template <typename Cell, typename C1, typename C2, typename C3> // I'm sorry for terrible type names.
-auto calcDualMetrics(const Cell& cell, int num_nodes,
+std::tuple<std::vector<double>, std::vector<Parfait::Point<double>>> calcDualMetrics(const Cell& cell, int num_nodes,
                         const C1& edge_to_node,
                         const C1& edge_to_face,
                         const C2& edge_centers,
@@ -198,7 +198,7 @@ void addHexDualMetrics(GetCell getCell, GetXyz getXyz, int numberOfCells, const 
 }
 
 template <typename Cell>
-auto calculateTetAreas(const Cell& cell){
+std::vector<Parfait::Point<double>> calculateTetAreas(const Cell& cell){
     std::vector<Parfait::Point<double>> areas(4);
     std::vector<double> volumes;
     int num_nodes = 4;
@@ -211,7 +211,7 @@ auto calculateTetAreas(const Cell& cell){
 }
 
 template <typename Cell>
-auto calculatePrismAreas(const Cell& cell){
+std::vector<Parfait::Point<double>> calculatePrismAreas(const Cell& cell){
     std::vector<Parfait::Point<double>> areas(9);
     std::vector<double> volumes;
     int num_nodes = 6;
