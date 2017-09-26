@@ -49,13 +49,22 @@ public:
     void Send(const T& value, int source) const;
 
     template<typename T>
-    void Send(std::vector<T>& vec, int length, int destination) const;
+    MessageStatus NonBlockingSend(const T& value, int destination) const;
+
+    template<typename T>
+    MessageStatus NonBlockingRecv(const T& value, int source) const;
+
+    template<typename T>
+    void Send(const std::vector<T>& vec, int length, int destination) const;
 
     template<typename T>
     MessageStatus NonBlockingSend(const std::vector<T>& vec, int length, int destination) const;
 
     template<typename T>
     MessageStatus NonBlockingSend(const std::vector<T>& vec, int destination) const;
+
+    template<typename T>
+    MessageStatus NonBlockingRecv(std::vector<T>& vec, int source) const;
 
     template<typename T>
     MessageStatus NonBlockingRecv(std::vector<T>& vec, int length, int source) const;
@@ -67,10 +76,10 @@ public:
     void Recv(std::vector<T>& vec, int length, int source) const;
 
     template<typename T>
-    void Send(std::vector<T>& vec, int destination) const;
+    void Send(const std::vector<T>& vec, int destination) const;
 
     template<typename T>
-    void Send(std::vector<std::vector<T>>& vec, int destination) const;
+    void Send(const std::vector<std::vector<T>>& vec, int destination) const;
 
     template<typename T>
     void Recv(std::vector<std::vector<T>>& vec, int source) const;

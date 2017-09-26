@@ -1,17 +1,17 @@
 
 template<typename T>
-void MessagePasser::Send(std::vector<T>& vec, int length, int destination) const {
+void MessagePasser::Send(const std::vector<T>& vec, int length, int destination) const {
     MPI_Send(vec.data(), length * sizeof(T), MPI_CHAR, destination, 0, getCommunicator());
 }
 
 template<typename T>
-void MessagePasser::Send(std::vector<T>& vec, int destination) const {
+void MessagePasser::Send(const std::vector<T>& vec, int destination) const {
     int length = (int) vec.size();
     Send(vec, length, destination);
 }
 
 template<typename T>
-void MessagePasser::Send(std::vector<std::vector<T>>& vec, int destination) const {
+void MessagePasser::Send(const std::vector<std::vector<T>>& vec, int destination) const {
     // pack into a contiguous buffer
     std::vector<T> sendBuffer;
     std::vector<int> sendBufferMap = {0};
@@ -23,6 +23,13 @@ void MessagePasser::Send(std::vector<std::vector<T>>& vec, int destination) cons
             sendBuffer.push_back(val);
     Send(sendBufferMap, destination);
     Send(sendBuffer, destination);
+}
+
+template<typename T>
+MessagePasser::MessageStatus MessagePasser::NonBlockingSend(const T& value, int destination) const {
+    MessageStatus status;
+    MPI_Isend(&value, sizeof(T), MPI_CHAR, destination, 0, getCommunicator(), status.request());
+    return status;
 }
 
 template<typename T>
