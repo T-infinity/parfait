@@ -57,16 +57,13 @@ namespace Parfait {
             for(auto& pair : rank_needs_from_me){
                 int source_rank = pair.first;
                 auto& vec = pair.second;
-                recv_statuses.emplace_back(MessagePasser::MessageStatus());
-                MPI_Irecv(vec.data(), vec.size(), MPI_LONG, source_rank, 0, mp->getCommunicator(), recv_statuses.back().request());
+                recv_statuses.emplace_back(mp->NonBlockingRecv(vec, vec.size(), source_rank));
             }
 
             std::vector<MessagePasser::MessageStatus> send_statuses;
             for(int r = 0; r < i_need_from_rank.size(); r++){
                 if(i_need_from_rank[r].size() == 0) continue;
-                send_statuses.emplace_back(MessagePasser::MessageStatus());
-                MPI_Isend(i_need_from_rank[r].data(), i_need_from_rank[r].size(), MPI_LONG, r, 0, mp->getCommunicator(), send_statuses.back().request());
-
+                send_statuses.emplace_back(mp->NonBlockingSend(i_need_from_rank[r], i_need_from_rank[r].size(), r));
             }
 
             mp->WaitAll(recv_statuses);
