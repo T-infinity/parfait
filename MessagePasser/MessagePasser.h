@@ -12,6 +12,10 @@ public:
     public:
         inline MessageStatus() : r(std::make_shared<MPI_Request>()){}
         inline MPI_Request* request() { return r.get(); }
+        inline void wait() {
+            MPI_Status no_one_cares;
+            MPI_Wait(request(), &no_one_cares);
+        }
     private:
         std::shared_ptr<MPI_Request> r;
     };
@@ -32,9 +36,6 @@ public:
     inline void Barrier() const {
         MPI_Barrier(getCommunicator());
     }
-
-    template<typename StatusType>
-    void Wait(StatusType& status) const;
 
     template<typename StatusType>
     void WaitAll(std::vector<StatusType>& statuses) const;

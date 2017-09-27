@@ -54,9 +54,7 @@ namespace Parfait {
         }
 
         void finish() {
-            for (auto &s : recv_statuses) {
-                mp->Wait(s);
-            }
+            mp->WaitAll(recv_statuses);
 
             for (auto &pair : syncPattern.receive_from) {
                 auto &source = pair.first;
@@ -67,9 +65,7 @@ namespace Parfait {
                 }
             }
 
-            for (auto &s : send_statuses) {
-                mp->Wait(s);
-            }
+            mp->WaitAll(send_statuses);
         }
 
     private:
