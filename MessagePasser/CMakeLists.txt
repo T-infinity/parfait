@@ -45,6 +45,7 @@ set(PARFAIT_PARALLEL_TESTS_SRC
         test/AllGathervTests.cpp
         test/AllGatherTests.cpp
         test/GathervTests.cpp
+        test/MessagePasserStatusTests.cpp
         test/AsyncSends_tests.cpp
         test/ParallelSumTests.cpp
         test/SendRecvScalarTests.cpp

@@ -10,10 +10,10 @@ class MessagePasser {
 public:
     class MessageStatus {
     public:
-        MessageStatus() {}
-        MPI_Request* request() { return &r; }
+        inline MessageStatus() : r(std::make_shared<MPI_Request>()){}
+        inline MPI_Request* request() { return r.get(); }
     private:
-        MPI_Request r;
+        std::shared_ptr<MPI_Request> r;
     };
 
     MessagePasser();
