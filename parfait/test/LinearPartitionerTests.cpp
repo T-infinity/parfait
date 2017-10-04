@@ -70,6 +70,12 @@ TEST_CASE("LinearPartitionerTests, getLocalId"){
     REQUIRE(1 == localId);
 }
 
+TEST_CASE("Linearpartitioner::Range can be made from initializer list"){
+    const Parfait::LinearPartitioner::Range<long> range = {0,100};
+    REQUIRE(range.start == 0);
+    REQUIRE(range.end == 100);
+}
+
 template <typename T>
 bool rangeOwns(const LinearPartitioner::Range<T> &range, T id) {
     return range.owns(id);
