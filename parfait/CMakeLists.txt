@@ -64,6 +64,7 @@ set(SERIAL_TESTS_SOURCES
         test/NodeToCellTests.cpp
         test/EdgeBuilderTests.cpp
         test/HexMetricsTests.cpp
+        test/GraphOrderingsTests.cpp
         test/PyramidMetricsTests.cpp
         test/PrismMetricsTests.cpp
         test/TetMetricsTests.cpp
