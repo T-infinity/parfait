@@ -99,3 +99,6 @@ add_dependencies(ParfaitTests catch)
 
 install(FILES ${PARFAIT_HEADERS}
         DESTINATION parfait/include/parfait)
+
+install(FILES parfaitConfig.cmake
+        DESTINATION parfait)

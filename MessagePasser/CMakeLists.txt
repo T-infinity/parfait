@@ -89,5 +89,5 @@ target_link_libraries(MessagePasserTests
 install(FILES ${MESSAGE_PASSER_HEADERS}
         DESTINATION parfait/include/MessagePasser)
 
-install(FILES parfaitConfig.cmake
+install(FILES MessagePasserConfig.cmake
         DESTINATION parfait)
