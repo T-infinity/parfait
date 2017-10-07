@@ -44,7 +44,7 @@ MessagePasser::MessageStatus MessagePasser::NonBlockingRecv(
 template<typename T>
 MessagePasser::MessageStatus MessagePasser::NonBlockingRecv(
     std::vector<T>& vec, int source) const {
-    static_assert(sizeof(T) == sizeof(T), "NonBlockingRecv does not work for vectors of unknown size");
+    static_assert(sizeof(T) != sizeof(T), "NonBlockingRecv does not work for vectors of unknown size");
 }
 
 
