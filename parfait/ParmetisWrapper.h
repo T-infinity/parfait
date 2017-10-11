@@ -14,7 +14,7 @@ namespace Parfait {
         idx_t weight_flag = 0; // don't weight vertices or edges
         idx_t numflag = 0;    // use C indexing, not fortran
         idx_t ncon = 1;     // Number of weights.....not sure whytf this is 1 instead of 0...
-        idx_t options[3] = {0, 0, 0};
+        idx_t options[3] = {1, 0, 0};
         idx_t edgecut;
         MPI_Comm comm;
     };
