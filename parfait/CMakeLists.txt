@@ -85,13 +85,13 @@ add_executable(ParfaitTests ${SERIAL_TESTS_SOURCES} ${PARFAIT_HEADERS})
 target_include_directories(ParfaitTests PUBLIC
         ../
         ${MPI_INCLUDE_PATH}
-        ${JSON_INCLUDE_DIR}
         ${CATCH_INCLUDE_DIR}
         ${PARMETIS_INCLUDE_DIRS}
         ${METIS_INCLUDE_DIRS}
         )
 target_link_libraries(ParfaitTests
         ${MPI_LIBRARIES}
+        nlohmann_json
         ${PARMETIS_LIBRARY}
         ${METIS_LIBRARY}
         )

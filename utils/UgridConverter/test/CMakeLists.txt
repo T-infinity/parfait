@@ -14,4 +14,6 @@ target_include_directories(UnitTests PUBLIC
         ${JSON_INCLUDE_DIR}
         )
 
+target_link_libraries(UnitTests nlohmann_json)
+
 add_dependencies(UnitTests catch)

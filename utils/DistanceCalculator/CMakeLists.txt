@@ -11,10 +11,10 @@ include_directories(
         ${PARMETIS_INCLUDE_DIRS}
         ${METIS_INCLUDE_DIRS}
         ${MPI_INCLUDE_PATH}
-        ${JSON_INCLUDE_DIR}
 )
 
 add_executable(DistanceCalculator DistanceCalculator.cpp)
+target_link_libraries(DistanceCalculator nlohmann_json)
 
 install(TARGETS DistanceCalculator 
     EXPORT parfait-targets
