@@ -3,9 +3,10 @@
 #include <parfait/ParmetisWrapper.h>
 
 namespace Parfait {
-  inline std::vector<int> ParmetisPartitioner::generatePartVector(
+    template<typename ContainerOfContainers>
+    std::vector<int> ParmetisPartitioner::generatePartVector(
           std::shared_ptr<MessagePasser> mp,
-          const std::vector<std::vector<long>>& node_to_node) {
+          const ContainerOfContainers& node_to_node) {
       //convert connectivity to flat arrays
       std::vector<long> ia(node_to_node.size() + 1, 0);
       for (auto i = 0; i < node_to_node.size(); i++)

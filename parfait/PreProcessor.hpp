@@ -1,4 +1,3 @@
-#include "Partitioner.h"
 #include "ParallelMeshReader.h"
 #include "ParallelNodeToNodeBuilder.h"
 #include <thread>
@@ -26,11 +25,8 @@ namespace Parfait {
       Parfait::ParallelNodeToNodeBuilder<Parfait::ParallelMesh> n2n_builder(*mesh.get());
       auto n2n = n2n_builder.buildNodeToNodeConnectivity();
       auto after_building_node_to_node = Now();
-      std::shared_ptr<Parfait::Partitioner> partitioner;
 
-      partitioner = std::make_shared<Parfait::ParmetisPartitioner>();
-
-      auto part = partitioner->generatePartVector(mp, n2n);
+      auto part = ParmetisPartitioner::generatePartVector(mp, n2n);
       auto after_parmetis = Now();
       NodeBasedRedistributor distributor(mp, mesh, part);
       auto distributed = distributor.redistribute();
