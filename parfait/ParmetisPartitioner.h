@@ -1,12 +1,12 @@
 #pragma once
+#include "MessagePasser/MessagePasser.h"
 #include <vector>
-#include "Partitioner.h"
-
 namespace Parfait {
-  class ParmetisPartitioner : public Partitioner {
+  class ParmetisPartitioner {
   public:
-      std::vector<int> generatePartVector(std::shared_ptr<MessagePasser> mp,
-                                          const std::vector<std::vector<long>>& node_to_node);
+      template<typename ContainerOfContainers>
+      static std::vector<int> generatePartVector(std::shared_ptr<MessagePasser> mp,
+                                          const ContainerOfContainers& node_to_node);
   };
 }
 
