@@ -72,23 +72,16 @@ set(SERIAL_TESTS_SOURCES
         test/SyncPatternTests.cpp
         )
 
+# create the cmake-3.0 target
+add_library(parfait INTERFACE)
+target_include_directories(parfait INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} ${MPI_INCLUDE_PATH} ${METIS_INCLUDE_DIRS} ${PARMETIS_INCLUDE_DIRS})
+target_link_libraries(parfait INTERFACE ${MPI_LIBRARIES} nlohmann_json ${METIS_LIBRARY} ${PARMETIS_LIBRARY})
 
 add_executable(ParfaitTests ${SERIAL_TESTS_SOURCES} ${PARFAIT_HEADERS})
-target_include_directories(ParfaitTests PUBLIC
-        ../
-        ${MPI_INCLUDE_PATH}
-        ${CATCH_INCLUDE_DIR}
-        ${PARMETIS_INCLUDE_DIRS}
-        ${METIS_INCLUDE_DIRS}
-        )
-target_link_libraries(ParfaitTests
-        ${MPI_LIBRARIES}
-        nlohmann_json
-        ${PARMETIS_LIBRARY}
-        ${METIS_LIBRARY}
-        )
-add_dependencies(ParfaitTests catch)
+target_include_directories(ParfaitTests PUBLIC ${CATCH_INCLUDE_DIR} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/..)
+target_link_libraries(ParfaitTests parfait)
 
+add_dependencies(ParfaitTests catch)
 
 install(FILES ${PARFAIT_HEADERS}
         DESTINATION parfait/include/parfait)
