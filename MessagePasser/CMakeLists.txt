@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.6)
 
 PROJECT(ParfaitParallelTests)
 include ( FindPackageHandleStandardArgs )
@@ -12,13 +12,6 @@ find_library ( PARMETIS_LIBRARY NAMES parmetis)
 find_library ( METIS_LIBRARY NAMES metis)
 find_package_handle_standard_args ( METIS_LIBRARY DEFAULT_MSG METIS_LIBRARY )
 find_package_handle_standard_args ( PARMETIS_LIBRARY DEFAULT_MSG PARMETIS_LIBRARY )
-if(NOT PARMETIS_LIBRARY)
-    message(FATAL_ERROR "parmetis not found")
-endif()
-
-if(NOT METIS_LIBRARY)
-    message(FATAL_ERROR "metis not found")
-endif()
 
 add_definitions(
         -DPARFAIT_WITH_PARMETIS
