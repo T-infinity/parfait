@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 
-PROJECT(Parfait)
+PROJECT(parfait)
 set (CMAKE_CXX_STANDARD 14)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 
 #--------------- Add catch as external project----------------------------------------------------------------
 include(ExternalProject)

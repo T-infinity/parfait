@@ -11,19 +11,11 @@ find_library ( PARMETIS_LIBRARY NAMES parmetis)
 find_library ( METIS_LIBRARY NAMES metis)
 find_package_handle_standard_args ( METIS_LIBRARY DEFAULT_MSG METIS_LIBRARY )
 find_package_handle_standard_args ( PARMETIS_LIBRARY DEFAULT_MSG PARMETIS_LIBRARY )
-if(NOT PARMETIS_LIBRARY)
-    message(FATAL_ERROR "parmetis not found")
-endif()
-
-if(NOT METIS_LIBRARY)
-    message(FATAL_ERROR "metis not found")
-endif()
 
 file(GLOB_RECURSE PARFAIT_HEADERS
         "*.h"
         "*.hpp"
         )
-
 
 add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/grids/6cell.lb8.ugrid")
 add_definitions(-DSIX_CELL_TEST_JSON="${CMAKE_SOURCE_DIR}/grids/6cell.json")

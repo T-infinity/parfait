@@ -18,9 +18,7 @@ target_include_directories(GridConverter PUBLIC
         ${METIS_INCLUDE_DIRS}
         ${MPI_INCLUDE_PATH}
         )
-target_link_libraries(GridConverter
-    nlohmann_json
-    )
+target_link_libraries(GridConverter nlohmann_json)
 
 
 install(TARGETS GridConverter
