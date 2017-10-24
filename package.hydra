@@ -1,4 +1,0 @@
-package:
-    name: parfait
-    external-deps: [mpi]
-    t-inf-deps: []
