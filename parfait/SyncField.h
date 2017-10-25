@@ -86,8 +86,8 @@ namespace Parfait {
     }
 
     template<typename T>
-    void syncVector(std::shared_ptr<MessagePasser> mp, std::vector<T> &vec, std::map<long, int> &global_to_local,
-                    Parfait::SyncPattern &sync_pattern) {
+    void syncVector(std::shared_ptr<MessagePasser> mp, std::vector<T> &vec, const std::map<long, int> &global_to_local,
+                    const Parfait::SyncPattern &sync_pattern) {
         SyncWrapper<T> syncer(vec, global_to_local);
         syncField<T>(mp, syncer, sync_pattern);
     }
