@@ -52,6 +52,7 @@ set(SERIAL_TESTS_SOURCES
         test/STLTests.cpp
         test/VectorToolsTests.cpp
         test/GenericMeshToolsTests.cpp
+        test/MinimumStorageSetTests.cpp
         test/ImportedUgridTests.cpp
         test/NodeToCellTests.cpp
         test/EdgeBuilderTests.cpp
