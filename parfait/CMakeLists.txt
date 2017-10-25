@@ -32,6 +32,7 @@ set(SERIAL_TESTS_SOURCES
         test/BuildCRSTests.cpp
         test/CartBlockSliceTests.cpp
         test/CartBlockTests.cpp
+        test/CGNSFaceExtractionTests.cpp
         test/CGNSToAflrTests.cpp
         test/CGNSToFun3dTests.cpp
         test/CGNSToVtkTests.cpp
