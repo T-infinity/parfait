@@ -5,3 +5,4 @@ set (CMAKE_CXX_STANDARD 14)
 
 add_subdirectory(UgridConverter)
 add_subdirectory(DistanceCalculator)
+add_subdirectory(STLHelp)

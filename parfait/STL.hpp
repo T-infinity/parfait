@@ -18,9 +18,9 @@ void STL::addFacet(const P& p1, const P& p2, const P& p3){
 
 inline void STL::rescale(double scale) {
     for (unsigned int i = 0; i < facets.size(); i++) {
-        for (unsigned int j = 0; j < 3; j++) { facets[i][0][j] /= scale; }
-        for (unsigned int j = 0; j < 3; j++) { facets[i][1][j] /= scale; }
-        for (unsigned int j = 0; j < 3; j++) { facets[i][2][j] /= scale; }
+        for (unsigned int j = 0; j < 3; j++) { facets[i][0][j] *= scale; }
+        for (unsigned int j = 0; j < 3; j++) { facets[i][1][j] *= scale; }
+        for (unsigned int j = 0; j < 3; j++) { facets[i][2][j] *= scale; }
     }
 }
 
@@ -32,7 +32,7 @@ inline void STL::scaleToUnitLength() {
 inline void STL::scaleToUnitLength(const Extent &d) {
     translateCenterToOrigin(d);
     double length = getLongestCartesianLength(d);
-    rescale(length);
+    rescale(1.0/length);
 }
 
 inline double STL::getLongestCartesianLength(const Extent &d){

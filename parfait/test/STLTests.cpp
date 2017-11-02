@@ -43,5 +43,17 @@ TEST_CASE("STL add facet"){
     stl.addFacet(p1, p2, p3);
     REQUIRE(stl.facets[0].points[0][0] == Approx(0));
     REQUIRE(stl.facets[0].points[2][0] == Approx(1));
+}
+
+TEST_CASE("STL scaled"){
+    std::array<double, 3> p1 = {0,0,0};
+    std::array<double, 3> p2 = {1,0,0};
+    std::array<double, 3> p3 = {1,1,0};
+
+    Parfait::STL::STL stl;
+    stl.addFacet(p1, p2, p3);
+    stl.rescale(10);
+    REQUIRE(stl.facets[0].points[0][0] == Approx(0.0));
+    REQUIRE(stl.facets[0].points[2][0] == Approx(10.0));
 
 }
