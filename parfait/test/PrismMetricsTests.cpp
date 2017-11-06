@@ -122,7 +122,7 @@ TEST_CASE("Prism Cell Center"){
 
     auto cell_center = Parfait::CGNS::Prism::computeCenter(prism);
     REQUIRE(cell_center[0] == Approx(0.5));
-    REQUIRE(cell_center[1] == Approx(0.16666));
+    REQUIRE(cell_center[1] == Approx(0.1666666));
     REQUIRE(cell_center[2] == Approx(0.5));
 }
 
