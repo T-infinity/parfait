@@ -33,10 +33,10 @@ namespace Parfait {
       Point operator/=(const T a);
       Point operator+=(const Point &rhs);
       Point operator-=(const Point &rhs);
-      bool operator==(const Point &rhs);
-      bool operator!=(const Point &rhs);
-      bool operator<(const Point &rhs);
-      bool operator>(const Point &rhs);
+      bool operator==(const Point &rhs) const;
+      bool operator!=(const Point &rhs) const;
+      bool operator<(const Point &rhs) const;
+      bool operator>(const Point &rhs) const;
       bool approxEqual(const Point &rhs, T tol = 1.0e-14) const;
       void normalize();
       T magnitude() const;

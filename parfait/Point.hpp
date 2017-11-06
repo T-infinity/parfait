@@ -92,7 +92,7 @@ namespace Parfait {
   }
 
   template <typename T>
-  bool Point<T>::operator==(const Point<T> &rhs) {
+  bool Point<T>::operator==(const Point<T> &rhs) const{
     if (pos[0] != rhs.pos[0])
       return false;
     if (pos[1] != rhs.pos[1])
@@ -103,12 +103,12 @@ namespace Parfait {
   }
 
   template <typename T>
-  bool Point<T>::operator!=(const Point<T> &rhs) {
+  bool Point<T>::operator!=(const Point<T> &rhs) const {
       return not (*this == rhs);
   }
 
   template <typename T>
-  bool Point<T>::operator<(const Point<T> &rhs) {
+  bool Point<T>::operator<(const Point<T> &rhs) const {
       if (pos[0] < rhs.pos[0])
           return true;
       else if(pos[0] > rhs.pos[0])
@@ -125,7 +125,7 @@ namespace Parfait {
   }
 
     template <typename T>
-    bool Point<T>::operator>(const Point<T> &rhs) {
+    bool Point<T>::operator>(const Point<T> &rhs) const {
         return (not (*this < rhs)) and (not (*this == rhs));
     }
 
