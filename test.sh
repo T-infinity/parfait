@@ -2,7 +2,6 @@
 set -e
 
 cd build
-make
 cd parfait
 mpirun -np 1 ./ParfaitTests -d yes
 mpirun -np 2 ./ParfaitTests -d yes
