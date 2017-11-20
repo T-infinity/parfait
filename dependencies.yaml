@@ -1,2 +1,3 @@
 dependencies:
   - nlohmann_json
+  - catch2

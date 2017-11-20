@@ -71,7 +71,7 @@ target_include_directories(MessagePasserTests PUBLIC
         ${CATCH_INCLUDE_DIR}
 )
 
-add_dependencies(MessagePasserTests catch)
+add_dependencies(MessagePasserTests Catch)
 
 target_link_libraries(MessagePasserTests
         ${MPI_LIBRARIES}

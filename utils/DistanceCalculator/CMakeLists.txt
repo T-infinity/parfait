@@ -4,6 +4,7 @@ PROJECT(DistanceCalculator)
 set (CMAKE_CXX_STANDARD 14)
 
 find_package(OpenMP REQUIRED)
+find_package(nlohmann_json REQUIRED)
 
 add_executable(DistanceCalculator DistanceCalculator.cpp)
 target_link_libraries(DistanceCalculator PUBLIC parfait nlohmann_json)
