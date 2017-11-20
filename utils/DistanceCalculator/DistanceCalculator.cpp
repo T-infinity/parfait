@@ -4,6 +4,7 @@
 #include <memory>
 #include "../../parfait/STL.h"
 #include "../../parfait/StringTools.h"
+#include "../../parfait-viz/src/VtkUnstructuredWriter.h"
 
 std::vector<int> findAllTags(const Parfait::ImportedUgrid& mesh){
     std::set<int> tags;
@@ -109,11 +110,12 @@ auto cacheSurface(const Parfait::ImportedUgrid& ugrid, const std::set<int>& tags
     return Parfait::STL::SearchSTL(stl);
 }
 
-void writeToFile(std::string filename, const std::vector<double>& dist){
+void writeToFile(std::string filename, const std::vector<double>& dist, const std::vector<double>& xyz){
     FILE* fp = fopen(filename.c_str(), "w");
 
+    fprintf(fp, "#nodeId: x y z distance\n");
     for(int n = 0; n < dist.size(); n++){
-        fprintf(fp,"%d: %e\n", n, dist[n]);
+        fprintf(fp,"%d: %1.15e %1.15e %1.15e %1.15e\n", n, xyz[3*n+0], xyz[3*n+1], xyz[3*n+2], dist[n]);
     }
 
     fclose(fp);
@@ -138,7 +140,7 @@ int main(int argc, char* argv[]) {
     }
     std::string filename = argv[1];
 
-    auto ugrid = Parfait::ImportedUgridFactory::readUgrid(filename);
+    auto ugrid = Parfait::ImportedUgridFactory::readUgrid(filename, true);
     auto tags = getWallTags(ugrid);
 
     Parfait::STL::STL stl;
@@ -154,7 +156,10 @@ int main(int argc, char* argv[]) {
         dist[n] = (point - c).magnitude();
     }
 
-    writeToFile("distance.txt", dist);
+    writeToFile("distance.txt", dist, ugrid.nodes);
     writeBoundaryDistances("boundary.txt", dist, determineIfBoundaryNodes(ugrid));
-
+    printf("Exporting <%s> as vtu.", filename.c_str());
+    Parfait::VtkUnstructuredWriter writer(filename, ugrid);
+    writer.addNodeData("distance", dist.data(), 1);
+    writer.writeBinary();
 }
