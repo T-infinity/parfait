@@ -15,4 +15,4 @@ target_include_directories(UnitTests PUBLIC
 
 target_link_libraries(UnitTests nlohmann_json)
 
-add_dependencies(UnitTests catch)
+add_dependencies(UnitTests Catch)

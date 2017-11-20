@@ -3,29 +3,10 @@ cmake_minimum_required(VERSION 3.6)
 PROJECT(parfait)
 set (CMAKE_CXX_STANDARD 14)
 
-
-#--------------- Add catch as external project----------------------------------------------------------------
-include(ExternalProject)
-find_package(Git REQUIRED)
-find_package(nlohmann_json REQUIRED)
-
-
-ExternalProject_Add(
-    catch
-    PREFIX ${CMAKE_BINARY_DIR}/catch
-    URL $ENV{catchdir}
-    TIMEOUT 10
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND ""
-    LOG_DOWNLOAD ON
-   )
-
-# Expose required variable (CATCH_INCLUDE_DIR) to parent scope
-ExternalProject_Get_Property(catch source_dir)
-
-set(CATCH_INCLUDE_DIR ${source_dir}/single_include CACHE INTERNAL "Path to include folder for Catch")
-#---------------- End adding catch as external project -------------------------------------------------------
+# Prepare "Catch" library for other executables
+set(CATCH_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include/catch)
+add_library(Catch INTERFACE)
+target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
 
 add_subdirectory(parfait)
 add_subdirectory(parfait-viz)
