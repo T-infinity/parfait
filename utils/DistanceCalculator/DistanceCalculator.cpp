@@ -133,14 +133,16 @@ void writeBoundaryDistances(std::string filename, const std::vector<double>& dis
     fclose(fp);
 }
 
+bool isBigEndian(std::string filename);
 int main(int argc, char* argv[]) {
     if(argc != 2){
-        std::cout << "Usage DistanceCalculator <filename little endian ugrid>" << std::endl;
+        std::cout << "Usage DistanceCalculator <filename>" << std::endl;
         exit(0);
     }
     std::string filename = argv[1];
+    bool is_big_endian = isBigEndian(filename);
 
-    auto ugrid = Parfait::ImportedUgridFactory::readUgrid(filename, true);
+    auto ugrid = Parfait::ImportedUgridFactory::readUgrid(filename, is_big_endian);
     auto tags = getWallTags(ugrid);
 
     Parfait::STL::STL stl;
@@ -162,4 +164,7 @@ int main(int argc, char* argv[]) {
     Parfait::VtkUnstructuredWriter writer(filename, ugrid);
     writer.addNodeData("distance", dist.data(), 1);
     writer.writeBinary();
+}
+bool isBigEndian(std::string filename) {
+    return filename.find(".b8.") != std::string::npos;
 }
