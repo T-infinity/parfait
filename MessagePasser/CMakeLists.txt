@@ -15,7 +15,6 @@ find_package_handle_standard_args ( PARMETIS_LIBRARY DEFAULT_MSG PARMETIS_LIBRAR
 
 add_definitions(
         -DPARFAIT_WITH_PARMETIS
-        -DCATCH_WITH_MPI
 )
 
 
