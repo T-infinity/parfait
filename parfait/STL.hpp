@@ -116,8 +116,8 @@ inline Parfait::Extent<double> STL::findDomain() const {
     return domain;
 }
 
-inline Parfait::Point<double> SearchSTL::getClosestPoint(const Point &p, double &dist) const {
-    dist = 0.001;
+inline Parfait::Point<double> SearchSTL::getClosestPoint(const Point &p) const {
+    double dist = 0.001;
     return LoopClosest(p, dist);
 }
 
@@ -125,55 +125,42 @@ inline Parfait::Point<double> SearchSTL::getClosestPointWithSeed(const Point &po
     return LoopClosest(point, dist);
 }
 
+inline Parfait::Point<double> SearchSTL::getClosestPointToFacets(const std::vector<int>& facet_indices, const Point& point) const {
+    double dist = std::numeric_limits<double>::max();
+    Parfait::Point<double> closest;
+    for (unsigned int index = 0; index < facet_indices.size(); index++) {
+        auto facetIndex = facet_indices[index];
+        auto &facet = stl.facets[facetIndex];
+        double distanceToFacet;
+        auto candidate_closer = facet.GetClosestPoint(point, distanceToFacet);
+        if (distanceToFacet < dist) {
+            dist = distanceToFacet;
+            closest = candidate_closer;
+        }
+    }
+    return closest;
+}
+
 inline Parfait::Point<double> SearchSTL::LoopClosest(const Point &point, double &dist) const {
-    // Refactor this and below so we can check if a point returned is inside the extent box.
-    bool found = false;
     Point closest;
-    bool done = false;
-    int count = 0;
-    while (!found) {
+    for(int loop = 0; loop < 500; loop++){
         Point offset{dist, dist, dist};
         Extent extent{point - offset, point + offset};
 
         auto inside = adt.retrieve(extent);
-        for (unsigned int index = 0; index < inside.size(); index++) {
-            auto facetIndex = inside[index];
-            auto &facet = stl.facets[facetIndex];
-            double distanceToFacet;
-            Point closestPointOnFacet = facet.GetClosestPoint(point, distanceToFacet);
-            if (distanceToFacet < dist) {
-                {
-                    dist = distanceToFacet;
-                    closest = closestPointOnFacet;
-                    found = true;
-                }
-            }
-        }
-        if (dist < 1.0e-16) {
-            dist = 1.0e-16;
-        }
-        count++;
-        if (count == 50) {
-            fprintf(stderr,
-                    "\n[ERROR]: You are clearly stuck in a loop and can't find the nearest point on the geometry.");
-            fprintf(stderr, "\nSearching From Point: %lf %lf %lf", point[0], point[1], point[2]);
-            throw std::logic_error("Stuck in a loop can't find geometry");
-        }
-        inside.clear();
-        if (!found) {
-            dist *= 2.0;
-        } else if (!done) {
-            // If this is the first candidate node we've found.
-            // Make sure there aren't any closer points that we just barely missed.
-            // Do this by making an extent box that includes things we would have missed
-            // in a spherical extent.
+        if(inside.size() != 0){
             dist *= 1.7;
-            done = true;
-            found = false;
+            Point offset{dist, dist, dist};
+            Extent extent{point - offset, point + offset};
+            inside =  adt.retrieve(extent);
+            return getClosestPointToFacets(inside, point);
         }
+        dist *= 2.0;
     }
 
-    return closest;
+    fprintf(stderr, "\n[ERROR]: You are clearly stuck in a loop and can't find the nearest point on the geometry.");
+    fprintf(stderr, "\nSearching From Point: %lf %lf %lf", point[0], point[1], point[2]);
+    throw std::logic_error("Stuck in a loop can't find geometry");
 }
 
 inline std::vector<Facet> SearchSTL::getFacetsInsideExtent(const Extent &domain) const {
@@ -197,11 +184,6 @@ inline SearchSTL::SearchSTL(const STL &stl_in) : stl(stl_in), adt(stl_in.findDom
 
 inline Facet &STL::operator[](const int i) {
     return facets[i];
-}
-
-inline Parfait::Point<double> SearchSTL::getClosestPoint(const Point &point) const {
-    double distance;
-    return getClosestPoint(point, distance);
 }
 }
 }

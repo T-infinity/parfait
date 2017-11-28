@@ -44,10 +44,10 @@ namespace Parfait {
     public:
         SearchSTL(const STL &stl_in);
 
-        Point getClosestPoint(const Point &point, double &dist) const;
-        Point getClosestPoint(const Point &point) const;
+        Parfait::Point<double> getClosestPoint(const Point &point) const;
         Point getClosestPointWithSeed(const Point &point, double &dist) const;
         std::vector<Facet> getFacetsInsideExtent(const Extent &e) const;
+        Parfait::Point<double> getClosestPointToFacets(const std::vector<int>& facet_indices, const Point& point) const;
 
         Extent findDomain() const { return stl.findDomain(); }
 

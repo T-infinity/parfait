@@ -12,7 +12,7 @@ TEST_CASE("STLTests, Closest"){
 
     STL::SearchSTL searchSTL(stl);
     double distance;
-    auto p = searchSTL.getClosestPoint({2,2,2}, distance);
+    auto p = searchSTL.getClosestPoint({2, 2, 2});
     REQUIRE(p.approxEqual({.5,.5,.5}));
 }
 
