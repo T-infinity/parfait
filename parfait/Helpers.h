@@ -3,7 +3,7 @@
 #include "Point.h"
 #include "ParallelMesh.h"
 #include "SyncPattern.h"
-#include "../MessagePasser/MessagePasser.h"
+#include <MessagePasser/MessagePasser.h>
 #include "SyncPattern.h"
 
 namespace Parfait {

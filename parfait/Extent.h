@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../MessagePasser/MessagePasserStream.h"
+#include <MessagePasser/MessagePasserStream.h>
 #include "Point.h"
 
 namespace Parfait {

@@ -1,6 +1,6 @@
 #include <vector>
 #include <string>
-#include "../MessagePasser/MessagePasser.h"
+#include <MessagePasser/MessagePasser.h>
 
 namespace Parfait {
   inline Configuration::Configuration(int number_of_grids, const std::vector<std::string>& grid_filenames,

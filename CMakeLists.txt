@@ -8,8 +8,7 @@ set(CATCH_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include/catch)
 add_library(Catch INTERFACE)
 target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
 
+add_subdirectory(MessagePasser)
 add_subdirectory(parfait)
 add_subdirectory(parfait-viz)
 add_subdirectory(utils)
-add_subdirectory(MessagePasser)
-

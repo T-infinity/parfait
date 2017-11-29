@@ -10,7 +10,7 @@ add_executable(GridConverter UgridConverter.cpp)
 target_link_libraries(GridConverter ${VTK_LIBRARIES})
 
 target_include_directories(GridConverter PUBLIC ../../parfait-viz/src/ ${VTK_INCLUDE_DIRS} )
-target_link_libraries(GridConverter nlohmann_json parfait)
+target_link_libraries(GridConverter nlohmann_json parfait MessagePasser)
 
 
 install(TARGETS GridConverter

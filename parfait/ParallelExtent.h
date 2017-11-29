@@ -1,5 +1,5 @@
 #pragma once
-#include "../MessagePasser/MessagePasser.h"
+#include <MessagePasser/MessagePasser.h>
 #include "ExtentBuilder.h"
 
 namespace Parfait {

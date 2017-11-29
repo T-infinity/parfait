@@ -78,8 +78,21 @@ target_link_libraries(MessagePasserTests
         ${METIS_LIBRARY}
         )
 
-install(FILES ${MESSAGE_PASSER_HEADERS}
-        DESTINATION parfait/include/MessagePasser)
+add_library(MessagePasser INTERFACE)
+add_library(MessagePasser::MessagePasser ALIAS MessagePasser)
+target_include_directories(MessagePasser INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
+        $<INSTALL_INTERFACE:MessagePasser/include>
+        ${MPI_INCLUDE_PATH})
+
+install(TARGETS MessagePasser
+        EXPORT MessagePasser
+        LIBRARY DESTINATION MessagePasser/lib)
+
+install(FILES ${MESSAGE_PASSER_HEADERS} DESTINATION MessagePasser/include/MessagePasser)
+
+install(EXPORT MessagePasser
+        NAMESPACE MessagePasser:: DESTINATION MessagePasser)
 
 install(FILES MessagePasserConfig.cmake
-        DESTINATION parfait)
+        DESTINATION MessagePasser)

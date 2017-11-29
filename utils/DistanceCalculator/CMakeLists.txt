@@ -9,7 +9,7 @@ find_package(VTK REQUIRED)
 
 add_executable(DistanceCalculator DistanceCalculator.cpp)
 target_include_directories(DistanceCalculator PUBLIC ${VTK_INCLUDE_DIRS})
-target_link_libraries(DistanceCalculator PUBLIC parfait nlohmann_json ${VTK_LIBRARIES} ${OpenMP_C_FLAGS})
+target_link_libraries(DistanceCalculator PUBLIC parfait nlohmann_json ${VTK_LIBRARIES} ${OpenMP_C_FLAGS} MessagePasser)
 target_compile_options(DistanceCalculator PUBLIC ${OpenMP_C_FLAGS} ${OpenMP_CXX_FLAGS})
 
 install(TARGETS DistanceCalculator 

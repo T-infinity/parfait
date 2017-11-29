@@ -2,7 +2,7 @@
 #include <vector>
 #include <map>
 #include <set>
-#include "../MessagePasser/MessagePasser.h"
+#include <MessagePasser/MessagePasser.h>
 
 namespace Parfait {
 

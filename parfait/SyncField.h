@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <map>
-#include "../MessagePasser/MessagePasser.h"
+#include <MessagePasser/MessagePasser.h>
 
 namespace Parfait {
     template<typename T>

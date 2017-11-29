@@ -3,7 +3,7 @@
 #include "STL.h"
 #include "Point.h"
 #include <memory>
-#include "../MessagePasser/MessagePasser.h"
+#include <MessagePasser/MessagePasser.h>
 
 class DistanceCalculator {
 public:

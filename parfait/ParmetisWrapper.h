@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <vector>
-#include "../MessagePasser/MessagePasser.h"
+#include <MessagePasser/MessagePasser.h>
 #include <parmetis.h>
 #include <metis.h>
 

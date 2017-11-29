@@ -76,17 +76,31 @@ set(SERIAL_TESTS_SOURCES
 
 # create the cmake-3.0 target
 add_library(parfait INTERFACE)
-target_include_directories(parfait INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} ${MPI_INCLUDE_PATH} ${METIS_INCLUDE_DIRS} ${PARMETIS_INCLUDE_DIRS})
-target_link_libraries(parfait INTERFACE ${MPI_LIBRARIES} nlohmann_json ${METIS_LIBRARY} ${PARMETIS_LIBRARY})
+target_include_directories(parfait INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:parfait/include>
+        ${MPI_INCLUDE_PATH} ${METIS_INCLUDE_DIRS} ${PARMETIS_INCLUDE_DIRS})
+target_link_libraries(parfait INTERFACE ${MPI_LIBRARIES} ${METIS_LIBRARY} ${PARMETIS_LIBRARY} MessagePasser::MessagePasser)
 
 add_executable(ParfaitTests ${SERIAL_TESTS_SOURCES} ${PARFAIT_HEADERS})
-target_include_directories(ParfaitTests PUBLIC ${CATCH_INCLUDE_DIR} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/..)
-target_link_libraries(ParfaitTests parfait)
+target_include_directories(ParfaitTests PUBLIC ${CATCH_INCLUDE_DIR} PRIVATE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
+        $<INSTALL_INTERFACE:/.>
+        )
+target_link_libraries(ParfaitTests parfait nlohmann_json MessagePasser::MessagePasser)
 
 add_dependencies(ParfaitTests Catch)
 
-install(FILES ${PARFAIT_HEADERS}
-        DESTINATION parfait/include/parfait)
+
+install(TARGETS parfait
+        EXPORT parfait
+        LIBRARY DESTINATION parfait/lib)
+
+install(FILES ${PARFAIT_HEADERS} DESTINATION parfait/include/parfait)
+
+install(EXPORT parfait
+        NAMESPACE parfait:: DESTINATION parfait)
 
 install(FILES parfaitConfig.cmake
         DESTINATION parfait)
+

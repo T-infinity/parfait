@@ -1,3 +1,1 @@
-get_filename_component(SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
-set(PARFAIT_INCLUDE_DIRS ${SELF_DIR}/include)
-
+include("${CMAKE_CURRENT_LIST_DIR}/parfait.cmake")
