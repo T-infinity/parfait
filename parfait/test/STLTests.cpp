@@ -10,7 +10,7 @@ TEST_CASE("STLTests, Closest"){
     auto stl = STLFactory::getUnitCube();
     stl.scaleToUnitLength();
 
-    STL::SearchSTL searchSTL(stl);
+    Parfait::STL::SearchSTL searchSTL(stl);
     double distance;
     auto p = searchSTL.getClosestPoint({2, 2, 2});
     REQUIRE(p.approxEqual({.5,.5,.5}));
@@ -20,7 +20,7 @@ TEST_CASE("STLTests, ClosestBugFixCheck"){
     auto stl = STLFactory::getUnitCube();
     stl.scaleToUnitLength();
 
-    STL::SearchSTL searchSTL(stl);
+    Parfait::STL::SearchSTL searchSTL(stl);
     Parfait::Point<double> p(-1,1,1);
     auto closest = searchSTL.getClosestPoint(p);
     REQUIRE(closest.approxEqual({-.5,.5,.5}));
