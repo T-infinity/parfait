@@ -47,6 +47,7 @@ set(SERIAL_TESTS_SOURCES
         test/SparseMatrixTests.cpp
         test/MeshInterfaceTests.cpp
         test/ParfaitMeshTests.cpp
+        test/TreeDistTests.cpp
         test/PointTest.cpp
         test/StencilLeastSquaresGradientTests.cpp
         test/StringToolsTests.cpp
