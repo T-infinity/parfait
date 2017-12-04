@@ -219,7 +219,7 @@ inline Parfait::Point<double> Parfait::Facet::getNode(int i) const {
     return p;
 }
 
-inline Parfait::Point<double> Parfait::Facet::GetClosestPoint(Point<double> safe, double &dist) const{
+inline Parfait::Point<double> Parfait::Facet::GetClosestPoint(Point<double> safe) const{
 
     Point<double> point = safe;
     Point<double> diff  =  points[0] - point;
@@ -253,214 +253,126 @@ inline Parfait::Point<double> Parfait::Facet::GetClosestPoint(Point<double> safe
             |P0      \
       reg4  | reg5    \ reg6
     */
-    if (s + t <= det)
-    {
-        if (s < (double)0)
-        {
-            if (t < (double)0)  // region 4
-            {
-                if (b0 < (double)0)
-                {
+    if (s + t <= det) {
+        if (s < (double)0) {
+            if (t < (double)0) {
+                if (b0 < (double)0) {
                     t = (double)0;
                     if (-b0 >= a00)
-                    {
                         s = (double)1;
-                        //sqrDistance = a00 + ((double)2)*b0 + c;
-                    }
                     else
-                    {
                         s = -b0/a00;
-                        //sqrDistance = b0*s + c;
-                    }
                 }
-                else
-                {
+                else {
                     s = (double)0;
                     if (b1 >= (double)0)
-                    {
                         t = (double)0;
-                        //sqrDistance = c;
-                    }
                     else if (-b1 >= a11)
-                    {
                         t = (double)1;
-                        //sqrDistance = a11 + ((double)2)*b1 + c;
-                    }
                     else
-                    {
                         t = -b1/a11;
-                        //sqrDistance = b1*t + c;
-                    }
                 }
             }
-            else  // region 3
-            {
+            else {
                 s = (double)0;
                 if (b1 >= (double)0)
-                {
                     t = (double)0;
-                    //sqrDistance = c;
-                }
                 else if (-b1 >= a11)
-                {
                     t = (double)1;
-                    //sqrDistance = a11 + ((double)2)*b1 + c;
-                }
                 else
-                {
                     t = -b1/a11;
-                    //sqrDistance = b1*t + c;
-                }
             }
         }
-        else if (t < (double)0)  // region 5
-        {
+        else if (t < (double)0)  {
             t = (double)0;
             if (b0 >= (double)0)
-            {
                 s = (double)0;
-                //sqrDistance = c;
-            }
             else if (-b0 >= a00)
-            {
                 s = (double)1;
-                //sqrDistance = a00 + ((double)2)*b0 + c;
-            }
             else
-            {
                 s = -b0/a00;
-                //sqrDistance = b0*s + c;
-            }
         }
-        else  // region 0
-        {
-            // minimum at interior point
+        else  {
             double invDet = ((double)1)/det;
             s *= invDet;
             t *= invDet;
-            //sqrDistance = s*(a00*s + a01*t + ((double)2)*b0) +
-            //   t*(a01*s + a11*t + ((double)2)*b1) + c;
         }
     }
-    else
-    {
+    else {
         double tmp0, tmpoints, numer, denom;
 
-        if (s < (double)0)  // region 2
-        {
+        if (s < (double)0) {
             tmp0 = a01 + b0;
             tmpoints = a11 + b1;
-            if (tmpoints > tmp0)
-            {
+            if (tmpoints > tmp0) {
                 numer = tmpoints - tmp0;
                 denom = a00 - ((double)2)*a01 + a11;
-                if (numer >= denom)
-                {
+                if (numer >= denom) {
                     s = (double)1;
                     t = (double)0;
-                    //sqrDistance = a00 + ((double)2)*b0 + c;
                 }
-                else
-                {
+                else {
                     s = numer/denom;
                     t = (double)1 - s;
-                    //sqrDistance = s*(a00*s + a01*t + ((double)2)*b0) +
-                    //t*(a01*s + a11*t + ((double)2)*b1) + c;
                 }
             }
-            else
-            {
+            else {
                 s = (double)0;
                 if (tmpoints <= (double)0)
-                {
                     t = (double)1;
-                    //sqrDistance = a11 + ((double)2)*b1 + c;
-                }
                 else if (b1 >= (double)0)
-                {
                     t = (double)0;
-                    //sqrDistance = c;
-                }
                 else
-                {
                     t = -b1/a11;
-                    //sqrDistance = b1*t + c;
-                }
             }
         }
-        else if (t < (double)0)  // region 6
-        {
+        else if (t < (double)0)  {
             tmp0 = a01 + b1;
             tmpoints = a00 + b0;
-            if (tmpoints > tmp0)
-            {
+            if (tmpoints > tmp0) {
                 numer = tmpoints - tmp0;
                 denom = a00 - ((double)2)*a01 + a11;
-                if (numer >= denom)
-                {
+                if (numer >= denom) {
                     t = (double)1;
                     s = (double)0;
-                    //sqrDistance = a11 + ((double)2)*b1 + c;
                 }
-                else
-                {
+                else {
                     t = numer/denom;
                     s = (double)1 - t;
-                    //sqrDistance = s*(a00*s + a01*t + ((double)2)*b0) +
-                    //t*(a01*s + a11*t + ((double)2)*b1) + c;
                 }
             }
             else
             {
                 t = (double)0;
                 if (tmpoints <= (double)0)
-                {
                     s = (double)1;
-                    //sqrDistance = a00 + ((double)2)*b0 + c;
-                }
                 else if (b0 >= (double)0)
-                {
                     s = (double)0;
-                    //sqrDistance = c;
-                }
                 else
-                {
                     s = -b0/a00;
-                    //sqrDistance = b0*s + c;
-                }
             }
         }
-        else  // region 1
-        {
+        else  {
             numer = a11 + b1 - a01 - b0;
-            if (numer <= (double)0)
-            {
+            if (numer <= (double)0) {
                 s = (double)0;
                 t = (double)1;
-                //sqrDistance = a11 + ((double)2)*b1 + c;
             }
-            else
-            {
+            else {
                 denom = a00 - ((double)2)*a01 + a11;
-                if (numer >= denom)
-                {
+                if (numer >= denom) {
                     s = (double)1;
                     t = (double)0;
-                    //sqrDistance = a00 + ((double)2)*b0 + c;
                 }
-                else
-                {
+                else {
                     s = numer/denom;
                     t = (double)1 - s;
-                    //sqrDistance = s*(a00*s + a01*t + ((double)2)*b0) +
-                    //t*(a01*s + a11*t + ((double)2)*b1) + c;
                 }
             }
         }
     }
 
     point = points[0] + s*edge0 + t*edge1;
-    dist = Point<double>::distance(safe,point);
     return point;
 }
 

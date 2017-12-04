@@ -117,12 +117,12 @@ inline Parfait::Extent<double> STL::findDomain() const {
 }
 
 inline Parfait::Point<double> SearchSTL::getClosestPoint(const Point &p) const {
-    double dist = 0.001;
-    return LoopClosest(p, dist);
+    double radius_seed = 0.001;
+    return LoopClosest(p, radius_seed);
 }
 
-inline Parfait::Point<double> SearchSTL::getClosestPointWithSeed(const Point &point, double &dist) const {
-    return LoopClosest(point, dist);
+inline Parfait::Point<double> SearchSTL::getClosestPointWithSeed(const Point &point, double radius_seed) const {
+    return LoopClosest(point, radius_seed);
 }
 
 inline Parfait::Point<double> SearchSTL::getClosestPointToFacets(const std::vector<int>& facet_indices, const Point& point) const {
@@ -131,8 +131,8 @@ inline Parfait::Point<double> SearchSTL::getClosestPointToFacets(const std::vect
     for (unsigned int index = 0; index < facet_indices.size(); index++) {
         auto facetIndex = facet_indices[index];
         auto &facet = stl.facets[facetIndex];
-        double distanceToFacet;
-        auto candidate_closer = facet.GetClosestPoint(point, distanceToFacet);
+        auto candidate_closer = facet.GetClosestPoint(point);
+        double distanceToFacet = (candidate_closer - point).magnitude();
         if (distanceToFacet < dist) {
             dist = distanceToFacet;
             closest = candidate_closer;
@@ -141,21 +141,21 @@ inline Parfait::Point<double> SearchSTL::getClosestPointToFacets(const std::vect
     return closest;
 }
 
-inline Parfait::Point<double> SearchSTL::LoopClosest(const Point &point, double &dist) const {
+inline Parfait::Point<double> SearchSTL::LoopClosest(const Point &point, double search_radius) const {
     Point closest;
     for(int loop = 0; loop < 500; loop++){
-        Point offset{dist, dist, dist};
+        Point offset{search_radius, search_radius, search_radius};
         Extent extent{point - offset, point + offset};
 
         auto inside = adt.retrieve(extent);
         if(inside.size() != 0){
-            dist *= 1.7;
-            Point offset{dist, dist, dist};
+            search_radius *= 1.71;
+            Point offset{search_radius, search_radius, search_radius};
             Extent extent{point - offset, point + offset};
             inside =  adt.retrieve(extent);
             return getClosestPointToFacets(inside, point);
         }
-        dist *= 2.0;
+        search_radius *= 2.0;
     }
 
     fprintf(stderr, "\n[ERROR]: You are clearly stuck in a loop and can't find the nearest point on the geometry.");

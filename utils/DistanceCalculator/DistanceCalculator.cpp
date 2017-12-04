@@ -161,9 +161,9 @@ int main(int argc, char* argv[]) {
     writeToFile("distance.txt", dist, ugrid.nodes);
     writeBoundaryDistances("boundary.txt", dist, determineIfBoundaryNodes(ugrid));
     printf("Exporting <%s> as vtu.", filename.c_str());
-    Parfait::VtkUnstructuredWriter writer(filename, ugrid);
-    writer.addNodeData("distance", dist.data(), 1);
-    writer.writeBinary();
+    //Parfait::VtkUnstructuredWriter writer(filename, ugrid);
+    //writer.addNodeData("distance", dist.data(), 1);
+    //writer.writeBinary();
 }
 bool isBigEndian(std::string filename) {
     return filename.find(".b8.") != std::string::npos;

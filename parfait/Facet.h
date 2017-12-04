@@ -21,7 +21,7 @@ namespace Parfait {
       bool DoesRayIntersect(const double orig[3], const double dir[3], double &t,
                             bool *confident = nullptr) const;
 
-      Point<double> GetClosestPoint(Point<double> point, double &dist) const;
+      Point<double> GetClosestPoint(Point<double> point) const;
 
       Point<double> &operator[](int i);
       const Point<double> &operator[](int i) const;

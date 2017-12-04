@@ -51,7 +51,7 @@ TEST_CASE("Facet, get closest point"){
 
     Point<double> p = {0,0,0};
     
-    double dist = 0;
-    auto closest = f.GetClosestPoint(p, dist);
+    auto closest = f.GetClosestPoint(p);
+    double dist = (closest - p).magnitude();
     REQUIRE(dist == Approx(0));
 }
