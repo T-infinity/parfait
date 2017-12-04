@@ -141,25 +141,33 @@ inline Parfait::Point<double> SearchSTL::getClosestPointToFacets(const std::vect
     return closest;
 }
 
-inline Parfait::Point<double> SearchSTL::LoopClosest(const Point &point, double search_radius) const {
+inline Parfait::Point<double> SearchSTL::LoopClosest(const Point &query_point, double search_radius) const {
     Point closest;
+    bool found = false;
     for(int loop = 0; loop < 500; loop++){
         Point offset{search_radius, search_radius, search_radius};
-        Extent extent{point - offset, point + offset};
+        Extent extent{query_point - offset, query_point + offset};
 
         auto inside = adt.retrieve(extent);
-        if(inside.size() != 0){
-            search_radius *= 1.71;
-            Point offset{search_radius, search_radius, search_radius};
-            Extent extent{point - offset, point + offset};
-            inside =  adt.retrieve(extent);
-            return getClosestPointToFacets(inside, point);
+        for(auto facet_index : inside){
+            const auto& facet = stl.facets[facet_index];
+            auto closest_point = facet.GetClosestPoint(query_point);
+            auto dist = (closest_point - query_point).magnitude();
+            if(dist < search_radius){
+                closest = closest_point;
+                found = true;
+                search_radius = dist;
+            }
         }
-        search_radius *= 2.0;
+        if(found){
+            return closest;
+        }
+
+        search_radius *= 1.5;
     }
 
     fprintf(stderr, "\n[ERROR]: You are clearly stuck in a loop and can't find the nearest point on the geometry.");
-    fprintf(stderr, "\nSearching From Point: %lf %lf %lf", point[0], point[1], point[2]);
+    fprintf(stderr, "\nSearching From Point: %lf %lf %lf", query_point[0], query_point[1], query_point[2]);
     throw std::logic_error("Stuck in a loop can't find geometry");
 }
 

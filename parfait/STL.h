@@ -54,7 +54,7 @@ namespace Parfait {
     private:
         const STL &stl;
         Parfait::Adt3DExtent adt;
-        Point LoopClosest(const Point &point, double search_radius) const;
+        Point LoopClosest(const Point &query_point, double search_radius) const;
     };
   }
 }

@@ -71,40 +71,42 @@ std::vector<int> determineIfBoundaryNodes(const Parfait::ImportedUgrid& ugrid){
 }
 
 auto cacheSurface(const Parfait::ImportedUgrid& ugrid, const std::set<int>& tags, Parfait::STL::STL& stl){
-    for(int t = 0; t < ugrid.triangles.size() / 3; t++){
-        auto tri = &ugrid.triangles[3*t+0];
+    for(int t = 0; t < ugrid.triangles.size() / 3; t++) {
+        auto tri = &ugrid.triangles[3 * t + 0];
         int tag = ugrid.triangleTags[t];
-        if(not tags.count(tag)) continue;
-        std::array<Parfait::Point<double>, 3> facet;
-        for(int i = 0; i < 3; i++){
-            int n = tri[i];
-            const double* p = &ugrid.nodes[3*n+0];
-            facet[i] = Parfait::Point<double>(p[0], p[1], p[2]);
+        if (tags.count(tag) != 0) {
+            std::array<Parfait::Point<double>, 3> facet;
+            for (int i = 0; i < 3; i++) {
+                int n = tri[i];
+                const double *p = &ugrid.nodes[3 * n + 0];
+                facet[i] = Parfait::Point<double>(p[0], p[1], p[2]);
+            }
+            stl.facets.push_back({facet[0], facet[1], facet[2]});
         }
-        stl.facets.push_back({facet[0], facet[1], facet[2]});
     }
 
-    for(int q = 0; q < ugrid.quads.size() / 4; q++){
-        auto quad = &ugrid.quads[4*q+0];
+    for(int q = 0; q < ugrid.quads.size() / 4; q++) {
+        auto quad = &ugrid.quads[4 * q + 0];
         int tag = ugrid.quadTags[q];
-        if(not tags.count(tag)) continue;
-        std::array<Parfait::Point<double>, 3> facet;
-        const double* p;
-        p = &ugrid.nodes[3*quad[0]+0];
-        facet[0] = Parfait::Point<double>(p[0], p[1], p[2]);
-        p = &ugrid.nodes[3*quad[1]+0];
-        facet[1] = Parfait::Point<double>(p[0], p[1], p[2]);
-        p = &ugrid.nodes[3*quad[2]+0];
-        facet[2] = Parfait::Point<double>(p[0], p[1], p[2]);
-        stl.facets.push_back({facet[0], facet[1], facet[2]});
+        if (tags.count(tag) != 0) {
+            std::array<Parfait::Point<double>, 3> facet;
+            const double *p;
+            p = &ugrid.nodes[3 * quad[0] + 0];
+            facet[0] = Parfait::Point<double>(p[0], p[1], p[2]);
+            p = &ugrid.nodes[3 * quad[1] + 0];
+            facet[1] = Parfait::Point<double>(p[0], p[1], p[2]);
+            p = &ugrid.nodes[3 * quad[2] + 0];
+            facet[2] = Parfait::Point<double>(p[0], p[1], p[2]);
+            stl.facets.push_back({facet[0], facet[1], facet[2]});
 
-        p = &ugrid.nodes[3*quad[2]+0];
-        facet[2] = Parfait::Point<double>(p[0], p[1], p[2]);
-        p = &ugrid.nodes[3*quad[3]+0];
-        facet[3] = Parfait::Point<double>(p[0], p[1], p[2]);
-        p = &ugrid.nodes[3*quad[0]+0];
-        facet[0] = Parfait::Point<double>(p[0], p[1], p[2]);
-        stl.facets.push_back({facet[0], facet[1], facet[2]});
+            p = &ugrid.nodes[3 * quad[2] + 0];
+            facet[2] = Parfait::Point<double>(p[0], p[1], p[2]);
+            p = &ugrid.nodes[3 * quad[3] + 0];
+            facet[3] = Parfait::Point<double>(p[0], p[1], p[2]);
+            p = &ugrid.nodes[3 * quad[0] + 0];
+            facet[0] = Parfait::Point<double>(p[0], p[1], p[2]);
+            stl.facets.push_back({facet[0], facet[1], facet[2]});
+        }
     }
 
     return Parfait::STL::SearchSTL(stl);
