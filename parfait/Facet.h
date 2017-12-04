@@ -18,7 +18,9 @@ namespace Parfait {
                                   const Point<double> &edgehi,
                                   Point<double> &point) const;
 
-      bool DoesRayIntersect(const double orig[3], const double dir[3], double &t,
+      bool DoesRayIntersect(const Parfait::Point<double>& orig,
+                            const Parfait::Point<double>& dir,
+                            double &t,
                             bool *confident = nullptr) const;
 
       Point<double> GetClosestPoint(Point<double> point) const;
@@ -42,9 +44,12 @@ namespace Parfait {
 
       static double getLargestAngleBetween(const std::vector<Facet> &facets);
 
+      bool intersects(const Extent<double> &e);
   private:
       double GetMax(int i);
       double GetMin(int i);
+      bool triBoxOverlap(const Parfait::Point<double>&, const Parfait::Point<double>& boxhalfsize,
+                         const std::array<Parfait::Point<double>, 3>& verts) const;
   };
 }
 

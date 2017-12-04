@@ -55,3 +55,22 @@ TEST_CASE("Facet, get closest point"){
     double dist = (closest - p).magnitude();
     REQUIRE(dist == Approx(0));
 }
+
+TEST_CASE("Facet intersects with Extent"){
+
+    {
+        Facet f({0, 0, .4}, {.5, 0, 0.4}, {0, .5, 0.4});
+        Parfait::Extent<double> e = {{0, 0, 0}, {1, 1, 1}};
+        REQUIRE(f.intersects(e));
+    }
+    {
+        Facet f({0, 0.4, 0}, {.5, .4, 0}, {0, 0.4, 0.5});
+        Parfait::Extent<double> e = {{0, 0, 0}, {1, 1, 1}};
+        REQUIRE(f.intersects(e));
+    }
+    {
+        Facet f({0, 0.4, 1.1}, {.5, .4, 1.1}, {0, 0.4, 1.1});
+        Parfait::Extent<double> e = {{0, 0, 0}, {1, 1, 1}};
+        REQUIRE(not f.intersects(e));
+    }
+}
