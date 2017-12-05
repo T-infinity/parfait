@@ -15,3 +15,15 @@ target_compile_options(DistanceCalculator PUBLIC ${OpenMP_C_FLAGS} ${OpenMP_CXX_
 install(TARGETS DistanceCalculator 
     EXPORT parfait-targets
     DESTINATION parfait/bin)
+
+
+add_executable(TreeDistanceCalculator TreeDistanceCalculator.cpp)
+target_include_directories(TreeDistanceCalculator PUBLIC ${VTK_INCLUDE_DIRS})
+target_link_libraries(TreeDistanceCalculator PUBLIC parfait nlohmann_json ${VTK_LIBRARIES} ${OpenMP_C_FLAGS} MessagePasser)
+target_compile_options(TreeDistanceCalculator PUBLIC ${OpenMP_C_FLAGS} ${OpenMP_CXX_FLAGS})
+
+install(TARGETS TreeDistanceCalculator
+        EXPORT parfait-targets
+        DESTINATION parfait/bin)
+
+

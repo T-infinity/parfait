@@ -5,6 +5,7 @@ set (CMAKE_CXX_STANDARD 14)
 
 find_package(MPI REQUIRED)
 find_package(nlohmann_json REQUIRED)
+find_package(Tracer REQUIRED)
 find_path(PARMETIS_INCLUDE_DIRS parmetis.h)
 find_path(METIS_INCLUDE_DIRS metis.h)
 find_library ( PARMETIS_LIBRARY NAMES parmetis)
@@ -68,6 +69,7 @@ set(SERIAL_TESTS_SOURCES
         test/NodeBasedRedistributorTests.cpp
         test/PreProcessorTests.cpp
         test/ParallelMeshReaderTests.cpp
+        test/TreeDistTests.cpp
         test/DistanceCalculatorTests.cpp
         test/ParallelExtent_test.cpp
         test/GridSystemPreProcessorTests.cpp
@@ -81,7 +83,9 @@ target_include_directories(parfait INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<INSTALL_INTERFACE:parfait/include>
         ${MPI_INCLUDE_PATH} ${METIS_INCLUDE_DIRS} ${PARMETIS_INCLUDE_DIRS})
-target_link_libraries(parfait INTERFACE ${MPI_LIBRARIES} ${METIS_LIBRARY} ${PARMETIS_LIBRARY} MessagePasser::MessagePasser)
+
+target_link_libraries(parfait INTERFACE ${MPI_LIBRARIES} ${METIS_LIBRARY} ${PARMETIS_LIBRARY}
+        MessagePasser::MessagePasser tracer::tracer)
 
 add_executable(ParfaitTests ${SERIAL_TESTS_SOURCES} ${PARFAIT_HEADERS})
 target_include_directories(ParfaitTests PUBLIC ${CATCH_INCLUDE_DIR} PRIVATE

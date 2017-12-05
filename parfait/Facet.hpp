@@ -388,7 +388,7 @@ inline double Parfait::Facet::getLargestAngleBetween(const std::vector<Facet> &f
     return acos(min) * 180 / 3.141592653; //close enough to pi
 }
 
-inline bool Parfait::Facet::intersects(const Parfait::Extent<double> &e) {
+inline bool Parfait::Facet::intersects(const Parfait::Extent<double> &e) const {
 
     Parfait::Point<double> center = 0.5*(e.hi + e.lo);
     Parfait::Point<double> halfs = 0.5*(e.hi - e.lo);

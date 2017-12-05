@@ -44,7 +44,7 @@ namespace Parfait {
 
       static double getLargestAngleBetween(const std::vector<Facet> &facets);
 
-      bool intersects(const Extent<double> &e);
+      bool intersects(const Extent<double> &e) const;
   private:
       double GetMax(int i);
       double GetMin(int i);
