@@ -12,23 +12,32 @@ class OctTree {
             EMPTY, EMPTY, EMPTY, EMPTY
         };
 
-        std::vector<int> inside;
+        std::vector<Parfait::Facet> inside_facets;
     };
 public:
-    void insert(const Parfait::Facet& f, int id){
-
+    void initializeRoot(const Parfait::Facet& f) {
+        auto root = Node();
+        root.parent = Node::ROOT;
+        root.extent = root_extent;
+        root.inside_facets.push_back(f);
+        nodes.push_back(root);
+    }
+    void insert(const Parfait::Facet& f){
+        if(nodes.size() == 0)
+            initializeRoot(f);
     }
     void setMaxDepth(int depth){
         max_depth = depth;
     }
 
-    std::vector<int> retrieve(const Parfait::Point<double>& p, double radius){
-        std::vector<int> inside;
-
-        return inside;
+    Parfait::Point<double> closestPoint(const Parfait::Point<double>& p){
+        auto& f = nodes[0].inside_facets[0];
+        return f.GetClosestPoint(p);
     }
 private:
     int max_depth = 11;
+    Parfait::Extent<double> root_extent = {{0,0,0}, {1,1,1}};
+    std::vector<Node> nodes;
 };
 
 
@@ -54,8 +63,10 @@ TEST_CASE("OctTree Exists"){
     OctTree tree;
     tree.setMaxDepth(8);
     Parfait::Facet f = {{0,0,0}, {1,0,0}, {1,1,1}};
-    tree.insert(f, 7);
+    tree.insert(f);
 
-    auto inside = tree.retrieve({0,0,0}, 1.0);
-    REQUIRE(inside.size() == 1);
+    auto p = tree.closestPoint({10,10,10});
+    REQUIRE(p[0] == Approx(1.0));
+    REQUIRE(p[1] == Approx(1.0));
+    REQUIRE(p[2] == Approx(1.0));
 }
