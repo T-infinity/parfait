@@ -146,6 +146,10 @@ namespace Parfait {
           Tracer::end("closestPoint");
           return current_closest;
       }
+
+      inline std::pair<bool, Parfait::Point<double>> getClosestInSphere(const Parfait::Point<double> &center, double radius) const {
+          return {false, {0,0,0}};
+      }
   private:
       int max_depth = 2;
       const Parfait::Extent<double> root_extent;
@@ -157,7 +161,6 @@ namespace Parfait {
           auto root = Node(root_extent, depth);
           voxels.push_back(root);
       }
-
 
       inline void splitVoxel(int voxel_index) {
           int before_voxel_count = voxels.size();
