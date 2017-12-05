@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <exception>
 #include "STLReader.h"
+#include <Tracer.h>
 
 namespace Parfait {
 namespace STL {
@@ -143,6 +144,7 @@ inline Parfait::Point<double> SearchSTL::getClosestPointToFacets(const std::vect
 
 inline Parfait::Point<double> SearchSTL::LoopClosest(const Point &query_point, double search_radius) const {
     Point closest;
+    Tracer::begin("LoopClosest");
     bool found = false;
     for(int loop = 0; loop < 500; loop++){
         Point offset{search_radius, search_radius, search_radius};
@@ -160,6 +162,7 @@ inline Parfait::Point<double> SearchSTL::LoopClosest(const Point &query_point, d
             }
         }
         if(found){
+            Tracer::end("LoopClosest");
             return closest;
         }
 

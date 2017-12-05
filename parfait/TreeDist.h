@@ -6,6 +6,7 @@
 #include <limits>
 #include <Tracer.h>
 #include <queue>
+#include <stack>
 
 namespace Parfait {
 
@@ -32,7 +33,7 @@ namespace Parfait {
               EMPTY, EMPTY, EMPTY, EMPTY
           };
 
-          std::vector<Parfait::Facet> inside_facets;
+          std::vector<int> inside_facets;
 
           inline bool isLeaf() const {
               for(auto c : children)
@@ -123,7 +124,9 @@ namespace Parfait {
       inline void insert(const Parfait::Facet& f){
           if(voxels.size() == 0)
               initializeRoot();
-          insert(0, f);
+          int facet_id = facets.size();
+          facets.push_back(f);
+          insert(0, f, facet_id);
       }
 
       inline void setMaxDepth(int depth){
@@ -132,7 +135,7 @@ namespace Parfait {
 
       inline Parfait::Point<double> closestPoint(const Parfait::Point<double>& p) const {
           Tracer::begin("closestPoint");
-          std::queue<int> process;
+          std::stack<int> process;
           process.push(0);
           double m = std::numeric_limits<double>::max();
           Parfait::Point<double> current_closest = {m,m,m};
@@ -147,6 +150,7 @@ namespace Parfait {
       int max_depth = 2;
       const Parfait::Extent<double> root_extent;
       std::vector<Node> voxels;
+      std::vector<Parfait::Facet> facets;
 
       inline void initializeRoot() {
           int depth = 0;
@@ -163,17 +167,17 @@ namespace Parfait {
           }
       }
 
-      inline void insert(int voxel_index, const Parfait::Facet& f){
+      inline void insert(int voxel_index, const Parfait::Facet &f, int facet_index) {
           const auto extent = voxels[voxel_index].extent;
           if(f.intersects(extent)) {
               if (voxels[voxel_index].depth == max_depth)
-                  voxels[voxel_index].inside_facets.push_back(f);
+                  voxels[voxel_index].inside_facets.push_back(facet_index);
               else {
                   if (voxels[voxel_index].isLeaf()) {
                       splitVoxel(voxel_index);
                   }
                   for (auto &child : voxels[voxel_index].children) {
-                      insert(child, f);
+                      insert(child, f, facet_index);
                   }
               }
           }
@@ -181,9 +185,9 @@ namespace Parfait {
 
       inline Parfait::Point<double> closestPoint(const Parfait::Point<double> &query_point,
                                                  Parfait::Point<double> current_closest,
-                                                 std::queue<int> &process) const {
+                                                 std::stack<int> &process) const {
 
-          int voxel_index = process.front();
+          int voxel_index = process.top();
           process.pop();
           double min_distance = (query_point - current_closest).magnitude();
 
@@ -210,7 +214,7 @@ namespace Parfait {
                                           Point<double> &current_closest,
                                           double min_distance) const {
           for (const auto f : voxels[voxel_index].inside_facets) {
-              auto p = f.GetClosestPoint(query_point);
+              auto p = facets[f].GetClosestPoint(query_point);
               double dist = (query_point - p).magnitude();
               if (dist < min_distance) {
                   min_distance = dist;

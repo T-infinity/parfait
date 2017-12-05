@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <memory>
+#include <Tracer.h>
 #include "../../parfait/STL.h"
 #include "../../parfait/StringTools.h"
 #include "../../parfait-viz/src/VtkUnstructuredWriter.h"
@@ -148,7 +149,9 @@ int main(int argc, char* argv[]) {
     auto tags = getWallTags(ugrid);
 
     Parfait::STL::STL stl;
+    Tracer::begin("build adt");
     auto searchSTL = cacheSurface(ugrid, tags, stl);
+    Tracer::end("build adt");
 
     int nnodes = ugrid.nodes.size() / 3;
     std::vector<double> dist(nnodes, -1);

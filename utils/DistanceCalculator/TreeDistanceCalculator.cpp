@@ -151,11 +151,15 @@ int main(int argc, char* argv[]) {
 
     auto stl = cacheSurface(ugrid, tags);
     Parfait::OctTree tree(stl.findDomain());
-    tree.setMaxDepth(8);
+    tree.setMaxDepth(3);
+
+    Tracer::begin("building tree");
     for(const auto& f : stl.facets){
         tree.insert(f);
     }
+    Tracer::end("building tree");
 
+    auto start = std::chrono::system_clock::now();
     int nnodes = ugrid.nodes.size() / 3;
     std::vector<double> dist(nnodes, -1);
 #pragma omp parallel for
@@ -165,6 +169,8 @@ int main(int argc, char* argv[]) {
         auto c = tree.closestPoint(p);
         dist[n] = (point - c).magnitude();
     }
+    auto end = std::chrono::system_clock::now();
+    std::cout << "Elapsed time " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << std::endl;
 
     writeToFile("distance.txt", dist, ugrid.nodes);
     writeBoundaryDistances("boundary.txt", dist, determineIfBoundaryNodes(ugrid));
