@@ -26,4 +26,7 @@ inline void Parfait::Adt3DExtent::removeFirst(int id, const Parfait::Extent<doub
                                    unitTransformer.ToUnitSpace(e.hi));
     adt.removeFirst(id, search.data());
 }
+inline Parfait::Extent<double> Parfait::Adt3DExtent::boundingExtent() const {
+    return unitTransformer.getDomain();
+}
 

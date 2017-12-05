@@ -12,6 +12,7 @@ namespace Parfait {
         void store(int id, const Extent<double> &extent);
         std::vector<int> retrieve(const Extent<double> &domain) const;
         void removeFirst(int id, const Extent<double>& e);
+        Parfait::Extent<double> boundingExtent() const;
     private:
         UnitTransformer unitTransformer;
         Adt<6> adt;

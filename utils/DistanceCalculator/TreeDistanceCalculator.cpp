@@ -151,7 +151,7 @@ int main(int argc, char* argv[]) {
 
     auto stl = cacheSurface(ugrid, tags);
     Parfait::OctTree tree(stl.findDomain());
-    tree.setMaxDepth(3);
+    tree.setMaxDepth(8);
 
     Tracer::begin("building tree");
     for(const auto& f : stl.facets){

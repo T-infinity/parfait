@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <exception>
 #include "STLReader.h"
+#include "TreeDist.h"
 #include <Tracer.h>
 
 namespace Parfait {
@@ -118,7 +119,11 @@ inline Parfait::Extent<double> STL::findDomain() const {
 }
 
 inline Parfait::Point<double> SearchSTL::getClosestPoint(const Point &p) const {
-    double radius_seed = 0.001;
+    auto domain = adt.boundingExtent();
+    auto dumb_initial_closest = getClosestPointInExtent(domain, p);
+    double radius_seed = (dumb_initial_closest - p).magnitude();
+    if(radius_seed < 0.001)
+        radius_seed = 0.001;
     return LoopClosest(p, radius_seed);
 }
 
@@ -146,7 +151,7 @@ inline Parfait::Point<double> SearchSTL::LoopClosest(const Point &query_point, d
     Point closest;
     Tracer::begin("LoopClosest");
     bool found = false;
-    for(int loop = 0; loop < 500; loop++){
+    for(int loop = 0; loop < 5000; loop++){
         Point offset{search_radius, search_radius, search_radius};
         Extent extent{query_point - offset, query_point + offset};
 
@@ -166,7 +171,7 @@ inline Parfait::Point<double> SearchSTL::LoopClosest(const Point &query_point, d
             return closest;
         }
 
-        search_radius *= 1.5;
+        search_radius *= 1.2;
     }
 
     fprintf(stderr, "\n[ERROR]: You are clearly stuck in a loop and can't find the nearest point on the geometry.");
