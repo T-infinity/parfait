@@ -2,6 +2,7 @@
 #include <vector>
 #include <parfait/Point.h>
 #include <parfait/Extent.h>
+#include <parfait/ExtentBuilder.h>
 #include <Facet.h>
 #include <limits>
 #include <Tracer.h>
@@ -32,7 +33,7 @@ namespace Parfait {
           inline Node(const Parfait::Extent<double>& e, int depth)
               : extent(e), depth(depth) {
           }
-          const Parfait::Extent<double> extent;
+          Parfait::Extent<double> extent;
           const int depth;
           std::array<int, 8> children {
               EMPTY, EMPTY, EMPTY, EMPTY,
@@ -47,6 +48,7 @@ namespace Parfait {
                       return false;
               return true;
           }
+
           inline Parfait::Extent<double> childExtent(int child) {
               switch(child){
                   case 0: return getChild0Extent(extent);
@@ -67,7 +69,6 @@ namespace Parfait {
               childExtent.hi[2] = 0.5*(childExtent.lo[2] + childExtent.hi[2]);
               return childExtent;
           }
-
           inline Parfait::Extent<double> getChild1Extent(const Parfait::Extent<double> &extent){
               Parfait::Extent<double> childExtent = extent;
               childExtent.lo[0] = 0.5*(childExtent.lo[0] + childExtent.hi[0]);
@@ -75,7 +76,6 @@ namespace Parfait {
               childExtent.hi[2] = 0.5*(childExtent.lo[2] + childExtent.hi[2]);
               return childExtent;
           }
-
           inline Parfait::Extent<double> getChild2Extent(const Parfait::Extent<double> &extent){
               Parfait::Extent<double> childExtent = extent;
               childExtent.lo[0] = 0.5*(childExtent.lo[0] + childExtent.hi[0]);
@@ -83,7 +83,6 @@ namespace Parfait {
               childExtent.hi[2] = 0.5*(childExtent.lo[2] + childExtent.hi[2]);
               return childExtent;
           }
-
           inline Parfait::Extent<double> getChild3Extent(const Parfait::Extent<double> &extent){
               Parfait::Extent<double> childExtent = extent;
               childExtent.lo[1] = 0.5*(childExtent.lo[1] + childExtent.hi[1]);
@@ -91,7 +90,6 @@ namespace Parfait {
               childExtent.hi[2] = 0.5*(childExtent.lo[2] + childExtent.hi[2]);
               return childExtent;
           }
-
           inline Parfait::Extent<double> getChild4Extent(const Parfait::Extent<double> &extent){
               Parfait::Extent<double> childExtent = extent;
               childExtent.hi[0] = 0.5*(childExtent.lo[0] + childExtent.hi[0]);
@@ -99,7 +97,6 @@ namespace Parfait {
               childExtent.lo[2] = 0.5*(childExtent.lo[2] + childExtent.hi[2]);
               return childExtent;
           }
-
           inline Parfait::Extent<double> getChild5Extent(const Parfait::Extent<double> &extent){
               Parfait::Extent<double> childExtent = extent;
               childExtent.lo[0] = 0.5*(childExtent.lo[0] + childExtent.hi[0]);
@@ -107,7 +104,6 @@ namespace Parfait {
               childExtent.lo[2] = 0.5*(childExtent.lo[2] + childExtent.hi[2]);
               return childExtent;
           }
-
           inline Parfait::Extent<double> getChild6Extent(const Parfait::Extent<double> &extent){
               Parfait::Extent<double> childExtent = extent;
               childExtent.lo[0] = 0.5*(childExtent.lo[0] + childExtent.hi[0]);
@@ -115,7 +111,6 @@ namespace Parfait {
               childExtent.lo[2] = 0.5*(childExtent.lo[2] + childExtent.hi[2]);
               return childExtent;
           }
-
           inline Parfait::Extent<double> getChild7Extent(const Parfait::Extent<double> &extent){
               Parfait::Extent<double> childExtent = extent;
               childExtent.lo[1] = 0.5*(childExtent.lo[1] + childExtent.hi[1]);
@@ -128,6 +123,7 @@ namespace Parfait {
       }
 
       inline void insert(const Parfait::Facet& f){
+          if(locked) throw std::logic_error("Cannot insert after calling shrinkExtents()");
           if(voxels.size() == 0)
               initializeRoot();
           int facet_id = facets.size();
@@ -137,6 +133,11 @@ namespace Parfait {
 
       inline void setMaxDepth(int depth){
           max_depth = depth;
+      }
+
+      inline void shrinkExtents(){
+          locked = true;
+          shrinkExtents(0);
       }
 
       inline Parfait::Point<double> closestPoint(const Parfait::Point<double>& p) const {
@@ -154,8 +155,7 @@ namespace Parfait {
       }
 
       inline Parfait::Point<double> getClosest_withSeed(const Parfait::Point<double> &center,
-                                                                         double radius) const {
-          Tracer::begin("getClosest_withSeed");
+                                                        double radius) const {
           double m = std::numeric_limits<double>::max();
           Parfait::Point<double> current_closest = {m,m,m};
           bool found = false;
@@ -163,11 +163,11 @@ namespace Parfait {
               std::tie(found, current_closest) = getClosestInSphere(center, radius, current_closest, m, 0);
               radius *= 1.5;
           }
-          Tracer::end("getClosest_withSeed");
           return current_closest;
       }
   private:
       int max_depth = 2;
+      bool locked = false;
       const Parfait::Extent<double> root_extent;
       std::vector<Node> voxels;
       std::vector<Parfait::Facet> facets;
@@ -280,6 +280,44 @@ namespace Parfait {
               }
           }
           return current_closest;
+      }
+
+      inline Parfait::Extent<double> shrinkExtents(int voxel_index){
+
+          auto extent = determineShrunkExtent(voxel_index);
+          voxels[voxel_index].extent = extent;
+          return extent;
+      }
+
+      Extent<double> determineShrunkExtent(int voxel_index) {
+          if(voxels[voxel_index].isLeaf())
+              return etermineShrunkExtentLeaf(voxel_index);
+          else
+              return determineShrunkExtentChildren(voxel_index);
+      }
+
+      Extent<double> determineShrunkExtentChildren(int voxel_index) {
+          auto extent = ExtentBuilder::createEmptyBuildableExtent(Extent<double>());
+          for(auto& child : voxels[voxel_index].children){
+              if(child != Node::EMPTY){
+                  ExtentBuilder::expandExtentWithAnother(extent, shrinkExtents(child));
+              }
+          }
+          if(extent.hi[0] == std::numeric_limits<double>::min())
+              extent = voxels[voxel_index].extent;
+          return extent;
+      }
+
+      Extent<double> etermineShrunkExtentLeaf(int voxel_index) const {
+          auto extent = ExtentBuilder::createEmptyBuildableExtent(Extent<double>());
+          for(auto& facet_index : voxels[voxel_index].inside_facets){
+              const auto& facet = facets[facet_index];
+              for(int i = 0; i < 3; i++)
+                  ExtentBuilder::addPointToExtent(extent, facet[i]);
+          }
+          if(extent.hi[0] == std::numeric_limits<double>::min())
+              extent = voxels[voxel_index].extent;
+          return extent;
       }
   };
 }

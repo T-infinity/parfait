@@ -174,3 +174,25 @@ TEST_CASE("OctTree find facets inside sphere") {
     REQUIRE(p[1] == Approx(0));
     REQUIRE(p[2] == Approx(0));
 }
+
+TEST_CASE("OctTree shrink extents"){
+    Parfait::Extent<double> e{{0,0,0}, {1,1,1}};
+    Parfait::OctTree tree(e);
+    tree.setMaxDepth(8);
+    Parfait::Facet f = {{0, 0, 0}, {1, 0, 0}, {1, 1, 0.0}};
+    tree.insert(f);
+    f = {{0, 0, 1}, {1, 0, 1}, {1, 1, 1}};
+    tree.insert(f);
+
+    tree.shrinkExtents();
+
+    auto p = tree.getClosest_withSeed({10, 10, 10}, 1);
+    REQUIRE(p[0] == Approx(1));
+    REQUIRE(p[1] == Approx(1));
+    REQUIRE(p[2] == Approx(1));
+
+    p = tree.getClosest_withSeed({0, 0, 0}, 1);
+    REQUIRE(p[0] == Approx(0));
+    REQUIRE(p[1] == Approx(0));
+    REQUIRE(p[2] == Approx(0));
+}

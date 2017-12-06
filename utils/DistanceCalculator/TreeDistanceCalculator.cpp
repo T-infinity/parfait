@@ -158,6 +158,7 @@ int main(int argc, char* argv[]) {
         tree.insert(f);
     }
     Tracer::end("building tree");
+    tree.shrinkExtents();
 
     auto start = std::chrono::system_clock::now();
     int nnodes = ugrid.nodes.size() / 3;
@@ -166,7 +167,7 @@ int main(int argc, char* argv[]) {
     for(int n = 0; n < nnodes; n++){
         auto p = &ugrid.nodes[3*n+0];
         Parfait::Point<double> point(p[0], p[1], p[2]);
-        auto c = tree.getClosest_withSeed(p, 0.01);
+        auto c = tree.closestPoint(p);
         dist[n] = (point - c).magnitude();
     }
     auto end = std::chrono::system_clock::now();
