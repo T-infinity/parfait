@@ -159,6 +159,7 @@ int main(int argc, char* argv[]) {
     }
     Tracer::end("building tree");
     tree.contractExtents();
+    tree.pruneEmpty();
 
     auto start = std::chrono::system_clock::now();
     int nnodes = ugrid.nodes.size() / 3;

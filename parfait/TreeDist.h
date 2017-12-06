@@ -35,7 +35,7 @@ namespace Parfait {
               found_on_surface(false),
               actual_distance(std::numeric_limits<double>::max()){
           }
-          bool isPotentiallyCloser(const Parfait::Point<double> p){
+          bool isPotentiallyCloser(const Parfait::Point<double> p) const {
               double d = (p - query_point).magnitude();
               return (d < actual_distance);
           }
@@ -172,6 +172,12 @@ namespace Parfait {
           shrinkExtents(0);
       }
 
+      inline void pruneEmpty(){
+          Tracer::begin("pruneEmpty");
+          pruneVoxel(0);
+          Tracer::end("pruneEmpty");
+      }
+
       inline Parfait::Point<double> closestPoint(const Parfait::Point<double>& p) const {
           PriorityQueue process;
           process.push(std::make_pair(std::numeric_limits<double>::max(), 0));
@@ -228,7 +234,7 @@ namespace Parfait {
       }
 
       inline CurrentState closestPoint(const Parfait::Point<double> &query_point,
-                                       CurrentState current_state,
+                                       const CurrentState& current_state,
                                        PriorityQueue &process) const {
 
           int voxel_index = process.top().second;
@@ -255,8 +261,8 @@ namespace Parfait {
       }
 
       CurrentState getClosestPointInLeaf(int voxel_index,
-                                          const Point<double> &query_point,
-                                          CurrentState current_state ) const {
+                                         const Point<double> &query_point,
+                                         CurrentState current_state ) const {
           for (const auto f : voxels.at(voxel_index).inside_facets) {
               auto p = facets[f].GetClosestPoint(query_point);
               current_state.changeLocationIfCloser(p);
@@ -297,9 +303,32 @@ namespace Parfait {
               for(int i = 0; i < 3; i++)
                   ExtentBuilder::addPointToExtent(extent, facet[i]);
           }
-          if(extent.hi[0] == std::numeric_limits<double>::min())
-              extent = voxels.at(voxel_index).extent;
+          if(extent.hi[0] == std::numeric_limits<double>::min()){
+              auto c = voxels.at(voxel_index).extent.center();
+              extent = {c, c};
+          }
           return extent;
+      }
+
+      bool pruneVoxel(int voxel_index){
+          if(voxels.at(voxel_index).isLeaf()){
+              if(voxels.at(voxel_index).inside_facets.size() == 0){
+                  return true;
+              }
+              return false;
+          } else {
+              bool prune = true;
+              for(auto& child : voxels.at(voxel_index).children) {
+                  if (child != Node::EMPTY) {
+                      if (pruneVoxel(child)) {
+                          child = Node::EMPTY;
+                      } else {
+                          prune = false;
+                      }
+                  }
+              }
+              return prune;
+          }
       }
   };
 }
