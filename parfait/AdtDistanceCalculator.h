@@ -12,12 +12,11 @@ public:
 
     template <typename FillPoint, typename FillCell, typename CellType>
     DistanceCalculator(std::shared_ptr<MessagePasser> mp, FillPoint fillPoint,FillCell fillCell, CellType cellType,int cell_count)
-            : mp(mp), stl(extractFacets(fillPoint,fillCell,cellType,cell_count)), searchSTL(stl){}
-
-
+            : mp(mp), tree(buildTree(extractFacets(fillPoint,fillCell,cellType,cell_count))){
+    };
 
     inline Parfait::Point<double> closest(const Parfait::Point<double>& p) const {
-        return searchSTL.getClosestPoint(p);
+        return tree.closestPoint(p);
     }
 
     double distance(const Parfait::Point<double>& p) const {
@@ -26,11 +25,28 @@ public:
 
 private:
     std::shared_ptr<MessagePasser> mp;
-    const Parfait::STL::STL stl;
-    const Parfait::STL::SearchSTL searchSTL;
+    Parfait::DistanceTree tree;
 
     template <typename FillPoint, typename FillCell, typename CellType>
     std::vector<Parfait::Facet> extractFacets(FillPoint,FillCell,CellType,int);
+
+
+    Parfait::DistanceTree buildTree(const std::vector<Parfait::Facet>& facets){
+        auto e = Parfait::ExtentBuilder::createEmptyBuildableExtent(Parfait::Extent<double>());
+        for(const auto& f : facets){
+            for(int i = 0; i < 3; i++)
+                Parfait::ExtentBuilder::addPointToExtent(e, f[i]);
+        }
+        Parfait::DistanceTree tree(e);
+        for(const auto& f : facets){
+            tree.insert(f);
+        }
+
+        tree.pruneEmpty();
+        tree.contractExtents();
+
+        return tree;
+    }
 };
 
 template <typename FillPoint, typename FillCell>
