@@ -25,7 +25,7 @@ namespace Parfait {
       return (dist < radius);
   }
 
-  class OctTree {
+  class DistanceTree {
   public:
       typedef std::priority_queue<std::pair<double, int>, std::vector<std::pair<double, int>>, std::greater<>> PriorityQueue;
       class CurrentState{
@@ -151,7 +151,7 @@ namespace Parfait {
               return childExtent;
           }
       };
-      OctTree(const Parfait::Extent<double>& e) :root_extent(e){
+      DistanceTree(const Parfait::Extent<double>& e) :root_extent(e){
       }
 
       inline void insert(const Parfait::Facet& f){

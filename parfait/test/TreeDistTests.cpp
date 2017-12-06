@@ -12,17 +12,17 @@ TEST_CASE("Sphere extent intersection"){
     REQUIRE(Parfait::extentSphereIntersection({{0,0,0},{1,0,0}}, {10,0,0}, 11));
 }
 
-TEST_CASE("OctTree::Node::isLeaf "){
+TEST_CASE("DistanceTree::Node::isLeaf "){
     Parfait::Extent<double> e = {{0,0,0}, {1,1,1}};
     int depth = 0;
-    Parfait::OctTree::Node node(e, depth);
+    Parfait::DistanceTree::Node node(e, depth);
     REQUIRE(node.isLeaf());
 }
 
-TEST_CASE("OctTree::Node::childrenExtent(i)"){
+TEST_CASE("DistanceTree::Node::childrenExtent(i)"){
     Parfait::Extent<double> extent = {{0,0,0}, {1,1,1}};
     int depth = 0;
-    Parfait::OctTree::Node node(extent, depth);
+    Parfait::DistanceTree::Node node(extent, depth);
     SECTION("child 0"){
         auto e = node.childExtent(0);
         REQUIRE(e.lo[0] == Approx(0));
@@ -97,9 +97,9 @@ TEST_CASE("OctTree::Node::childrenExtent(i)"){
     }
 }
 
-TEST_CASE("OctTree Requires domain"){
+TEST_CASE("DistanceTree Requires domain"){
     Parfait::Extent<double> e{{0,0,0}, {1,1,1}};
-    Parfait::OctTree tree(e);
+    Parfait::DistanceTree tree(e);
     tree.setMaxDepth(8);
     Parfait::Facet f = {{0,0,0}, {1,0,0}, {1,1,1}};
     tree.insert(f);
@@ -110,9 +110,9 @@ TEST_CASE("OctTree Requires domain"){
     REQUIRE(p[2] == Approx(1.0));
 }
 
-TEST_CASE("OctTree can store multiple facets") {
+TEST_CASE("DistanceTree can store multiple facets") {
     Parfait::Extent<double> e{{0,0,0}, {1,1,1}};
-    Parfait::OctTree tree(e);
+    Parfait::DistanceTree tree(e);
     tree.setMaxDepth(8);
     Parfait::Facet f = {{0, 0, 0}, {0.5, 0, 0}, {.5, .5, .5}};
     tree.insert(f);
@@ -155,9 +155,9 @@ TEST_CASE("Closest point in AABB"){
     }
 }
 
-TEST_CASE("OctTree shrink extents"){
+TEST_CASE("DistanceTree shrink extents"){
     Parfait::Extent<double> e{{0,0,0}, {1,1,1}};
-    Parfait::OctTree tree(e);
+    Parfait::DistanceTree tree(e);
     tree.setMaxDepth(8);
     Parfait::Facet f = {{0, 0, 0}, {1, 0, 0}, {1, 1, 0.0}};
     tree.insert(f);

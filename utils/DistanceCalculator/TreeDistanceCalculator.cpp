@@ -150,7 +150,7 @@ int main(int argc, char* argv[]) {
 
 
     auto stl = cacheSurface(ugrid, tags);
-    Parfait::OctTree tree(stl.findDomain());
+    Parfait::DistanceTree tree(stl.findDomain());
     tree.setMaxDepth(5);
 
     Tracer::begin("building tree");
