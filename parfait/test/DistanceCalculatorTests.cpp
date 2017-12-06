@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include <parfait/DistanceCalculator.h>
+#include <parfait/AdtDistanceCalculator.h>
 using namespace Parfait;
 TEST_CASE("get distance to triangle"){
     Parfait::Facet f({0,0,0}, {.5,0,0}, {0,.5,0});

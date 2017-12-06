@@ -3,7 +3,7 @@
 #include <parfait/Point.h>
 #include <parfait/Extent.h>
 #include <parfait/ExtentBuilder.h>
-#include <Facet.h>
+#include <parfait/Facet.h>
 #include <limits>
 #include <Tracer.h>
 #include <queue>

@@ -7,22 +7,22 @@ find_package(OpenMP REQUIRED)
 find_package(nlohmann_json REQUIRED)
 find_package(VTK REQUIRED)
 
-add_executable(DistanceCalculator DistanceCalculator.cpp)
-target_include_directories(DistanceCalculator PUBLIC ${VTK_INCLUDE_DIRS})
-target_link_libraries(DistanceCalculator PUBLIC parfait nlohmann_json ${VTK_LIBRARIES} ${OpenMP_C_FLAGS} MessagePasser)
-target_compile_options(DistanceCalculator PUBLIC ${OpenMP_C_FLAGS} ${OpenMP_CXX_FLAGS})
+add_executable(AdtDistanceCalculator AdtDistanceCalculator.cpp)
+target_include_directories(AdtDistanceCalculator PUBLIC ${VTK_INCLUDE_DIRS})
+target_link_libraries(AdtDistanceCalculator PUBLIC parfait nlohmann_json ${VTK_LIBRARIES} ${OpenMP_C_FLAGS} MessagePasser)
+target_compile_options(AdtDistanceCalculator PUBLIC ${OpenMP_C_FLAGS} ${OpenMP_CXX_FLAGS})
 
-install(TARGETS DistanceCalculator 
+install(TARGETS AdtDistanceCalculator
     EXPORT parfait-targets
     DESTINATION parfait/bin)
 
 
-add_executable(TreeDistanceCalculator TreeDistanceCalculator.cpp)
-target_include_directories(TreeDistanceCalculator PUBLIC ${VTK_INCLUDE_DIRS})
-target_link_libraries(TreeDistanceCalculator PUBLIC parfait nlohmann_json ${VTK_LIBRARIES} ${OpenMP_C_FLAGS} MessagePasser)
-target_compile_options(TreeDistanceCalculator PUBLIC ${OpenMP_C_FLAGS} ${OpenMP_CXX_FLAGS})
+add_executable(DistanceCalculator TreeDistanceCalculator.cpp)
+target_include_directories(DistanceCalculator PUBLIC ${VTK_INCLUDE_DIRS})
+target_link_libraries(DistanceCalculator PUBLIC parfait nlohmann_json ${VTK_LIBRARIES} ${OpenMP_C_FLAGS} MessagePasser)
+target_compile_options(DistanceCalculator PUBLIC ${OpenMP_C_FLAGS} ${OpenMP_CXX_FLAGS})
 
-install(TARGETS TreeDistanceCalculator
+install(TARGETS DistanceCalculator
         EXPORT parfait-targets
         DESTINATION parfait/bin)
 
