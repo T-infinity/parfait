@@ -151,18 +151,19 @@ int main(int argc, char* argv[]) {
 
     auto stl = cacheSurface(ugrid, tags);
     Parfait::OctTree tree(stl.findDomain());
-    tree.setMaxDepth(8);
+    tree.setMaxDepth(4);
 
     Tracer::begin("building tree");
     for(const auto& f : stl.facets){
         tree.insert(f);
     }
     Tracer::end("building tree");
-    tree.shrinkExtents();
+//    tree.shrinkExtents();
 
     auto start = std::chrono::system_clock::now();
     int nnodes = ugrid.nodes.size() / 3;
     std::vector<double> dist(nnodes, -1);
+    Tracer::begin("searching");
 #pragma omp parallel for
     for(int n = 0; n < nnodes; n++){
         auto p = &ugrid.nodes[3*n+0];
@@ -170,12 +171,13 @@ int main(int argc, char* argv[]) {
         auto c = tree.closestPoint(p);
         dist[n] = (point - c).magnitude();
     }
+    Tracer::end("searching");
     auto end = std::chrono::system_clock::now();
     std::cout << "Elapsed time " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << std::endl;
 
     writeToFile("distance.txt", dist, ugrid.nodes);
     writeBoundaryDistances("boundary.txt", dist, determineIfBoundaryNodes(ugrid));
-    printf("Exporting <%s> as vtu.", filename.c_str());
+    //printf("Exporting <%s> as vtu.", filename.c_str());
     //Parfait::VtkUnstructuredWriter writer(filename, ugrid);
     //writer.addNodeData("distance", dist.data(), 1);
     //writer.writeBinary();
