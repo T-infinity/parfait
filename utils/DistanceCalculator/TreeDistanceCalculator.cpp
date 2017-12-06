@@ -166,7 +166,7 @@ int main(int argc, char* argv[]) {
     for(int n = 0; n < nnodes; n++){
         auto p = &ugrid.nodes[3*n+0];
         Parfait::Point<double> point(p[0], p[1], p[2]);
-        auto c = tree.closestPoint(p);
+        auto c = tree.getClosest_withSeed(p, 0.01);
         dist[n] = (point - c).magnitude();
     }
     auto end = std::chrono::system_clock::now();

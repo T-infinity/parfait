@@ -9,6 +9,7 @@ TEST_CASE("Sphere extent intersection"){
     double radius = 2.0;
 
     REQUIRE(Parfait::extentSphereIntersection(e, center, radius));
+    REQUIRE(Parfait::extentSphereIntersection({{0,0,0},{1,0,0}}, {10,0,0}, 11));
 }
 
 TEST_CASE("OctTree::Node::isLeaf "){
@@ -158,16 +159,18 @@ TEST_CASE("OctTree find facets inside sphere") {
     Parfait::Extent<double> e{{0,0,0}, {1,1,1}};
     Parfait::OctTree tree(e);
     tree.setMaxDepth(8);
-    Parfait::Facet f = {{0, 0, 0}, {0.5, 0, 0}, {.5, .5, .5}};
+    Parfait::Facet f = {{0, 0, 0}, {1, 0, 0}, {1, 1, 0.0}};
     tree.insert(f);
-    f = {{0.5, 0.5, 0.5}, {1, .5, .5}, {1, 1, 1}};
+    f = {{0, 0, 1}, {1, 0, 1}, {1, 1, 1}};
     tree.insert(f);
 
-    bool found;
-    Parfait::Point<double> p;
-    std::tie(found, p) = tree.getClosestInSphere({10, 10, 10}, 1);
-    REQUIRE(not found);
+    auto p = tree.getClosest_withSeed({10, 10, 10}, 1);
+    REQUIRE(p[0] == Approx(1));
+    REQUIRE(p[1] == Approx(1));
+    REQUIRE(p[2] == Approx(1));
 
-    std::tie(found, p) = tree.getClosestInSphere({0, 0, 0}, 1);
-    REQUIRE(found);
+    p = tree.getClosest_withSeed({0, 0, 0}, 1);
+    REQUIRE(p[0] == Approx(0));
+    REQUIRE(p[1] == Approx(0));
+    REQUIRE(p[2] == Approx(0));
 }

@@ -10,12 +10,18 @@
 
 namespace Parfait {
 
+
   inline Parfait::Point<double> getClosestPointInExtent(const Parfait::Extent<double> &e, Parfait::Point<double> p){
       for(int i = 0; i < 3; i++){
           if(p[i] > e.hi[i]) p[i] = e.hi[i];
           else if(p[i] < e.lo[i]) p[i] = e.lo[i];
       }
       return p;
+  }
+  inline bool extentSphereIntersection(const Parfait::Extent<double>& e, const Parfait::Point<double>& center, const double radius){
+      auto p = getClosestPointInExtent(e, center);
+      double dist = (p - center).magnitude();
+      return (dist < radius);
   }
 
   class OctTree {
@@ -147,8 +153,18 @@ namespace Parfait {
           return current_closest;
       }
 
-      inline std::pair<bool, Parfait::Point<double>> getClosestInSphere(const Parfait::Point<double> &center, double radius) const {
-          return {false, {0,0,0}};
+      inline Parfait::Point<double> getClosest_withSeed(const Parfait::Point<double> &center,
+                                                                         double radius) const {
+          Tracer::begin("getClosest_withSeed");
+          double m = std::numeric_limits<double>::max();
+          Parfait::Point<double> current_closest = {m,m,m};
+          bool found = false;
+          while(not found) {
+              std::tie(found, current_closest) = getClosestInSphere(center, radius, current_closest, m, 0);
+              radius *= 1.5;
+          }
+          Tracer::end("getClosest_withSeed");
+          return current_closest;
       }
   private:
       int max_depth = 2;
@@ -186,6 +202,45 @@ namespace Parfait {
           }
       }
 
+      inline std::pair<bool, Parfait::Point<double>> getClosestInSphere(
+          const Parfait::Point<double> &query_point, double radius,
+          Parfait::Point<double> current_closest,
+          double current_min,
+          int voxel_index) const {
+
+          const auto& e = voxels[voxel_index].extent;
+          if(extentSphereIntersection(e, query_point, radius)){
+              if(voxels[voxel_index].isLeaf()){
+                  auto p = getClosestPointInLeaf(voxel_index, query_point,  current_closest, current_min);
+                  double dist = (query_point - p).magnitude();
+                  if(dist < radius){
+                      return {true, p};
+                  }
+              }
+              else {
+                  bool found = false;
+                  for(auto child : voxels[voxel_index].children){
+                      if(child != Node::EMPTY) {
+                          Parfait::Point<double> p;
+                          bool f;
+                          std::tie(f, p) =
+                              getClosestInSphere(query_point, radius, current_closest, current_min, child);
+                          if(f){
+                              found = true;
+                              double dist = (p - query_point).magnitude();
+                              if(dist < current_min){
+                                  current_closest = p;
+                                  current_min = dist;
+                              }
+                          }
+                      }
+                  }
+                  return {found, current_closest};
+              }
+          }
+          return {false, current_closest};
+      }
+
       inline Parfait::Point<double> closestPoint(const Parfait::Point<double> &query_point,
                                                  Parfait::Point<double> current_closest,
                                                  std::stack<int> &process) const {
@@ -214,7 +269,7 @@ namespace Parfait {
 
       Point<double> getClosestPointInLeaf(int voxel_index,
                                           const Point<double> &query_point,
-                                          Point<double> &current_closest,
+                                          Point<double> current_closest,
                                           double min_distance) const {
           for (const auto f : voxels[voxel_index].inside_facets) {
               auto p = facets[f].GetClosestPoint(query_point);
@@ -226,18 +281,7 @@ namespace Parfait {
           }
           return current_closest;
       }
-
   };
-
-  inline bool extentSphereIntersection(const Parfait::Extent<double>& e, const Parfait::Point<double>& center, const double radius){
-      double r2 = radius * radius;
-      double dmin = 0;
-      for( int i = 0; i < 3; i++ ) {
-          if( center[i] < e.lo[i] ) dmin += std::pow((center[i] - e.lo[i]), 2);
-          else if( center[i] > e.hi[i] ) dmin += std::pow((center[i] - e.hi[i]), 2);
-      }
-      return dmin <= r2;
-  }
 }
 
 
