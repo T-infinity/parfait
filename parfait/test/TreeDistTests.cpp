@@ -164,7 +164,7 @@ TEST_CASE("OctTree shrink extents"){
     f = {{0, 0, 1}, {1, 0, 1}, {1, 1, 1}};
     tree.insert(f);
 
-    tree.shrinkExtents();
+    tree.contractExtents();
 
     auto p = tree.closestPoint({10, 10, 10});
     REQUIRE(p[0] == Approx(1));

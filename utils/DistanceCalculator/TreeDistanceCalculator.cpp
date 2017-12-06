@@ -151,14 +151,14 @@ int main(int argc, char* argv[]) {
 
     auto stl = cacheSurface(ugrid, tags);
     Parfait::OctTree tree(stl.findDomain());
-    tree.setMaxDepth(4);
+    tree.setMaxDepth(5);
 
     Tracer::begin("building tree");
     for(const auto& f : stl.facets){
         tree.insert(f);
     }
     Tracer::end("building tree");
-//    tree.shrinkExtents();
+    tree.contractExtents();
 
     auto start = std::chrono::system_clock::now();
     int nnodes = ugrid.nodes.size() / 3;

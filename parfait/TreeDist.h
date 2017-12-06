@@ -155,7 +155,7 @@ namespace Parfait {
       }
 
       inline void insert(const Parfait::Facet& f){
-          if(locked) throw std::logic_error("Cannot insert after calling shrinkExtents()");
+          if(locked) throw std::logic_error("Cannot insert after calling contractExtents()");
           if(voxels.size() == 0)
               initializeRoot();
           int facet_id = facets.size();
@@ -167,7 +167,7 @@ namespace Parfait {
           max_depth = depth;
       }
 
-      inline void shrinkExtents(){
+      inline void contractExtents(){
           locked = true;
           shrinkExtents(0);
       }
