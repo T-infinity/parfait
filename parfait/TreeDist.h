@@ -36,8 +36,9 @@ namespace Parfait {
               actual_distance(std::numeric_limits<double>::max()){
           }
           bool isPotentiallyCloser(const Parfait::Point<double> p) const {
+              double relative_percent_bounds = 0.0;
               double d = (p - query_point).magnitude();
-              return (d < actual_distance);
+              return (d < (1.0-relative_percent_bounds)*actual_distance);
           }
           void changeLocationIfCloser(const Parfait::Point<double> p){
               found_on_surface = true;
@@ -169,7 +170,7 @@ namespace Parfait {
 
       inline void contractExtents(){
           locked = true;
-          shrinkExtents(0);
+          contraceExtents(0);
       }
 
       inline void pruneEmpty(){
@@ -270,7 +271,7 @@ namespace Parfait {
           return current_state;
       }
 
-      inline Parfait::Extent<double> shrinkExtents(int voxel_index){
+      inline Parfait::Extent<double> contraceExtents(int voxel_index){
 
           auto extent = determineShrunkExtent(voxel_index);
           voxels.at(voxel_index).extent = extent;
@@ -279,7 +280,7 @@ namespace Parfait {
 
       Extent<double> determineShrunkExtent(int voxel_index) {
           if(voxels.at(voxel_index).isLeaf())
-              return etermineShrunkExtentLeaf(voxel_index);
+              return determineShrunkExtentLeaf(voxel_index);
           else
               return determineShrunkExtentChildren(voxel_index);
       }
@@ -288,7 +289,7 @@ namespace Parfait {
           auto extent = ExtentBuilder::createEmptyBuildableExtent(Extent<double>());
           for(auto& child : voxels.at(voxel_index).children){
               if(child != Node::EMPTY){
-                  ExtentBuilder::expandExtentWithAnother(extent, shrinkExtents(child));
+                  ExtentBuilder::expandExtentWithAnother(extent, contraceExtents(child));
               }
           }
           if(extent.hi[0] == std::numeric_limits<double>::min())
@@ -296,7 +297,7 @@ namespace Parfait {
           return extent;
       }
 
-      Extent<double> etermineShrunkExtentLeaf(int voxel_index) const {
+      Extent<double> determineShrunkExtentLeaf(int voxel_index) const {
           auto extent = ExtentBuilder::createEmptyBuildableExtent(Extent<double>());
           for(auto& facet_index : voxels.at(voxel_index).inside_facets){
               const auto& facet = facets[facet_index];
@@ -332,5 +333,3 @@ namespace Parfait {
       }
   };
 }
-
-
