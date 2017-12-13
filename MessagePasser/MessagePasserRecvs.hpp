@@ -1,8 +1,8 @@
-
 #include <type_traits>
 
 template<typename T>
 void MessagePasser::Recv(std::vector<T>& vec, int length, int source) const {
+    static_assert(std::is_trivially_copyable<T>::value, "Must be able to trivially copy datatype for MessagePasser::NonBlockingRecv");
     vec.clear();
     vec.resize(length);
     MPI_Status status;
@@ -11,6 +11,7 @@ void MessagePasser::Recv(std::vector<T>& vec, int length, int source) const {
 
 template<typename T>
 void MessagePasser::Recv(std::vector<T>& vec, int source) const {
+    static_assert(std::is_trivially_copyable<T>::value, "Must be able to trivially copy datatype for MessagePasser::NonBlockingRecv");
     int n = 0;
     MPI_Status status;
     MPI_Probe(source, 0, getCommunicator(), &status);
@@ -21,6 +22,7 @@ void MessagePasser::Recv(std::vector<T>& vec, int source) const {
 
 template<typename T>
 void MessagePasser::Recv(std::vector<std::vector<T>>& vec, int source) const {
+    static_assert(std::is_trivially_copyable<T>::value, "Must be able to trivially copy datatype for MessagePasser::NonBlockingRecv");
     std::vector<int> recvBufferMap;
     std::vector<T> recvBuffer;
     Recv(recvBufferMap, source);
@@ -35,6 +37,7 @@ void MessagePasser::Recv(std::vector<std::vector<T>>& vec, int source) const {
 template<typename T>
 MessagePasser::MessageStatus MessagePasser::NonBlockingRecv(
         std::vector<T>& vec, int length, int source) const {
+    static_assert(std::is_trivially_copyable<T>::value, "Must be able to trivially copy datatype for MessagePasser::NonBlockingRecv");
     MessageStatus status;
     vec.resize(length);
     MPI_Irecv(vec.data(), length * sizeof(T), MPI_CHAR, source, 0, getCommunicator(), status.request());
@@ -45,11 +48,13 @@ template<typename T>
 MessagePasser::MessageStatus MessagePasser::NonBlockingRecv(
     std::vector<T>& vec, int source) const {
     static_assert(sizeof(T) != sizeof(T), "NonBlockingRecv does not work for vectors of unknown size");
+    throw std::logic_error("Can not MessagePasser::NonBlockingRecv with vector of unknown size");
 }
 
 
 template<typename T>
 MessagePasser::MessageStatus MessagePasser::NonBlockingRecv(T &d, int source) const {
+    static_assert(std::is_trivially_copyable<T>::value, "Must be able to trivially copy datatype for MessagePasser::NonBlockingRecv");
     MessageStatus status;
     MPI_Irecv(&d, 1 * sizeof(T), MPI_CHAR, source, 0, getCommunicator(), status.request());
     return status;
