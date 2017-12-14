@@ -1,4 +1,5 @@
 #include <catch.hpp>
+#include <vector>
 #include "../MessagePasser.h"
 
 TEST_CASE("Self Send"){
