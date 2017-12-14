@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 #include <stdexcept>
 #include <vector>
@@ -6,7 +7,7 @@ namespace Parfait {
 
     class CRS {
         public:
-            static CRS buildCRSFromGraph(const std::vector<std::vector<int>> &graph){
+            inline static CRS buildCRSFromGraph(const std::vector<std::vector<int>> &graph){
                 CRS crs;
                 crs.ia.resize(graph.size()+1);
                 crs.ia[0] = 0;
@@ -23,7 +24,7 @@ namespace Parfait {
                 return crs;
             }
 
-            int getLocation(int i, int j){
+            inline int getLocation(int i, int j){
                 if(i == j){
                     return iau[i];
                 }
