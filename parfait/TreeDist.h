@@ -170,10 +170,12 @@ namespace Parfait {
 
       inline void contractExtents(){
           locked = true;
+          if(voxels.size() == 0) return;
           contraceExtents(0);
       }
 
       inline void pruneEmpty(){
+          if(voxels.size() == 0) return;
           Tracer::begin("pruneEmpty");
           pruneVoxel(0);
           Tracer::end("pruneEmpty");
@@ -240,6 +242,7 @@ namespace Parfait {
 
           int voxel_index = process.top().second;
           process.pop();
+          if(voxels.size() == 0) return current_state;
 
           auto closest_possible_to_voxel = getClosestPointInExtent(voxels.at(voxel_index).extent, query_point);
           if(not current_state.isPotentiallyCloser(closest_possible_to_voxel)){
