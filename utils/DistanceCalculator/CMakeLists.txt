@@ -7,7 +7,7 @@ find_package(OpenMP REQUIRED)
 find_package(nlohmann_json REQUIRED)
 find_package(VTK REQUIRED)
 
-add_executable(AdtDistanceCalculator AdtDistanceCalculator.cpp)
+add_executable(AdtDistanceCalculator DistanceCalculator.cpp)
 target_include_directories(AdtDistanceCalculator PUBLIC ${VTK_INCLUDE_DIRS})
 target_link_libraries(AdtDistanceCalculator PUBLIC parfait nlohmann_json ${VTK_LIBRARIES} ${OpenMP_C_FLAGS} MessagePasser)
 target_compile_options(AdtDistanceCalculator PUBLIC ${OpenMP_C_FLAGS} ${OpenMP_CXX_FLAGS})

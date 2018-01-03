@@ -155,6 +155,11 @@ namespace Parfait {
       DistanceTree(const Parfait::Extent<double>& e) :root_extent(e){
       }
 
+      inline void finalize() {
+          contractExtents();
+          pruneEmpty();
+      }
+
       inline void insert(const Parfait::Facet& f){
           if(locked) throw std::logic_error("Cannot insert after calling contractExtents()");
           if(voxels.size() == 0)
@@ -198,7 +203,7 @@ namespace Parfait {
       }
 
   private:
-      int max_depth = 2;
+      int max_depth = 4;
       bool locked = false;
       const Parfait::Extent<double> root_extent;
       std::vector<Node> voxels;

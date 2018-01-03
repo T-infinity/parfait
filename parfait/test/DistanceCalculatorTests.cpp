@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include <parfait/AdtDistanceCalculator.h>
+#include <parfait/DistanceCalculator.h>
 using namespace Parfait;
 
 
