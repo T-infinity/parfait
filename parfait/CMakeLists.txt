@@ -38,6 +38,7 @@ set(SERIAL_TESTS_SOURCES
         test/LinearPartitionerTests.cpp
         test/SparseMatrixTests.cpp
         test/MeshInterfaceTests.cpp
+        test/NormalTests.cpp
         test/ParfaitMeshTests.cpp
         test/TreeDistTests.cpp
         test/PointTest.cpp
