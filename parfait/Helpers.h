@@ -46,11 +46,11 @@ namespace Parfait {
 
         template<typename Mesh>
         std::pair <std::vector<long>, std::vector<long>> buildHaveNeedForNodes(
-                std::shared_ptr <MessagePasser> messagePasser,
+                MessagePasser messagePasser,
                 Mesh &mesh) {
             std::vector<long> have;
             std::vector<long> need;
-            int me = messagePasser->Rank();
+            int me = messagePasser.Rank();
             for (int n = 0; n < mesh.nodeCount(); n++) {
                 if (mesh.nodeOwner(n) == me)
                     have.push_back(mesh.globalNodeId(n));
@@ -61,7 +61,7 @@ namespace Parfait {
         }
 
         template<typename Mesh>
-        Parfait::SyncPattern getNodeSyncPattern(std::shared_ptr <MessagePasser> mp, Mesh &mesh) {
+        Parfait::SyncPattern getNodeSyncPattern(MessagePasser mp, Mesh &mesh) {
             std::vector<long> have;
             std::vector<long> need;
             std::tie(have, need) = buildHaveNeedForNodes(mp, mesh);
