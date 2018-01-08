@@ -6,7 +6,7 @@
 using namespace Parfait;
 
 TEST_CASE("Read in grid based on json file (on one proc)") {
-    auto mp = std::make_shared<MessagePasser>();
+    MessagePasser mp;
     std::string input_json = SIX_CELL_TEST_JSON;
     ConfigurationReader reader(input_json);
     Configuration config = reader.createConfiguration();
@@ -14,7 +14,7 @@ TEST_CASE("Read in grid based on json file (on one proc)") {
     PreProcessor preProcessor(mp, config);
     auto mesh = preProcessor.createMesh();
 
-    if(mp->NumberOfProcesses() == 1){
+    if(mp.NumberOfProcesses() == 1){
         REQUIRE(12 == mesh->numberOfTriangles());
         REQUIRE(6 == mesh->numberOfQuads());
         REQUIRE(0 == mesh->numberOfTets());
@@ -29,7 +29,7 @@ TEST_CASE("Read in grid based on json file (on one proc)") {
         }
     }
 
-    if(mp->NumberOfProcesses() == 2){
+    if(mp.NumberOfProcesses() == 2){
         REQUIRE(mesh->numberOfNodes() == 14);
     }
 
@@ -37,7 +37,7 @@ TEST_CASE("Read in grid based on json file (on one proc)") {
 }
 
 TEST_CASE("Add Owning Rank test"){
-    auto mp = std::make_shared<MessagePasser>();
+    MessagePasser mp;
     std::string input_json = SIX_CELL_TEST_JSON;
     ConfigurationReader reader(input_json);
     Configuration config = reader.createConfiguration();
@@ -45,10 +45,10 @@ TEST_CASE("Add Owning Rank test"){
     PreProcessor preProcessor(mp, config);
     auto mesh = preProcessor.createMesh();
 
-    if(mp->NumberOfProcesses() == 2){
-        int other  = (mp->Rank() == 0)?(1):(0);
+    if(mp.NumberOfProcesses() == 2){
+        int other  = (mp.Rank() == 0)?(1):(0);
         for(int i = 0; i < 7; i++){
-            REQUIRE(mp->Rank() == mesh->owningRankOfNode(i));
+            REQUIRE(mp.Rank() == mesh->owningRankOfNode(i));
         }
         for(int i = 7; i < 14; i++){
             REQUIRE(other == mesh->owningRankOfNode(i));

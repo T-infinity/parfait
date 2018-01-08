@@ -14,7 +14,7 @@ public:
                                                                     const std::vector<long> &local_mesh_to_global_mesh,
                                                                     const std::vector<bool> &do_own_local_node) {
 
-        auto mp = std::make_shared<MessagePasser>(comm);
+        MessagePasser mp(comm);
         std::vector<long> have, need;
         std::tie(have, need) = buildHaveNeed(local_mesh_to_global_mesh, do_own_local_node);
         Parfait::SyncPattern sync_pattern = Parfait::SyncPattern::build(mp, have, need);
@@ -40,12 +40,12 @@ public:
         return count;
     }
 
-    inline static long getRankRowStart(const std::shared_ptr<MessagePasser> &mp, int num_owned_nodes) {
-        std::vector<long> rows_per_rank(mp->NumberOfProcesses());
-        mp->AllGather(long(num_owned_nodes), rows_per_rank);
+    inline static long getRankRowStart(MessagePasser mp, int num_owned_nodes) {
+        std::vector<long> rows_per_rank(mp.NumberOfProcesses());
+        mp.AllGather(long(num_owned_nodes), rows_per_rank);
         rows_per_rank.push_back(0);
         long start = 0;
-        for (int r = 0; r < mp->Rank(); r++) {
+        for (int r = 0; r < mp.Rank(); r++) {
             start += rows_per_rank[r];
         }
         return start;

@@ -29,7 +29,7 @@ namespace Parfait {
     template<typename T, typename Field>
     class Syncer {
     public:
-        Syncer(std::shared_ptr<MessagePasser> mp,
+        Syncer(MessagePasser mp,
                Field &f,
                const Parfait::SyncPattern &syncPattern) : mp(mp), f(f), syncPattern(syncPattern) {
         }
@@ -39,7 +39,7 @@ namespace Parfait {
                 auto &source = pair.first;
                 auto &recv_list = pair.second;
                 recv_buffer[source].resize(recv_list.size());
-                auto s = mp->NonBlockingRecv(recv_buffer[source], recv_list.size(), source);
+                auto s = mp.NonBlockingRecv(recv_buffer[source], recv_list.size(), source);
                 recv_statuses.push_back(s);
             }
             for (auto &pair : syncPattern.send_to) {
@@ -48,13 +48,13 @@ namespace Parfait {
                 for (auto t : send_list) {
                     send_buffer[destination].push_back(f.getEntry(t));
                 }
-                auto s = mp->NonBlockingSend(send_buffer[destination], destination);
+                auto s = mp.NonBlockingSend(send_buffer[destination], destination);
                 send_statuses.push_back(s);
             }
         }
 
         void finish() {
-            mp->WaitAll(recv_statuses);
+            mp.WaitAll(recv_statuses);
 
             for (auto &pair : syncPattern.receive_from) {
                 auto &source = pair.first;
@@ -65,11 +65,11 @@ namespace Parfait {
                 }
             }
 
-            mp->WaitAll(send_statuses);
+            mp.WaitAll(send_statuses);
         }
 
     private:
-        std::shared_ptr<MessagePasser> mp;
+        MessagePasser mp;
         Field &f;
         const Parfait::SyncPattern &syncPattern;
         std::map<int, std::vector<T>> recv_buffer;
@@ -79,14 +79,14 @@ namespace Parfait {
     };
 
     template<typename T, typename Field>
-    void syncField(std::shared_ptr<MessagePasser> mp, Field &f, const Parfait::SyncPattern &syncPattern) {
+    void syncField(MessagePasser mp, Field &f, const Parfait::SyncPattern &syncPattern) {
         Syncer<T, Field> syncer(mp, f, syncPattern);
         syncer.start();
         syncer.finish();
     }
 
     template<typename T>
-    void syncVector(std::shared_ptr<MessagePasser> mp, std::vector<T> &vec, const std::map<long, int> &global_to_local,
+    void syncVector(MessagePasser mp, std::vector<T> &vec, const std::map<long, int> &global_to_local,
                     const Parfait::SyncPattern &sync_pattern) {
         SyncWrapper<T> syncer(vec, global_to_local);
         syncField<T>(mp, syncer, sync_pattern);

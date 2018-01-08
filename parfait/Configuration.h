@@ -26,7 +26,7 @@ namespace Parfait {
       Parfait::MotionMatrix getMotionMatrix(int gridId) const;
       int getBoundaryCondition(int gridId, int tag) const;
       Parfait::BoundaryConditionMap getMapbcObject(int gridId) const;
-      void print(std::shared_ptr<MessagePasser> mp) const;
+      void print(MessagePasser mp) const;
   private:
       int ngrids;
       std::vector<std::string> gridFilenames;

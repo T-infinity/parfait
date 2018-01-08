@@ -7,13 +7,13 @@
 namespace Parfait {
   class NodeBasedRedistributor {
   public:
-      NodeBasedRedistributor(std::shared_ptr<MessagePasser> mp,
+      NodeBasedRedistributor(MessagePasser mp,
                              std::shared_ptr<ParallelMesh> mesh, std::vector<int>& part);
 
       std::shared_ptr<ParallelMesh> redistribute();
   private:
 
-      std::shared_ptr<MessagePasser> mp;
+      MessagePasser mp;
       std::vector<long> redistributeNodeIds();
       std::vector<int> redistributeTags(std::vector<long>& my_non_ghost_ids,
                                         std::vector<int>& cells, std::vector<int>& tags, int cellSize);

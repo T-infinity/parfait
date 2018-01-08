@@ -8,7 +8,7 @@
 #include "ParmetisPartitioner.h"
 
 namespace Parfait {
-  inline PreProcessor::PreProcessor(std::shared_ptr<MessagePasser> mp,
+  inline PreProcessor::PreProcessor(MessagePasser mp,
                                     Configuration& configuration)
           : mp(mp), config(configuration) {}
 

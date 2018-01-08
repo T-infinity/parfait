@@ -28,7 +28,7 @@ namespace Parfait {
   public:
       friend class ParallelMeshBuilder;
 
-      ParallelMesh(std::shared_ptr<MessagePasser> messagePasser, ParallelMeshBuilder builder);
+      ParallelMesh(MessagePasser messagePasser, ParallelMeshBuilder builder);
       int numberOfNodes() const;
       int numberOfCells() const;
       int numberOfNodesInCell(int id) const;
@@ -62,17 +62,17 @@ namespace Parfait {
       int numberOfQuads() const;
       const int* getQuad(int id) const;
 
-      std::shared_ptr<MessagePasser> messagePasser;
+      MessagePasser messagePasser;
       std::shared_ptr<ParallelMeshData> data;
   };
 
   class ParallelMeshBuilder {
   public:
-      ParallelMeshBuilder(std::shared_ptr<MessagePasser> mp);
-      ParallelMeshBuilder(std::shared_ptr<MessagePasser> mp, ParallelMesh mesh);
+      ParallelMeshBuilder(MessagePasser mp);
+      ParallelMeshBuilder(MessagePasser mp, ParallelMesh mesh);
       std::shared_ptr<ParallelMesh> exportMesh();
 
-      std::shared_ptr<MessagePasser> messagePasser;
+      MessagePasser messagePasser;
       std::shared_ptr<ParallelMeshData> data;
   };
 }

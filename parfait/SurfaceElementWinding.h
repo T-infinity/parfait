@@ -80,7 +80,7 @@ namespace Parfait {
         return true;
     }
 
-    inline void windAllSurfaceElementsOut(std::shared_ptr<MessagePasser> mp, std::shared_ptr<Parfait::ParallelMesh>& mesh,
+    inline void windAllSurfaceElementsOut(MessagePasser mp, std::shared_ptr<Parfait::ParallelMesh>& mesh,
                                           const std::vector<int>& surface_neighbors) {
 
         auto builder = Parfait::ParallelMeshBuilder(mp, *mesh.get());

@@ -11,7 +11,7 @@ namespace Parfait {
   class PreProcessor {
 
   public:
-      PreProcessor(std::shared_ptr<MessagePasser> mp,
+      PreProcessor(MessagePasser mp,
                    Configuration& configuration);
       std::shared_ptr<ParallelMesh> createMesh();
 
@@ -22,7 +22,7 @@ namespace Parfait {
       bool getIsBigEndian(int i) { return config.isBigEndian(i); }
 
   private:
-      std::shared_ptr<MessagePasser> mp;
+      MessagePasser mp;
       Configuration& config;
       std::vector<int> calculateNewPartitioning(std::shared_ptr<ParallelMesh> mesh);
       std::shared_ptr<ParallelMesh> getDistributedMesh(std::vector<std::string>& grid_names,

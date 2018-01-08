@@ -13,7 +13,7 @@ namespace Parfait {
       enum { TRI_3, QUAD_4 };
 
       template<typename FillPoint, typename FillCell, typename CellType>
-      DistanceCalculator(std::shared_ptr<MessagePasser> mp,
+      DistanceCalculator(MessagePasser mp,
                          FillPoint fillPoint,
                          FillCell fillCell,
                          CellType cellType,
@@ -30,7 +30,7 @@ namespace Parfait {
       }
 
   private:
-      std::shared_ptr<MessagePasser> mp;
+      MessagePasser mp;
       Parfait::DistanceTree tree;
 
       template<typename FillPoint, typename FillCell, typename CellType>
@@ -103,7 +103,7 @@ namespace Parfait {
           if (type == DistanceCalculator::QUAD_4)
               appendQuadFacets(send_facets, fillPoint, fillCell, cell_id);
       }
-      mp->AllGatherv(send_facets, facets);
+      mp.AllGatherv(send_facets, facets);
       return facets;
   };
 

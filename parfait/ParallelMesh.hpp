@@ -1,10 +1,10 @@
 #include <MessagePasser/MessagePasser.h>
 
 namespace Parfait {
-inline ParallelMeshBuilder::ParallelMeshBuilder(std::shared_ptr<MessagePasser> mp) :
+inline ParallelMeshBuilder::ParallelMeshBuilder(MessagePasser mp) :
     messagePasser(mp), data(std::make_shared<ParallelMeshData>()) {}
 
-inline ParallelMeshBuilder::ParallelMeshBuilder(std::shared_ptr<MessagePasser> mp,
+inline ParallelMeshBuilder::ParallelMeshBuilder(MessagePasser mp,
                                                 ParallelMesh mesh) :
     messagePasser(mp), data(mesh.data) {
 }
@@ -14,12 +14,12 @@ inline std::shared_ptr<ParallelMesh> ParallelMeshBuilder::exportMesh() {
 }
 
 inline int ParallelMesh::countOwnedNodes() const {
-    int rank = messagePasser->Rank();
+    int rank = messagePasser.Rank();
     return int(std::count(data->nodeOwnerRank.begin(),
                           data->nodeOwnerRank.end(), rank));
 }
 
-inline ParallelMesh::ParallelMesh(std::shared_ptr<MessagePasser> messagePasser,
+inline ParallelMesh::ParallelMesh(MessagePasser messagePasser,
                                   ParallelMeshBuilder builder)
     : messagePasser(messagePasser), data(builder.data) {
 }
@@ -53,7 +53,7 @@ inline long ParallelMesh::getGlobalNodeId(int id) const {
 }
 
 inline int ParallelMesh::isGhostNode(int id) const {
-    return data->nodeOwnerRank[id] != messagePasser->Rank();
+    return data->nodeOwnerRank[id] != messagePasser.Rank();
 }
 
 inline int ParallelMesh::numberOfTets() const {

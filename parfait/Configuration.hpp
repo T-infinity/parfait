@@ -29,8 +29,8 @@ namespace Parfait {
       return mapbcVector.at(gridId).at(gridId).first;
   }
 
-  inline void Configuration::print(std::shared_ptr<MessagePasser> mp) const {
-      if (0 == mp->Rank()) {
+  inline void Configuration::print(MessagePasser mp) const {
+      if (0 == mp.Rank()) {
           for (unsigned int i = 0; i < gridFilenames.size(); i++) {
               printf("Grid %i:\n", i);
               printf("  -file        %s\n", gridFilenames.at(i).c_str());

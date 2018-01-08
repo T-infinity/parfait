@@ -21,12 +21,12 @@ namespace Parfait {
       };
 
   public:
-      static std::shared_ptr<ParallelMesh> readDistributedGrid(std::shared_ptr<MessagePasser> mp,
+      static std::shared_ptr<ParallelMesh> readDistributedGrid(MessagePasser mp,
                                                                std::string configurationFileName);
-      static std::shared_ptr<ParallelMesh> readDistributedGrid(std::shared_ptr<MessagePasser> mp,
+      static std::shared_ptr<ParallelMesh> readDistributedGrid(MessagePasser mp,
                                                                std::vector<std::string> gridFiles,
                                                                std::vector<bool> isBigEndian);
-      ParallelMeshReader(std::shared_ptr<MessagePasser> mp,
+      ParallelMeshReader(MessagePasser mp,
                          std::vector<std::string> gridFiles,
                          std::vector<bool> isBigEndian);
       std::shared_ptr<ParallelMesh> distributeGridsEvenly();
@@ -36,7 +36,7 @@ namespace Parfait {
       int numberOfGrids() const;
 
   public:
-      std::shared_ptr<MessagePasser> mp;
+      MessagePasser mp;
       std::vector<bool> isBigEndian;
       std::vector<std::string> gridFiles;
       std::vector<long> procNodeMap;

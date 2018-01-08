@@ -7,22 +7,22 @@
 #include "ConfigurationReader.h"
 
 inline std::vector<int> findNodeOwnerRank(
-        std::shared_ptr<MessagePasser> mp,
+        MessagePasser mp,
         std::vector<long>& have, std::set<long>& need,
         const std::map<long, int>& global_to_local) {
 
     std::vector<int> node_owner(global_to_local.size());
     for (auto global_node_id : have) {
         auto local = global_to_local.at(global_node_id);
-        node_owner[local] = mp->Rank();
+        node_owner[local] = mp.Rank();
     }
 
-    for (int r = 0; r < mp->NumberOfProcesses(); r++) {
+    for (int r = 0; r < mp.NumberOfProcesses(); r++) {
         std::vector<long> transmit;
-        if (r == mp->Rank()) {
+        if (r == mp.Rank()) {
             transmit = have;
         }
-        mp->Broadcast(transmit, r);
+        mp.Broadcast(transmit, r);
         for (auto global_node_id : transmit) {
             if (need.count(global_node_id)) {
                 int local = global_to_local.at(global_node_id);
@@ -35,7 +35,7 @@ inline std::vector<int> findNodeOwnerRank(
 }
 
 inline std::vector<int> setNodeOwnerRank(
-        std::shared_ptr<MessagePasser> mp,
+        MessagePasser mp,
         const std::vector<int>& ownership_degree,
         const std::vector<long>& globalNodeIds) {
 
@@ -72,7 +72,7 @@ inline void Parfait::ParallelMeshReader::createNodeOwnerRank() {
 }
 
 inline std::shared_ptr<Parfait::ParallelMesh> Parfait::ParallelMeshReader::readDistributedGrid(
-        std::shared_ptr<MessagePasser> mp,
+        MessagePasser mp,
         std::string configurationFileName) {
     ConfigurationReader configurationReader(configurationFileName);
     Configuration config = configurationReader.createConfiguration();
@@ -87,7 +87,7 @@ inline std::shared_ptr<Parfait::ParallelMesh> Parfait::ParallelMeshReader::readD
 }
 
 inline std::shared_ptr<Parfait::ParallelMesh> Parfait::ParallelMeshReader::readDistributedGrid(
-        std::shared_ptr<MessagePasser> mp,
+        MessagePasser mp,
         std::vector<std::string> gridFiles,
         std::vector<bool> isBigEndian) {
     ParallelMeshReader reader(mp, gridFiles, isBigEndian);
@@ -95,7 +95,7 @@ inline std::shared_ptr<Parfait::ParallelMesh> Parfait::ParallelMeshReader::readD
 }
 
 inline Parfait::ParallelMeshReader::ParallelMeshReader(
-        std::shared_ptr<MessagePasser> mp, std::vector<std::string> gridFiles_in,
+        MessagePasser mp, std::vector<std::string> gridFiles_in,
         std::vector<bool> isBigEndian_in)
         : mp(mp),
           isBigEndian(isBigEndian_in),
@@ -110,15 +110,15 @@ inline Parfait::ParallelMeshReader::ParallelMeshReader(
     gridHexMap.push_back(0);
     for (int i = 0; i < gridFiles.size(); i++) {
         int nnodes, ntri, nquad, ntet, npyr, nprism, nhex;
-        if (mp->Rank() == 0)
+        if (mp.Rank() == 0)
             UgridReader::readHeader(gridFiles[i], nnodes, ntri, nquad, ntet, npyr, nprism, nhex, isBigEndian[i]);
-        mp->Broadcast(nnodes, 0);
-        mp->Broadcast(ntri, 0);
-        mp->Broadcast(nquad, 0);
-        mp->Broadcast(ntet, 0);
-        mp->Broadcast(npyr, 0);
-        mp->Broadcast(nprism, 0);
-        mp->Broadcast(nhex, 0);
+        mp.Broadcast(nnodes, 0);
+        mp.Broadcast(ntri, 0);
+        mp.Broadcast(nquad, 0);
+        mp.Broadcast(ntet, 0);
+        mp.Broadcast(npyr, 0);
+        mp.Broadcast(nprism, 0);
+        mp.Broadcast(nhex, 0);
         gridNodeMap.push_back(nnodes);
         gridTriangleMap.push_back(ntri);
         gridQuadMap.push_back(nquad);
@@ -149,7 +149,7 @@ inline std::vector<long> Parfait::ParallelMeshReader::getProcNodeMap() {
 
 inline void Parfait::ParallelMeshReader::mapNodesToLocalSpace() {
     int localNodeId = 0;
-    for (long globalNodeId = procNodeMap[mp->Rank()]; globalNodeId < procNodeMap[mp->Rank() + 1]; globalNodeId++) {
+    for (long globalNodeId = procNodeMap[mp.Rank()]; globalNodeId < procNodeMap[mp.Rank() + 1]; globalNodeId++) {
         globalToLocalId[globalNodeId] = localNodeId++;
     }
 
@@ -193,17 +193,17 @@ inline void Parfait::ParallelMeshReader::mapNodesToLocalSpace() {
 }
 
 inline void Parfait::ParallelMeshReader::distributeUgrid() {
-    if (0 == mp->Rank())
+    if (0 == mp.Rank())
         buildDistributionMaps();
-    mp->Broadcast(procNodeMap, 0);
+    mp.Broadcast(procNodeMap, 0);
 
     distributeNodes();
 
     long globalNumberOfNodes = totalNumberOfNodes();
-    auto myNodeRange = LinearPartitioner::getRangeForWorker(mp->Rank(),
+    auto myNodeRange = LinearPartitioner::getRangeForWorker(mp.Rank(),
                                                             globalNumberOfNodes,
-                                                            mp->NumberOfProcesses());
-    int nchunks = mp->NumberOfProcesses();
+                                                            mp.NumberOfProcesses());
+    int nchunks = mp.NumberOfProcesses();
 
     distributeTriangles(myNodeRange, nchunks);
     distributeQuads(myNodeRange, nchunks);
@@ -224,7 +224,7 @@ inline void Parfait::ParallelMeshReader::gatherGhostXyz() {
     int nregular = 0;
     int number_of_nodes = int(meshBuilder->data->xyz.size() / 3);
     for (int i = 0; i < number_of_nodes; ++i)
-        if (meshBuilder->data->nodeOwnerRank[i] == mp->Rank())
+        if (meshBuilder->data->nodeOwnerRank[i] == mp.Rank())
             nregular++;
     std::vector<long> ghostIds(meshBuilder->data->globalNodeIds.begin() + nregular,
                                meshBuilder->data->globalNodeIds.end());
@@ -249,7 +249,7 @@ inline void Parfait::ParallelMeshReader::buildDistributionMaps() {
                                 ntet, npyr, nprism, nhex, isBigEndian[i]);
         totalNodes += nnodes;
     }
-    int nproc = mp->NumberOfProcesses();
+    int nproc = mp.NumberOfProcesses();
     procNodeMap.assign(nproc, 0);
 
     for (int i = 0; i < nproc; i++) {
@@ -269,18 +269,18 @@ inline std::shared_ptr<Parfait::ParallelMesh> Parfait::ParallelMeshReader::distr
 }
 
 inline void Parfait::ParallelMeshReader::distributeNodes() {
-    if (mp->Rank() == 0) {
-        int nproc = mp->NumberOfProcesses();
+    if (mp.Rank() == 0) {
+        int nproc = mp.NumberOfProcesses();
         std::vector<double> (* f)(std::string, int, int, bool);
         f = UgridReader::readNodes;
         meshBuilder->data->xyz = getFromGrids(f, 3, gridNodeMap, 0, procNodeMap[1], false, double());
         for (int proc = 1; proc < nproc; proc++) {
             vector<double> nodeBuffer = getFromGrids(f, 3, gridNodeMap, procNodeMap[proc], procNodeMap[proc + 1], false,
                                                      double());
-            mp->Send(nodeBuffer, proc);
+            mp.Send(nodeBuffer, proc);
         }
     } else
-        mp->Recv(meshBuilder->data->xyz, 0);
+        mp.Recv(meshBuilder->data->xyz, 0);
 }
 
 inline void Parfait::ParallelMeshReader::distributeTriangles(
@@ -290,8 +290,8 @@ inline void Parfait::ParallelMeshReader::distributeTriangles(
     for (int i = 0; i < nchunks; ++i) {
         auto faces = getCellChunk(TRIANGLE, i, ntriangles, nchunks);
         auto tags = getTagChunk(TRIANGLE_TAG, i, ntriangles, nchunks);
-        mp->Broadcast(faces, 0);
-        mp->Broadcast(tags, 0);
+        mp.Broadcast(faces, 0);
+        mp.Broadcast(tags, 0);
         extractAndAppendFaces(3, faces, tags, meshBuilder->data->triangles, meshBuilder->data->triangleTags,
                               myNodeRange);
     }
@@ -304,8 +304,8 @@ inline void Parfait::ParallelMeshReader::distributeQuads(
     for (int i = 0; i < nchunks; ++i) {
         auto faces = getCellChunk(QUAD, i, nquads, nchunks);
         auto tags = getTagChunk(QUAD_TAG, i, nquads, nchunks);
-        mp->Broadcast(faces, 0);
-        mp->Broadcast(tags, 0);
+        mp.Broadcast(faces, 0);
+        mp.Broadcast(tags, 0);
         extractAndAppendFaces(4, faces, tags, meshBuilder->data->quads, meshBuilder->data->quadTags, myNodeRange);
     }
 }
@@ -316,7 +316,7 @@ inline void Parfait::ParallelMeshReader::distributeTets(
     long ntets = gridTetMap.back();
     for (int i = 0; i < nchunks; ++i) {
         auto tetChunk = getCellChunk(TET, i, ntets, nchunks);
-        mp->Broadcast(tetChunk, 0);
+        mp.Broadcast(tetChunk, 0);
         extractAndAppendCells(4, tetChunk, meshBuilder->data->tets, myNodeRange);
     }
 }
@@ -327,7 +327,7 @@ inline void Parfait::ParallelMeshReader::distributePyramids(
     long npyramids = gridPyramidMap.back();
     for (int i = 0; i < nchunks; ++i) {
         auto chunk = getCellChunk(PYRAMID, i, npyramids, nchunks);
-        mp->Broadcast(chunk, 0);
+        mp.Broadcast(chunk, 0);
         extractAndAppendCells(5, chunk, meshBuilder->data->pyramids, myNodeRange);
     }
 }
@@ -338,7 +338,7 @@ inline void Parfait::ParallelMeshReader::distributePrisms(
     long nprisms = gridPrismMap.back();
     for (int i = 0; i < nchunks; ++i) {
         auto chunk = getCellChunk(PRISM, i, nprisms, nchunks);
-        mp->Broadcast(chunk, 0);
+        mp.Broadcast(chunk, 0);
         extractAndAppendCells(6, chunk, meshBuilder->data->prisms, myNodeRange);
     }
 }
@@ -349,7 +349,7 @@ inline void Parfait::ParallelMeshReader::distributeHexs(
     long nhexs = gridHexMap.back();
     for (int i = 0; i < nchunks; ++i) {
         auto chunk = getCellChunk(HEX, i, nhexs, nchunks);
-        mp->Broadcast(chunk, 0);
+        mp.Broadcast(chunk, 0);
         extractAndAppendCells(8, chunk, meshBuilder->data->hexs, myNodeRange);
     }
 }
@@ -358,7 +358,7 @@ inline std::vector<long> Parfait::ParallelMeshReader::getCellChunk(
         Parfait::ParallelMeshReader::CellType cellType,
         int chunkId, long nCells, int nchunks) {
     std::vector<long> chunk;
-    if (mp->Rank() == 0) {
+    if (mp.Rank() == 0) {
         auto range = LinearPartitioner::getRangeForWorker(chunkId, nCells, nchunks);
         std::vector<int> (* f)(std::string, int, int, bool);
         switch (cellType) {
@@ -390,7 +390,7 @@ inline std::vector<int> Parfait::ParallelMeshReader::getTagChunk(
         Parfait::ParallelMeshReader::TagType tagType,
         int chunkId, long nCells, int nchunks) {
     std::vector<int> chunk;
-    if (mp->Rank() == 0) {
+    if (mp.Rank() == 0) {
         auto range = LinearPartitioner::getRangeForWorker(chunkId, nCells, nchunks);
         std::vector<int> (* f)(std::string, int, int, bool);
         switch (tagType) {
@@ -445,7 +445,7 @@ inline void Parfait::ParallelMeshReader::extractAndAppendFaces(
 
 inline int Parfait::ParallelMeshReader::getOwningProcOfNode(long id) {
     auto nnodes = gridNodeMap.back();
-    return LinearPartitioner::getWorkerOfWorkItem(id, nnodes, mp->NumberOfProcesses());
+    return LinearPartitioner::getWorkerOfWorkItem(id, nnodes, mp.NumberOfProcesses());
 }
 
 inline int Parfait::ParallelMeshReader::getOwningGridOfNode(long globalId) {
@@ -567,17 +567,17 @@ inline void Parfait::ParallelMeshReader::createLocalToGlobalNodeIdMap() {
 inline std::vector<double> Parfait::ParallelMeshReader::getXyzForGhostNodes(std::vector<long>& ghostIds) {
     std::vector<long> gatheredIds;
     std::vector<double> gatheredXyz;
-    for (int proc = 0; proc < mp->NumberOfProcesses(); ++proc) {
+    for (int proc = 0; proc < mp.NumberOfProcesses(); ++proc) {
         std::vector<long> requestedIds;
-        if (mp->Rank() == proc)
+        if (mp.Rank() == proc)
             requestedIds = ghostIds;
-        mp->Broadcast(requestedIds, proc);
+        mp.Broadcast(requestedIds, proc);
         std::vector<long> responseIds;
         std::vector<double> responseXyz;
         for (long id:requestedIds) {
             if (globalToLocalId.count(id) == 1) {
                 int localId = globalToLocalId[id];
-                if (meshBuilder->data->nodeOwnerRank[localId] == mp->Rank()) {
+                if (meshBuilder->data->nodeOwnerRank[localId] == mp.Rank()) {
                     responseIds.push_back(id);
                     responseXyz.push_back(meshBuilder->data->xyz[3 * localId + 0]);
                     responseXyz.push_back(meshBuilder->data->xyz[3 * localId + 1]);
@@ -585,8 +585,8 @@ inline std::vector<double> Parfait::ParallelMeshReader::getXyzForGhostNodes(std:
                 }
             }
         }
-        mp->Gatherv(responseIds, gatheredIds, proc);
-        mp->Gatherv(responseXyz, gatheredXyz, proc);
+        mp.Gatherv(responseIds, gatheredIds, proc);
+        mp.Gatherv(responseXyz, gatheredXyz, proc);
     }
     std::map<long, int> tmp_map;
     for (unsigned int i = 0; i < ghostIds.size(); ++i)

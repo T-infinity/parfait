@@ -6,7 +6,7 @@
 namespace Parfait {
 
   inline std::vector<std::shared_ptr<Parfait::ParallelMesh>> importMeshesAsSystem(
-          std::shared_ptr<MessagePasser> mp,
+          MessagePasser mp,
           std::string filename) {
       ConfigurationReader reader(filename);
       auto config = reader.createConfiguration();

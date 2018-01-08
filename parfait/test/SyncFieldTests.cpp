@@ -27,9 +27,8 @@ public:
 };
 
 TEST_CASE("Field Exists Tests") {
-    auto mp = std::make_shared<MessagePasser>();
-
-    if(mp->NumberOfProcesses() != 2)
+    MessagePasser mp;
+    if(mp.NumberOfProcesses() != 2)
         return;
 
     ExampleField f;
@@ -40,10 +39,10 @@ TEST_CASE("Field Exists Tests") {
     for(int i = 4; i < 8; i++)
         f.data[i] = -99;
     std::vector<long> global_ids;
-    if(mp->Rank() == 0){
+    if(mp.Rank() == 0){
         global_ids = std::vector<long>{0,1,2,3,4,5,6,7};
     }
-    else if(mp->Rank() == 1){
+    else if(mp.Rank() == 1){
         global_ids = std::vector<long>{4,5,6,7,0,1,2,3};
     }
 

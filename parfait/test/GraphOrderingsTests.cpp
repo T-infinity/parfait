@@ -3,13 +3,13 @@
 #include <parfait/GraphOrderings.h>
 
 TEST_CASE("contiguous row start"){
-    auto mp = std::make_shared<MessagePasser>();
-    if(mp->NumberOfProcesses() != 2) return;
+    MessagePasser mp;
+    if(mp.NumberOfProcesses() != 2) return;
 
     int num_owned_nodes = 10;
     auto start = Parfait::GraphOrderings::getRankRowStart(mp, num_owned_nodes);
-    if(mp->Rank() == 0) REQUIRE(start == 0);
-    if(mp->Rank() == 1) REQUIRE(start == 10);
+    if(mp.Rank() == 0) REQUIRE(start == 0);
+    if(mp.Rank() == 1) REQUIRE(start == 10);
 }
 
 TEST_CASE("Check have need"){

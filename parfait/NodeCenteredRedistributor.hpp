@@ -5,7 +5,7 @@
 
 namespace Parfait {
     inline NodeBasedRedistributor::NodeBasedRedistributor(
-            std::shared_ptr<MessagePasser> mp,
+            MessagePasser mp,
             std::shared_ptr<ParallelMesh> mesh_in,
             std::vector<int>& part_in)
             : mp(mp),
@@ -15,14 +15,14 @@ namespace Parfait {
 
     inline std::shared_ptr<ParallelMesh> NodeBasedRedistributor::redistribute() {
 
-        int nproc = mp->NumberOfProcesses();
+        int nproc = mp.NumberOfProcesses();
         nodeMap.assign(nproc, 0);
         int num_owned = 0;
         for (unsigned int n = 0; n < mesh->data->xyz.size() / 3; n++) {
-            if (mesh->data->nodeOwnerRank[n] == mp->Rank())
+            if (mesh->data->nodeOwnerRank[n] == mp.Rank())
                 num_owned++;
         }
-        mp->AllGather(num_owned, nodeMap);
+        mp.AllGather(num_owned, nodeMap);
         nodeMap.insert(nodeMap.begin(), 0);
         for (unsigned int i = 2; i < nodeMap.size(); i++)
             nodeMap[i] += nodeMap[i - 1];
@@ -110,7 +110,7 @@ namespace Parfait {
 
     inline std::vector<long> NodeBasedRedistributor::redistributeNodeIds() {
         std::vector<long> recvNodeIds;
-        for (int proc = 0; proc < mp->NumberOfProcesses(); proc++) {
+        for (int proc = 0; proc < mp.NumberOfProcesses(); proc++) {
             int count = 0;
             for (int owner:part)
                 if (owner == proc)
@@ -125,7 +125,7 @@ namespace Parfait {
                     sendIds.push_back(globalNodeId);
                 }
             }
-            mp->Gatherv(sendIds, recvNodeIds, proc);
+            mp.Gatherv(sendIds, recvNodeIds, proc);
         }
         std::sort(recvNodeIds.begin(), recvNodeIds.end());
         return recvNodeIds;
@@ -136,13 +136,13 @@ namespace Parfait {
         std::map<long, int> global_to_local;
         for (unsigned int i = 0; i < mesh->data->globalNodeIds.size(); i++)
             global_to_local[mesh->data->globalNodeIds[i]] = i;
-        for (int proc = 0; proc < mp->NumberOfProcesses(); ++proc) {
+        for (int proc = 0; proc < mp.NumberOfProcesses(); ++proc) {
             std::vector<long> idsOfXyxsINeed;
-            if (mp->Rank() == proc) {
+            if (mp.Rank() == proc) {
                 idsOfXyxsINeed = my_non_ghost_ids;
                 idsOfXyxsINeed.insert(idsOfXyxsINeed.end(), my_ghost_ids.begin(), my_ghost_ids.end());
             }
-            mp->Broadcast(idsOfXyxsINeed, proc);
+            mp.Broadcast(idsOfXyxsINeed, proc);
             std::vector<double> sendXYZ;
             std::vector<long> sendGlobalNodeId;
             std::vector<int> sendAssociatedComponentId;
@@ -158,12 +158,12 @@ namespace Parfait {
             }
 
             std::vector<double> gatheredXyz;
-            mp->Gatherv(sendXYZ, gatheredXyz, proc);
+            mp.Gatherv(sendXYZ, gatheredXyz, proc);
             std::vector<long> gatheredIds;
-            mp->Gatherv(sendGlobalNodeId, gatheredIds, proc);
+            mp.Gatherv(sendGlobalNodeId, gatheredIds, proc);
             std::vector<int> gatheredComponentIds;
-            mp->Gatherv(sendAssociatedComponentId, gatheredComponentIds, proc);
-            if (mp->Rank() == proc) {
+            mp.Gatherv(sendAssociatedComponentId, gatheredComponentIds, proc);
+            if (mp.Rank() == proc) {
                 recvXYZ.assign(gatheredXyz.size(), 0);
                 recvAssociatedComponentIds.assign(gatheredComponentIds.size(), -1);
                 for (unsigned int index = 0; index < gatheredIds.size(); index++) {
@@ -182,7 +182,7 @@ namespace Parfait {
         if (globalToLocal.end() == it)
             return false;
         int localId = it->second;
-        if (mesh->data->nodeOwnerRank[localId] == mp->Rank())
+        if (mesh->data->nodeOwnerRank[localId] == mp.Rank())
             return true;
         return false;
     }
@@ -191,17 +191,17 @@ namespace Parfait {
                                                                      std::vector<int>& tags,
                                                                      int cellSize) {
         std::vector<int> recvCellTags;
-        for (int proc = 0; proc < mp->NumberOfProcesses(); proc++) {
+        for (int proc = 0; proc < mp.NumberOfProcesses(); proc++) {
             std::vector<long> neededNodeIds;
             std::vector<int> sendCellTags;
-            if (mp->Rank() == proc)
+            if (mp.Rank() == proc)
                 neededNodeIds = my_non_ghost_ids;
-            mp->Broadcast(neededNodeIds, proc);
+            mp.Broadcast(neededNodeIds, proc);
             for (unsigned int i = 0; i < cells.size() / cellSize; i++) {
                 if (iShouldSendThisSurfaceCell(&cells[cellSize * i], cellSize, neededNodeIds))
                     sendCellTags.push_back(tags[i]);
             }
-            mp->Gatherv(sendCellTags, recvCellTags, proc);
+            mp.Gatherv(sendCellTags, recvCellTags, proc);
         }
         return recvCellTags;
     }
@@ -210,12 +210,12 @@ namespace Parfait {
                                                                        std::vector<int>& cells, int cellSize) {
         std::vector<long> recvCells;
 
-        for (int proc = 0; proc < mp->NumberOfProcesses(); proc++) {
+        for (int proc = 0; proc < mp.NumberOfProcesses(); proc++) {
             std::vector<long> neededNodeIds;
             std::vector<long> sendCellIds;
-            if (mp->Rank() == proc)
+            if (mp.Rank() == proc)
                 neededNodeIds = my_non_ghost_ids;
-            mp->Broadcast(neededNodeIds, proc);
+            mp.Broadcast(neededNodeIds, proc);
             for (unsigned int i = 0; i < cells.size() / cellSize; i++) {
                 if (iShouldSendThisCell(&cells[cellSize * i], cellSize, neededNodeIds))
                     sendCellIds.push_back(i);
@@ -225,7 +225,7 @@ namespace Parfait {
             for (auto id:sendCellIds)
                 for (int j = 0; j < cellSize; j++)
                     sendCells.push_back(mesh->data->globalNodeIds[cells[cellSize * id + j]]);
-            mp->Gatherv(sendCells, recvCells, proc);
+            mp.Gatherv(sendCells, recvCells, proc);
         }
         return recvCells;
     }
@@ -235,12 +235,12 @@ namespace Parfait {
         std::vector<long> sendCellIds;
         std::vector<long> recvCells;
         sendCellIds.reserve(cells.size());
-        for (int proc = 0; proc < mp->NumberOfProcesses(); proc++) {
+        for (int proc = 0; proc < mp.NumberOfProcesses(); proc++) {
             sendCellIds.clear();
             std::vector<long> neededNodeIds;
-            if (mp->Rank() == proc)
+            if (mp.Rank() == proc)
                 neededNodeIds = my_non_ghost_ids;
-            mp->Broadcast(neededNodeIds, proc);
+            mp.Broadcast(neededNodeIds, proc);
             for (unsigned int i = 0; i < cells.size() / cellSize; i++) {
                 if (iShouldSendThisSurfaceCell(&cells[cellSize * i], cellSize, neededNodeIds))
                     sendCellIds.push_back(i);
@@ -250,13 +250,13 @@ namespace Parfait {
             for (auto id:sendCellIds)
                 for (int j = 0; j < cellSize; j++)
                     sendCells.push_back(mesh->data->globalNodeIds[cells[cellSize * id + j]]);
-            mp->Gatherv(sendCells, recvCells, proc);
+            mp.Gatherv(sendCells, recvCells, proc);
         }
         return recvCells;
     }
 
     inline bool NodeBasedRedistributor::iShouldSendThisCell(int* cell, int cellSize, const std::vector<long>& neededNodeIds) {
-        if (mesh->data->nodeOwnerRank[cell[0]] != mp->Rank()) return false;
+        if (mesh->data->nodeOwnerRank[cell[0]] != mp.Rank()) return false;
         for (int i = 0; i < cellSize; i++) {
             int localNodeId = cell[i];
             long globalNodeId = mesh->data->globalNodeIds[localNodeId];
@@ -267,7 +267,7 @@ namespace Parfait {
     }
 
     inline bool NodeBasedRedistributor::iShouldSendThisSurfaceCell(int* cell, int cellSize, const std::vector<long>& neededNodeIds) {
-        if (mesh->data->nodeOwnerRank[cell[0]] != mp->Rank()) return false;
+        if (mesh->data->nodeOwnerRank[cell[0]] != mp.Rank()) return false;
         for (int i = 0; i < cellSize; i++) {
             int localNodeId = cell[i];
             long globalNodeId = mesh->data->globalNodeIds[localNodeId];

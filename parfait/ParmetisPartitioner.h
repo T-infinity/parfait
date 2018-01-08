@@ -5,7 +5,7 @@ namespace Parfait {
   class ParmetisPartitioner {
   public:
       template<typename ContainerOfContainers>
-      static std::vector<int> generatePartVector(std::shared_ptr<MessagePasser> mp,
+      static std::vector<int> generatePartVector(MessagePasser mp,
                                           const ContainerOfContainers& node_to_node);
   };
 }

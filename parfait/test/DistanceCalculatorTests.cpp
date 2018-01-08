@@ -10,7 +10,7 @@ TEST_CASE("get distance to triangle"){
     auto fillCell  = [] (int id,int* face){for(int i=0;i<3;i++) face[i] = i;};
     auto getCellType = [] (int id) {return DistanceCalculator::TRI_3;};
 
-    auto mp = std::make_shared<MessagePasser>();
+    MessagePasser mp;
 
     DistanceCalculator distanceCalculator(mp,fillPoint,fillCell,getCellType,1);
 
@@ -24,7 +24,7 @@ TEST_CASE("query distance with no geometry"){
     auto fillCell  = [] (int id,int* face){for(int i=0;i<3;i++) face[i] = i;};
     auto getCellType = [] (int id) {return DistanceCalculator::TRI_3;};
 
-    auto mp = std::make_shared<MessagePasser>();
+    MessagePasser mp;
 
     int facet_count = 0;
 

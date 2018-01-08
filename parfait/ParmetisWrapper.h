@@ -32,7 +32,7 @@ namespace Parfait {
     inline void printParmetisInput(const std::vector <idx_t> &vtxdist, const std::vector <idx_t> &xadj,
                                    const std::vector <idx_t> &adjncy, const std::vector <real_t> &tpwgts);
 
-    inline void partitionMesh(std::shared_ptr <MessagePasser> mp,
+    inline void partitionMesh(MessagePasser mp,
                               int rank, int nproc,
                               long *proc_node_map,
                               long *ia,
@@ -40,14 +40,14 @@ namespace Parfait {
                               int *part_vec) {
         int nnodes = getMyNumberOfNodes(rank, proc_node_map);
         ParMetisInfo parMetisInfo;
-        parMetisInfo.comm = mp->getCommunicator();
+        parMetisInfo.comm = mp.getCommunicator();
         for (int i = 0; i < ia[nnodes]; i++)
             if (ja[i] < 0)
-                throw std::logic_error("Rank " + std::to_string(mp->Rank())
+                throw std::logic_error("Rank " + std::to_string(mp.Rank())
                                        + " negative id [" + std::to_string(i) + "] of ["
                                        + std::to_string(nnodes) + "]");
 
-        idx_t number_of_partitions = mp->NumberOfProcesses();
+        idx_t number_of_partitions = mp.NumberOfProcesses();
 
         auto vtxdist = getVertexDistributionAcrossProcs(nproc, proc_node_map);
         auto xadj = getAdjacencyMap(ia, nnodes);

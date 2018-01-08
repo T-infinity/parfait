@@ -5,7 +5,7 @@
 namespace Parfait {
     template<typename ContainerOfContainers>
     std::vector<int> ParmetisPartitioner::generatePartVector(
-          std::shared_ptr<MessagePasser> mp,
+          MessagePasser mp,
           const ContainerOfContainers& node_to_node) {
       //convert connectivity to flat arrays
       std::vector<long> ia(node_to_node.size() + 1, 0);
@@ -17,14 +17,14 @@ namespace Parfait {
           for (auto nbr:row)
               ja.push_back(nbr);
       // map nodes to processors
-      std::vector<long> procNodeMap(mp->NumberOfProcesses(), 0);
-      mp->AllGather((long) node_to_node.size(), procNodeMap);
+      std::vector<long> procNodeMap(mp.NumberOfProcesses(), 0);
+      mp.AllGather((long) node_to_node.size(), procNodeMap);
       procNodeMap.insert(procNodeMap.begin(), 0);
       for (unsigned int i = 1; i < procNodeMap.size(); i++)
           procNodeMap[i] += procNodeMap[i - 1];
       // allocate part vector and call 3rd party partitioner
       std::vector<int> part(node_to_node.size(), 0);
-      partitionMesh(mp, mp->Rank(), mp->NumberOfProcesses(), procNodeMap.data(),
+      partitionMesh(mp, mp.Rank(), mp.NumberOfProcesses(), procNodeMap.data(),
                     ia.data(), ja.data(), part.data());
       return part;
   }

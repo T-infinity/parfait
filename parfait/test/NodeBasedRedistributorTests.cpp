@@ -6,13 +6,13 @@
 
 
 TEST_CASE("Node Centered Redistributor"){
-    auto mp = std::make_shared<MessagePasser>();
-    if(mp->NumberOfProcesses() != 2)
+    MessagePasser mp;
+    if(mp.NumberOfProcesses() != 2)
         return;
 
     Parfait::ParallelMeshBuilder meshBuilder(mp);
-    std::vector<int> part(3, mp->Rank());
-    if(mp->Rank() == 0){
+    std::vector<int> part(3, mp.Rank());
+    if(mp.Rank() == 0){
         meshBuilder.data->prisms = {0,1,2,3,4,5};
         meshBuilder.data->nodeOwnerRank = {0,0,0,1,1,1};
         meshBuilder.data->globalNodeIds = {0,1,2,3,4,5};
@@ -22,7 +22,7 @@ TEST_CASE("Node Centered Redistributor"){
         meshBuilder.data->xyz = {0,0,0, 1,0,0, 1,1,0, 0,0,1, 1,0,1, 1,1,1};
     }
 
-    if(mp->Rank() == 1){
+    if(mp.Rank() == 1){
         meshBuilder.data->prisms = {3,4,5,0,1,2};
         meshBuilder.data->nodeOwnerRank = {1,1,1,0,0,0};
         meshBuilder.data->triangles = {0,1,2};
@@ -42,7 +42,7 @@ TEST_CASE("Node Centered Redistributor"){
             number_of_owned_nodes++;
     }
 
-    auto total = mp->ParallelSum(number_of_owned_nodes);
+    auto total = mp.ParallelSum(number_of_owned_nodes);
     REQUIRE(6 == total);
 
     REQUIRE(mesh->numberOfNodes() == 6);
