@@ -1,7 +1,6 @@
 #include <vector>
 #include <catch.hpp>
 #include <parfait/ImportedUgrid.h>
-#include <parfait/GenericSurfaceMesh.h>
 
 using std::vector;
 using namespace Parfait;
