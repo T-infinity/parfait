@@ -1,7 +1,7 @@
 #include <array>
 #include <catch.hpp>
 #include <parfait/Point.h>
-#include <parfait/GenericMeshTools.h>
+#include <parfait/Metrics.h>
 #include <parfait/CGNSElements.h>
 #include <parfait/DualMetrics.h>
 
@@ -12,7 +12,7 @@ TEST_CASE("Triangle Area"){
     tri[1] = {1,0,0};
     tri[2] = {0,1,0};
 
-    auto area = Parfait::GenericMeshTools::computeTriangleArea(tri[0], tri[2], tri[1]);
+    auto area = Parfait::Metrics::computeTriangleArea(tri[0], tri[2], tri[1]);
     REQUIRE(area.magnitude() == Approx(0.5));
     REQUIRE(area[2] == Approx(-0.5));
 }

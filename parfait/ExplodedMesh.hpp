@@ -1,9 +1,7 @@
-#ifndef PARFAIT_EXPLODEDMESH_HPP
-#define PARFAIT_EXPLODEDMESH_HPP
+#pragma once
 
 #include <map>
 #include "VectorTools.h"
-#include "GenericMeshTools.h"
 
 namespace Parfait{
   template <class Mesh>
@@ -97,9 +95,22 @@ namespace Parfait{
   std::vector<int> ExplodedMesh::getNodesInCellFace(int cellId, int faceId) const{
       return cells[cellId][faceId];
   }
+  template<class MeshType, class container>
+  Point<double> computeCenter(MeshType &mesh, const container &nodes) {
+      Point<double> center(0, 0, 0);
+      for (auto node : nodes) {
+          Point<double> a;
+          mesh.getNode(node, &a[0]);
+          center += a;
+      }
+
+      center /= (double) nodes.size();
+      return center;
+  }
+
   void ExplodedMesh::shrinkPoints(double scale){
       for(int cellId = 0; cellId < (int)cells.size(); cellId++){
-          auto center = GenericMeshTools::computeCenter(*this, this->getNodesInCell(cellId));
+          auto center = computeCenter(*this, this->getNodesInCell(cellId));
           for(int n : getNodesInCell(cellId)){
               auto p = points[n];
               auto dp = p - center;
@@ -109,4 +120,3 @@ namespace Parfait{
       }
   }
 }
-#endif

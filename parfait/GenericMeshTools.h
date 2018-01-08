@@ -10,19 +10,6 @@
 namespace Parfait {
   namespace GenericMeshTools {
 
-    template<class MeshType, class container>
-    Point<double> computeCenter(MeshType &mesh, const container &nodes) {
-        Point<double> center(0, 0, 0);
-        for (auto node : nodes) {
-            Point<double> a;
-            mesh.getNode(node, &a[0]);
-            center += a;
-        }
-
-        center /= (double) nodes.size();
-        return center;
-    }
-
     template<class MeshType>
     std::vector<std::array<int, 2>> getUniqueEdges(MeshType &mesh_in) {
 
@@ -157,57 +144,6 @@ namespace Parfait {
         }
 
         return edges;
-    }
-
-    template <typename T>
-    Point<T> computeTriangleArea(const Point<T>& a, const Point<T>& b, const Point<T>& c){
-        auto v1 = b - a;
-        auto v2 = c - a;
-
-        auto area = 0.5 * Point<double>::cross(v1, v2);
-        return area;
-    }
-
-    template<typename MeshType, class CellType>
-    bool containsPoint(MeshType &mesh, CellType &&cell, const Point<double> &p) {
-        Point<double> a, b, searchPoint(p);
-        for (auto face:cell) {
-            // Make tets with the search point and the
-            // triangles of each face tesselation and
-            // check if the volume is positive for all (p is inside cell)
-            auto faceNodeIds = face.getNodes();
-            auto faceCentroid = faceCenter(mesh, face);
-            int n = faceNodeIds.size();
-            for (int i = 0; i < n; i++) {
-                mesh.getNode(faceNodeIds[i], a.data());
-                mesh.getNode(faceNodeIds[(i + 1) % n], b.data());
-                if (0 > CompTetVolume(b, a, faceCentroid, searchPoint))
-                    return false;
-            }
-        }
-        return true;
-    }
-
-    template<typename MeshType, class CellType>
-    double interpolate(MeshType &mesh, CellType &&cell,
-                       std::vector<double> &nodeData, double p[3]) {
-        double interpolatedValue = 0.0;
-        // for now, just average the values at the cell vertices
-        // later, this will be tri-linear interpolation, etc.
-        for (int nodeId : cell.getNodes()) interpolatedValue += nodeData[nodeId];
-        interpolatedValue /= (double) cell.numberOfNodes();
-        return interpolatedValue;
-    }
-
-
-    template<typename MeshType, class CellType>
-    std::vector<double> calculateInterpolationWeights(MeshType &mesh, CellType &&cell,
-                                                      double p[3]) {
-        // for now, just return all weights equal
-        double w = 1.0 / (double) cell.numberOfNodes();
-        std::vector<double> weights(cell.numberOfNodes(), w);
-
-        return weights;
     }
   }
 }
