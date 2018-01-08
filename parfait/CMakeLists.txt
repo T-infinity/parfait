@@ -30,8 +30,9 @@ set(SERIAL_TESTS_SOURCES
         test/CGNSToVtkTests.cpp
         test/DualMetricsTests.cpp
         test/ExtentMeshWrapperTests.cpp
-        test/EdgeFieldLeastSquaresGradientTests.cpp
         test/ExtentBuilderTests.cpp
+        test/EdgesTests.cpp
+        test/EdgeFieldLeastSquaresGradientTests.cpp
         test/ExtentTests.cpp
         test/FacetTests.cpp
         test/Fun3DToCGNSTests.cpp
@@ -46,11 +47,9 @@ set(SERIAL_TESTS_SOURCES
         test/StringToolsTests.cpp
         test/STLTests.cpp
         test/VectorToolsTests.cpp
-        test/GenericMeshToolsTests.cpp
         test/MinimumStorageSetTests.cpp
         test/ImportedUgridTests.cpp
         test/NodeToCellTests.cpp
-        test/EdgeBuilderTests.cpp
         test/HexMetricsTests.cpp
         test/GraphOrderingsTests.cpp
         test/PyramidMetricsTests.cpp
