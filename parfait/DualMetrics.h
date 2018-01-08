@@ -1,7 +1,7 @@
 #pragma once
 #include <tuple>
-#include "GenericMeshTools.h"
 #include "CGNSElements.h"
+#include "Metrics.h"
 
 namespace Parfait {
 
@@ -22,7 +22,6 @@ std::tuple<std::vector<double>, std::vector<Parfait::Point<double>>> calcDualMet
                                                                                      const C3 &face_centers,
                                                                                      const Parfait::Point<double> &cell_center) {
 
-    using namespace Parfait::GenericMeshTools;
     int num_edges = edge_to_node.size();
     std::vector<double> node_volumes(num_nodes, 0);
     std::vector<Parfait::Point<double>> edge_areas(num_edges, {0, 0, 0});
@@ -32,14 +31,14 @@ std::tuple<std::vector<double>, std::vector<Parfait::Point<double>>> calcDualMet
         auto hnode = edge_to_node[edge][1];
         auto lface = edge_to_face[edge][0];
         auto rface = edge_to_face[edge][1];
-        node_volumes[lnode] += computeTetVolume(cell[lnode], edge_centers[edge], face_centers[lface], cell_center);
-        node_volumes[lnode] += computeTetVolume(cell[lnode], face_centers[rface], edge_centers[edge], cell_center);
+        node_volumes[lnode] += Metrics::computeTetVolume(cell[lnode], edge_centers[edge], face_centers[lface], cell_center);
+        node_volumes[lnode] += Metrics::computeTetVolume(cell[lnode], face_centers[rface], edge_centers[edge], cell_center);
 
-        node_volumes[hnode] += computeTetVolume(edge_centers[edge], cell[hnode], face_centers[lface], cell_center);
-        node_volumes[hnode] += computeTetVolume(face_centers[rface], cell[hnode], edge_centers[edge], cell_center);
+        node_volumes[hnode] += Metrics::computeTetVolume(edge_centers[edge], cell[hnode], face_centers[lface], cell_center);
+        node_volumes[hnode] += Metrics::computeTetVolume(face_centers[rface], cell[hnode], edge_centers[edge], cell_center);
 
-        edge_areas[edge] += computeTriangleArea(edge_centers[edge], face_centers[lface], cell_center);
-        edge_areas[edge] += computeTriangleArea(face_centers[rface], edge_centers[edge], cell_center);
+        edge_areas[edge] += Metrics::computeTriangleArea(edge_centers[edge], face_centers[lface], cell_center);
+        edge_areas[edge] += Metrics::computeTriangleArea(face_centers[rface], edge_centers[edge], cell_center);
     }
     return std::make_tuple(node_volumes, edge_areas);
 }

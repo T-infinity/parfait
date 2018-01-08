@@ -10,39 +10,6 @@
 namespace Parfait {
   namespace GenericMeshTools {
 
-/*  Computes the volume of a tet given the xyz coords of its
-  vertices.  It returns the signed volume, so in order for it
-  to be positive, the nodes have to be in the expected order
-  (matching ugrid format).
-
-          D
-         /|\
-        / | \
-       /  |  \
-      /   |   \
-     /    |    \
-  A /     |     \ C
-    \` ` `|` ` `/
-     \    |    /
-      \   |   /
-       \  |  /
-        \ | /
-         \|/
-          B
-
-*/
-    inline double computeTetVolume(const Point<double> &a,
-                                   const Point<double> &b,
-                                   const Point<double> &c,
-                                   const Point<double> &d) {
-
-        auto v1 = a - d;
-        auto v2 = b - d;
-        auto v3 = c - d;
-        auto v = Point<double>::cross(v2, v3);
-        return -Point<double>::dot(v1, v) / 6.0;
-    }
-
     template<class MeshType, class container>
     Point<double> computeCenter(MeshType &mesh, const container &nodes) {
         Point<double> center(0, 0, 0);

@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "ParallelMesh.h"
-#include "Helpers.h"
+#include "Metrics.h"
 
 namespace Parfait {
 struct BoundaryGhostEdge {
@@ -18,23 +18,23 @@ inline std::vector<BoundaryGhostEdge> buildBoundaryEdges(const Parfait::Parallel
         auto a = mesh.getXyz(tri[0]);
         auto b = mesh.getXyz(tri[1]);
         auto c = mesh.getXyz(tri[2]);
-        auto center = Helpers::average({a, b, c});
+        auto center = Metrics::average({a, b, c});
         auto e1 = 0.5 * (a + b);
         auto e2 = 0.5 * (b + c);
         auto e3 = 0.5 * (a + c);
         {
-            auto area = Helpers::computeTriangleArea(a, e1, center);
-            area += Helpers::computeTriangleArea(center, e3, a);
+            auto area = Metrics::computeTriangleArea(a, e1, center);
+            area += Metrics::computeTriangleArea(center, e3, a);
             output.push_back(BoundaryGhostEdge{mesh.getTriangleTag(t), tri[0], area});
         }
         {
-            auto area = Helpers::computeTriangleArea(b, e2, center);
-            area += Helpers::computeTriangleArea(center, e1, b);
+            auto area = Metrics::computeTriangleArea(b, e2, center);
+            area += Metrics::computeTriangleArea(center, e1, b);
             output.push_back(BoundaryGhostEdge{mesh.getTriangleTag(t), tri[1], area});
         }
         {
-            auto area = Helpers::computeTriangleArea(c, e3, center);
-            area += Helpers::computeTriangleArea(center, e2, c);
+            auto area = Metrics::computeTriangleArea(c, e3, center);
+            area += Metrics::computeTriangleArea(center, e2, c);
             output.push_back(BoundaryGhostEdge{mesh.getTriangleTag(t), tri[2], area});
         }
     }
@@ -44,29 +44,29 @@ inline std::vector<BoundaryGhostEdge> buildBoundaryEdges(const Parfait::Parallel
         auto b = mesh.getXyz(quad[1]);
         auto c = mesh.getXyz(quad[2]);
         auto d = mesh.getXyz(quad[3]);
-        auto center = Helpers::average({a, b, c, d});
+        auto center = Metrics::average({a, b, c, d});
         auto e1 = 0.5 * (a + b);
         auto e2 = 0.5 * (b + c);
         auto e3 = 0.5 * (c + d);
         auto e4 = 0.5 * (d + a);
         {
-            auto area = Helpers::computeTriangleArea(a, e1, center);
-            area += Helpers::computeTriangleArea(center, e4, a);
+            auto area = Metrics::computeTriangleArea(a, e1, center);
+            area += Metrics::computeTriangleArea(center, e4, a);
             output.push_back(BoundaryGhostEdge{mesh.getQuadTag(q), quad[0], area});
         }
         {
-            auto area = Helpers::computeTriangleArea(b, e2, center);
-            area += Helpers::computeTriangleArea(center, e1, b);
+            auto area = Metrics::computeTriangleArea(b, e2, center);
+            area += Metrics::computeTriangleArea(center, e1, b);
             output.push_back(BoundaryGhostEdge{mesh.getQuadTag(q), quad[1], area});
         }
         {
-            auto area = Helpers::computeTriangleArea(c, e3, center);
-            area += Helpers::computeTriangleArea(center, e2, c);
+            auto area = Metrics::computeTriangleArea(c, e3, center);
+            area += Metrics::computeTriangleArea(center, e2, c);
             output.push_back(BoundaryGhostEdge{mesh.getQuadTag(q), quad[2], area});
         }
         {
-            auto area = Helpers::computeTriangleArea(d, e4, center);
-            area += Helpers::computeTriangleArea(center, e3, d);
+            auto area = Metrics::computeTriangleArea(d, e4, center);
+            area += Metrics::computeTriangleArea(center, e3, d);
             output.push_back(BoundaryGhostEdge{mesh.getQuadTag(q), quad[3], area});
         }
     }
