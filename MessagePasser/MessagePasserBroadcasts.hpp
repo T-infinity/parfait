@@ -3,7 +3,7 @@
 #include <vector>
 
 inline void MessagePasser::Broadcast(std::string& s, int rootId) const {
-    std::vector<char> to_send(s.c_str(), s.c_str() + s.size() + 1);
+    std::vector<char> to_send(s.c_str(), s.c_str() + s.size());
     Broadcast(to_send, rootId);
     s = std::string(to_send.begin(), to_send.end());
 }

@@ -37,6 +37,13 @@ TEST_CASE("Broadcast vector of ints"){
         REQUIRE(i == vec[i]);
 }
 
+TEST_CASE("Broadcast string"){
+    std::string s = "dog";
+    auto mp = MessagePasser();
+    mp.Broadcast(s,0);
+    REQUIRE(3 == s.size());
+}
+
 TEST_CASE("Broadcast a vector of unspecified size"){
     auto mp = std::make_shared<MessagePasser>();
 
