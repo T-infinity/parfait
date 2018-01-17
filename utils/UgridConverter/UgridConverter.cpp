@@ -31,7 +31,7 @@ std::shared_ptr<ImportedUgrid> readInputGrid(std::string filename, std::string f
 }
 
 void writeOutputFile(std::shared_ptr<ImportedUgrid> ugrid, std::string filename, std::string file_type){
-    if(file_type == "binary"){
+    if(file_type == "lb8"){
         printf("Exporting <%s> as binary.", filename.c_str());
         Parfait::UgridWriter::writeImportedUgrid(*ugrid.get(), filename + ".lb8.ugrid", false);
     } else if(file_type == "vtk") {
