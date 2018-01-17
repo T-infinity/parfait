@@ -33,7 +33,7 @@ std::set<int> getUserTags() {
     std::cout << "Which tags should be considered a wall? (space delimited list)" << std::endl;
     std::string user_tags;
     std::getline(std::cin, user_tags);
-    auto l = StringTools::split(user_tags, " ");
+    auto l = Parfait::StringTools::split(user_tags, " ");
     std::set<int> tags;
     for(auto s : l){
         tags.insert(to_int(s));

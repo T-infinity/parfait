@@ -4,7 +4,7 @@
 
 TEST_CASE("String split by delimiter"){
     std::string s = "This is a sentence.";
-    auto l = StringTools::split(s, " ");
+    auto l = Parfait::StringTools::split(s, " ");
     REQUIRE(l.size() == 4);
     REQUIRE("This" == l[0]);
     REQUIRE("is" == l[1]);
@@ -14,7 +14,7 @@ TEST_CASE("String split by delimiter"){
 
 TEST_CASE("String split by string delimiter"){
     std::string s = "(>'-')> <('-'<) ^(' - ')^ <('-'<) (>'-')>";
-    auto l = StringTools::split(s, "'-'");
+    auto l = Parfait::StringTools::split(s, "'-'");
     REQUIRE(l.size() == 5);
 
 }

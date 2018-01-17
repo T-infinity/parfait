@@ -7,12 +7,12 @@ set(TEST_SOURCES
         )
 
 
-add_executable(UnitTests ${TEST_SOURCES})
-target_include_directories(UnitTests PUBLIC
+add_executable(GridConverterUnitTests ${TEST_SOURCES})
+target_include_directories(GridConverterUnitTests PUBLIC
         ${CATCH_INCLUDE_DIR}
         nlohmann_json
         )
 
-target_link_libraries(UnitTests nlohmann_json)
+target_link_libraries(GridConverterUnitTests nlohmann_json)
 
-add_dependencies(UnitTests Catch)
+add_dependencies(GridConverterUnitTests Catch)

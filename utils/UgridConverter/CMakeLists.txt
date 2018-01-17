@@ -6,7 +6,7 @@ set (CMAKE_CXX_STANDARD 14)
 find_package(VTK REQUIRED)
 find_package(nlohmann_json REQUIRED)
 
-add_executable(GridConverter UgridConverter.cpp)
+add_executable(GridConverter UgridConverter.cpp CommandLineParser.h)
 target_link_libraries(GridConverter ${VTK_LIBRARIES})
 
 target_include_directories(GridConverter PUBLIC ../../parfait-viz/src/ ${VTK_INCLUDE_DIRS} )
