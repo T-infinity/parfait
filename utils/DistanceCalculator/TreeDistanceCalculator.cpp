@@ -152,17 +152,14 @@ int main(int argc, char* argv[]) {
     auto stl = cacheSurface(ugrid, tags);
     Parfait::DistanceTree tree(stl.findDomain());
 
-    Tracer::begin("building tree");
     for(const auto& f : stl.facets){
         tree.insert(f);
     }
-    Tracer::end("building tree");
     tree.finalize();
 
     auto start = std::chrono::system_clock::now();
     int nnodes = ugrid.nodes.size() / 3;
     std::vector<double> dist(nnodes, -1);
-    Tracer::begin("searching");
 #pragma omp parallel for
     for(int n = 0; n < nnodes; n++){
         auto p = &ugrid.nodes[3*n+0];
@@ -170,7 +167,6 @@ int main(int argc, char* argv[]) {
         auto c = tree.closestPoint(p);
         dist[n] = (point - c).magnitude();
     }
-    Tracer::end("searching");
     auto end = std::chrono::system_clock::now();
     std::cout << "Elapsed time " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << std::endl;
 

@@ -76,7 +76,7 @@ target_include_directories(parfait INTERFACE
         ${MPI_INCLUDE_PATH} ${METIS_INCLUDE_DIRS} ${PARMETIS_INCLUDE_DIRS})
 
 target_link_libraries(parfait INTERFACE ${MPI_LIBRARIES} ${METIS_LIBRARY} ${PARMETIS_LIBRARY}
-        MessagePasser::MessagePasser tracer::tracer)
+        MessagePasser::MessagePasser)
 
 add_executable(ParfaitTests ${SERIAL_TESTS_SOURCES} ${PARFAIT_HEADERS})
 target_include_directories(ParfaitTests PUBLIC ${CATCH_INCLUDE_DIR} PRIVATE

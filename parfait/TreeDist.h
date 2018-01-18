@@ -5,7 +5,6 @@
 #include <parfait/ExtentBuilder.h>
 #include <parfait/Facet.h>
 #include <limits>
-#include <Tracer.h>
 #include <queue>
 #include <stack>
 
@@ -181,9 +180,7 @@ namespace Parfait {
 
       inline void pruneEmpty(){
           if(voxels.size() == 0) return;
-          Tracer::begin("pruneEmpty");
           pruneVoxel(0);
-          Tracer::end("pruneEmpty");
       }
 
       inline Parfait::Point<double> closestPoint(const Parfait::Point<double>& p) const {

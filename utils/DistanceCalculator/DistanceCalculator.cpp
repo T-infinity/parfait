@@ -2,7 +2,6 @@
 #include <iostream>
 #include <sstream>
 #include <memory>
-#include <Tracer.h>
 #include "../../parfait/STL.h"
 #include "../../parfait/StringTools.h"
 #include "../../parfait-viz/src/VtkUnstructuredWriter.h"
@@ -149,14 +148,11 @@ int main(int argc, char* argv[]) {
     auto tags = getWallTags(ugrid);
 
     Parfait::STL::STL stl;
-    Tracer::begin("build adt");
     auto searchSTL = cacheSurface(ugrid, tags, stl);
-    Tracer::end("build adt");
 
     auto start = std::chrono::system_clock::now();
     int nnodes = ugrid.nodes.size() / 3;
     std::vector<double> dist(nnodes, -1);
-    Tracer::begin("searching");
 #pragma omp parallel for
     for(int n = 0; n < nnodes; n++){
         auto p = &ugrid.nodes[3*n+0];
@@ -164,7 +160,6 @@ int main(int argc, char* argv[]) {
         auto c = searchSTL.getClosestPoint(p);
         dist[n] = (point - c).magnitude();
     }
-    Tracer::end("searching");
     auto end = std::chrono::system_clock::now();
     std::cout << "Elapsed time " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << std::endl;
 

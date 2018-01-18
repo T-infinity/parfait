@@ -6,7 +6,6 @@
 #include <exception>
 #include "STLReader.h"
 #include "TreeDist.h"
-#include <Tracer.h>
 
 namespace Parfait {
 namespace STL {
