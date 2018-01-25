@@ -5,16 +5,17 @@ set (CMAKE_CXX_STANDARD 14)
 
 
 file(GLOB_RECURSE PARFAIT_HEADERS
-        "*.h"
-        "*.hpp"
-        )
+    "*.h"
+    "*.hpp"
+    )
 
-add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/grids/6cell.lb8.ugrid")
-add_definitions(-DSIX_CELL_TEST_JSON="${CMAKE_SOURCE_DIR}/grids/6cell.json")
-add_definitions(-DRAMP_TEST_JSON="${CMAKE_SOURCE_DIR}/grids/ramp.json")
-add_definitions(-DCOMBINED_TEST_JSON="${CMAKE_SOURCE_DIR}/grids/combined.json")
 
-set(SERIAL_TESTS_SOURCES
+if(BUILD_EVERYTHING)
+    add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/grids/6cell.lb8.ugrid")
+    add_definitions(-DSIX_CELL_TEST_JSON="${CMAKE_SOURCE_DIR}/grids/6cell.json")
+    add_definitions(-DRAMP_TEST_JSON="${CMAKE_SOURCE_DIR}/grids/ramp.json")
+    add_definitions(-DCOMBINED_TEST_JSON="${CMAKE_SOURCE_DIR}/grids/combined.json")
+    set(SERIAL_TESTS_SOURCES
         test/AllTests.cpp
         test/Adt3DExtentTests.cpp
         test/Adt3DPointTests.cpp
@@ -67,36 +68,37 @@ set(SERIAL_TESTS_SOURCES
         test/SyncFieldTests.cpp
         test/SyncPatternTests.cpp
         )
-
-# create the cmake-3.0 target
-add_library(parfait INTERFACE)
-target_include_directories(parfait INTERFACE
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:parfait/include>
-        ${MPI_INCLUDE_PATH} ${METIS_INCLUDE_DIRS} ${PARMETIS_INCLUDE_DIRS})
-
-target_link_libraries(parfait INTERFACE ${MPI_LIBRARIES} ${METIS_LIBRARY} ${PARMETIS_LIBRARY}
-        MessagePasser::MessagePasser)
-
-add_executable(ParfaitTests ${SERIAL_TESTS_SOURCES} ${PARFAIT_HEADERS})
-target_include_directories(ParfaitTests PUBLIC ${CATCH_INCLUDE_DIR} PRIVATE
+    add_executable(ParfaitTests ${SERIAL_TESTS_SOURCES} ${PARFAIT_HEADERS})
+    target_include_directories(ParfaitTests PUBLIC ${CATCH_INCLUDE_DIR} PRIVATE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
         $<INSTALL_INTERFACE:/.>
         )
-target_link_libraries(ParfaitTests parfait nlohmann_json MessagePasser::MessagePasser)
+    target_link_libraries(ParfaitTests parfait nlohmann_json MessagePasser::MessagePasser)
 
-add_dependencies(ParfaitTests Catch)
+    add_dependencies(ParfaitTests Catch)
+endif()
 
+add_library(parfait INTERFACE)
+target_include_directories(parfait INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:parfait/include>
+    ${MPI_INCLUDE_PATH} 
+    ${METIS_INCLUDE_DIRS} 
+    ${PARMETIS_INCLUDE_DIRS}
+    )
+
+target_link_libraries(parfait INTERFACE ${MPI_LIBRARIES} ${METIS_LIBRARY} ${PARMETIS_LIBRARY}
+    MessagePasser::MessagePasser)
 
 install(TARGETS parfait
-        EXPORT parfait
-        LIBRARY DESTINATION parfait/lib)
+    EXPORT parfait
+    LIBRARY DESTINATION parfait/lib)
 
 install(FILES ${PARFAIT_HEADERS} DESTINATION parfait/include/parfait)
 
 install(EXPORT parfait
-        NAMESPACE parfait:: DESTINATION parfait)
+    NAMESPACE parfait:: DESTINATION parfait)
 
 install(FILES parfaitConfig.cmake
-        DESTINATION parfait)
+    DESTINATION parfait)
 
