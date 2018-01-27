@@ -70,7 +70,7 @@ inline nlohmann::json getConfigFromCommandLine(std::vector<std::string>& command
             config["input"]["type"] = determineInputType(config["input"]["file"]);
         } else if(command_line[index] == "-o"){
             config["output"]["file"] = command_line[++index];
-            config["output"]["type"] = determineOutputType(config["input"]["file"]);
+            config["output"]["type"] = determineOutputType(config["output"]["file"]);
         }
     }
     try{

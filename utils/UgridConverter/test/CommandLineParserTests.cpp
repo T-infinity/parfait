@@ -18,11 +18,15 @@ TEST_CASE("Determine output filetype"){
 }
 
 TEST_CASE("Command Line can get input file"){
-    std::vector<std::string> command_line = {"-i","pokemon.lb8.ugrid", "-o", "pokemon.lb8.ugrid"};
+    std::vector<std::string> command_line = {"-i","pokemon.b8.ugrid", "-o", "pikachu.lb8.ugrid"};
     auto config = getConfigFromCommandLine(command_line);
     std::string file_in = config["input"]["file"];
-    std::string type = config["input"]["type"];
-    REQUIRE("pokemon.lb8.ugrid" == file_in);
-    REQUIRE("lb8" == type);
-}
+    std::string type_in = config["input"]["type"];
+    REQUIRE("pokemon.b8.ugrid" == file_in);
+    REQUIRE("b8" == type_in);
 
+    std::string file_out = config["output"]["file"];
+    std::string type_out = config["output"]["type"];
+    REQUIRE("pikachu.lb8.ugrid" == file_out);
+    REQUIRE("lb8" == type_out);
+}
