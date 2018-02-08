@@ -2,6 +2,7 @@
 #include <parfait/Edges.h>
 #include <parfait/CGNSElements.h>
 #include <parfait/CartMesh.h>
+#include <parfait/EdgeBuilder.h>
 
 TEST_CASE("GenericMeshToolsTests, UniqueEdges"){
 
@@ -30,7 +31,7 @@ TEST_CASE("GenericMeshToolsTests, UniqueEdges"){
 };
 
 TEST_CASE("add cells to edge list"){
-    Parfait::Edges::EdgeBuilder edgeBuilder;
+    Parfait::EdgeBuilder edgeBuilder;
     std::array<int,4> tet {9,5,30,32};
     edgeBuilder.addCell(tet.data(),Parfait::CGNS::Tet::edge_to_node);
 
