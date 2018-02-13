@@ -167,7 +167,7 @@ public:
     T ParallelMin(T value) const;
 
     template<typename T>
-    T ParallelRankOfMax(T value, int rootId) const;
+    T ParallelRankOfMax(T value) const;
 
     template<typename T>
     std::vector<T> ElementalMax(std::vector<T>& vec, int root) const;

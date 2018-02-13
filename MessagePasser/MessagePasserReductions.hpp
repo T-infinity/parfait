@@ -66,7 +66,7 @@ std::vector<T> MessagePasser::ParallelMin(const std::vector<T>& vec, int rootId)
 }
 
 template<typename T>
-T MessagePasser::ParallelRankOfMax(T value, int rootId) const {
+T MessagePasser::ParallelRankOfMax(T value) const {
     static_assert(std::is_trivially_copyable<T>::value, "Must be able to trivially copy datatype for MessagePasser::NonBlockingRecv");
     struct {
       T value;
@@ -74,8 +74,8 @@ T MessagePasser::ParallelRankOfMax(T value, int rootId) const {
     } tmp, max;
     tmp.value = value;
     tmp.rank  = Rank();
-    MPI_Reduce(&tmp, &max, 1, Type(tmp.value,tmp.rank), MPI_MAXLOC, rootId, getCommunicator());
-    Broadcast(max.rank, rootId);
+    MPI_Reduce(&tmp, &max, 1, Type(tmp.value,tmp.rank), MPI_MAXLOC, 0, getCommunicator());
+    Broadcast(max.rank, 0);
     return max.rank;
 }
 
