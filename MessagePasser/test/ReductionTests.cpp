@@ -48,6 +48,15 @@ TEST_CASE("Parallel min reduction for a single element"){
         REQUIRE(value == mp->Rank());
 }
 
+TEST_CASE("Parallel rank of max reduction for a single element"){
+    auto mp = std::make_shared<MessagePasser>();
+
+    int root = mp->NumberOfProcesses()-1;
+    int value = mp->Rank();
+    int rank = mp->ParallelRankOfMax(value, root);
+    REQUIRE((mp->NumberOfProcesses()-1 == rank));
+}
+
 TEST_CASE("Parallel min-all reduction for a single element"){
     auto mp = std::make_shared<MessagePasser>();
 

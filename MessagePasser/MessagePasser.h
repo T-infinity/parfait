@@ -33,6 +33,10 @@ public:
     inline MPI_Datatype Type(long value) const { return MPI_LONG; }
     inline MPI_Datatype Type(float value) const { return MPI_FLOAT; }
     inline MPI_Datatype Type(double value) const { return MPI_DOUBLE; }
+    inline MPI_Datatype Type(int v, int r) const { return MPI_2INT; }
+    inline MPI_Datatype Type(long v, int r) const { return MPI_LONG_INT; }
+    inline MPI_Datatype Type(float v, int r) const { return MPI_FLOAT_INT; }
+    inline MPI_Datatype Type(double v, int r) const { return MPI_DOUBLE_INT; }
     inline void Barrier() const {
         MPI_Barrier(getCommunicator());
     }
@@ -161,6 +165,9 @@ public:
 
     template<typename T>
     T ParallelMin(T value) const;
+
+    template<typename T>
+    T ParallelRankOfMax(T value, int rootId) const;
 
     template<typename T>
     std::vector<T> ElementalMax(std::vector<T>& vec, int root) const;
