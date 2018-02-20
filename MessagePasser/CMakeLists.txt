@@ -64,7 +64,6 @@ if(BUILD_EVERYTHING)
         ${PARMETIS_INCLUDE_DIRS}
         ${METIS_INCLUDE_DIRS}
         ${MPI_INCLUDE_PATH}
-        ${JSON_INCLUDE_DIR}
         )
 
     target_link_libraries(MessagePasserTests
