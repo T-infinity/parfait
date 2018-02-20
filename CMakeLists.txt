@@ -15,10 +15,7 @@ if(BUILD_EVERYTHING)
     find_package_handle_standard_args ( METIS_LIBRARY DEFAULT_MSG METIS_LIBRARY )
     find_package_handle_standard_args ( PARMETIS_LIBRARY DEFAULT_MSG PARMETIS_LIBRARY )
 
-    # Prepare "Catch" library for other executables
-    set(CATCH_INCLUDE_DIR ${CMAKE_INSTALL_PREFIX}/include/catch)
-    add_library(Catch INTERFACE)
-    target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
+    find_package(Catch2 REQUIRED)
 endif()
 
 add_subdirectory(MessagePasser)

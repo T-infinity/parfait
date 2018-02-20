@@ -69,13 +69,13 @@ if(BUILD_EVERYTHING)
         test/SyncPatternTests.cpp
         )
     add_executable(ParfaitTests ${SERIAL_TESTS_SOURCES} ${PARFAIT_HEADERS})
-    target_include_directories(ParfaitTests PUBLIC ${CATCH_INCLUDE_DIR} PRIVATE
+    target_include_directories(ParfaitTests
+            PRIVATE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
         $<INSTALL_INTERFACE:/.>
         )
-    target_link_libraries(ParfaitTests parfait nlohmann_json MessagePasser::MessagePasser)
+    target_link_libraries(ParfaitTests parfait nlohmann_json MessagePasser::MessagePasser Catch2::Catch)
 
-    add_dependencies(ParfaitTests Catch)
 endif()
 
 add_library(parfait INTERFACE)

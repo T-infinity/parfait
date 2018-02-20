@@ -65,15 +65,13 @@ if(BUILD_EVERYTHING)
         ${METIS_INCLUDE_DIRS}
         ${MPI_INCLUDE_PATH}
         ${JSON_INCLUDE_DIR}
-        ${CATCH_INCLUDE_DIR}
         )
-
-    add_dependencies(MessagePasserTests Catch)
 
     target_link_libraries(MessagePasserTests
         ${MPI_LIBRARIES}
         ${PARMETIS_LIBRARY}
         ${METIS_LIBRARY}
+            Catch2::Catch
         )
 endif()
 

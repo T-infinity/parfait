@@ -9,10 +9,8 @@ set(TEST_SOURCES
 
 add_executable(GridConverterUnitTests ${TEST_SOURCES})
 target_include_directories(GridConverterUnitTests PUBLIC
-        ${CATCH_INCLUDE_DIR}
         nlohmann_json
         )
 
-target_link_libraries(GridConverterUnitTests nlohmann_json)
+target_link_libraries(GridConverterUnitTests nlohmann_json Catch2::Catch)
 
-add_dependencies(GridConverterUnitTests Catch)
