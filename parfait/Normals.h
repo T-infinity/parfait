@@ -34,15 +34,17 @@ namespace Parfait {
     inline Parfait::Point<double> goodNormal(const std::vector<Parfait::Point<double>> &normals) {
         auto norm = average(normals);
 
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 100000; i++) {
             auto average_angle = averageAngleInRad(norm, normals);
             double max_delta = 0;
+            auto updated_normal = norm;
             for (auto u : normals) {
                 auto angle = angleBetweenInRad(u, norm);
                 auto delta = average_angle - angle;
-                norm += u * fabs(delta);
+                updated_normal += u * fabs(delta);
                 max_delta = std::max(delta, max_delta);
             }
+            norm = updated_normal;
             norm.normalize();
             if (max_delta < 1.0e-8)
                 break;
