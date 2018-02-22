@@ -19,10 +19,10 @@ TEST_CASE("Edge collection least squares gradient of more than 1 variable"){
     auto getFirstVariable = [&](int node_id){return var[node_id][0];};
     auto getSecondVariable = [&](int node_id){return var[node_id][1];};
 
-    auto grad_first = Parfait::Gradient::calculateNodeGradientsFromEdges(getEdge, edges.size(), getXyz, points.size(),
-                                                      gs, getFirstVariable);
-    auto grad_second = Parfait::Gradient::calculateNodeGradientsFromEdges(getEdge, edges.size(), getXyz, points.size(),
-                                                       gs, getSecondVariable);
+    auto grad_first = Parfait::Gradient::calculateNodeGradientsFromEdges<double>(getEdge, edges.size(), getXyz, points.size(),
+                                                                                 gs, getFirstVariable);
+    auto grad_second = Parfait::Gradient::calculateNodeGradientsFromEdges<double>(getEdge, edges.size(), getXyz, points.size(),
+                                                                                  gs, getSecondVariable);
 
     REQUIRE(grad_first.size() == points.size());
     for(auto& g : grad_first) {

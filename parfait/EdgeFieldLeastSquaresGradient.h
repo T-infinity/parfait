@@ -100,12 +100,12 @@ namespace Parfait {
             return gs;
         }
 
-        template<typename GetEdge, typename GetXyz, typename GetVariable>
-        std::vector<Parfait::Point<double>> calculateNodeGradientsFromEdges(
+        template<typename T, typename GetEdge, typename GetXyz, typename GetVariable>
+        std::vector<Parfait::Point<T>> calculateNodeGradientsFromEdges(
                 GetEdge getEdge, int number_of_edges, GetXyz getXyz,
                 int number_of_nodes, const std::vector<GSWeights> &gs, const GetVariable var) {
 
-            std::vector<Parfait::Point<double>> grad(number_of_nodes, {0, 0, 0});
+            std::vector<Parfait::Point<T>> grad(number_of_nodes, {0, 0, 0});
 
             for (int i = 0; i < number_of_edges; i++) {
                 auto edge = getEdge(i);
