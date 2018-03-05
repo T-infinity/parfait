@@ -35,23 +35,23 @@ inline void UgridWriter::writeHeader(std::string filename,int nnodes,
     FILE *f = fopen(filename.c_str(),"wb");
     if(f == NULL)
         throw std::domain_error("Could not open .ugrid file: "+filename);
-	if(swapBytes) {
-		private_fwrite(&nnodes,sizeof(int),1,f);
-		private_fwrite(&ntri  ,sizeof(int),1,f);
-		private_fwrite(&nquad ,sizeof(int),1,f);
-		private_fwrite(&ntet  ,sizeof(int),1,f);
-		private_fwrite(&npyr  ,sizeof(int),1,f);
-		private_fwrite(&nprism,sizeof(int),1,f);
-		private_fwrite(&nhex  ,sizeof(int),1,f);
-	} else {
-		fwrite(&nnodes,sizeof(int),1,f);
-		fwrite(&ntri  ,sizeof(int),1,f);
-		fwrite(&nquad ,sizeof(int),1,f);
-		fwrite(&ntet  ,sizeof(int),1,f);
-		fwrite(&npyr  ,sizeof(int),1,f);
-		fwrite(&nprism,sizeof(int),1,f);
-		fwrite(&nhex  ,sizeof(int),1,f);
-	}
+    if(swapBytes){
+        bswap_32(&nnodes);
+        bswap_32(&ntri);
+        bswap_32(&nquad);
+        bswap_32(&ntet);
+        bswap_32(&npyr);
+        bswap_32(&nprism);
+        bswap_32(&nhex);
+    }
+
+    fwrite(&nnodes,sizeof(int),1,f);
+    fwrite(&ntri  ,sizeof(int),1,f);
+    fwrite(&nquad ,sizeof(int),1,f);
+    fwrite(&ntet  ,sizeof(int),1,f);
+    fwrite(&npyr  ,sizeof(int),1,f);
+    fwrite(&nprism,sizeof(int),1,f);
+    fwrite(&nhex  ,sizeof(int),1,f);
     fclose(f);
 }
 
@@ -59,10 +59,13 @@ inline void UgridWriter::writeNodes(std::string filename,int nnodes,double *node
 	FILE *f = fopen(filename.c_str(),"ab");
     if(f == NULL)
         throw std::domain_error("Could not open .ugrid file: "+filename);
-	if(swapBytes)
-		private_fwrite(nodes,sizeof(double),3*nnodes,f);
-	else
-		fwrite(nodes,sizeof(double),3*nnodes,f);
+    for(size_t i = 0; i < 3*nnodes; i++){
+        bswap_64(&nodes[i]);
+    }
+    fwrite(nodes,sizeof(double),3*nnodes,f);
+    for(size_t i = 0; i < 3*nnodes; i++){
+        bswap_64(&nodes[i]);
+    }
 	fclose(f);
 }
 
@@ -114,11 +117,19 @@ inline void UgridWriter::writeQuadBoundaryTags(std::string filename,int nquads,i
 inline void UgridWriter::writeIntegerField(std::string filename,int n,int *fieldData,bool swapBytes) {
 	FILE *f = fopen(filename.c_str(),"ab");
 	assert(f != NULL);
-	if(swapBytes)
-		private_fwrite(fieldData,sizeof(int),n,f);
-	else
-		fwrite(fieldData,sizeof(int),n,f);
+	if(swapBytes){
+        for(size_t i = 0; i < n; i++){
+            bswap_32(&fieldData[i]);
+        }
+    }
+
+    fwrite(fieldData,sizeof(int),n,f);
 	fclose(f);
+    if(swapBytes){
+        for(size_t i = 0; i < n; i++){
+            bswap_32(&fieldData[i]);
+        }
+    }
 }
 
 inline void UgridWriterFactory::setName(std::string fileNameBase) {

@@ -88,25 +88,21 @@ inline void Parfait::UgridReader::readHeader(std::string filename,int &nnodes, i
     if(f == NULL){
         throw std::domain_error("Could not open .ugrid file: "+filename);
     }
-	if(swapBytes)
-	{
-		private_fread(&nnodes,sizeof(int),1,f);
-		private_fread(&ntri  ,sizeof(int),1,f);
-		private_fread(&nquad ,sizeof(int),1,f);
-		private_fread(&ntet  ,sizeof(int),1,f);
-		private_fread(&npyr  ,sizeof(int),1,f);
-		private_fread(&nprism,sizeof(int),1,f);
-		private_fread(&nhex  ,sizeof(int),1,f);
-	}
-	else
-	{
-		fread(&nnodes,sizeof(int),1,f);
-		fread(&ntri  ,sizeof(int),1,f);
-		fread(&nquad ,sizeof(int),1,f);
-		fread(&ntet  ,sizeof(int),1,f);
-		fread(&npyr  ,sizeof(int),1,f);
-		fread(&nprism,sizeof(int),1,f);
-		fread(&nhex  ,sizeof(int),1,f);
+    fread(&nnodes,sizeof(int),1,f);
+    fread(&ntri  ,sizeof(int),1,f);
+    fread(&nquad ,sizeof(int),1,f);
+    fread(&ntet  ,sizeof(int),1,f);
+    fread(&npyr  ,sizeof(int),1,f);
+    fread(&nprism,sizeof(int),1,f);
+    fread(&nhex  ,sizeof(int),1,f);
+	if(swapBytes) {
+		bswap_32(&nnodes);
+		bswap_32(&ntri  );
+		bswap_32(&nquad );
+		bswap_32(&ntet  );
+		bswap_32(&npyr  );
+		bswap_32(&nprism);
+		bswap_32(&nhex  );
 	}
     fclose(f);
 }
@@ -131,10 +127,13 @@ inline std::vector<double> Parfait::UgridReader::readNodes(std::string filename,
 	int byteOffset = 7*sizeof(int);
 	byteOffset += 3*begin*sizeof(double);
 	fseek(f,byteOffset,SEEK_SET);
-	if(swapBytes)
-		private_fread(&nodes[0],sizeof(double),3*nrequested,f);
-	else
 		fread(&nodes[0],sizeof(double),3*nrequested,f);
+    if(swapBytes) {
+        for (size_t i = 0; i < 3 * nrequested; i++) {
+            bswap_64(&nodes[i]);
+        }
+    }
+
 	fclose(f);
     return nodes;
 }
@@ -159,11 +158,13 @@ inline std::vector<int> Parfait::UgridReader::readTriangles(std::string filename
     unsigned long int byteOffset = 7*sizeof(int) + 3*nnodes*sizeof(double);
     byteOffset += 3*begin*sizeof(int);
     fseek(f,byteOffset,SEEK_SET);
-	if(swapBytes)
-    	private_fread(&triangles[0],sizeof(int),3*nrequested,f);
-	else
-    	fread(&triangles[0],sizeof(int),3*nrequested,f);
+    fread(&triangles[0],sizeof(int),3*nrequested,f);
     fclose(f);
+    if(swapBytes) {
+        for (size_t i = 0; i < 3 * nrequested; i++) {
+            bswap_32(&triangles[i]);
+        }
+    }
 
     for(int& vertex : triangles)
         vertex--;
@@ -191,11 +192,13 @@ inline std::vector<int> Parfait::UgridReader::readQuads(std::string filename,int
     byteOffset += 3*ntri*sizeof(int);
     byteOffset += 4*begin*sizeof(int);
     fseek(f,byteOffset,SEEK_SET);
-	if(swapBytes)
-    	private_fread(&quads[0],sizeof(int),4*nrequested,f);
-	else
-    	fread(&quads[0],sizeof(int),4*nrequested,f);
+    fread(&quads[0],sizeof(int),4*nrequested,f);
     fclose(f);
+    if(swapBytes) {
+        for (size_t i = 0; i < 4 * nrequested; i++) {
+            bswap_32(&quads[i]);
+        }
+    }
 
     for(int& vertex : quads)
         vertex--;
@@ -226,11 +229,14 @@ inline std::vector<int> Parfait::UgridReader::readTets(std::string filename,int 
     byteOffset += (ntri+nquad)*sizeof(int);
     byteOffset += 4*begin*sizeof(int);
     fseek(f,byteOffset,SEEK_SET);
-	if(swapBytes)
-    	private_fread(&tets[0],sizeof(int),4*nrequested,f);
-	else
-    	fread(&tets[0],sizeof(int),4*nrequested,f);
+    fread(&tets[0],sizeof(int),4*nrequested,f);
     fclose(f);
+
+    if(swapBytes) {
+        for (size_t i = 0; i < 4 * nrequested; i++) {
+            bswap_32(&tets[i]);
+        }
+    }
 
     for(int& vertex : tets)
         vertex--;
@@ -262,11 +268,13 @@ inline std::vector<int> Parfait::UgridReader::readPyramids(std::string filename,
     byteOffset += 4*ntet*sizeof(int);
     byteOffset += 5*begin*sizeof(int);
     fseek(f,byteOffset,SEEK_SET);
-	if(swapBytes)
-    	private_fread(&pyrs[0],sizeof(int),5*nrequested,f);
-	else
-    	fread(&pyrs[0],sizeof(int),5*nrequested,f);
+    fread(&pyrs[0],sizeof(int),5*nrequested,f);
     fclose(f);
+    if(swapBytes) {
+        for (size_t i = 0; i < 5 * nrequested; i++) {
+            bswap_32(&pyrs[i]);
+        }
+    }
 
     for(int& vertex : pyrs)
         vertex--;
@@ -299,10 +307,12 @@ inline std::vector<int> Parfait::UgridReader::readPrisms(std::string filename,in
     byteOffset += 5*npyr*sizeof(int);
     byteOffset += 6*begin*sizeof(int);
     fseek(f,byteOffset,SEEK_SET);
-	if(swapBytes)
-    	private_fread(&prisms[0],sizeof(int),6*nrequested,f);
-	else
-    	fread(&prisms[0],sizeof(int),6*nrequested,f);
+    fread(&prisms[0],sizeof(int),6*nrequested,f);
+    if(swapBytes) {
+        for (size_t i = 0; i < 6 * nrequested; i++) {
+            bswap_32(&prisms[i]);
+        }
+    }
     fclose(f);
 
     for(int& vertex : prisms) // decrement to C indexing
@@ -342,11 +352,13 @@ inline std::vector<int> Parfait::UgridReader::readHexs(std::string filename,int 
     byteOffset += 6*nprism*sizeof(int);
     byteOffset += 8*begin*sizeof(int);
     fseek(f,byteOffset,SEEK_SET);
-	if(swapBytes)
-    	private_fread(&hexs[0],sizeof(int),8*nrequested,f);
-	else
-    	fread(&hexs[0],sizeof(int),8*nrequested,f);
+    fread(&hexs[0],sizeof(int),8*nrequested,f);
     fclose(f);
+    if(swapBytes) {
+        for (size_t i = 0; i < 8 * nrequested; i++) {
+            bswap_32(&hexs[i]);
+        }
+    }
 
     for(int& vertex : hexs)
         vertex--;
@@ -394,10 +406,12 @@ inline std::vector<int> Parfait::UgridReader::readBoundaryTags(std::string filen
     byteOffset += 4*nquad*sizeof(int);
     byteOffset += begin*sizeof(int);
     fseek(f,byteOffset,SEEK_SET);
-	if(swapBytes)
-    	private_fread(&tags[0],sizeof(int),nrequested,f);
-    else
-		fread(&tags[0],sizeof(int),nrequested,f);
+    fread(&tags[0],sizeof(int),nrequested,f);
     fclose(f);
+    if(swapBytes) {
+        for (size_t i = 0; i < nrequested; i++) {
+            bswap_32(&tags[i]);
+        }
+    }
     return tags;
 }
