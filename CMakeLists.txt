@@ -30,7 +30,7 @@ endif()
 add_subdirectory(MessagePasser)
 add_subdirectory(parfait)
 
-if(BUILD_EVERYTHING)
+if(NOT BUILD_HEADER_ONLY)
     add_subdirectory(parfait-viz)
     add_subdirectory(utils)
 endif()
