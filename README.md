@@ -13,7 +13,7 @@ make -j install
 
 ## nlohmann_json
 If not strictly installing header files Parfait requires nlohmann_json (https://github.com/nlohmann/json).
-You can install nlohmann::json using their provided cmake, and add the Findnlohmann_json.cmake path to your `CMAKE_PREFIX_PATH` environmen variable.
+You can install nlohmann::json using their provided cmake based build system, and add the `Findnlohmann_json.cmake` path to your `CMAKE_PREFIX_PATH` environment variable.
 Or you can install their single header in an `nlohmann` folder somewhere on your machine, and build with:
 
 ```
