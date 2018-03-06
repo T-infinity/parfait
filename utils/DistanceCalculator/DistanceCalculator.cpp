@@ -15,7 +15,6 @@
 #include <memory>
 #include "../../parfait/STL.h"
 #include "../../parfait/StringTools.h"
-#include "../../parfait-viz/src/VtkUnstructuredWriter.h"
 
 std::vector<int> findAllTags(const Parfait::ImportedUgrid& mesh){
     std::set<int> tags;
@@ -176,7 +175,7 @@ int main(int argc, char* argv[]) {
 
     writeToFile("distance.txt", dist, ugrid.nodes);
     writeBoundaryDistances("boundary.txt", dist, determineIfBoundaryNodes(ugrid));
-    printf("Exporting <%s> as vtu.", filename.c_str());
+//    printf("Exporting <%s> as vtu.", filename.c_str());
     //Parfait::VtkUnstructuredWriter writer(filename, ugrid);
     //writer.addNodeData("distance", dist.data(), 1);
     //writer.writeBinary();
