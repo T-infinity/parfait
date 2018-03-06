@@ -11,7 +11,15 @@ cmake .. -DHEADER_ONLY=TRUE
 make -j install
 ```
 
-## nlohmann_json
+## Dependencies
+Parfait depends on C++14.  We suggest you use the latest GNU compiler.  We regularly test with GCC 6.2 and 7.0.
+
+### MPI
+All Parfait utilities currectly rely on MPI.  Please make sure MPI is added to your `LD_LIBRARY_PATH` and `INCLUDE_PATH` (on many linux systems you simply `module load ...` your favorite flavor of MPI.
+
+### Metis and ParMetis
+
+### nlohmann_json
 If not strictly installing header files Parfait requires nlohmann_json (https://github.com/nlohmann/json).
 You can install nlohmann::json using their provided cmake based build system, and add the `Findnlohmann_json.cmake` path to your `CMAKE_PREFIX_PATH` environment variable.
 Or you can install their single header in an `nlohmann` folder somewhere on your machine, and build with:
@@ -24,10 +32,10 @@ make -j install
 ```
 Note: Your path _must_ point to the folder containing the nlohmann folder.  Do not point to json.hpp.
 
-This will install the Parfait header files, and some of the Parfait utilities.  
+### VTK
 Some Parfait utilities require the VTK libraries to be installed, and for the FindVTK.cmake file to be discoverable by cmake.
 
-## Unit Tests
+### Catch2
 To enable building Parfait's unit tests you must have Catch2 installed. 
 You can install Catch2 using their provided cmake and add the FindCatch2.cmake path to your `CMAKE_PREFIX_PATH` environment variable.
 Or, you can simple install the Catch2 catch.hpp header file, and build with:

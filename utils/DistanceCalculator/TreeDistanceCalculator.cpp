@@ -16,7 +16,6 @@
 #include <TreeDist.h>
 #include "../../parfait/STL.h"
 #include "../../parfait/StringTools.h"
-#include "../../parfait-viz/src/VtkUnstructuredWriter.h"
 
 std::vector<int> findAllTags(const Parfait::ImportedUgrid& mesh){
     std::set<int> tags;
@@ -46,7 +45,7 @@ std::set<int> getUserTags() {
     std::getline(std::cin, user_tags);
     auto l = Parfait::StringTools::split(user_tags, " ");
     std::set<int> tags;
-    for(auto s : l){
+    for(const auto& s : l){
         tags.insert(to_int(s));
     }
     return tags;
