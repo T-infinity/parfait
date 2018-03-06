@@ -6,7 +6,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 option(BUILD_HEADER_ONLY "To build with full support" FALSE)
 option(BUILD_TESTS "To build with test support" TRUE)
-option(nlohmann_json_path "Specify search path to nlohmann/json.hpp" "")
+option(nlohmann_json_path "Specify search path to the nlohmann folder (i.e. the folder containing nlohmann/json.hpp)" "")
 option(Catch2_path "Specify search path to catch.hpp" "")
 
 
