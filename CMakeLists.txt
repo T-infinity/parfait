@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.6)
 PROJECT(parfait)
 set (CMAKE_CXX_STANDARD 14)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-#list(APPEND CMAKE_MODULE_PATH ${CMAKE_INSTALL_PREFIX})
 
 option(BUILD_HEADER_ONLY "To build with full support" FALSE)
 option(BUILD_TESTS "To build with test support" TRUE)
