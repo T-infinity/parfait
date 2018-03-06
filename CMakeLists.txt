@@ -2,10 +2,18 @@ cmake_minimum_required(VERSION 3.6)
 
 PROJECT(parfait)
 set (CMAKE_CXX_STANDARD 14)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+#list(APPEND CMAKE_MODULE_PATH ${CMAKE_INSTALL_PREFIX})
 
-set(BUILD_EVERYTHING TRUE CACHE BOOL "dogs...")
+option(BUILD_HEADER_ONLY "To build with full support" FALSE)
+option(BUILD_TESTS "To build with test support" TRUE)
+option(nlohmann_json_path "Specify search path to nlohmann/json.hpp" "")
+option(Catch2_path "Specify search path to catch.hpp" "")
 
-if(BUILD_EVERYTHING)
+
+if(BUILD_HEADER_ONLY)
+    set(BUILD_TESTS FALSE)
+else()
     find_package(MPI REQUIRED)
     find_package(nlohmann_json REQUIRED)
     find_path(PARMETIS_INCLUDE_DIRS parmetis.h)
@@ -14,7 +22,9 @@ if(BUILD_EVERYTHING)
     find_library ( METIS_LIBRARY NAMES metis)
     find_package_handle_standard_args ( METIS_LIBRARY DEFAULT_MSG METIS_LIBRARY )
     find_package_handle_standard_args ( PARMETIS_LIBRARY DEFAULT_MSG PARMETIS_LIBRARY )
+endif()
 
+if(BUILD_TESTS)
     find_package(Catch2 REQUIRED)
 endif()
 

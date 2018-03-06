@@ -4,7 +4,6 @@ PROJECT(DistanceCalculator)
 set (CMAKE_CXX_STANDARD 14)
 
 find_package(OpenMP REQUIRED)
-find_package(nlohmann_json REQUIRED)
 find_package(VTK REQUIRED)
 
 add_executable(AdtDistanceCalculator DistanceCalculator.cpp)

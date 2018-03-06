@@ -4,7 +4,6 @@ PROJECT(UgridConverter)
 set (CMAKE_CXX_STANDARD 14)
 
 find_package(VTK REQUIRED)
-find_package(nlohmann_json REQUIRED)
 
 add_executable(GridConverter UgridConverter.cpp CommandLineParser.h)
 target_link_libraries(GridConverter ${VTK_LIBRARIES})
@@ -17,4 +16,6 @@ install(TARGETS GridConverter
     EXPORT parfait-targets
     DESTINATION parfait/bin)
 
-add_subdirectory(test)
+if(BUILD_TESTS)
+    add_subdirectory(test)
+endif()

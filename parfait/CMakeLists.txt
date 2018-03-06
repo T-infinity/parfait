@@ -10,7 +10,7 @@ file(GLOB_RECURSE PARFAIT_HEADERS
     )
 
 
-if(BUILD_EVERYTHING)
+if(BUILD_TESTS)
     add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/grids/6cell.lb8.ugrid")
     add_definitions(-DSIX_CELL_TEST_JSON="${CMAKE_SOURCE_DIR}/grids/6cell.json")
     add_definitions(-DRAMP_TEST_JSON="${CMAKE_SOURCE_DIR}/grids/ramp.json")

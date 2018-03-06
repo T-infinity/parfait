@@ -18,19 +18,10 @@ set(SOURCE_FILES
     )
 
 
-if(BUILD_EVERYTHING)
+if(BUILD_TESTS)
     add_definitions(
         -DPARFAIT_WITH_PARMETIS
         )
-    include ( FindPackageHandleStandardArgs )
-    find_package(MPI REQUIRED)
-    find_package(nlohmann_json REQUIRED)
-    find_path(PARMETIS_INCLUDE_DIRS parmetis.h)
-    find_path(METIS_INCLUDE_DIRS metis.h)
-    find_library ( PARMETIS_LIBRARY NAMES parmetis)
-    find_library ( METIS_LIBRARY NAMES metis)
-    find_package_handle_standard_args ( METIS_LIBRARY DEFAULT_MSG METIS_LIBRARY )
-    find_package_handle_standard_args ( PARMETIS_LIBRARY DEFAULT_MSG PARMETIS_LIBRARY )
     set(PARFAIT_PARALLEL_TESTS_SRC
         test/AllTests.cpp
         test/AllGathervTests.cpp
