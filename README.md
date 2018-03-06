@@ -1,7 +1,7 @@
 Parfait is an unstructured mesh toolkit developed at NASA Langley.
 
 
-##Building
+# Building
 The Parfait toolkit is header only. If you just want to use the C++ toolkit simply
 
 ```
@@ -11,7 +11,7 @@ cmake .. -DHEADER_ONLY=TRUE
 make -j install
 ```
 
-#nlohmann_json
+## nlohmann_json
 If not strictly installing header files Parfait requires nlohmann_json (https://github.com/nlohmann/json).
 You can install nlohmann::json using their provided cmake, and add the Findnlohmann_json.cmake path to your `CMAKE_PREFIX_PATH` environmen variable.
 Or you can install their single header in an `nlohmann` folder somewhere on your machine, and build with:
@@ -27,7 +27,7 @@ Note: Your path _must_ point to the folder containing the nlohmann folder.  Do n
 This will install the Parfait header files, and some of the Parfait utilities.  
 Some Parfait utilities require the VTK libraries to be installed, and for the FindVTK.cmake file to be discoverable by cmake.
 
-#Unit Tests
+## Unit Tests
 To enable building Parfait's unit tests you must have Catch2 installed. 
 You can install Catch2 using their provided cmake and add the FindCatch2.cmake path to your `CMAKE_PREFIX_PATH` environment variable.
 Or, you can simple install the Catch2 catch.hpp header file, and build with:
