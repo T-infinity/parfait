@@ -3,15 +3,14 @@ cmake_minimum_required(VERSION 3.6)
 PROJECT(ParfaitViz)
 set (CMAKE_CXX_STANDARD 14)
 
-find_package(MPI REQUIRED)
+if(MPI_FOUND)
+    add_definitions(
+        -DPARFAIT_WITH_MPI
+        -DPARFAIT_WITH_PARMETIS
+        -DCATCH_WITH_MPI
+        )
 
-add_definitions(
-  -DPARFAIT_WITH_MPI
-  -DPARFAIT_WITH_PARMETIS
-  -DCATCH_WITH_MPI
-)
-
-set(PARFAIT_VIZ_HEADERS
+    set(PARFAIT_VIZ_HEADERS
         src/ParfaitVizualizer.h
         src/VtkExtentWriter.h
         src/VtkUnstructuredWriter.h
@@ -21,8 +20,9 @@ set(PARFAIT_VIZ_HEADERS
         src/VtkHacking.h
         )
 
-install(FILES ${PARFAIT_VIZ_HEADERS} 
-    DESTINATION parfait-viz/include)
+    install(FILES ${PARFAIT_VIZ_HEADERS} 
+        DESTINATION parfait-viz/include)
 
-install(FILES parfait-vizConfig.cmake 
-    DESTINATION parfait-viz)
+    install(FILES parfait-vizConfig.cmake 
+        DESTINATION parfait-viz)
+endif()
