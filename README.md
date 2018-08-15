@@ -1,5 +1,14 @@
 Parfait is an unstructured mesh toolkit developed at NASA Langley.
 
+# Quick Start if you just want the Distance Calculator Utility
+```
+cd parfait
+mkdir build
+cd build
+cmake .. -DUTILS_ONLY=TRUE -DCMAKE_INSTALL_PREFIX=/path/to/your/desired/install/path
+make -j install
+```
+
 
 # Building
 The Parfait toolkit is header only. If you just want to use the C++ toolkit simply
