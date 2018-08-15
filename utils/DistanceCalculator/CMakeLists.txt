@@ -11,7 +11,7 @@ if(NOT OpenMP_FOUND)
     message("This error often occurs on Apple hardware since clang on Apple does not ship with OpenMP support")
     message("We suggest using GNU g++ even on Apple hardware for this reason.")
     message("You can set the compiler when invoking cmake with: ")
-    message("   cmake -DCMAKE_CXX_COMPILER=/path/to/your/desired/compiler")
+    message("   cmake -DCMAKE_CXX_COMPILER=/path/to/your/desired/C++/compiler -DCMAKE_C_COMPILER=/path/to/your/desired/C/compiler"
     message("======================================")
 endif()
 
