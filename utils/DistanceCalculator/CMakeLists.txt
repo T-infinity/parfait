@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.6)
 PROJECT(DistanceCalculator)
 set (CMAKE_CXX_STANDARD 14)
 
-find_package(OpenMP REQUIRED)
+find_package(OpenMP)
 
 
 add_executable(DistanceCalculator TreeDistanceCalculator.cpp)
