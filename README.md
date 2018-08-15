@@ -8,6 +8,7 @@ cd build
 cmake .. -DUTILS_ONLY=TRUE -DCMAKE_INSTALL_PREFIX=/path/to/your/desired/install/path
 make -j install
 ```
+There should now be a DistanceCalculator binary utility in your `/path/to/your/desired/install/path/parfait/bin`
 
 
 # Building
