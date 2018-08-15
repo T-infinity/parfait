@@ -2,8 +2,10 @@ cmake_minimum_required(VERSION 3.6)
 
 PROJECT(DistanceCalculator)
 set (CMAKE_CXX_STANDARD 14)
-
 find_package(OpenMP)
+
+add_executable(DistanceCalculator TreeDistanceCalculator.cpp)
+target_link_libraries(DistanceCalculator PUBLIC parfait MessagePasser)
 if(NOT OpenMP_FOUND)
     message("======================================")
     message("OpenMP was not detected on your system.")
@@ -13,15 +15,12 @@ if(NOT OpenMP_FOUND)
     message("You can set the compiler when invoking cmake with: ")
     message("   cmake -DCMAKE_CXX_COMPILER=/path/to/your/desired/C++/compiler -DCMAKE_C_COMPILER=/path/to/your/desired/C/compiler"
     message("======================================")
+else()
+    target_link_libraries(DistanceCalculator PUBLIC ${OpenMP_C_FLAGS}
+    target_compile_options(DistanceCalculator PUBLIC ${OpenMP_C_FLAGS} ${OpenMP_CXX_FLAGS})
 endif()
 
 
-add_executable(DistanceCalculator TreeDistanceCalculator.cpp)
-target_include_directories(DistanceCalculator PUBLIC ${VTK_INCLUDE_DIRS})
-target_link_libraries(DistanceCalculator PUBLIC parfait ${OpenMP_C_FLAGS} MessagePasser)
-target_compile_options(DistanceCalculator PUBLIC ${OpenMP_C_FLAGS} ${OpenMP_CXX_FLAGS})
 install(TARGETS DistanceCalculator
         EXPORT parfait-targets
         DESTINATION parfait/bin)
-
-
