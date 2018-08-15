@@ -6,6 +6,7 @@ set (CMAKE_CXX_STANDARD 14)
 find_package(VTK)
 
 if(VTK_FOUND)
+    if(nlohmann_json_FOUND)
     add_executable(GridConverter UgridConverter.cpp CommandLineParser.h)
     target_link_libraries(GridConverter ${VTK_LIBRARIES})
 
@@ -20,4 +21,5 @@ if(VTK_FOUND)
         add_subdirectory(test)
     endif()
 
+endif()
 endif()
