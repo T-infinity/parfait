@@ -23,4 +23,4 @@ endif()
 
 install(TARGETS DistanceCalculator
         EXPORT parfait-targets
-        DESTINATION parfait/bin)
+        DESTINATION bin)
