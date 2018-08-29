@@ -51,7 +51,7 @@ namespace Parfait {
                 throw std::logic_error("Attempted to build sync pattern with mismatched need, need_from");
 
             std::vector<std::vector<long>> i_need_from_rank(mp.NumberOfProcesses());
-            for(int index = 0; index < need.size(); index++){
+            for(size_t index = 0; index < need.size(); index++){
                 long global = need[index];
                 int from = need_from[index];
                 i_need_from_rank.at(from).push_back(global);
@@ -72,7 +72,7 @@ namespace Parfait {
             }
 
             std::vector<MessagePasser::MessageStatus> send_statuses;
-            for(int r = 0; r < i_need_from_rank.size(); r++){
+            for(size_t r = 0; r < i_need_from_rank.size(); r++){
                 if(i_need_from_rank[r].size() == 0) continue;
                 send_statuses.emplace_back(mp.NonBlockingSend(i_need_from_rank[r], i_need_from_rank[r].size(), r));
             }

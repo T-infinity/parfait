@@ -127,7 +127,6 @@ namespace Parfait {
                 Parfait::Point<double> p{getXyz(node2)};
                 auto dx = p - o;
                 auto dq = var(node2) - var(node1);
-                auto &g = gs[node1];
 
                 auto c = calcLSCoeffs(gs[node1], dx);
                 grad[node1][0] += c[0] * dq;

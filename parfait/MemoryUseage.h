@@ -32,7 +32,7 @@ namespace Parfait{
         return t_info.resident_size/(1024*1024);
     }
 #else
-  int parseLine(char* line){
+  inline int parseLine(char* line){
     int i = strlen(line);
     while (*line < '0' || *line > '9') line++;
     line[i-3] = '\0';

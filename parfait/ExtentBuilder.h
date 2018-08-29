@@ -18,7 +18,7 @@ namespace Parfait {
     namespace ExtentBuilder {
 
         template<typename T>
-        Extent<T> createEmptyBuildableExtent(const Extent<T>&& e){
+        Extent<T> createEmptyBuildableExtent(){
             T lo = std::numeric_limits<T>::lowest();
             T hi = std::numeric_limits<T>::max();
             return Extent<T> {{hi,hi,hi},{lo,lo,lo}};
@@ -49,19 +49,17 @@ namespace Parfait {
             }
         }
 
-        template<typename ObjectWithPoints>
-        auto build(const ObjectWithPoints& obj){
-            auto p = obj.getNode(0);
-            auto x = p[0]; auto y = p[1]; auto z = p[2];
-            Extent<decltype(x)> e{{x,y,z},{x,y,z}};
-            for(int i=1;i< obj.numberOfNodes();i++)
-                addPointToExtent(e, obj.getNode(i));
+        template<typename Container>
+        auto build(const Container& points){
+            auto e = createEmptyBuildableExtent<double>();
+            for(auto& p:points)
+                addPointToExtent(e,p);
             return e;
         }
 
         template<typename MeshType>
         Extent<double> buildExtentForCellInMesh(const MeshType& mesh,int cell_id){
-            auto e = createEmptyBuildableExtent(Extent<double>());
+            auto e = createEmptyBuildableExtent<double>();
             for(int node_id:mesh.getNodesInCell(cell_id)){
                 auto xyz = mesh.getNode(node_id);
                 addPointToExtent(e,Point<double>(xyz[0],xyz[1],xyz[2]));

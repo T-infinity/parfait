@@ -13,9 +13,9 @@
 #include <iostream>
 #include <sstream>
 #include <memory>
-#include <TreeDist.h>
-#include "../../parfait/STL.h"
-#include "../../parfait/StringTools.h"
+#include <parfait/TreeDist.h>
+#include <parfait/STL.h>
+#include <parfait/StringTools.h>
 
 std::vector<int> findAllTags(const Parfait::ImportedUgrid& mesh){
     std::set<int> tags;
@@ -160,7 +160,9 @@ int main(int argc, char* argv[]) {
 
 
     auto stl = cacheSurface(ugrid, tags);
+
     Parfait::DistanceTree tree(stl.findDomain());
+    tree.setMaxDepth(40);
 
     for(const auto& f : stl.facets){
         tree.insert(f);
@@ -170,7 +172,8 @@ int main(int argc, char* argv[]) {
     auto start = std::chrono::system_clock::now();
     int nnodes = ugrid.nodes.size() / 3;
     std::vector<double> dist(nnodes, -1);
-#pragma omp parallel for
+    printf("Searching for distance of %d points\n", nnodes);
+#pragma omp parallel for schedule(guided)
     for(int n = 0; n < nnodes; n++){
         auto p = &ugrid.nodes[3*n+0];
         Parfait::Point<double> point(p[0], p[1], p[2]);

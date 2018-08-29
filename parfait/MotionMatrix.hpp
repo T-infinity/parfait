@@ -132,10 +132,13 @@ inline void MotionMatrix::movePoint(double p[3]) const {
 	p[2] = vec_out[2];
 }
 
-inline void MotionMatrix::printMatrix(FILE *f) const {
-	fprintf(f, "\n%lf %lf %lf %lf\n", mat[0], mat[1], mat[2], mat[3]);
-	fprintf(f, "%lf %lf %lf %lf\n", mat[4], mat[5], mat[6], mat[7]);
-	fprintf(f, "%lf %lf %lf %lf\n", mat[8], mat[9], mat[10], mat[11]);
-	fprintf(f, "%lf %lf %lf %lf\n", mat[12], mat[13], mat[14], mat[15]);
+inline std::string MotionMatrix::toString() const {
+	std::string s;
+	for(int i=0;i<4;i++){
+		for(int j=0;j<4;j++)
+			s.append(std::to_string(mat[4*i+j])+" ");
+		s.append("\n");
+	}
+	return s;
 }
 }

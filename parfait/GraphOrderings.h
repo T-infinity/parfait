@@ -23,19 +23,19 @@ public:
 
     inline static std::map<long, long> buildDistributedToContiguous(MPI_Comm comm,
                                                                     const std::vector<long> &local_mesh_to_global_mesh,
-                                                                    const std::vector<bool> &do_own_local_node) {
+                                                                    const std::vector<bool> &do_own) {
 
         MessagePasser mp(comm);
         std::vector<long> have, need;
-        std::tie(have, need) = buildHaveNeed(local_mesh_to_global_mesh, do_own_local_node);
+        std::tie(have, need) = buildHaveNeed(local_mesh_to_global_mesh, do_own);
         Parfait::SyncPattern sync_pattern = Parfait::SyncPattern::build(mp, have, need);
 
-        int num_owned_nodes = countOwnedNodes(do_own_local_node);
+        int num_owned_nodes = countOwned(do_own);
         long contiguous_row_start = getRankRowStart(mp, num_owned_nodes);
-        auto local_to_owned_compact = buildLocalToCompactOwned(do_own_local_node);
+        auto local_to_owned_compact = buildLocalToCompactOwned(do_own);
 
         auto local_to_petsc_global =
-            assignOwnedContiguousGlobal(do_own_local_node, contiguous_row_start, local_to_owned_compact);
+            assignOwnedContiguousGlobal(do_own, contiguous_row_start, local_to_owned_compact);
 
         auto global_mesh_to_local_mesh = buildGlobalToLocal(local_mesh_to_global_mesh);
 
@@ -44,16 +44,16 @@ public:
         return buildGlobalToGlobalMap(local_mesh_to_global_mesh, local_to_petsc_global);
     }
 
-    inline static int countOwnedNodes(const std::vector<bool> &do_own) {
+    inline static int countOwned(const std::vector<bool> &do_own) {
         int count = 0;
         for (bool own : do_own)
             if (own) count++;
         return count;
     }
 
-    inline static long getRankRowStart(MessagePasser mp, int num_owned_nodes) {
+    inline static long getRankRowStart(MessagePasser mp, int num_owned) {
         std::vector<long> rows_per_rank(mp.NumberOfProcesses());
-        mp.AllGather(long(num_owned_nodes), rows_per_rank);
+        mp.AllGather(long(num_owned), rows_per_rank);
         rows_per_rank.push_back(0);
         long start = 0;
         for (int r = 0; r < mp.Rank(); r++) {
@@ -62,11 +62,11 @@ public:
         return start;
     }
 
-    inline static std::vector<int> buildLocalToCompactOwned(const std::vector<bool> &do_own_local_node) {
-        std::vector<int> local_to_compact(do_own_local_node.size(), -1);
+    inline static std::vector<int> buildLocalToCompactOwned(const std::vector<bool> &do_own) {
+        std::vector<int> local_to_compact(do_own.size(), -1);
         int next_compact = 0;
-        for (int local = 0; local < do_own_local_node.size(); local++) {
-            if (do_own_local_node[local])
+        for (int local = 0; local < int(do_own.size()); local++) {
+            if (do_own[local])
                 local_to_compact[local] = next_compact++;
         }
         return local_to_compact;
@@ -76,7 +76,7 @@ public:
                                                                 long petsc_row_start,
                                                                 const std::vector<int> &local_to_owned_compact) {
         std::vector<long> local_to_petsc_global(do_own_local_node.size(), -1);
-        for (int local = 0; local < local_to_petsc_global.size(); local++) {
+        for (int local = 0; local < int(local_to_petsc_global.size()); local++) {
             if (do_own_local_node[local]) {
                 local_to_petsc_global[local] = local_to_owned_compact[local] + petsc_row_start;
             }
@@ -88,7 +88,7 @@ public:
         const std::vector<long> &local_to_global,
         const std::vector<bool> &do_own_local) {
         std::vector<long> have, need;
-        for (int local = 0; local < local_to_global.size(); local++) {
+        for (int local = 0; local < int(local_to_global.size()); local++) {
             if (do_own_local[local]) have.push_back(local_to_global[local]);
             else need.push_back(local_to_global[local]);
         }
@@ -97,7 +97,7 @@ public:
 
     inline static std::map<long, int> buildGlobalToLocal(const std::vector<long> &local_to_global) {
         std::map<long, int> global_to_local;
-        for (int local = 0; local < local_to_global.size(); local++) {
+        for (int local = 0; local < int(local_to_global.size()); local++) {
             global_to_local[local_to_global[local]] = local;
         }
         return global_to_local;
@@ -107,7 +107,7 @@ public:
         const std::vector<long> &local_to_global_distributed,
         const std::vector<long> &local_to_global_contiguous) {
         std::map<long, long> distributed_to_contiguous;
-        for (int local = 0; local < local_to_global_contiguous.size(); local++) {
+        for (int local = 0; local < int(local_to_global_contiguous.size()); local++) {
             distributed_to_contiguous[local_to_global_distributed[local]] = local_to_global_contiguous[local];
         }
         return distributed_to_contiguous;

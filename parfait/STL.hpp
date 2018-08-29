@@ -16,7 +16,6 @@
 #include <stdexcept>
 #include <exception>
 #include "STLReader.h"
-#include "TreeDist.h"
 
 namespace Parfait {
 namespace STL {
@@ -128,86 +127,5 @@ inline Parfait::Extent<double> STL::findDomain() const {
     return domain;
 }
 
-inline Parfait::Point<double> SearchSTL::getClosestPoint(const Point &p) const {
-    auto domain = adt.boundingExtent();
-    auto dumb_initial_closest = getClosestPointInExtent(domain, p);
-    double radius_seed = (dumb_initial_closest - p).magnitude();
-    if(radius_seed < 0.001)
-        radius_seed = 0.001;
-    return LoopClosest(p, radius_seed);
-}
-
-inline Parfait::Point<double> SearchSTL::getClosestPointWithSeed(const Point &point, double radius_seed) const {
-    return LoopClosest(point, radius_seed);
-}
-
-inline Parfait::Point<double> SearchSTL::getClosestPointToFacets(const std::vector<int>& facet_indices, const Point& point) const {
-    double dist = std::numeric_limits<double>::max();
-    Parfait::Point<double> closest;
-    for (unsigned int index = 0; index < facet_indices.size(); index++) {
-        auto facetIndex = facet_indices[index];
-        auto &facet = stl.facets[facetIndex];
-        auto candidate_closer = facet.GetClosestPoint(point);
-        double distanceToFacet = (candidate_closer - point).magnitude();
-        if (distanceToFacet < dist) {
-            dist = distanceToFacet;
-            closest = candidate_closer;
-        }
-    }
-    return closest;
-}
-
-inline Parfait::Point<double> SearchSTL::LoopClosest(const Point &query_point, double search_radius) const {
-    Point closest;
-    bool found = false;
-    for(int loop = 0; loop < 5000; loop++){
-        Point offset{search_radius, search_radius, search_radius};
-        Extent extent{query_point - offset, query_point + offset};
-
-        auto inside = adt.retrieve(extent);
-        for(auto facet_index : inside){
-            const auto& facet = stl.facets[facet_index];
-            auto closest_point = facet.GetClosestPoint(query_point);
-            auto dist = (closest_point - query_point).magnitude();
-            if(dist < search_radius){
-                closest = closest_point;
-                found = true;
-                search_radius = dist;
-            }
-        }
-        if(found){
-            return closest;
-        }
-
-        search_radius *= 1.2;
-    }
-
-    fprintf(stderr, "\n[ERROR]: You are clearly stuck in a loop and can't find the nearest point on the geometry.");
-    fprintf(stderr, "\nSearching From Point: %lf %lf %lf", query_point[0], query_point[1], query_point[2]);
-    throw std::logic_error("Stuck in a loop can't find geometry");
-}
-
-inline std::vector<Facet> SearchSTL::getFacetsInsideExtent(const Extent &domain) const {
-
-    auto ids = adt.retrieve(domain);
-    fflush(stdout);
-    std::vector<Facet> inside;
-    for (auto &id : ids) {
-        inside.push_back(stl.facets[id]);
-    }
-    return inside;
-}
-
-inline SearchSTL::SearchSTL(const STL &stl_in) : stl(stl_in), adt(stl_in.findDomain()) {
-//#pragma omp parallel for
-    for (unsigned int facetId = 0; facetId < stl.facets.size(); facetId++) {
-        auto &facet = stl.facets[facetId];
-        adt.store(facetId, ExtentBuilder::build(facet));
-    }
-}
-
-inline Facet &STL::operator[](const int i) {
-    return facets[i];
-}
 }
 }

@@ -33,7 +33,7 @@ namespace Parfait {
         void getMatrix(double matrix[16]) const;
         void movePoint(double p[3]) const;
 
-        void printMatrix(FILE *f) const;
+        std::string toString() const;
     private:
         double mat[16];
     };

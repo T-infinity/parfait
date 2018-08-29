@@ -105,8 +105,8 @@ void getPrismFace(const std::vector<T> &cell, int face_id, std::vector<T> &face)
         case 2:
             face.resize(4);
             face[0] = cell[2];
-            face[1] = cell[3];
-            face[2] = cell[0];
+            face[1] = cell[0];
+            face[2] = cell[3];
             face[3] = cell[5];
             break;
         case 3:

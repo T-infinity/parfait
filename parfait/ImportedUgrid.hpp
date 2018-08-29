@@ -92,7 +92,7 @@ inline int Parfait::ImportedUgrid::numberOfFacesInCell(int id) const
 		return 5;	
 	if(id < cellMap[3])
 		return 6;
-	assert(false);
+	throw std::logic_error("couldn't find cell");
 }
 
 inline int Parfait::ImportedUgrid::numberOfNodesInCell(int id) const
@@ -105,7 +105,7 @@ inline int Parfait::ImportedUgrid::numberOfNodesInCell(int id) const
 		return 6;
 	if(id < cellMap[3])
 		return 8;
-	assert(false);
+	throw std::logic_error("couldn't find cell");
 }
 
 inline int Parfait::ImportedUgrid::numberOfNodesInBoundaryFace(int id) const
@@ -114,7 +114,7 @@ inline int Parfait::ImportedUgrid::numberOfNodesInBoundaryFace(int id) const
         return 3;
     if(id < faceMap[1])
         return 4;
-    assert(false);
+    throw std::logic_error("couldn't find cell");
 }
 
 inline int Parfait::ImportedUgrid::numberOfNodesInCellFace(int cellId,int faceId) const
@@ -137,7 +137,7 @@ inline int Parfait::ImportedUgrid::numberOfNodesInCellFace(int cellId,int faceId
 	}
 	if(cellId < cellMap[3])
 		return 4;
-	assert(false);
+    throw std::logic_error("could node find cell");
 }
 
 inline std::vector<int> Parfait::ImportedUgrid::getNodesInBoundaryFace(int faceId) const

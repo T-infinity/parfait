@@ -70,7 +70,7 @@ namespace Parfait {
             for (auto &pair : syncPattern.receive_from) {
                 auto &source = pair.first;
                 auto &recv_list = pair.second;
-                for (int i = 0; i < recv_list.size(); i++) {
+                for (int i = 0; i < int(recv_list.size()); i++) {
                     auto global_id = recv_list[i];
                     f.setEntry(global_id, recv_buffer[source][i]);
                 }

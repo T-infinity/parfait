@@ -10,89 +10,8 @@
 // on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
 // See the License for the specific language governing permissions and limitations under the License.
 #include "ByteSwap.h"
+#include "CellWindingConverters.h"
 #include <stdexcept>
-
-inline void Parfait::UgridReader::readHeader(std::string filename,int &nnodes,
-		int &ntri,int &nquad,
-		int &ntet,int &npyr,int &nprism,int &nhex) {
-	readHeader(filename,nnodes,ntri,nquad,ntet,npyr,nprism,nhex,false);
-}
-
-inline std::vector<double> Parfait::UgridReader::readNodes(std::string filename) {
-	return readNodes(filename,false);
-}
-
-inline std::vector<int> Parfait::UgridReader::readTriangles(std::string filename) {
-	return readTriangles(filename,false);
-}
-
-inline std::vector<int> Parfait::UgridReader::readQuads(std::string filename) {
-	return readQuads(filename,false);
-}
-
-inline std::vector<int> Parfait::UgridReader::readTets(std::string filename) {
-	return readTets(filename,false);
-}
-
-inline std::vector<int> Parfait::UgridReader::readPyramids(std::string filename) {
-	return readPyramids(filename,false);
-}
-
-inline std::vector<int> Parfait::UgridReader::readPrisms(std::string filename) {
-	return readPrisms(filename,false);
-}
-
-inline std::vector<int> Parfait::UgridReader::readHexs(std::string filename) {
-	return readHexs(filename,false);
-}
-
-inline std::vector<int> Parfait::UgridReader::readTriangleBoundaryTags(std::string filename) {
-	return readTriangleBoundaryTags(filename,false);
-}
-
-inline std::vector<int> Parfait::UgridReader::readQuadBoundaryTags(std::string filename) {
-	return readQuadBoundaryTags(filename,false);
-}
-
-inline std::vector<double> Parfait::UgridReader::readNodes(std::string filename, int begin,int end) {
-	return readNodes(filename,begin,end,false);
-}
-
-inline std::vector<int> Parfait::UgridReader::readTriangles(std::string filename, int begin,int end) {
-	return readTriangles(filename,begin,end,false);
-}
-
-inline std::vector<int> Parfait::UgridReader::readQuads(std::string filename, int begin,int end) {
-	return readQuads(filename,begin,end,false);
-}
-
-inline std::vector<int> Parfait::UgridReader::readTets(std::string filename, int begin,int end) {
-	return readTets(filename,begin,end,false);
-}
-
-inline std::vector<int> Parfait::UgridReader::readPyramids(std::string filename, int begin,int end) {
-	return readPyramids(filename,begin,end,false);
-}
-
-inline std::vector<int> Parfait::UgridReader::readPrisms(std::string filename, int begin,int end) {
-	return readPrisms(filename,begin,end,false);
-}
-
-inline std::vector<int> Parfait::UgridReader::readHexs(std::string filename, int begin,int end) {
-	return readHexs(filename,begin,end,false);
-}
-
-inline std::vector<int> Parfait::UgridReader::readBoundaryTags(std::string filename, int begin,int end) {
-	return readBoundaryTags(filename,begin,end,false);
-}
-
-inline std::vector<int> Parfait::UgridReader::readTriangleBoundaryTags(std::string filename, int begin,int end) {
-	return readTriangleBoundaryTags(filename,begin,end,false);
-}
-
-inline std::vector<int> Parfait::UgridReader::readQuadBoundaryTags(std::string filename, int begin,int end) {
-	return readQuadBoundaryTags(filename,begin,end,false);
-}
 
 inline void Parfait::UgridReader::readHeader(std::string filename,int &nnodes, int &ntri,int &nquad, int &ntet,int &npyr,int &nprism,int &nhex,bool swapBytes) {
     FILE *f = fopen(filename.c_str(),"rb");
@@ -251,6 +170,8 @@ inline std::vector<int> Parfait::UgridReader::readTets(std::string filename,int 
 
     for(int& vertex : tets)
         vertex--;
+    for(int i = 0; i < nrequested; i++)
+        Parfait::AflrToCGNS::convertTet(&tets[4*i]);
 
     return tets;
 }
@@ -290,6 +211,9 @@ inline std::vector<int> Parfait::UgridReader::readPyramids(std::string filename,
     for(int& vertex : pyrs)
         vertex--;
 
+    for(int i = 0; i < nrequested; i++)
+        Parfait::AflrToCGNS::convertPyramid(&pyrs[5*i]);
+
     return pyrs;
 }
 
@@ -328,6 +252,8 @@ inline std::vector<int> Parfait::UgridReader::readPrisms(std::string filename,in
 
     for(int& vertex : prisms) // decrement to C indexing
         vertex--;
+    for(int i = 0; i < nrequested; i++)
+        Parfait::AflrToCGNS::convertPrism(&prisms[6*i]);
     for(auto id:prisms) {
         if (id < 0) {
             printf("begin %i end %i",begin,end);
@@ -373,6 +299,8 @@ inline std::vector<int> Parfait::UgridReader::readHexs(std::string filename,int 
 
     for(int& vertex : hexs)
         vertex--;
+    for(int i = 0; i < nrequested; i++)
+        Parfait::AflrToCGNS::convertHex(&hexs[8*i]);
 
     return hexs;
 }

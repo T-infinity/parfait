@@ -23,7 +23,7 @@ namespace Parfait {
       constexpr int numberOfEdges() {
           return 6;
       }
-      static const std::array<std::array<int, 2>, 6> edge_to_node =
+      static constexpr std::array<std::array<int, 2>, 6> edge_to_node =
               {{
                        {0, 1},
                        {1, 2},
@@ -33,7 +33,7 @@ namespace Parfait {
                        {2, 3}
                }};
 
-      static const std::array<std::array<int, 2>, 6> edge_to_face =
+      static constexpr std::array<std::array<int, 2>, 6> edge_to_face =
               {{
                        {0, 1},
                        {0, 2},
@@ -75,7 +75,7 @@ namespace Parfait {
       constexpr int numberOfEdges() {
           return 8;
       }
-      const static std::array<std::array<int,2>,8> edge_to_node
+      constexpr static std::array<std::array<int,2>,8> edge_to_node
               {{
                        {0,1},
                        {1,2},
@@ -86,7 +86,7 @@ namespace Parfait {
                        {2,4},
                        {3,4},
                }};
-      const static std::array<std::array<int,2>,8> edge_to_face
+      constexpr static std::array<std::array<int,2>,8> edge_to_face
               {{
                        {0,1},
                        {0,2},
@@ -125,7 +125,7 @@ namespace Parfait {
       constexpr int numberOfEdges() {
           return 9;
       }
-      const static std::array<std::array<int,2>,9> edge_to_node
+      constexpr static std::array<std::array<int,2>,9> edge_to_node
               {{
                        {0,1},
                        {1,2},
@@ -137,7 +137,7 @@ namespace Parfait {
                        {4,5},
                        {5,3}
                }};
-      const static std::array<std::array<int,2>,9> edge_to_face
+      constexpr static std::array<std::array<int,2>,9> edge_to_face
               {{
                        {3,0},
                        {3,1},
@@ -180,7 +180,7 @@ namespace Parfait {
       constexpr int numberOfEdges() {
           return 12;
       }
-      const static std::array<std::array<int,2>, 12> edge_to_node
+      constexpr static std::array<std::array<int,2>, 12> edge_to_node
               {{
                        {0,1},
                        {1,2},
@@ -195,7 +195,7 @@ namespace Parfait {
                        {6,7},
                        {7,4},
                }};
-      const static std::array<std::array<int,2>, 12> edge_to_face
+      constexpr static std::array<std::array<int,2>, 12> edge_to_face
               {{
                        {0,1},
                        {0,2},

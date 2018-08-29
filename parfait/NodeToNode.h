@@ -26,9 +26,14 @@ namespace Parfait {
         std::vector<std::vector<int>> buildNodeToNodeConnectivity();
     private:
         MeshType& mesh;
-        void addEdge(int left, int right);
         std::vector<std::set<int>> node_to_node;
-
+        template <size_t N>
+        void addCell(const std::vector<int>& cell, const std::array<std::array<int, 2>, N>& edges){
+            for(auto& edge : edges){
+                node_to_node[cell[edge[0]]].insert(cell[edge[1]]);
+                node_to_node[cell[edge[1]]].insert(cell[edge[0]]);
+            }
+        }
     };
 
 

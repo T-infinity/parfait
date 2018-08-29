@@ -15,7 +15,7 @@
 #include "Point.h"
 #include <memory>
 #include <MessagePasser/MessagePasser.h>
-
+#include <parfait/TreeDist.h>
 
 namespace Parfait {
   class DistanceCalculator {
@@ -48,7 +48,7 @@ namespace Parfait {
       std::vector<Parfait::Facet> extractFacets(FillPoint, FillCell, CellType, int);
 
       Parfait::DistanceTree buildTree(const std::vector<Parfait::Facet> &facets) {
-          auto e = Parfait::ExtentBuilder::createEmptyBuildableExtent(Parfait::Extent<double>());
+          auto e = Parfait::ExtentBuilder::createEmptyBuildableExtent<double>();
           for (const auto &f : facets) {
               for (int i = 0; i < 3; i++)
                   Parfait::ExtentBuilder::addPointToExtent(e, f[i]);

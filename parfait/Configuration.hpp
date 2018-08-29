@@ -50,7 +50,8 @@ namespace Parfait {
               else
                   printf("  -endianness  little\n");
               printf("  -Motion matrix:");
-              motionMatrices.at(i).printMatrix(stdout);
+              auto m = motionMatrices.at(i).toString();
+              printf("%s",m.c_str());
           }
       }
   }

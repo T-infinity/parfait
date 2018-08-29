@@ -1,4 +1,3 @@
-
 // Copyright 2016 United States Government as represented by the Administrator of the National Aeronautics and Space Administration. 
 // No copyright is claimed in the United States under Title 17, U.S. Code. All Other Rights Reserved.
 // 
@@ -11,8 +10,15 @@
 // See the License for the specific language governing permissions and limitations under the License.
 #pragma once
 
-#include <stdio.h>
-#define CHECKPOINT fprintf(stderr, "CHECKPOINT: %s %d\n", __FILE__, __LINE__);
+#include <stdexcept>
+#include <sstream>
+#define THROW(message) throw std::logic_error(std::string(message) + std::string(__FILE__) + std::string(__func__) + std::to_string(__LINE__));
 
-
-#define PARALLEL_CHECKPOINT fprintf(stderr, "CHECKPOINT: RANK %d: %s %d\n",mp.Rank(), __FILE__, __LINE__);
+inline void MyThrow(const std::string message,
+        const char* file,
+        const std::size_t line,
+        const char* func) {
+    std::ostringstream stream;
+    stream << "EXCEPTION: " << message << ", file " << file << " func " << func << " line " << line;
+    throw std::logic_error(stream.str());
+}

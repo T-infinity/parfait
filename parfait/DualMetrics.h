@@ -36,7 +36,7 @@ std::tuple<std::vector<double>, std::vector<Parfait::Point<double>>> calcDualMet
     int num_edges = edge_to_node.size();
     std::vector<double> node_volumes(num_nodes, 0);
     std::vector<Parfait::Point<double>> edge_areas(num_edges, {0, 0, 0});
-    for (int edge = 0; edge < edge_to_node.size(); edge++) {
+    for (size_t edge = 0; edge < edge_to_node.size(); edge++) {
 
         auto lnode = edge_to_node[edge][0];
         auto hnode = edge_to_node[edge][1];

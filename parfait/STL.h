@@ -48,25 +48,6 @@ namespace Parfait {
         double getLongestCartesianLength(const Extent &d);
         Extent findDomain() const;
     };
-
-    class SearchSTL {
-        typedef Parfait::Extent<double> Extent;
-        typedef Parfait::Point<double> Point;
-    public:
-        SearchSTL(const STL &stl_in);
-
-        Parfait::Point<double> getClosestPoint(const Point &point) const;
-        Point getClosestPointWithSeed(const Point &point, double dist) const;
-        std::vector<Facet> getFacetsInsideExtent(const Extent &e) const;
-        Parfait::Point<double> getClosestPointToFacets(const std::vector<int>& facet_indices, const Point& point) const;
-
-        Extent findDomain() const { return stl.findDomain(); }
-
-    private:
-        const STL &stl;
-        Parfait::Adt3DExtent adt;
-        Point LoopClosest(const Point &query_point, double search_radius) const;
-    };
   }
 }
 
