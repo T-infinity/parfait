@@ -162,7 +162,7 @@ int main(int argc, char* argv[]) {
     auto stl = cacheSurface(ugrid, tags);
 
     Parfait::DistanceTree tree(stl.findDomain());
-    tree.setMaxDepth(40);
+    tree.setMaxDepth(26);
 
     for(const auto& f : stl.facets){
         tree.insert(f);

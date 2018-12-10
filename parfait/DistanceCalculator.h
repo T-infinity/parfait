@@ -15,7 +15,7 @@
 #include "Point.h"
 #include <memory>
 #include <MessagePasser/MessagePasser.h>
-#include <parfait/TreeDist.h>
+#include <parfait/DistanceTree.h>
 
 namespace Parfait {
   class DistanceCalculator {
@@ -57,10 +57,7 @@ namespace Parfait {
           for (const auto &f : facets) {
               tree.insert(f);
           }
-
-          tree.pruneEmpty();
-          tree.contractExtents();
-
+          tree.finalize();
           return tree;
       }
   };
@@ -114,7 +111,7 @@ namespace Parfait {
           if (type == DistanceCalculator::QUAD_4)
               appendQuadFacets(send_facets, fillPoint, fillCell, cell_id);
       }
-      mp.AllGatherv(send_facets, facets);
+      mp.Gather(send_facets, facets);
       return facets;
   };
 

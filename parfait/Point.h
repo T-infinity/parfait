@@ -38,10 +38,10 @@ namespace Parfait {
 
       Point operator+(const Point &rhs) const;
       Point operator-(const Point &rhs) const;
-      Point operator*(const T a) const;
-      Point operator/(const T a) const;
-      Point operator*=(const T a);
-      Point operator/=(const T a);
+      Point operator*(const T& a) const;
+      Point operator/(const T& a) const;
+      Point operator*=(const T& a);
+      Point operator/=(const T& a);
       Point operator+=(const Point &rhs);
       Point operator-=(const Point &rhs);
       bool operator==(const Point &rhs) const;
@@ -50,6 +50,7 @@ namespace Parfait {
       bool operator>(const Point &rhs) const;
       bool approxEqual(const Point &rhs, T tol = 1.0e-14) const;
       void normalize();
+      std::string to_string() const;
       T magnitude() const;
       template <typename U>
       friend Point<U> operator*(double a, const Point<U> &rhs);
@@ -60,7 +61,6 @@ namespace Parfait {
       static Point cross(const Point &a, const Point &b);
       static Point normalize(const Point &a);
 
-      void Print() const;
   };
 }
 

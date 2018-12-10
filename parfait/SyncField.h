@@ -13,6 +13,7 @@
 #include <vector>
 #include <map>
 #include <MessagePasser/MessagePasser.h>
+#include "SyncPattern.h"
 
 namespace Parfait {
     template<typename T>

@@ -12,7 +12,7 @@
 
 #include <stdexcept>
 #include <sstream>
-#define THROW(message) throw std::logic_error(std::string(message) + std::string(__FILE__) + std::string(__func__) + std::to_string(__LINE__));
+#define THROW(message) throw std::logic_error(std::string(message) + " at file: " + std::string(__FILE__) + " function: " + std::string(__func__) + " line: " + std::to_string(__LINE__));
 
 inline void MyThrow(const std::string message,
         const char* file,

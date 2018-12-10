@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.0)
 
 PROJECT(parfait-core-unit-tests)
 set (CMAKE_CXX_STANDARD 14)
@@ -11,10 +11,6 @@ file(GLOB_RECURSE PARFAIT_HEADERS
 
 
 if(BUILD_TESTS)
-    add_definitions(-DSIX_CELL_TEST_GRID="${CMAKE_SOURCE_DIR}/grids/6cell.lb8.ugrid")
-    add_definitions(-DSIX_CELL_TEST_JSON="${CMAKE_SOURCE_DIR}/grids/6cell.json")
-    add_definitions(-DRAMP_TEST_JSON="${CMAKE_SOURCE_DIR}/grids/ramp.json")
-    add_definitions(-DCOMBINED_TEST_JSON="${CMAKE_SOURCE_DIR}/grids/combined.json")
     set(SERIAL_TESTS_SOURCES
         test/AllTests.cpp
         test/Adt3DExtentTests.cpp
@@ -32,17 +28,20 @@ if(BUILD_TESTS)
         test/DualMetricsTests.cpp
         test/ExtentMeshWrapperTests.cpp
         test/ExtentBuilderTests.cpp
+        test/ExtentWriterTests.cpp
         test/EdgesTests.cpp
         test/EdgeFieldLeastSquaresGradientTests.cpp
         test/ExtentTests.cpp
+        test/GreedyGraphColoringTests.cpp
         test/FacetTests.cpp
         test/Fun3DToCGNSTests.cpp
         test/LinearPartitionerTests.cpp
         test/SparseMatrixTests.cpp
         test/MeshInterfaceTests.cpp
         test/NormalTests.cpp
+        test/PrintLargeIntegerTests.cpp
         test/ParfaitMeshTests.cpp
-        test/TreeDistTests.cpp
+        test/DistanceTreeTests.cpp
         test/PointTest.cpp
         test/StencilLeastSquaresGradientTests.cpp
         test/StringToolsTests.cpp
@@ -50,6 +49,7 @@ if(BUILD_TESTS)
         test/VectorToolsTests.cpp
         test/MinimumStorageSetTests.cpp
         test/ImportedUgridTests.cpp
+        test/OctreeTests.cpp
         test/NodeToCellTests.cpp
         test/HexMetricsTests.cpp
         test/GraphOrderingsTests.cpp
@@ -57,14 +57,9 @@ if(BUILD_TESTS)
         test/PrismMetricsTests.cpp
         test/TetMetricsTests.cpp
         test/NodeToNodeBuilderTests.cpp
-        test/ParallelNodeToNodeTests.cpp
-        test/NodeBasedRedistributorTests.cpp
-        test/PreProcessorTests.cpp
-        test/ParallelMeshReaderTests.cpp
-        test/TreeDistTests.cpp
+        test/DistanceTreeTests.cpp
         test/DistanceCalculatorTests.cpp
         test/ParallelExtent_test.cpp
-        test/GridSystemPreProcessorTests.cpp
         test/SyncFieldTests.cpp
         test/SyncPatternTests.cpp
         )
@@ -74,31 +69,38 @@ if(BUILD_TESTS)
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
         $<INSTALL_INTERFACE:/.>
         )
-    target_link_libraries(ParfaitTests parfait nlohmann_json MessagePasser::MessagePasser Catch2::Catch)
+    target_link_libraries(ParfaitTests parfait MessagePasser::MessagePasser Catch2::Catch)
+    target_compile_definitions(ParfaitTests INTERFACE ${PARFAIT_TEST_CXX_FLAGS})
 
 endif()
 
 add_library(parfait INTERFACE)
+add_library(parfait::parfait ALIAS parfait)
 target_include_directories(parfait INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:parfait/include>
-    ${MPI_INCLUDE_PATH} 
-    ${METIS_INCLUDE_DIRS} 
-    ${PARMETIS_INCLUDE_DIRS}
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
+    $<INSTALL_INTERFACE:include>
+    ${MPI_INCLUDE_PATH}
     )
 
-target_link_libraries(parfait INTERFACE ${MPI_LIBRARIES} ${METIS_LIBRARY} ${PARMETIS_LIBRARY}
-    MessagePasser::MessagePasser)
+target_link_libraries(parfait INTERFACE ${MPI_LIBRARIES}
+    MessagePasser::MessagePasser
+    nlohmann_json
+    )
 
 install(TARGETS parfait
     EXPORT parfait
-    LIBRARY DESTINATION parfait/lib)
+    LIBRARY DESTINATION lib)
 
-install(FILES ${PARFAIT_HEADERS} DESTINATION parfait/include/parfait)
+install(FILES ${PARFAIT_HEADERS} DESTINATION include/parfait)
 
 install(EXPORT parfait
-    NAMESPACE parfait:: DESTINATION parfait)
+    NAMESPACE parfait:: DESTINATION cmake)
 
 install(FILES parfaitConfig.cmake
-    DESTINATION parfait)
+    DESTINATION cmake)
 
+enable_testing()
+set (ranks_1 -np 1 "./ParfaitTests")
+set (ranks_2 -np 2 "./ParfaitTests")
+add_test(NAME parfait-1-rank COMMAND "mpirun" ${ranks_1})
+add_test(NAME parfait-2-rank COMMAND "mpirun" ${ranks_2})

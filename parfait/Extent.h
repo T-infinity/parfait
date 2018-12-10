@@ -34,6 +34,7 @@ namespace Parfait {
         T getLength_Y() const;
         T getLength_Z() const;
         Point<T> center() const;
+        std::array<Point<T>, 8> corners() const;
 
         void resize(double scale);
         void resize(double scaleX, double scaleY, double scaleZ);

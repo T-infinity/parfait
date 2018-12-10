@@ -48,6 +48,18 @@ namespace Parfait {
                 e.hi[i] = std::max(e.hi[i], p[i]);
             }
         }
+        template<typename T>
+        Extent<T> intersection(Extent<T>& e1, const Extent<T>& e2) {
+            if(not e1.contains(e2))
+                return createEmptyBuildableExtent<T>();
+            Extent<T> e;
+            for(int i = 0; i < 3; i++)
+                e.lo[i] = (e1.lo[i] < e2.lo[i])?(e2.lo[i]):(e1.lo[i]);
+
+            for(int i = 0; i < 3; i++)
+                e.hi[i] = (e1.hi[i] > e2.hi[i])?(e2.hi[i]):(e1.hi[i]);
+            return e;
+        }
 
         template<typename Container>
         auto build(const Container& points){

@@ -96,7 +96,7 @@ inline Parfait::Extent<int> Parfait::CartBlock::getRangeOfOverlappingCells(const
         fitted_search_extent.lo[i] = std::max(fitted_search_extent.lo[i],lo[i]);
         fitted_search_extent.hi[i] = std::min(fitted_search_extent.hi[i],hi[i]);
     }
-    // I don't remember exactly how this works, but it passes the tests....
+    // I don't remember exactly how this works, but it passes the bindings_tests....
     double hx,hy,hz;
     hx = fitted_search_extent.lo[0] - lo[0];
     hy = fitted_search_extent.lo[1] - lo[1];

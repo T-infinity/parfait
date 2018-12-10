@@ -52,8 +52,8 @@ public:
     }
 
     inline static long getRankRowStart(MessagePasser mp, int num_owned) {
-        std::vector<long> rows_per_rank(mp.NumberOfProcesses());
-        mp.AllGather(long(num_owned), rows_per_rank);
+        std::vector<long> rows_per_rank;
+        mp.Gather(long(num_owned), rows_per_rank);
         rows_per_rank.push_back(0);
         long start = 0;
         for (int r = 0; r < mp.Rank(); r++) {

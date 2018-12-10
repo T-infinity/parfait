@@ -48,7 +48,7 @@ namespace Parfait {
   }
 
   template <typename T>
-  Point<T> Point<T>::operator*(const T a) const {
+  Point<T> Point<T>::operator*(const T& a) const {
     return Point<T>(
         a * pos[0],
         a * pos[1],
@@ -56,7 +56,7 @@ namespace Parfait {
   }
 
   template <typename T>
-  Point<T> Point<T>::operator/(const T a) const {
+  Point<T> Point<T>::operator/(const T& a) const {
     T ooa = 1.0 / a;
     return Point<T>(
         ooa * pos[0],
@@ -65,7 +65,7 @@ namespace Parfait {
   }
 
   template <typename T>
-  Point<T> Point<T>::operator*=(const T a) {
+  Point<T> Point<T>::operator*=(const T& a) {
     pos[0] *= a;
     pos[1] *= a;
     pos[2] *= a;
@@ -73,7 +73,7 @@ namespace Parfait {
   }
 
   template <typename T>
-  Point<T> Point<T>::operator/=(const T a) {
+  Point<T> Point<T>::operator/=(const T& a) {
     T b = 1.0 / a;
     return *this *= b;
   }
@@ -195,5 +195,13 @@ namespace Parfait {
     Point<T> b{a};
     b.normalize();
     return b;
+  }
+  template<typename T>
+  std::string Point<T>::to_string() const {
+    std::string output = std::to_string(pos[0]) + " " +
+        std::to_string(pos[1]) + " " +
+        std::to_string(pos[2]);
+
+    return output;
   }
 }

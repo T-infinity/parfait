@@ -135,4 +135,22 @@ namespace Parfait {
   double Extent<T>::volume(const Extent<T> &domain) {
     return domain.getLength_X() * domain.getLength_Y() * domain.getLength_Z();
   }
+
+    template<typename T>
+    std::array<Point<T>, 8>
+    Extent<T>::corners() const {
+      std::array<Point<T>, 8> points;
+
+      points[0] = {lo[0], lo[1], lo[2]};
+      points[1] = {hi[0], lo[1], lo[2]};
+      points[2] = {hi[0], hi[1], lo[2]};
+      points[3] = {lo[0], hi[1], lo[2]};
+
+      points[4] = {lo[0], lo[1], hi[2]};
+      points[5] = {hi[0], lo[1], hi[2]};
+      points[6] = {hi[0], hi[1], hi[2]};
+      points[7] = {lo[0], hi[1], hi[2]};
+
+      return points;
+    }
 }
