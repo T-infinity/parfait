@@ -84,8 +84,13 @@ target_include_directories(parfait INTERFACE
 
 target_link_libraries(parfait INTERFACE ${MPI_LIBRARIES}
     MessagePasser::MessagePasser
-    nlohmann_json
     )
+
+if(nlohmann_json_FOUND)
+target_link_libraries(parfait INTERFACE
+  nlohmann_json
+    )
+endif()
 
 install(TARGETS parfait
     EXPORT parfait
