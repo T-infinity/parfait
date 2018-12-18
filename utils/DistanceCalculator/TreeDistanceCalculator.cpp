@@ -13,9 +13,12 @@
 #include <iostream>
 #include <sstream>
 #include <memory>
-#include <parfait/TreeDist.h>
+#include <parfait/DistanceTree.h>
 #include <parfait/STL.h>
 #include <parfait/StringTools.h>
+#include <parfait/ExtentWriter.h>
+
+const std::string __VERSION = "0.2a";
 
 std::vector<int> findAllTags(const Parfait::ImportedUgrid& mesh){
     std::set<int> tags;
@@ -146,13 +149,57 @@ void writeBoundaryDistances(std::string filename, const std::vector<double>& dis
     fclose(fp);
 }
 
-bool isBigEndian(std::string filename);
-int main(int argc, char* argv[]) {
-    if(argc != 2){
-        std::cout << "Usage DistanceCalculator <filename>" << std::endl;
-        exit(0);
+void printVersionAndExit(){
+    std::cout << __VERSION << std::endl;
+    exit(0);
+}
+
+bool isVersionRequested(const std::vector<std::string>& arguments){
+    for(const auto& a : arguments){
+        if(a == "-v" or a == "--version")
+            return true;
     }
-    std::string filename = argv[1];
+    return false;
+}
+
+bool isAppropriateFilenameRequested(const std::vector<std::string>& arguments){
+    if(arguments.size() == 1)
+        return false;
+    auto should_be_filename = arguments[1];
+    auto filename_parts = Parfait::StringTools::split(should_be_filename, ".");
+    return filename_parts.back() == "ugrid";
+}
+
+void printHelpAndExit(){
+    std::cout << "DistanceCalculator" << std::endl;
+    std::cout << "Usage: ./DistanceCalculator <filename>" << std::endl;
+    std::cout << "Only *.b8.ugrid or *.lb8.ugrid files are supported at this time.";
+    exit(0);
+}
+
+bool isBigEndian(std::string filename) {
+    return filename.find(".b8.") != std::string::npos;
+}
+
+std::vector<std::string> launderArguments(int argc, char* argv[]){
+    std::vector<std::string> arguments;
+    for(int i = 0; i < argc; i++){
+        arguments.push_back(argv[i]);
+    }
+    return arguments;
+}
+
+std::string getFilename(const std::vector<std::string>& arguments){
+    if(not isAppropriateFilenameRequested(arguments))
+        printHelpAndExit();
+    return arguments[1];
+}
+int main(int argc, char* argv[]) {
+    std::vector<std::string> arguments = launderArguments(argc, argv);
+    if(isVersionRequested(arguments))
+        printVersionAndExit();
+
+    std::string filename = getFilename(arguments);
     bool is_big_endian = isBigEndian(filename);
 
     auto ugrid = Parfait::ImportedUgridFactory::readUgrid(filename, is_big_endian);
@@ -189,7 +236,4 @@ int main(int argc, char* argv[]) {
     //Parfait::VtkUnstructuredWriter writer(filename, ugrid);
     //writer.addNodeData("distance", dist.data(), 1);
     //writer.writeBinary();
-}
-bool isBigEndian(std::string filename) {
-    return filename.find(".b8.") != std::string::npos;
 }
